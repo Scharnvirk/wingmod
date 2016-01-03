@@ -27,11 +27,6 @@ var BasePhysics = (function () {
     }
 
     _createClass(BasePhysics, [{
-        key: "getPositionAndAngle",
-        value: function getPositionAndAngle() {
-            return [this.position, this.angle];
-        }
-    }, {
         key: "calculatePositionVector",
         value: function calculatePositionVector() {
             this.position.add(this.velocityVector);

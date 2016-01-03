@@ -37,6 +37,10 @@ var Utils = {
         for(var prop in donor.prototype){
             receiver[prop] = donor.prototype[prop];
         }
+    },
+
+    uptrunc: function(x){
+        return x < 0 ? Math.floor(x) : Math.ceil(x);
     }
 };
 

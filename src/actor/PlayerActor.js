@@ -13,6 +13,8 @@ class PlayerActor extends BaseActor {
         };
 
         this.physics = this.createPhysics();
+
+        this.diameter = 2;
     }
 
     createMesh(){

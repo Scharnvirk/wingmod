@@ -20,12 +20,13 @@ var MookActor = (function (_BaseActor) {
 
         _this.physicsProperties = {
             friction: 0.01,
-            acceleration: 0.1,
+            acceleration: 0.05,
             deceleration: 0.04
         };
 
         _this.physics = _this.createPhysics();
 
+        _this.diameter = 2;
         _this.turning = 0;
         _this.thrustSetting = 0;
         return _this;
@@ -49,7 +50,6 @@ var MookActor = (function (_BaseActor) {
     }, {
         key: "actorLogic",
         value: function actorLogic() {
-
             switch (this.turning) {
                 case -1:
                     this.angle--;break;

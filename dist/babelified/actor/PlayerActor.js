@@ -28,6 +28,8 @@ var PlayerActor = (function (_BaseActor) {
         };
 
         _this.physics = _this.createPhysics();
+
+        _this.diameter = 2;
         return _this;
     }
 

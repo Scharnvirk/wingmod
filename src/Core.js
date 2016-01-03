@@ -23,15 +23,22 @@ class Core {
         this.runAfterAssetsLoaded();
     }
 
+    makeManagers(){
+        this.masterManager = new MasterManager();
+        this.masterManager.add(new Manager(this.scene, 'ship'), 'ship');
+        this.masterManager.add(new Manager(this.scene), 'light');
+    }
+
     runAfterAssetsLoaded(){
+        this.makeManagers();
+
         this.gameLoop = new GameLoop(this.controls, this.camera);
-        this.gameScene.make();
-        this.actorManager = new Manager(this.scene);
 
         var actor = new PlayerActor(this.controls);
-        this.actorManager.add(actor);
-
         this.camera.actor = actor;
+        this.masterManager.get('ship').add(actor);
+
+        this.gameScene.make();
 
         setInterval(()=>{
             console.log('logicTicks:', this.logicTicks, ' renderTicks: ', this.renderTicks);
@@ -86,7 +93,7 @@ class Core {
     processGameLogic(){
         this.logicTicks++;
         this.gameLoop.update();
-        this.actorManager.update();
+        this.masterManager.update();
         this.gameScene.update();
         this.controls.update();
         this.camera.update();

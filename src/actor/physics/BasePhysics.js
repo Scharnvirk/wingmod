@@ -18,10 +18,6 @@ class BasePhysics {
         this.clock = 0;
     }
 
-    getPositionAndAngle(){
-        return[this.position, this.angle];
-    }
-
     calculatePositionVector(){
         this.position.add(this.velocityVector);
     }

@@ -35,18 +35,26 @@ var Core = (function () {
             this.runAfterAssetsLoaded();
         }
     }, {
+        key: 'makeManagers',
+        value: function makeManagers() {
+            this.masterManager = new MasterManager();
+            this.masterManager.add(new Manager(this.scene, 'ship'), 'ship');
+            this.masterManager.add(new Manager(this.scene), 'light');
+        }
+    }, {
         key: 'runAfterAssetsLoaded',
         value: function runAfterAssetsLoaded() {
             var _this = this;
 
+            this.makeManagers();
+
             this.gameLoop = new GameLoop(this.controls, this.camera);
-            this.gameScene.make();
-            this.actorManager = new Manager(this.scene);
 
             var actor = new PlayerActor(this.controls);
-            this.actorManager.add(actor);
-
             this.camera.actor = actor;
+            this.masterManager.get('ship').add(actor);
+
+            this.gameScene.make();
 
             setInterval(function () {
                 console.log('logicTicks:', _this.logicTicks, ' renderTicks: ', _this.renderTicks);
@@ -106,7 +114,7 @@ var Core = (function () {
         value: function processGameLogic() {
             this.logicTicks++;
             this.gameLoop.update();
-            this.actorManager.update();
+            this.masterManager.update();
             this.gameScene.update();
             this.controls.update();
             this.camera.update();

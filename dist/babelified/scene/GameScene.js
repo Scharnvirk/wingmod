@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -10,7 +10,7 @@ var GameScene = (function () {
 
         this.core = core;
         this.scene = scene;
-        this.lightManager = new MapLightManager(this.scene, this.core.camera);
+        //this.lightManager = new MapLightManager(this.scene, this.core.camera);
         this.lightCounter = 0;
 
         var radius = 5;
@@ -21,12 +21,12 @@ var GameScene = (function () {
     }
 
     _createClass(GameScene, [{
-        key: "makeSphere",
+        key: 'makeSphere',
         value: function makeSphere(sphereMaterial, _radius) {
             return new THREE.Mesh(this.sphereGeometry, sphereMaterial);
         }
     }, {
-        key: "makeWalls",
+        key: 'makeWalls',
         value: function makeWalls() {
             var walls = [];
             var wall;
@@ -56,22 +56,30 @@ var GameScene = (function () {
             return new THREE.Mesh(combine, material);
         }
     }, {
-        key: "make",
+        key: 'make',
         value: function make() {
             for (var j = 0; j < 5; j++) {
                 var light = new MapLightActor();
                 light.position.x = Math.random() * 1000 - 500;
                 light.position.y = Math.random() * 1000 - 500;
-                this.lightManager.add(light);
+                this.core.masterManager.get('light').add(light);
             }
 
-            this.mookManager = new Manager(this.scene);
-
-            for (var i = 0; i < 1000; i++) {
+            for (var i = 0; i < 2000; i++) {
                 var mook = new MookActor(new THREE.Vector2(Utils.rand(-100, 100), Utils.rand(-100, 100)));
                 mook.angle = Utils.rand(0, 360);
-                this.mookManager.add(mook);
+                this.core.masterManager.get('ship').add(mook);
             }
+
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(0,0)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(0,5)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(0,10)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(5,0)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(5,5)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(5,10)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(10,0)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(10,5)));
+            // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(10,10)));
 
             var combine = new THREE.Geometry();
             var geometry = new THREE.PlaneGeometry(1000, 1000, 200, 200);
@@ -95,11 +103,8 @@ var GameScene = (function () {
             console.log(testLight);
         }
     }, {
-        key: "update",
-        value: function update(delta) {
-            this.lightManager.update(delta);
-            this.mookManager.update();
-        }
+        key: 'update',
+        value: function update(delta) {}
     }]);
 
     return GameScene;

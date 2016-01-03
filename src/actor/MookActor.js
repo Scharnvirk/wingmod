@@ -5,12 +5,13 @@ class MookActor extends BaseActor{
 
         this.physicsProperties = {
             friction: 0.01,
-            acceleration: 0.1,
+            acceleration: 0.05,
             deceleration: 0.04
         };
 
         this.physics = this.createPhysics();
 
+        this.diameter = 2;
         this.turning = 0;
         this.thrustSetting = 0;
     }
@@ -28,8 +29,6 @@ class MookActor extends BaseActor{
     }
 
     actorLogic(){
-
-
         switch(this.turning){
             case -1: this.angle --; break;
             case -2: this.angle -= 3; break;
