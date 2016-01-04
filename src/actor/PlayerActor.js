@@ -1,18 +1,16 @@
 class PlayerActor extends BaseActor {
-    constructor(controlsHandler){
-        super(null, null, 30, 30);
-        this.controlsHandler = controlsHandler;
+    constructor(config){
+        super(config);
+        Object.assign(this, config);
+
+        this.controlsHandler = config.controlsHandler;
         this.mesh = this.createMesh();
         this.light = this.createLight();
         this.controls = this.createControls();
+        this.body = this.createBody();
 
-        this.physicsProperties = {
-            friction: 0.01,
-            acceleration: 0.1,
-            deceleration: 0.04
-        };
-
-        this.physics = this.createPhysics();
+        this.acceleration = 130;
+        this.turnSpeed = 3;
 
         this.diameter = 2;
     }
@@ -29,10 +27,25 @@ class PlayerActor extends BaseActor {
         return new PointLight(this, 120, 0x665522);
     }
 
-    createPhysics(){
-        return new BasePhysics(this);
+    createBody(){
+        return new BaseBody({
+            actor: this,
+            mass: 1,
+            damping: 0.75,
+            angularDamping: 0.01,
+            position: this.position
+        });
     }
 
     customUpdate(){
+        if(this.thrust !== 0){
+            this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+        }
+
+        if(this.rotationForce !== 0){
+            this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+        } else {
+            this.body.angularVelocity = 0;
+        }
     }
 }

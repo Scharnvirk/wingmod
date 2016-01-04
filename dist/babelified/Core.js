@@ -38,21 +38,33 @@ var Core = (function () {
         key: 'makeManagers',
         value: function makeManagers() {
             this.masterManager = new MasterManager();
-            this.masterManager.add(new Manager(this.scene, 'ship'), 'ship');
-            this.masterManager.add(new Manager(this.scene), 'light');
+            this.masterManager.add(new Manager(this.scene, this.world), 'ship');
+            this.masterManager.add(new Manager(this.scene, this.world), 'light');
+        }
+    }, {
+        key: 'makeWorld',
+        value: function makeWorld() {
+            this.world = new GameWorld({
+                gravity: [0, 0]
+            });
+        }
+    }, {
+        key: 'makePlayer',
+        value: function makePlayer() {
+            return this.masterManager.get('ship').create(PlayerActor, {
+                controlsHandler: this.controls
+            });
         }
     }, {
         key: 'runAfterAssetsLoaded',
         value: function runAfterAssetsLoaded() {
             var _this = this;
 
+            this.makeWorld();
             this.makeManagers();
 
             this.gameLoop = new GameLoop(this.controls, this.camera);
-
-            var actor = new PlayerActor(this.controls);
-            this.camera.actor = actor;
-            this.masterManager.get('ship').add(actor);
+            this.camera.actor = this.makePlayer();
 
             this.gameScene.make();
 
@@ -113,6 +125,7 @@ var Core = (function () {
         key: 'processGameLogic',
         value: function processGameLogic() {
             this.logicTicks++;
+            this.world.step(1 / 60);
             this.gameLoop.update();
             this.masterManager.update();
             this.gameScene.update();

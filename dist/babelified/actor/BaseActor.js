@@ -1,44 +1,29 @@
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BaseActor = (function () {
-    function BaseActor(position, angle, positionZ, diameter) {
+    function BaseActor(config) {
         _classCallCheck(this, BaseActor);
 
-        if (position && position instanceof THREE.Vector2 !== true) throw 'ERROR: invalid position vector for actor';
-
+        Object.assign(this, config);
         this.collisionCells = [];
 
-        this.position = position || new THREE.Vector2(0, 0);
-        this.positionZ = positionZ || 10;
-        this.diameter = diameter || 0;
+        if (!config) config = {};
 
-        this.angle = angle || 0;
+        this.position = config.position || [0, 0];
+        this.positionZ = config.positionZ || 10;
+
+        this.angle = config.angle || 0;
         this.thrust = 0;
-        this.counter = 0;
-
-        this.actorsCollidingWith = [];
-
-        this.physicsProperties = {
-            friction: 0,
-            acceleration: 0,
-            deceleration: 0
-        };
     }
 
     _createClass(BaseActor, [{
-        key: 'getPVAS',
-        value: function getPVAS() {
-            return [this.position, this.angle];
-        }
-    }, {
-        key: 'update',
+        key: "update",
         value: function update() {
-
-            this.fixAngleRollover();
+            //this.fixAngleRollover();
 
             if (this.controls) {
                 this.controls.update();
@@ -46,11 +31,8 @@ var BaseActor = (function () {
 
             this.customUpdate();
 
-            if (this.physics) {
-                this.handleCollisions();
-                this.physics.update(this.position, this.angle, this.thrust);
-                this.position = this.physics.position;
-                this.angle = this.physics.angle;
+            if (this.body) {
+                this.updatePhysicsFromBody();
             }
 
             if (this.mesh) {
@@ -62,7 +44,7 @@ var BaseActor = (function () {
             }
         }
     }, {
-        key: 'handleCollisions',
+        key: "handleCollisions",
         value: function handleCollisions() {
             for (var i = 0; i < this.actorsCollidingWith; i++) {
                 var x = this.actorsCollidingWith[i];
@@ -70,10 +52,10 @@ var BaseActor = (function () {
             this.actorsCollidingWith = [];
         }
     }, {
-        key: 'customUpdate',
+        key: "customUpdate",
         value: function customUpdate() {}
     }, {
-        key: 'addToScene',
+        key: "addToScene",
         value: function addToScene(scene) {
             if (this.mesh) {
                 scene.add(this.mesh.get());
@@ -84,7 +66,7 @@ var BaseActor = (function () {
             }
         }
     }, {
-        key: 'removeFromScene',
+        key: "removeFromScene",
         value: function removeFromScene(scene) {
             if (this.mesh) {
                 scene.remove(this.mesh.get());
@@ -95,19 +77,17 @@ var BaseActor = (function () {
                 delete this.light.get();
             }
         }
-    }, {
-        key: 'fixAngleRollover',
-        value: function fixAngleRollover() {
-            if (this.angle > 360) this.angle -= 360;
-            if (this.angle < 0) this.angle += 360;
-        }
-    }, {
-        key: 'updatePhysicsProperties',
-        value: function updatePhysicsProperties(physicsProperties) {
-            if (physicsProperties instanceof 'object' !== true) throw 'ERROR: Actor\'s physicsProperties must be object';
-            this.physicsProperties = physicsProperties;
 
-            if (this.physics) this.physics.updateProperties(physicsProperties);
+        // fixAngleRollover(){
+        //     if (this.angle > 360) this.angle -= 360;
+        //     if (this.angle < 0) this.angle += 360;
+        // }
+
+    }, {
+        key: "updatePhysicsFromBody",
+        value: function updatePhysicsFromBody() {
+            this.position = this.body.position;
+            this.angle = Utils.radToDeg(this.body.angle);
         }
     }]);
 

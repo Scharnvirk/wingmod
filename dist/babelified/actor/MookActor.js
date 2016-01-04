@@ -11,24 +11,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MookActor = (function (_BaseActor) {
     _inherits(MookActor, _BaseActor);
 
-    function MookActor(position) {
+    function MookActor(config) {
         _classCallCheck(this, MookActor);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MookActor).call(this, position, 0));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MookActor).call(this, config));
+
+        Object.assign(_this, config);
 
         _this.mesh = _this.createMesh();
+        _this.body = _this.createBody();
 
-        _this.physicsProperties = {
-            friction: 0.01,
-            acceleration: 0.05,
-            deceleration: 0.04
-        };
+        _this.acceleration = 100;
+        _this.turnSpeed = 1;
 
-        _this.physics = _this.createPhysics();
-
-        _this.diameter = 2;
-        _this.turning = 0;
-        _this.thrustSetting = 0;
+        _this.thrust = 0;
+        _this.rotationForce = 0;
         return _this;
     }
 
@@ -36,6 +33,15 @@ var MookActor = (function (_BaseActor) {
         key: "customUpdate",
         value: function customUpdate() {
             this.actorLogic();
+            if (this.thrust !== 0) {
+                this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+            }
+
+            if (this.rotationForce !== 0) {
+                this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+            } else {
+                this.body.angularVelocity = 0;
+            }
         }
     }, {
         key: "createMesh",
@@ -43,35 +49,28 @@ var MookActor = (function (_BaseActor) {
             return new ShipMesh(this, this.diameter, Utils.makeRandomColor());
         }
     }, {
-        key: "createPhysics",
-        value: function createPhysics() {
-            return new BasePhysics(this);
+        key: "createBody",
+        value: function createBody() {
+            return new BaseBody({
+                actor: this,
+                mass: 1,
+                damping: 0.75,
+                angularDamping: 0.01,
+                position: this.position
+            });
         }
     }, {
         key: "actorLogic",
         value: function actorLogic() {
-            switch (this.turning) {
-                case -1:
-                    this.angle--;break;
-                case -2:
-                    this.angle -= 3;break;
-                case 1:
-                    this.angle++;break;
-                case 2:
-                    this.angle += 3;break;
-            }
-
-            this.thrust = this.thrustSetting;
-
-            if (Utils.rand(0, 100) === 100) this.turning = Utils.rand(-2, 2);
+            if (Utils.rand(0, 100) === 100) this.rotationForce = Utils.rand(-2, 2);
             if (Utils.rand(0, 100) > 97) {
                 var thrustRand = Utils.rand(0, 100);
                 if (thrustRand > 20) {
-                    this.thrustSetting = 1;
+                    this.thrust = 1;
                 } else if (thrustRand <= 2) {
-                    this.thrustSetting = -1;
+                    this.thrust = -1;
                 } else {
-                    this.thrustSetting = 0;
+                    this.thrust = 0;
                 }
             }
         }

@@ -47,17 +47,16 @@ class GameScene {
 
     make() {
         for (var j  = 0; j < 5; j++){
-            var light = new MapLightActor();
-            light.position.x = Math.random()*1000-500;
-            light.position.y = Math.random()*1000-500;
-            this.core.masterManager.get('light').add(light);
+            this.core.masterManager.get('light').create(MapLightActor, {
+                position: [Utils.rand(-200,200), Utils.rand(-200,200)]
+            });
         }
 
-
-        for (var i = 0; i < 2000; i++){
-            var mook = new MookActor(new THREE.Vector2(Utils.rand(-100,100), Utils.rand(-100,100)));
-            mook.angle = Utils.rand(0,360);
-            this.core.masterManager.get('ship').add(mook);
+        for (var i = 0; i < 1000; i++){
+            this.core.masterManager.get('ship').create(MookActor, {
+                position: [Utils.rand(-200,200), Utils.rand(-200,200)],
+                angle: Utils.rand(0, 360)
+            });
         }
 
         // this.core.masterManager.get('ship').add(new MookActor(new THREE.Vector2(0,0)));
@@ -75,21 +74,21 @@ class GameScene {
         var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
         var floor = new THREE.Mesh( geometry, material );
 
-       floor.updateMatrix();
-       combine.merge(floor.geometry, floor.matrix);
+        floor.updateMatrix();
+        combine.merge(floor.geometry, floor.matrix);
 
-       var walls = this.makeWalls();
-       combine.merge(walls.geometry, walls.matrix);
-       var combinedObject = new THREE.Mesh(combine, material);
-       combinedObject.matrixAutoUpdate = false;
-       combinedObject.updateMatrix();
-      this.scene.add(combinedObject);
+        var walls = this.makeWalls();
+        combine.merge(walls.geometry, walls.matrix);
+        var combinedObject = new THREE.Mesh(combine, material);
+        combinedObject.matrixAutoUpdate = false;
+        combinedObject.updateMatrix();
+        this.scene.add(combinedObject);
 
-        var testLight = new THREE.PointLight( 0x550000, 1, 100 );
-        testLight.position.set( 50, 50, 50 );
-        this.scene.add( testLight );
-
-        console.log(testLight);
+        //helps if due to some error the scene doesn't render properly,
+        //particularly a case when lights go off
+        var emergencyLight = new THREE.PointLight( 0x550000, 1, 100 );
+        emergencyLight.position.set( 50, 50, 50 );
+        this.scene.add( emergencyLight );
     }
 
     update(delta){

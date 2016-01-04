@@ -11,11 +11,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MapLightActor = (function (_BaseActor) {
     _inherits(MapLightActor, _BaseActor);
 
-    function MapLightActor() {
+    function MapLightActor(config) {
         _classCallCheck(this, MapLightActor);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MapLightActor).call(this, null, null, 10, 50));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MapLightActor).call(this, config));
 
+        Object.assign(_this, config);
         _this.diameter = 50;
         _this.light = _this.createLight();
         return _this;

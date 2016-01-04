@@ -1,6 +1,7 @@
 class MapLightActor extends BaseActor{
-    constructor(){
-        super(null, null, 10, 50);
+    constructor(config){
+        super(config);
+        Object.assign(this, config);
         this.diameter = 50;
         this.light = this.createLight();
     }

@@ -19,8 +19,8 @@ Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function () {
     if (this.actor) {
-        this.position.x = this.actor.position.x;
-        this.position.y = this.actor.position.y;
+        this.position.x = this.actor.position[0];
+        this.position.y = this.actor.position[1];
     }
 };
 //# sourceMappingURL=Camera.js.map

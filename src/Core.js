@@ -25,18 +25,28 @@ class Core {
 
     makeManagers(){
         this.masterManager = new MasterManager();
-        this.masterManager.add(new Manager(this.scene, 'ship'), 'ship');
-        this.masterManager.add(new Manager(this.scene), 'light');
+        this.masterManager.add(new Manager(this.scene, this.world), 'ship');
+        this.masterManager.add(new Manager(this.scene, this.world), 'light');
+    }
+
+    makeWorld(){
+        this.world = new GameWorld({
+            gravity:[0, 0]
+        });
+    }
+
+    makePlayer(){
+        return this.masterManager.get('ship').create(PlayerActor, {
+            controlsHandler: this.controls
+        });
     }
 
     runAfterAssetsLoaded(){
+        this.makeWorld();
         this.makeManagers();
 
         this.gameLoop = new GameLoop(this.controls, this.camera);
-
-        var actor = new PlayerActor(this.controls);
-        this.camera.actor = actor;
-        this.masterManager.get('ship').add(actor);
+        this.camera.actor = this.makePlayer();
 
         this.gameScene.make();
 
@@ -92,6 +102,7 @@ class Core {
 
     processGameLogic(){
         this.logicTicks++;
+        this.world.step(1/60);
         this.gameLoop.update();
         this.masterManager.update();
         this.gameScene.update();

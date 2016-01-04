@@ -1,33 +1,20 @@
 class BaseActor{
-    constructor(position, angle, positionZ, diameter){
-        if(position && (position instanceof THREE.Vector2 !== true)) throw 'ERROR: invalid position vector for actor';
-
+    constructor(config){
+        Object.assign(this, config);
         this.collisionCells = [];
 
-        this.position = position || new THREE.Vector2(0,0);
-        this.positionZ = positionZ || 10;
-        this.diameter = diameter || 0;
+        if(!config) config = {};
 
-        this.angle = angle || 0;
+        this.position = config.position || [0,0];
+        this.positionZ = config.positionZ || 10;
+
+        this.angle = config.angle || 0;
         this.thrust = 0;
-        this.counter = 0;
 
-        this.actorsCollidingWith = [];
-
-        this.physicsProperties = {
-            friction: 0,
-            acceleration: 0,
-            deceleration: 0,
-        };
-    }
-
-    getPVAS(){
-        return [this.position, this.angle];
     }
 
     update(){
-
-        this.fixAngleRollover();
+        //this.fixAngleRollover();
 
         if (this.controls){
             this.controls.update();
@@ -35,11 +22,8 @@ class BaseActor{
 
         this.customUpdate();
 
-        if (this.physics){
-            this.handleCollisions();
-            this.physics.update(this.position, this.angle, this.thrust);
-            this.position = this.physics.position;
-            this.angle = this.physics.angle;
+        if (this.body){
+            this.updatePhysicsFromBody();
         }
 
         if (this.mesh){
@@ -81,16 +65,13 @@ class BaseActor{
         }
     }
 
-    fixAngleRollover(){
-        if (this.angle > 360) this.angle -= 360;
-        if (this.angle < 0) this.angle += 360;
+    // fixAngleRollover(){
+    //     if (this.angle > 360) this.angle -= 360;
+    //     if (this.angle < 0) this.angle += 360;
+    // }
+
+    updatePhysicsFromBody(){
+        this.position = this.body.position;
+        this.angle = Utils.radToDeg(this.body.angle);
     }
-
-    updatePhysicsProperties(physicsProperties){
-        if(physicsProperties instanceof 'object' !== true) throw 'ERROR: Actor\'s physicsProperties must be object';
-        this.physicsProperties = physicsProperties;
-
-        if(this.physics) this.physics.updateProperties(physicsProperties);
-    }
-
 }

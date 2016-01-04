@@ -11,23 +11,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var PlayerActor = (function (_BaseActor) {
     _inherits(PlayerActor, _BaseActor);
 
-    function PlayerActor(controlsHandler) {
+    function PlayerActor(config) {
         _classCallCheck(this, PlayerActor);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PlayerActor).call(this, null, null, 30, 30));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PlayerActor).call(this, config));
 
-        _this.controlsHandler = controlsHandler;
+        Object.assign(_this, config);
+
+        _this.controlsHandler = config.controlsHandler;
         _this.mesh = _this.createMesh();
         _this.light = _this.createLight();
         _this.controls = _this.createControls();
+        _this.body = _this.createBody();
 
-        _this.physicsProperties = {
-            friction: 0.01,
-            acceleration: 0.1,
-            deceleration: 0.04
-        };
-
-        _this.physics = _this.createPhysics();
+        _this.acceleration = 130;
+        _this.turnSpeed = 3;
 
         _this.diameter = 2;
         return _this;
@@ -49,13 +47,29 @@ var PlayerActor = (function (_BaseActor) {
             return new PointLight(this, 120, 0x665522);
         }
     }, {
-        key: "createPhysics",
-        value: function createPhysics() {
-            return new BasePhysics(this);
+        key: "createBody",
+        value: function createBody() {
+            return new BaseBody({
+                actor: this,
+                mass: 1,
+                damping: 0.75,
+                angularDamping: 0.01,
+                position: this.position
+            });
         }
     }, {
         key: "customUpdate",
-        value: function customUpdate() {}
+        value: function customUpdate() {
+            if (this.thrust !== 0) {
+                this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+            }
+
+            if (this.rotationForce !== 0) {
+                this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+            } else {
+                this.body.angularVelocity = 0;
+            }
+        }
     }]);
 
     return PlayerActor;

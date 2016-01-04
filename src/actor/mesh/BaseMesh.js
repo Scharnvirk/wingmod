@@ -8,10 +8,10 @@ class BaseMesh{
 
     update(position, deltaAngle, positionZ){
         if(this.followActor && this.mesh){
-            this.mesh.position.x = position.x;
-            this.mesh.position.y = position.y;
+            this.mesh.position.x = position[0];
+            this.mesh.position.y = position[1];
             this.mesh.position.z = positionZ;
-            this.mesh.rotation.z = Utils.degToRad(-this.actor.angle + this.angleOffset);
+            this.mesh.rotation.z = Utils.degToRad(this.actor.angle + this.angleOffset);
         }
     }
 

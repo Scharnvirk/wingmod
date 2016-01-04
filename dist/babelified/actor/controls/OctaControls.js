@@ -16,6 +16,7 @@ var OctaControls = (function () {
         key: "update",
         value: function update() {
             this.actor.thrust = 0;
+            this.actor.rotationForce = 0;
 
             if (this.controlsHandler.moveState.w) {
                 this.actor.thrust = 1;
@@ -26,11 +27,11 @@ var OctaControls = (function () {
             }
 
             if (this.controlsHandler.moveState.a) {
-                this.actor.angle -= 3;
+                this.actor.rotationForce = 1;
             }
 
             if (this.controlsHandler.moveState.d) {
-                this.actor.angle += 3;
+                this.actor.rotationForce = -1;
             }
         }
     }]);

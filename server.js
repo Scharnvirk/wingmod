@@ -31,7 +31,7 @@ var SampleApp = function() {
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
-        };
+        }
     };
 
 
@@ -45,50 +45,54 @@ var SampleApp = function() {
 
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
-		
+
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
 		self.zcache['/lib/utils/polyfills.js'] = fs.readFileSync('./lib/utils/polyfills.js');
-		
+        self.zcache['/lib/p2.min.js'] = fs.readFileSync('./lib/p2.min.js');
+
 		self.zcache['/dist/babelified/Controls.js'] = fs.readFileSync('./dist/babelified/Controls.js');
 		self.zcache['/dist/babelified/Core.js'] = fs.readFileSync('./dist/babelified/Core.js');
 		self.zcache['/dist/babelified/Init.js'] = fs.readFileSync('./dist/babelified/Init.js');
 		self.zcache['/dist/babelified/GameLoop.js'] = fs.readFileSync('./dist/babelified/GameLoop.js');
 		self.zcache['/dist/babelified/Utils.js'] = fs.readFileSync('./dist/babelified/Utils.js');
 		self.zcache['/dist/babelified/Camera.js'] = fs.readFileSync('./dist/babelified/Camera.js');
-		
+        self.zcache['/dist/babelified/World.js'] = fs.readFileSync('./dist/babelified/World.js');
+
 		self.zcache['/dist/babelified/modelRepo/ModelLoader.js'] = fs.readFileSync('./dist/babelified/modelRepo/ModelLoader.js');
 		self.zcache['/dist/babelified/modelRepo/ModelList.js'] = fs.readFileSync('./dist/babelified/modelRepo/ModelList.js');
 		self.zcache['/dist/babelified/modelRepo/ModelStore.js'] = fs.readFileSync('./dist/babelified/modelRepo/ModelStore.js');
-		
+
 		self.zcache['/dist/babelified/scene/GameScene.js'] = fs.readFileSync('./dist/babelified/scene/GameScene.js');
-		
+
 		self.zcache['/dist/babelified/actor/BaseActor.js'] = fs.readFileSync('./dist/babelified/actor/BaseActor.js');
 		self.zcache['/dist/babelified/actor/MapLightActor.js'] = fs.readFileSync('./dist/babelified/actor/MapLightActor.js');
 		self.zcache['/dist/babelified/actor/PlayerActor.js'] = fs.readFileSync('./dist/babelified/actor/PlayerActor.js');
 		self.zcache['/dist/babelified/actor/MookActor.js'] = fs.readFileSync('./dist/babelified/actor/MookActor.js');
-		
+
 		self.zcache['/dist/babelified/actor/mesh/BaseMesh.js'] = fs.readFileSync('./dist/babelified/actor/mesh/BaseMesh.js');
 		self.zcache['/dist/babelified/actor/mesh/SphereMesh.js'] = fs.readFileSync('./dist/babelified/actor/mesh/SphereMesh.js');
 		self.zcache['/dist/babelified/actor/mesh/ShipMesh.js'] = fs.readFileSync('./dist/babelified/actor/mesh/ShipMesh.js');
-		
+
 		self.zcache['/dist/babelified/actor/controls/OctaControls.js'] = fs.readFileSync('./dist/babelified/actor/controls/OctaControls.js');
-		
+
 		self.zcache['/dist/babelified/actor/manager/Manager.js'] = fs.readFileSync('./dist/babelified/actor/manager/Manager.js');
 		self.zcache['/dist/babelified/actor/manager/MapLightManager.js'] = fs.readFileSync('./dist/babelified/actor/manager/MapLightManager.js');
-		
+        self.zcache['/dist/babelified/actor/manager/MasterManager.js'] = fs.readFileSync('./dist/babelified/actor/manager/MasterManager.js');
+
 		self.zcache['/dist/babelified/actor/physics/BasePhysics.js'] = fs.readFileSync('./dist/babelified/actor/physics/BasePhysics.js');
-		
+        self.zcache['/dist/babelified/actor/physics/BaseBody.js'] = fs.readFileSync('./dist/babelified/actor/physics/BaseBody.js');
+
 		self.zcache['/dist/babelified/actor/light/BaseLight.js'] = fs.readFileSync('./dist/babelified/actor/light/BaseLight.js');
 		self.zcache['/dist/babelified/actor/light/PointLight.js'] = fs.readFileSync('./dist/babelified/actor/light/PointLight.js');
 		self.zcache['/dist/babelified/actor/light/MapPointLight.js'] = fs.readFileSync('./dist/babelified/actor/light/MapPointLight.js');
-		
+
 		self.zcache['/dist/babelified/objectPool/BaseObjectPool.js'] = fs.readFileSync('./dist/babelified/objectPool/BaseObjectPool.js');
 		self.zcache['/dist/babelified/objectPool/LightPool.js'] = fs.readFileSync('./dist/babelified/objectPool/LightPool.js');
-		
+
 		self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
-		
+
     };
 
     /**
@@ -148,50 +152,54 @@ var SampleApp = function() {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );
         };
-		
+
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
 		self.routes['/lib/threex.loop.js'] = function(req, res) {res.send(self.cache_get('/lib/threex.loop.js') );};
 		self.routes['/lib/utils/polyfills.js'] = function(req, res) {res.send(self.cache_get('/lib/utils/polyfills.js') );};
-		
+        self.routes['/lib/p2.min.js'] = function(req, res) {res.send(self.cache_get('/lib/p2.min.js') );};
+
 		self.routes['/dist/babelified/Controls.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/Controls.js') );};
 		self.routes['/dist/babelified/Core.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/Core.js') );};
 		self.routes['/dist/babelified/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/Init.js') );};
 		self.routes['/dist/babelified/GameLoop.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/GameLoop.js') );};
 		self.routes['/dist/babelified/Utils.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/Utils.js') );};
 		self.routes['/dist/babelified/Camera.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/Camera.js') );};
-		
+        self.routes['/dist/babelified/World.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/World.js') );};
+
 		self.routes['/dist/babelified/modelRepo/ModelLoader.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/modelRepo/ModelLoader.js') );};
 		self.routes['/dist/babelified/modelRepo/ModelList.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/modelRepo/ModelList.js') );};
 		self.routes['/dist/babelified/modelRepo/ModelStore.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/modelRepo/ModelStore.js') );};
-		
+
 		self.routes['/dist/babelified/scene/GameScene.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/scene/GameScene.js') );};
-		
+
 		self.routes['/dist/babelified/actor/BaseActor.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/BaseActor.js') );};
 		self.routes['/dist/babelified/actor/MapLightActor.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/MapLightActor.js') );};
 		self.routes['/dist/babelified/actor/PlayerActor.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/PlayerActor.js') );};
 		self.routes['/dist/babelified/actor/MookActor.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/MookActor.js') );};
-		
+
 		self.routes['/dist/babelified/actor/mesh/BaseMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/mesh/BaseMesh.js') );};
 		self.routes['/dist/babelified/actor/mesh/SphereMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/mesh/SphereMesh.js') );};
 		self.routes['/dist/babelified/actor/mesh/ShipMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/mesh/ShipMesh.js') );};
-		
+
 		self.routes['/dist/babelified/actor/controls/OctaControls.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/controls/OctaControls.js') );};
-		
+
 		self.routes['/dist/babelified/actor/manager/Manager.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/manager/Manager.js') );};
 		self.routes['/dist/babelified/actor/manager/MapLightManager.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/manager/MapLightManager.js') );};
-		
+        self.routes['/dist/babelified/actor/manager/MasterManager.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/manager/MasterManager.js') );};
+
 		self.routes['/dist/babelified/actor/physics/BasePhysics.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/physics/BasePhysics.js') );};
-		
+        self.routes['/dist/babelified/actor/physics/BaseBody.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/physics/BaseBody.js') );};
+
 		self.routes['/dist/babelified/actor/light/BaseLight.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/light/BaseLight.js') );};
 		self.routes['/dist/babelified/actor/light/PointLight.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/light/PointLight.js') );};
 		self.routes['/dist/babelified/actor/light/MapPointLight.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/actor/light/MapPointLight.js') );};
-		
+
 		self.routes['/dist/babelified/objectPool/BaseObjectPool.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/objectPool/BaseObjectPool.js') );};
 		self.routes['/dist/babelified/objectPool/LightPool.js'] = function(req, res) {res.send(self.cache_get('/dist/babelified/objectPool/LightPool.js') );};
-		
+
 		self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
-		
+
     };
 
 
@@ -244,4 +252,3 @@ var SampleApp = function() {
 var zapp = new SampleApp();
 zapp.initialize();
 zapp.start();
-

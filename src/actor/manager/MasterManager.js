@@ -1,22 +1,17 @@
-function MasterManager(){
-    this.managers = {};
-    this.collisionMap = {};
-    this.collision = new Collisions(this);
+function MasterManager(scene, world){
+    this._managers = {};
 }
 
 MasterManager.prototype.add = function(manager, name) {
-    manager.collisionMap = this.collisionMap;
-    this.managers[name] = manager;
+    this._managers[name] = manager;
 };
 
 MasterManager.prototype.get = function(name) {
-    return this.managers[name];
+    return this._managers[name];
 };
 
 MasterManager.prototype.update = function() {
-    Object.keys(this.managers).forEach((managerName)=>{
-        this.managers[managerName].update();
+    Object.keys(this._managers).forEach((managerName)=>{
+        this._managers[managerName].update();
     });
-
-    this.collision.update();
 };

@@ -11,7 +11,6 @@ class BasePhysics {
         this.deceleration = 0;
 
         this.velocityVector = new THREE.Vector2(0,0);
-        //this.accelerationVector = new THREE.Vector2(0,0);
 
         this.updateProperties();
 
