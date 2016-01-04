@@ -102,7 +102,13 @@ class Core {
 
     processGameLogic(){
         this.logicTicks++;
-        this.world.step(1/60);
+
+        // timeSeconds = t / 1000;
+        // lastTimeSeconds = lastTimeSeconds || timeSeconds;
+        //
+        // deltaTime = timeSeconds - lastTimeSeconds;
+
+        this.world.step(1/30);
         this.gameLoop.update();
         this.masterManager.update();
         this.gameScene.update();

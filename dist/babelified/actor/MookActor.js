@@ -21,8 +21,8 @@ var MookActor = (function (_BaseActor) {
         _this.mesh = _this.createMesh();
         _this.body = _this.createBody();
 
-        _this.acceleration = 100;
-        _this.turnSpeed = 1;
+        _this.acceleration = 40;
+        _this.turnSpeed = 0.3;
 
         _this.thrust = 0;
         _this.rotationForce = 0;

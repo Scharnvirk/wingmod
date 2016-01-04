@@ -24,8 +24,8 @@ var PlayerActor = (function (_BaseActor) {
         _this.controls = _this.createControls();
         _this.body = _this.createBody();
 
-        _this.acceleration = 130;
-        _this.turnSpeed = 3;
+        _this.acceleration = 75;
+        _this.turnSpeed = 1.5;
 
         _this.diameter = 2;
         return _this;

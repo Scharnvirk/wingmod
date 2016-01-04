@@ -6,8 +6,8 @@ class MookActor extends BaseActor{
         this.mesh = this.createMesh();
         this.body = this.createBody();
 
-        this.acceleration = 100;
-        this.turnSpeed = 1;
+        this.acceleration = 40;
+        this.turnSpeed = 0.3;
 
         this.thrust = 0;
         this.rotationForce = 0;

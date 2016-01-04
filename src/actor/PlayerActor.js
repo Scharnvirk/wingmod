@@ -9,8 +9,8 @@ class PlayerActor extends BaseActor {
         this.controls = this.createControls();
         this.body = this.createBody();
 
-        this.acceleration = 130;
-        this.turnSpeed = 3;
+        this.acceleration = 75;
+        this.turnSpeed = 1.5;
 
         this.diameter = 2;
     }
