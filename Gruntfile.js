@@ -10,7 +10,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd : 'src/',
                         src : ['**/*.js'],
-                        dest : 'dist/babelified/'
+                        dest : 'dist/b/'
                     }
                 ]
             }
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                 sourceMapName: 'dist/sourceMap.map'
             },
             src: {
-                src : 'dist/babelified/**/*.js',
+                src : 'dist/b/**/*.js',
                 dest : 'dist/trig.min.js'
             }
         }
