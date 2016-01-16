@@ -18,7 +18,7 @@ var GameScene = (function () {
             var walls = [];
             var wall;
 
-            var material = new THREE.MeshPhongMaterial({
+            var material = new THREE.MeshLambertMaterial({
                 color: 0xffffff
             });
 
@@ -48,7 +48,7 @@ var GameScene = (function () {
 
             var combine = new THREE.Geometry();
             var geometry = new THREE.PlaneGeometry(1000, 1000);
-            var material = new THREE.MeshPhongMaterial({ color: 0xffffff });
+            var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
             var floor = new THREE.Mesh(geometry, material);
 
             floor.updateMatrix();
