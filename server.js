@@ -56,7 +56,8 @@ var SampleApp = function() {
         self.zcache['/dist/b/Utils.js'] = fs.readFileSync('./dist/b/Utils.js');
 
         self.zcache['/dist/b/renderer/Camera.js'] = fs.readFileSync('./dist/b/renderer/Camera.js');
-		self.zcache['/dist/b/renderer/Controls.js'] = fs.readFileSync('./dist/b/renderer/Controls.js');
+		self.zcache['/dist/b/renderer/ControlsHandler.js'] = fs.readFileSync('./dist/b/renderer/ControlsHandler.js');
+        self.zcache['/dist/b/renderer/InputListener.js'] = fs.readFileSync('./dist/b/renderer/InputListener.js');
 		self.zcache['/dist/b/renderer/Core.js'] = fs.readFileSync('./dist/b/renderer/Core.js');
 		self.zcache['/dist/b/renderer/LogicBus.js'] = fs.readFileSync('./dist/b/renderer/LogicBus.js');
 
@@ -167,7 +168,8 @@ var SampleApp = function() {
         self.routes['/dist/b/Utils.js'] = function(req, res) {res.send(self.cache_get('/dist/b/Utils.js') );};
 
         self.routes['/dist/b/renderer/Camera.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/Camera.js') );};
-        self.routes['/dist/b/renderer/Controls.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/Controls.js') );};
+        self.routes['/dist/b/renderer/ControlsHandler.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/ControlsHandler.js') );};
+        self.routes['/dist/b/renderer/InputListener.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/InputListener.js') );};
 		self.routes['/dist/b/renderer/Core.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/Core.js') );};
         self.routes['/dist/b/renderer/LogicBus.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/LogicBus.js') );};
 

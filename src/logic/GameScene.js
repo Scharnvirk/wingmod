@@ -6,7 +6,9 @@ function GameScene(config){
 
 GameScene.prototype.fillScene = function(){
     for (let i = 0; i < 1000; i++){
-       this.actorManager.addNew([ActorFactory.MOOK_ACTOR, Utils.rand(-200,200), Utils.rand(-200,200), Utils.rand(0,360)]);
-   }
-   console.log("scene complete");
+        this.actorManager.addNew([ActorFactory.MOOK_ACTOR, Utils.rand(-200,200), Utils.rand(-200,200), Utils.rand(0,360)]);
+    }
+    var playerActor = this.actorManager.addNew([ActorFactory.SHIP_ACTOR, 0,0,0]);
+    this.actorManager.setPlayerActor(playerActor);
+    console.log("scene complete");
 };

@@ -1,9 +1,11 @@
 function ActorManager(config){
     config = config || {};
+    this.core = null;
     this.storage = {};
     this.world = null;
     this.factory = config.factory || new ActorFactory();
     this.currentId = 1;
+    this.playerActors = [];
 
     Object.assign(this, config);
 
@@ -17,10 +19,21 @@ ActorManager.prototype.addNew = function(actorParameters){
     this.storage[this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.body);
+
+    return actor;
 };
 
-ActorManager.prototype.update = function(){
-    for (var actor in this.storage) {
+ActorManager.prototype.update = function(inputState){
+    this.playerActors.forEach(function(actorStorageId){
+        this.storage[actorStorageId].playerUpdate(inputState);
+    }.bind(this));
+
+    for (let actor in this.storage) {
         this.storage[actor].update();
     }
+};
+
+ActorManager.prototype.setPlayerActor = function(actor){
+    this.playerActors.push(actor.body.storageId);
+    this.core.renderBus.postMessage('attachCamera', {actorId: actor.body.storageId});
 };

@@ -4,7 +4,7 @@ function Core(worker) {
     var _this = this;
 
     this.world = new GameWorld();
-    this.actorManager = new ActorManager({ world: this.world });
+    this.actorManager = new ActorManager({ world: this.world, core: this });
     this.renderBus = new RenderBus(worker);
     this.scene = new GameScene({ world: this.world, actorManager: this.actorManager });
     this.startGameLoop();
@@ -26,13 +26,13 @@ Core.prototype.createWorld = function () {
 
 Core.prototype.processGameLogic = function () {
     this.world.step(1 / 30);
-    this.actorManager.update();
-    this.renderBus.postMessage(this.world.makeUpdateData());
+    this.actorManager.update(this.renderBus.inputState);
+    this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
     this.logicTicks++;
 };
 
 Core.prototype.startGameLoop = function () {
-    var logicLoop = new THREEx.PhysicsLoop(59);
+    var logicLoop = new THREEx.PhysicsLoop(30);
     logicLoop.add(this.processGameLogic.bind(this));
     logicLoop.start();
 };

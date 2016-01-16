@@ -20,3 +20,5 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.customUpdate = function(){};
+
+BaseActor.prototype.playerUpdate = function(){};

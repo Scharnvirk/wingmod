@@ -12,22 +12,6 @@ function GameWorld(config){
 
 GameWorld.extend(p2.World);
 
-// GameWorld.prototype.makeUpdateData = function(){
-//     var updateData = [];
-//     this.bodies.forEach(function(body){
-//         updateData.push([body.storageId, body.classId, body.position[0], body.position[1], body.angle]);
-//     });
-//     return updateData;
-// };
-
-// GameWorld.prototype.makeUpdateData = function(){
-//     var rand = Utils.rand(1,100);
-//     for(let i = 0; i < 50000; i++){
-//         this.testArray[i] = i*rand+3;
-//     }
-//     return this.testArray;
-// };
-
 //format: [body.storageId, body.classId, body.position[0], body.position[1], body.angle]
 GameWorld.prototype.makeUpdateData = function(){
     var transferArray = this.transferArray;

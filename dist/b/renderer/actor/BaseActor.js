@@ -1,15 +1,27 @@
 "use strict";
 
 function BaseActor(configArray) {
-    this.updateFromLogic(configArray);
-
     this.positionZ = 10;
+
+    this.position = new Float32Array([0, 0]);
+    this.angle = 0;
+
+    this.logicPosition = new Float32Array([0, 0]);
+    this.logicPreviousPosition = new Float32Array([0, 0]);
+    this.logicAngle = 0;
+    this.logicPreviousAngle = 0;
+
+    this.updateFromLogic(configArray);
 
     this.mesh = this.createMesh();
     this.light = this.createLight();
 }
 
-BaseActor.prototype.update = function () {
+BaseActor.prototype.update = function (delta) {
+    this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
+    this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
+    this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
+
     if (this.mesh) {
         this.mesh.update();
     }
@@ -20,8 +32,13 @@ BaseActor.prototype.update = function () {
 };
 
 BaseActor.prototype.updateFromLogic = function (configArray) {
-    this.position = [configArray[2] || 0, configArray[3] || 0];
-    this.angle = configArray[4] || 0;
+    this.logicPreviousPosition[0] = this.logicPosition[0];
+    this.logicPreviousPosition[1] = this.logicPosition[1];
+    this.logicPreviousAngle = this.logicAngle;
+
+    this.logicPosition[0] = configArray[2] || 0;
+    this.logicPosition[1] = configArray[3] || 0;
+    this.logicAngle = configArray[4] || 0;
 };
 
 BaseActor.prototype.createMesh = function () {

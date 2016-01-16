@@ -2,8 +2,8 @@
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TopDownControls = function TopDownControls(domElement) {
-    _classCallCheck(this, TopDownControls);
+var InputListener = function InputListener(domElement) {
+    _classCallCheck(this, InputListener);
 
     this.scrollDuration = 4;
     this.scrollFallOffPercent = 10;
@@ -13,7 +13,7 @@ var TopDownControls = function TopDownControls(domElement) {
         this.domElement.setAttribute('tabindex', -1);
     }
 
-    this.moveState = {};
+    this.inputState = Object.create(null);
 
     this.keys = {
         87: 'w',
@@ -30,7 +30,7 @@ var TopDownControls = function TopDownControls(domElement) {
     };
 
     Object.keys(this.keys).forEach((function (key) {
-        this.moveState[this.keys[key]] = 0;
+        this.inputState[this.keys[key]] = 0;
     }).bind(this));
 
     this.keydown = function (event) {
@@ -38,19 +38,19 @@ var TopDownControls = function TopDownControls(domElement) {
             return;
         }
         if (this.keys.hasOwnProperty(event.keyCode)) {
-            this.moveState[this.keys[event.keyCode]] += 1;
+            this.inputState[this.keys[event.keyCode]] = 1;
         }
     };
 
     this.keyup = function (event) {
         if (this.keys.hasOwnProperty(event.keyCode)) {
-            this.moveState[this.keys[event.keyCode]] = 0;
+            this.inputState[this.keys[event.keyCode]] = 0;
         }
     };
 
     this.mouseWheel = function (event) {
-        this.moveState.scrollUp = event.deltaY > 0 ? this.scrollDuration : 0;
-        this.moveState.scrollDown = event.deltaY < 0 ? this.scrollDuration : 0;
+        this.inputState.scrollUp = event.deltaY > 0 ? this.scrollDuration : 0;
+        this.inputState.scrollDown = event.deltaY < 0 ? this.scrollDuration : 0;
     };
 
     this.handleEvent = function (event) {
@@ -69,20 +69,20 @@ var TopDownControls = function TopDownControls(domElement) {
         event.preventDefault();
     }
 
-    this.update = function (delta) {
-        Object.keys(this.moveState).forEach((function (key) {
+    this.update = function () {
+        for (var key in Object.keys(this.inputState)) {
             switch (key) {
                 case 'scrollUp':
                 case 'scrollDown':
-                    if (this.moveState[key] > 0) {
-                        this.moveState[key] *= 1 - this.scrollFallOffPercent / 100;
+                    if (this.inputState[key] > 0) {
+                        this.inputState[key] *= 1 - this.scrollFallOffPercent / 100;
                     }
-                    if (this.moveState[key] < 0.5) {
-                        this.moveState[key] = 0;
+                    if (this.inputState[key] < 0.5) {
+                        this.inputState[key] = 0;
                     }
                     break;
             }
-        }).bind(this));
+        }
     };
 
     this.dispose = function () {
@@ -101,4 +101,4 @@ var TopDownControls = function TopDownControls(domElement) {
     window.addEventListener('keydown', _keydown, false);
     window.addEventListener('keyup', _keyup, false);
 };
-//# sourceMappingURL=Controls.js.map
+//# sourceMappingURL=InputListener.js.map

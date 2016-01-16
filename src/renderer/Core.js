@@ -13,7 +13,7 @@ function Core(logicCore){
 
 Core.prototype.initRenderer = function(){
     this.renderer = this.makeRenderer();
-    this.controls = new TopDownControls( this.renderer.domElement );
+
     this.camera = this.makeCamera();
     this.scene = this.makeScene();
     this.scene.add(this.camera);
@@ -21,8 +21,12 @@ Core.prototype.initRenderer = function(){
     this.stats = new Stats();
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.top = '0px';
-    this.actorManager = new ActorManager({scene: this.scene});
+    this.actorManager = new ActorManager({scene: this.scene, core: this});
     this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
+
+    this.inputListener = new InputListener( this.renderer.domElement );
+    this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
+
     this.gameScene = new GameScene({
         core: this,
         scene: this.scene,
@@ -95,7 +99,8 @@ Core.prototype.continueInit = function(){
 Core.prototype.render = function(){
     this.gameScene.update();
     this.actorManager.update();
-    this.controls.update();
+    this.inputListener.update();
+    this.controlsHandler.update();
     this.camera.update();
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);

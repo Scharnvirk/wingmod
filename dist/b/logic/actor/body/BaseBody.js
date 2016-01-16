@@ -7,6 +7,9 @@ function BaseBody(config) {
     config.position = config.position || [0, 0];
     config.angle = Utils.degToRad(config.angle || 0);
 
+    config.sizeX = config.sizeX || 5;
+    config.sizeY = config.sizeY || 5;
+
     Object.assign(this, config);
 
     this.createShape();
@@ -15,6 +18,6 @@ function BaseBody(config) {
 BaseBody.extend(p2.Body);
 
 BaseBody.prototype.createShape = function () {
-    this.addShape(new p2.Box({ height: 5, width: 5 }));
+    this.addShape(new p2.Box({ height: this.sizeX, width: this.sizeY }));
 };
 //# sourceMappingURL=BaseBody.js.map

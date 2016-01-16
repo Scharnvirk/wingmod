@@ -74,7 +74,5 @@ class GameScene {
         }
     }
 
-    update(){
-
-    }
+    update(){}
 }
