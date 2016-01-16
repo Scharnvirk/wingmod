@@ -29,7 +29,11 @@ BaseActor.prototype.update = function (delta) {
     if (this.light) {
         this.light.update();
     }
+
+    this.customUpdate(delta);
 };
+
+BaseActor.prototype.customUpdate = function () {};
 
 BaseActor.prototype.updateFromLogic = function (configArray) {
     this.logicPreviousPosition[0] = this.logicPosition[0];

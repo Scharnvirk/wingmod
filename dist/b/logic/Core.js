@@ -12,7 +12,7 @@ function Core(worker) {
     this.logicTicks = 0;
 
     setInterval(function () {
-        console.log('logicTicks: ', _this.logicTicks);
+        //console.log('logicTicks: ', this.logicTicks);
         _this.logicTicks = 0;
     }, 1000);
 }

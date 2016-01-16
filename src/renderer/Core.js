@@ -87,7 +87,7 @@ Core.prototype.continueInit = function(){
     this.gameScene.make();
 
     setInterval(()=>{
-        console.log('renderTicks: ', this.renderTicks);
+        //console.log('renderTicks: ', this.renderTicks);
         this.renderTicks = 0;
     }, 1000);
 
@@ -97,47 +97,12 @@ Core.prototype.continueInit = function(){
 };
 
 Core.prototype.render = function(){
-    this.gameScene.update();
-    this.actorManager.update();
     this.inputListener.update();
     this.controlsHandler.update();
+    this.gameScene.update();
+    this.actorManager.update();
     this.camera.update();
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
 };
-
-/*
-interpolacja do ogarniecia!!!
-World.prototype.step = function(dt,timeSinceLastCalled,maxSubSteps){
-    maxSubSteps = maxSubSteps || 10;
-    timeSinceLastCalled = timeSinceLastCalled || 0;
-
-    if(timeSinceLastCalled === 0){ // Fixed, simple stepping
-
-        this.internalStep(dt);
-
-        // Increment time
-        this.time += dt;
-
-    } else {
-
-        this.accumulator += timeSinceLastCalled;
-        var substeps = 0;
-        while (this.accumulator >= dt && substeps < maxSubSteps) {
-            // Do fixed steps to catch up
-            this.internalStep(dt);
-            this.time += dt;
-            this.accumulator -= dt;
-            substeps++;
-        }
-
-        var t = (this.accumulator % dt) / dt;
-        for(var j=0; j!==this.bodies.length; j++){
-            var b = this.bodies[j];
-            vec2.lerp(b.interpolatedPosition, b.previousPosition, b.position, t);
-            b.interpolatedAngle = b.previousAngle + t * (b.angle - b.previousAngle);
-        }
-    }
-};
-*/

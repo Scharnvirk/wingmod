@@ -19,7 +19,7 @@ BaseActor.prototype.update = function(delta){
     this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
     this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
-    
+
     if (this.mesh) {
         this.mesh.update();
     }
@@ -27,7 +27,11 @@ BaseActor.prototype.update = function(delta){
     if (this.light){
         this.light.update();
     }
+
+    this.customUpdate(delta);
 };
+
+BaseActor.prototype.customUpdate = function(){};
 
 BaseActor.prototype.updateFromLogic = function(configArray){
     this.logicPreviousPosition[0] = this.logicPosition[0];

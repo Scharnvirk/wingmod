@@ -1,19 +1,8 @@
 class GameScene {
     constructor(config) {
         Object.assign(this, config);
-
         this.lightCounter = 0;
-
-        // var radius = 5;
-        // var segments = 16;
-        // var rings = 16;
-        //
-        // this.sphereGeometry =  new THREE.SphereGeometry( 1, 32, 16, 0, Math.PI );
     }
-
-    // makeSphere (sphereMaterial, _radius) {
-    //     return new THREE.Mesh(this.sphereGeometry, sphereMaterial );
-    // }
 
     makeWalls () {
         var walls = [];

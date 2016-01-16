@@ -14,8 +14,9 @@ function ActorManager(config){
 }
 
 ActorManager.prototype.update = function(){
+    var delta = ((Date.now() - this.currentPhysicsTime) / (this.currentPhysicsTime - this.lastPhysicsTime));
     for (var actor in this.storage) {
-        this.storage[actor].update((Date.now() - this.currentPhysicsTime) / (this.currentPhysicsTime - this.lastPhysicsTime));
+        this.storage[actor].update(isFinite(delta) ? Math.min(delta, 1) : 0);
     }
 };
 
