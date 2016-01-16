@@ -4,6 +4,8 @@ function BaseMesh(config) {
     THREE.Mesh.apply(this, arguments);
     this.followActor = true;
     this.angleOffset = 0;
+    //this.frustumCulled = false;
+    //this.rotationAutoUpdate = false;
 
     config.scaleX = config.scaleX || 1;
     config.scaleY = config.scaleY || 1;

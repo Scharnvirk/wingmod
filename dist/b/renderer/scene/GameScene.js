@@ -18,11 +18,11 @@ var GameScene = (function () {
             var walls = [];
             var wall;
 
-            var material = new THREE.MeshLambertMaterial({
+            var material = new THREE.MeshPhongMaterial({
                 color: 0xffffff
             });
 
-            var wallGeometry = new THREE.BoxGeometry(10, 100, 5, 20, 20);
+            var wallGeometry = new THREE.BoxGeometry(10, 100, 10);
 
             for (var i = 0; i < 100; i++) {
                 wall = new THREE.Mesh(wallGeometry, material);
@@ -47,8 +47,8 @@ var GameScene = (function () {
         value: function make() {
 
             var combine = new THREE.Geometry();
-            var geometry = new THREE.PlaneGeometry(1000, 1000, 200, 200);
-            var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            var geometry = new THREE.PlaneGeometry(1000, 1000);
+            var material = new THREE.MeshPhongMaterial({ color: 0xffffff });
             var floor = new THREE.Mesh(geometry, material);
 
             floor.updateMatrix();

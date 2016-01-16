@@ -51,8 +51,8 @@ Core.prototype.makeScene = function(camera) {
 Core.prototype.makeRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap;
+    //renderer.shadowMap.enabled = true;
+    //renderer.shadowMap.type = THREE.BasicShadowMap;
     return renderer;
 };
 
