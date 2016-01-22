@@ -36,8 +36,8 @@ class GameScene {
     make() {
 
         var combine = new THREE.Geometry();
-            var geometry = new THREE.PlaneGeometry(1000, 1000);
-            var material = new THREE.MeshPhongMaterial({ color: 0xffffff });
+            var geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
+            var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
             var floor = new THREE.Mesh(geometry, material);
 
         floor.updateMatrix();

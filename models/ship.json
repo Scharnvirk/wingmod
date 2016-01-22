@@ -36,7 +36,7 @@
       "colorSpecular": [0.5,0.5,0.5],
       "DbgIndex": 0,
       "transparent": false,
-      "shading": "phong",
+      "shading": "lambert",
       "depthTest": true,
       "colorDiffuse": [0.690196,0.690196,0.690196]
   }]
