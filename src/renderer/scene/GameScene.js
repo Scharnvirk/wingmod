@@ -56,7 +56,7 @@ class GameScene {
         this.emergencyLight.position.set( 0, 0, 50 );
         this.scene.add( this.emergencyLight );
 
-        for (let i = 0; i < 14; i++){
+        for (let i = 0; i < 5; i++){
             let l =  new THREE.PointLight( 0xffffff, 1, 100 );
             l.position.set(Utils.rand(-200,200), Utils.rand(-200,200), 20);
             this.scene.add(l);
