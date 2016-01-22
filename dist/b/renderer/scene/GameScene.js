@@ -28,7 +28,7 @@ var GameScene = (function () {
                 wall = new THREE.Mesh(wallGeometry, material);
                 wall.position.x = Utils.rand(-300, 300);
                 wall.position.y = Utils.rand(-300, 300);
-                wall.position.z = 0;
+                wall.position.z = Utils.rand(0, 5);
                 wall.rotateZ(Utils.degToRad(Utils.rand(0, 360)));
                 walls.push(wall);
             }
@@ -67,7 +67,7 @@ var GameScene = (function () {
             this.emergencyLight.position.set(0, 0, 50);
             this.scene.add(this.emergencyLight);
 
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 14; i++) {
                 var l = new THREE.PointLight(0xffffff, 1, 100);
                 l.position.set(Utils.rand(-200, 200), Utils.rand(-200, 200), 20);
                 this.scene.add(l);

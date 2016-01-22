@@ -9,10 +9,11 @@ function Core(worker) {
     this.scene = new GameScene({ world: this.world, actorManager: this.actorManager });
     this.startGameLoop();
     this.scene.fillScene();
+
     this.logicTicks = 0;
 
     setInterval(function () {
-        //console.log('logicTicks: ', this.logicTicks);
+        console.log('logicTicks: ', _this.logicTicks);
         _this.logicTicks = 0;
     }, 1000);
 }
@@ -25,8 +26,9 @@ Core.prototype.createWorld = function () {
 };
 
 Core.prototype.processGameLogic = function () {
-    this.world.step(1 / 30);
     this.actorManager.update(this.renderBus.inputState);
+    this.world.step(1 / 30);
+
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
     this.logicTicks++;
 };

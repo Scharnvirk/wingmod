@@ -18,7 +18,7 @@ class GameScene {
             wall = new THREE.Mesh(wallGeometry,material);
             wall.position.x = Utils.rand(-300,300);
             wall.position.y = Utils.rand(-300,300);
-            wall.position.z = 0;
+            wall.position.z = Utils.rand(0,5);
             wall.rotateZ(Utils.degToRad(Utils.rand(0,360)));
             walls.push(wall);
         }
@@ -56,7 +56,7 @@ class GameScene {
         this.emergencyLight.position.set( 0, 0, 50 );
         this.scene.add( this.emergencyLight );
 
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < 14; i++){
             let l =  new THREE.PointLight( 0xffffff, 1, 100 );
             l.position.set(Utils.rand(-200,200), Utils.rand(-200,200), 20);
             this.scene.add(l);

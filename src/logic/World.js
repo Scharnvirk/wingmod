@@ -12,7 +12,6 @@ function GameWorld(config){
 
 GameWorld.extend(p2.World);
 
-//format: [body.storageId, body.classId, body.position[0], body.position[1], body.angle]
 GameWorld.prototype.makeUpdateData = function(){
     var transferArray = this.transferArray;
     for(let i = 0; i < this.bodies.length; i ++){

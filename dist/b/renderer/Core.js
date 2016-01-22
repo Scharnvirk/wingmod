@@ -52,8 +52,6 @@ Core.prototype.makeScene = function (camera) {
 Core.prototype.makeRenderer = function () {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    //renderer.shadowMap.enabled = true;
-    //renderer.shadowMap.type = THREE.BasicShadowMap;
     return renderer;
 };
 
@@ -89,7 +87,7 @@ Core.prototype.continueInit = function () {
     this.gameScene.make();
 
     setInterval(function () {
-        //console.log('renderTicks: ', this.renderTicks);
+        console.log('renderTicks: ', _this.renderTicks);
         _this.renderTicks = 0;
     }, 1000);
 

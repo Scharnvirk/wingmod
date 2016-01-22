@@ -22,11 +22,4 @@ if('function'===typeof importScripts){
     importScripts('../renderer/actorManagement/ActorFactory.js');
 
     self.core = new Core(self);
-
-    //
-    // self.onmessage = function(message) {
-    //     console.log("MESSAGE IN LOGIC CORE", message);
-    //     self.postMessage(message.data);
-    // };
-
 }
