@@ -67,8 +67,8 @@ var GameScene = (function () {
             this.emergencyLight.position.set(0, 0, 50);
             this.scene.add(this.emergencyLight);
 
-            for (var i = 0; i < 15; i++) {
-                var l = new THREE.PointLight(0xffffff, 1, 1);
+            for (var i = 0; i < 5; i++) {
+                var l = new THREE.PointLight(0xffffff, 1, 100);
                 l.position.set(Utils.rand(-200, 200), Utils.rand(-200, 200), 20);
                 this.scene.add(l);
             }
