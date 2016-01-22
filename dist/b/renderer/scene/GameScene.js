@@ -48,7 +48,7 @@ var GameScene = (function () {
 
             var combine = new THREE.Geometry();
             var geometry = new THREE.PlaneGeometry(1000, 1000);
-            var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            var material = new THREE.MeshPhongMaterial({ color: 0xffffff });
             var floor = new THREE.Mesh(geometry, material);
 
             floor.updateMatrix();
@@ -67,7 +67,7 @@ var GameScene = (function () {
             this.emergencyLight.position.set(0, 0, 50);
             this.scene.add(this.emergencyLight);
 
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 10; i++) {
                 var l = new THREE.PointLight(0xffffff, 1, 100);
                 l.position.set(Utils.rand(-200, 200), Utils.rand(-200, 200), 20);
                 this.scene.add(l);

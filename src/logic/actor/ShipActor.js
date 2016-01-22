@@ -2,7 +2,7 @@ function ShipActor(configArray){
     configArray = configArray || [];
     BaseActor.apply(this, arguments);
 
-    this.acceleration = 4000;
+    this.acceleration = 10000;
     this.turnSpeed = 2;
 
     this.thrust = 0;
@@ -13,12 +13,12 @@ ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createBody = function(){
     return new BaseBody({
+        shape: new p2.Convex({vertices: [[-15, 8], [-6, -2], [6, -2], [15, 8], [15,14], [0, 20], [-15, 14] ]}),
         actor: this,
         mass: 40,
         damping: 0.75,
         angularDamping: 0,
-        sizeX: 20,
-        sizeY: 20
+        inertia: 10
     });
 };
 

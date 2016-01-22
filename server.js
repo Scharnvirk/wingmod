@@ -67,11 +67,13 @@ var SampleApp = function() {
 		self.zcache['/dist/b/renderer/actor/LightActor.js'] = fs.readFileSync('./dist/b/renderer/actor/LightActor.js');
 		self.zcache['/dist/b/renderer/actor/ShipActor.js'] = fs.readFileSync('./dist/b/renderer/actor/ShipActor.js');
 		self.zcache['/dist/b/renderer/actor/MookActor.js'] = fs.readFileSync('./dist/b/renderer/actor/MookActor.js');
+        self.zcache['/dist/b/renderer/actor/WallActor.js'] = fs.readFileSync('./dist/b/renderer/actor/WallActor.js');
 
         self.zcache['/dist/b/renderer/actor/light/BaseLight.js'] = fs.readFileSync('./dist/b/renderer/actor/light/BaseLight.js');
 
 		self.zcache['/dist/b/renderer/actor/mesh/BaseMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/BaseMesh.js');
 		self.zcache['/dist/b/renderer/actor/mesh/ShipMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/ShipMesh.js');
+        self.zcache['/dist/b/renderer/actor/mesh/WallMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/WallMesh.js');
 
 		self.zcache['/dist/b/renderer/actorManagement/ActorFactory.js'] = fs.readFileSync('./dist/b/renderer/actorManagement/ActorFactory.js');
 		self.zcache['/dist/b/renderer/actorManagement/ActorManager.js'] = fs.readFileSync('./dist/b/renderer/actorManagement/ActorManager.js');
@@ -95,6 +97,7 @@ var SampleApp = function() {
 		self.zcache['/dist/b/logic/actor/LightActor.js'] = fs.readFileSync('./dist/b/logic/actor/LightActor.js');
 		self.zcache['/dist/b/logic/actor/ShipActor.js'] = fs.readFileSync('./dist/b/logic/actor/ShipActor.js');
 		self.zcache['/dist/b/logic/actor/MookActor.js'] = fs.readFileSync('./dist/b/logic/actor/MookActor.js');
+        self.zcache['/dist/b/logic/actor/WallActor.js'] = fs.readFileSync('./dist/b/logic/actor/WallActor.js');
 
         self.zcache['/dist/b/logic/actor/body/BaseBody.js'] = fs.readFileSync('./dist/b/logic/actor/body/BaseBody.js');
     };
@@ -179,11 +182,13 @@ var SampleApp = function() {
 		self.routes['/dist/b/renderer/actor/LightActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/LightActor.js') );};
 		self.routes['/dist/b/renderer/actor/ShipActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/ShipActor.js') );};
 		self.routes['/dist/b/renderer/actor/MookActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/MookActor.js') );};
+        self.routes['/dist/b/renderer/actor/WallActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/WallActor.js') );};
 
         self.routes['/dist/b/renderer/actor/light/BaseLight.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/light/BaseLight.js') );};
 
 		self.routes['/dist/b/renderer/actor/mesh/BaseMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/BaseMesh.js') );};
 		self.routes['/dist/b/renderer/actor/mesh/ShipMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/ShipMesh.js') );};
+        self.routes['/dist/b/renderer/actor/mesh/WallMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/WallMesh.js') );};
 
 		self.routes['/dist/b/renderer/actorManagement/ActorFactory.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actorManagement/ActorFactory.js') );};
 		self.routes['/dist/b/renderer/actorManagement/ActorManager.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actorManagement/ActorManager.js') );};
@@ -206,6 +211,7 @@ var SampleApp = function() {
 		self.routes['/dist/b/logic/actor/LightActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/LightActor.js') );};
 		self.routes['/dist/b/logic/actor/ShipActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/ShipActor.js') );};
 		self.routes['/dist/b/logic/actor/MookActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/MookActor.js') );};
+        self.routes['/dist/b/logic/actor/WallActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/WallActor.js') );};
 
         self.routes['/dist/b/logic/actor/body/BaseBody.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/body/BaseBody.js') );};
 

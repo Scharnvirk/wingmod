@@ -7,9 +7,13 @@ function GameScene(config) {
 }
 
 GameScene.prototype.fillScene = function () {
-    for (var i = 0; i < 1000; i++) {
-        this.actorManager.addNew([ActorFactory.MOOK_ACTOR, Utils.rand(-200, 200), Utils.rand(-200, 200), Utils.rand(0, 360)]);
+    for (var i = 0; i < 600; i++) {
+        this.actorManager.addNew([ActorFactory.MOOK_ACTOR, Utils.rand(-150, 150), Utils.rand(-150, 150), Utils.rand(0, 360)]);
     }
+    this.actorManager.addNew([ActorFactory.WALL_ACTOR, 0, -200, 0]);
+    this.actorManager.addNew([ActorFactory.WALL_ACTOR, 0, 200, 0]);
+    this.actorManager.addNew([ActorFactory.WALL_ACTOR, 200, 0, Math.PI / 2]);
+    this.actorManager.addNew([ActorFactory.WALL_ACTOR, -200, 0, Math.PI / 2]);
     var playerActor = this.actorManager.addNew([ActorFactory.SHIP_ACTOR, 0, 0, 0]);
     this.actorManager.setPlayerActor(playerActor);
     console.log("scene complete");

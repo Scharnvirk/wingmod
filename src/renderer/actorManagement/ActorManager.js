@@ -5,6 +5,8 @@ function ActorManager(config){
     this.factory = config.factory || new ActorFactory();
     this.framerate = config.framerate || 60;
 
+    this.DELTA_SMOOTHNESS = 0;
+
     Object.assign(this, config);
 
     this.currentPhysicsTime = Date.now();
@@ -15,8 +17,9 @@ function ActorManager(config){
 
 ActorManager.prototype.update = function(){
     var delta = ((Date.now() - this.currentPhysicsTime) / (this.currentPhysicsTime - this.lastPhysicsTime));
+
     for (var actor in this.storage) {
-        this.storage[actor].update(isFinite(delta) ? Math.min(delta, 1) : 0);
+        this.storage[actor].update( isFinite(delta) ? Math.min(delta, 1) : 0 );
     }
 };
 

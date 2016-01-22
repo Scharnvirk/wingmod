@@ -10,6 +10,8 @@ function BaseBody(config) {
     config.sizeX = config.sizeX || 5;
     config.sizeY = config.sizeY || 5;
 
+    config.shape = config.shape || new p2.Box({ height: config.sizeY, width: config.sizeX });
+
     Object.assign(this, config);
 
     this.createShape();
@@ -18,6 +20,6 @@ function BaseBody(config) {
 BaseBody.extend(p2.Body);
 
 BaseBody.prototype.createShape = function () {
-    this.addShape(new p2.Box({ height: this.sizeX, width: this.sizeY }));
+    this.addShape(this.shape);
 };
 //# sourceMappingURL=BaseBody.js.map

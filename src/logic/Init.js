@@ -15,6 +15,7 @@ if('function'===typeof importScripts){
     importScripts('../logic/actor/MookActor.js');
     importScripts('../logic/actor/ShipActor.js');
     importScripts('../logic/actor/LightActor.js');
+    importScripts('../logic/actor/WallActor.js');
 
     importScripts('../logic/actor/body/BaseBody.js');
 

@@ -2,8 +2,8 @@ function MookActor(configArray){
     configArray = configArray || [];
     BaseActor.apply(this, arguments);
 
-    this.acceleration = 40;
-    this.turnSpeed = 0.3;
+    this.acceleration = 200;
+    this.turnSpeed = 0.8;
 
     this.thrust = 0;
     this.rotationForce = 0;
@@ -13,10 +13,12 @@ MookActor.extend(BaseActor);
 
 MookActor.prototype.createBody = function(){
     return new BaseBody({
+        shape: new p2.Convex({vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]]}),
         actor: this,
         mass: 1,
         damping: 0.75,
-        angularDamping: 0
+        angularDamping: 0,
+        inertia: 10
     });
 };
 

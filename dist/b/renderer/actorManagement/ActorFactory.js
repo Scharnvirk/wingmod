@@ -8,12 +8,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function ActorFactory() {
     var _actorMap;
 
-    this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, ActorFactory.SHIP_ACTOR, ShipActor), _defineProperty(_actorMap, ActorFactory.MOOK_ACTOR, MookActor), _defineProperty(_actorMap, ActorFactory.LIGHT_ACTOR, LightActor), _actorMap);
+    this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, ActorFactory.SHIP_ACTOR, ShipActor), _defineProperty(_actorMap, ActorFactory.MOOK_ACTOR, MookActor), _defineProperty(_actorMap, ActorFactory.LIGHT_ACTOR, LightActor), _defineProperty(_actorMap, ActorFactory.WALL_ACTOR, WallActor), _actorMap);
 }
 
 ActorFactory.SHIP_ACTOR = 1;
 ActorFactory.MOOK_ACTOR = 2;
 ActorFactory.LIGHT_ACTOR = 3;
+ActorFactory.WALL_ACTOR = 4;
 
 //actorDataArray format is: [classId, positionX, positionY, angle, velocityX, velocityY]
 
