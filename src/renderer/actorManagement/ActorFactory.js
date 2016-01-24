@@ -8,7 +8,6 @@ function ActorFactory(){
         [ActorFactory.LIGHT_ACTOR]: LightActor,
         [ActorFactory.WALL_ACTOR]: WallActor
     };
-
 }
 
 ActorFactory.SHIP_ACTOR = 1;

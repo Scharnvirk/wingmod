@@ -5,7 +5,7 @@ function GameScene(config){
 }
 
 GameScene.prototype.fillScene = function(){
-    for (let i = 0; i < 500; i++){
+    for (let i = 0; i < 1000; i++){
         this.actorManager.addNew([ActorFactory.MOOK_ACTOR, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360)]);
     }
     this.actorManager.addNew([ActorFactory.WALL_ACTOR, 0, -200, 0]);

@@ -17,14 +17,26 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                mangle: false,
+                mangle: true,
                 compress: true,
                 sourceMap: true,
                 sourceMapName: 'dist/sourceMap.map'
             },
-            src: {
-                src : 'dist/b/**/*.js',
-                dest : 'dist/trig.min.js'
+            logic: {
+                src : ['dist/b/Utils.js','dist/b/renderer/actorManagement/ActorFactory.js','dist/b/logic/**/*.js'],
+                dest : 'dist/logic.min.js'
+            },
+            renderer: {
+                src : ['dist/b/Init.js','dist/b/Utils.js','dist/b/renderer/**/*.js'],
+                dest : 'dist/renderer.min.js'
+            },
+            logicInit: {
+                src : ['dist/b/LogicInit.js'],
+                dest : 'dist/logicInit.min.js'
+            },
+            deps: {
+                src : ['lib/**/*.js'],
+                dest : 'dist/deps.min.js'
             }
         }
     });

@@ -46,60 +46,23 @@ var SampleApp = function() {
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
 
+        self.zcache['./assets/particle.png'] = fs.readFileSync('./assets/particle.png');
+        self.zcache['./assets/perlin-512.png'] = fs.readFileSync('./assets/perlin-512.png');
+
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
 		self.zcache['/lib/utils/polyfills.js'] = fs.readFileSync('./lib/utils/polyfills.js');
         self.zcache['/lib/p2.min.js'] = fs.readFileSync('./lib/p2.min.js');
+        self.zcache['/lib/GPUParticleSystem.js'] = fs.readFileSync('./lib/GPUParticleSystem.js');
 
-        self.zcache['/dist/b/Init.js'] = fs.readFileSync('./dist/b/Init.js');
-        self.zcache['/dist/b/Utils.js'] = fs.readFileSync('./dist/b/Utils.js');
+        self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
 
-        self.zcache['/dist/b/renderer/Camera.js'] = fs.readFileSync('./dist/b/renderer/Camera.js');
-		self.zcache['/dist/b/renderer/ControlsHandler.js'] = fs.readFileSync('./dist/b/renderer/ControlsHandler.js');
-        self.zcache['/dist/b/renderer/InputListener.js'] = fs.readFileSync('./dist/b/renderer/InputListener.js');
-		self.zcache['/dist/b/renderer/Core.js'] = fs.readFileSync('./dist/b/renderer/Core.js');
-		self.zcache['/dist/b/renderer/LogicBus.js'] = fs.readFileSync('./dist/b/renderer/LogicBus.js');
-
-        self.zcache['/dist/b/renderer/scene/GameScene.js'] = fs.readFileSync('./dist/b/renderer/scene/GameScene.js');
-
-		self.zcache['/dist/b/renderer/actor/BaseActor.js'] = fs.readFileSync('./dist/b/renderer/actor/BaseActor.js');
-		self.zcache['/dist/b/renderer/actor/LightActor.js'] = fs.readFileSync('./dist/b/renderer/actor/LightActor.js');
-		self.zcache['/dist/b/renderer/actor/ShipActor.js'] = fs.readFileSync('./dist/b/renderer/actor/ShipActor.js');
-		self.zcache['/dist/b/renderer/actor/MookActor.js'] = fs.readFileSync('./dist/b/renderer/actor/MookActor.js');
-        self.zcache['/dist/b/renderer/actor/WallActor.js'] = fs.readFileSync('./dist/b/renderer/actor/WallActor.js');
-
-        self.zcache['/dist/b/renderer/actor/light/BaseLight.js'] = fs.readFileSync('./dist/b/renderer/actor/light/BaseLight.js');
-
-		self.zcache['/dist/b/renderer/actor/mesh/BaseMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/BaseMesh.js');
-		self.zcache['/dist/b/renderer/actor/mesh/ShipMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/ShipMesh.js');
-        self.zcache['/dist/b/renderer/actor/mesh/WallMesh.js'] = fs.readFileSync('./dist/b/renderer/actor/mesh/WallMesh.js');
-
-		self.zcache['/dist/b/renderer/actorManagement/ActorFactory.js'] = fs.readFileSync('./dist/b/renderer/actorManagement/ActorFactory.js');
-		self.zcache['/dist/b/renderer/actorManagement/ActorManager.js'] = fs.readFileSync('./dist/b/renderer/actorManagement/ActorManager.js');
-
-        self.zcache['/dist/b/renderer/modelRepo/ModelLoader.js'] = fs.readFileSync('./dist/b/renderer/modelRepo/ModelLoader.js');
-		self.zcache['/dist/b/renderer/modelRepo/ModelList.js'] = fs.readFileSync('./dist/b/renderer/modelRepo/ModelList.js');
-		self.zcache['/dist/b/renderer/modelRepo/ModelStore.js'] = fs.readFileSync('./dist/b/renderer/modelRepo/ModelStore.js');
-
-		self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
+        self.zcache['/dist/logicInit.min.js'] = fs.readFileSync('./dist/logicInit.min.js');
+        self.zcache['/dist/logic.min.js'] = fs.readFileSync('./dist/logic.min.js');
+        self.zcache['/dist/renderer.min.js'] = fs.readFileSync('./dist/renderer.min.js');
 
 
-        self.zcache['/dist/b/logic/Init.js'] = fs.readFileSync('./dist/b/logic/Init.js');
-        self.zcache['/dist/b/logic/Core.js'] = fs.readFileSync('./dist/b/logic/Core.js');
-        self.zcache['/dist/b/logic/GameScene.js'] = fs.readFileSync('./dist/b/logic/GameScene.js');
-        self.zcache['/dist/b/logic/RenderBus.js'] = fs.readFileSync('./dist/b/logic/RenderBus.js');
-        self.zcache['/dist/b/logic/World.js'] = fs.readFileSync('./dist/b/logic/World.js');
-
-        self.zcache['/dist/b/logic/actorManagement/ActorManager.js'] = fs.readFileSync('./dist/b/logic/actorManagement/ActorManager.js');
-
-        self.zcache['/dist/b/logic/actor/BaseActor.js'] = fs.readFileSync('./dist/b/logic/actor/BaseActor.js');
-		self.zcache['/dist/b/logic/actor/LightActor.js'] = fs.readFileSync('./dist/b/logic/actor/LightActor.js');
-		self.zcache['/dist/b/logic/actor/ShipActor.js'] = fs.readFileSync('./dist/b/logic/actor/ShipActor.js');
-		self.zcache['/dist/b/logic/actor/MookActor.js'] = fs.readFileSync('./dist/b/logic/actor/MookActor.js');
-        self.zcache['/dist/b/logic/actor/WallActor.js'] = fs.readFileSync('./dist/b/logic/actor/WallActor.js');
-
-        self.zcache['/dist/b/logic/actor/body/BaseBody.js'] = fs.readFileSync('./dist/b/logic/actor/body/BaseBody.js');
     };
 
     /**
@@ -160,61 +123,22 @@ var SampleApp = function() {
             res.send(self.cache_get('index.html') );
         };
 
+
+        self.routes['/assets/particle.png'] = function(req, res) {res.send(self.cache_get('/assets/particle.png') );};
+        self.routes['/assets/perlin-512.png'] = function(req, res) {res.send(self.cache_get('/assets/perlin-512.png') );};
+
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
 		self.routes['/lib/threex.loop.js'] = function(req, res) {res.send(self.cache_get('/lib/threex.loop.js') );};
 		self.routes['/lib/utils/polyfills.js'] = function(req, res) {res.send(self.cache_get('/lib/utils/polyfills.js') );};
         self.routes['/lib/p2.min.js'] = function(req, res) {res.send(self.cache_get('/lib/p2.min.js') );};
+        self.routes['/lib/GPUParticleSystem.js'] = function(req, res) {res.send(self.cache_get('/lib/GPUParticleSystem.js') );};
 
+        self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
 
-		self.routes['/dist/b/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/b/Init.js') );};
-        self.routes['/dist/b/Utils.js'] = function(req, res) {res.send(self.cache_get('/dist/b/Utils.js') );};
-
-        self.routes['/dist/b/renderer/Camera.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/Camera.js') );};
-        self.routes['/dist/b/renderer/ControlsHandler.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/ControlsHandler.js') );};
-        self.routes['/dist/b/renderer/InputListener.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/InputListener.js') );};
-		self.routes['/dist/b/renderer/Core.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/Core.js') );};
-        self.routes['/dist/b/renderer/LogicBus.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/LogicBus.js') );};
-
-		self.routes['/dist/b/renderer/scene/GameScene.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/scene/GameScene.js') );};
-
-		self.routes['/dist/b/renderer/actor/BaseActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/BaseActor.js') );};
-		self.routes['/dist/b/renderer/actor/LightActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/LightActor.js') );};
-		self.routes['/dist/b/renderer/actor/ShipActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/ShipActor.js') );};
-		self.routes['/dist/b/renderer/actor/MookActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/MookActor.js') );};
-        self.routes['/dist/b/renderer/actor/WallActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/WallActor.js') );};
-
-        self.routes['/dist/b/renderer/actor/light/BaseLight.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/light/BaseLight.js') );};
-
-		self.routes['/dist/b/renderer/actor/mesh/BaseMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/BaseMesh.js') );};
-		self.routes['/dist/b/renderer/actor/mesh/ShipMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/ShipMesh.js') );};
-        self.routes['/dist/b/renderer/actor/mesh/WallMesh.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actor/mesh/WallMesh.js') );};
-
-		self.routes['/dist/b/renderer/actorManagement/ActorFactory.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actorManagement/ActorFactory.js') );};
-		self.routes['/dist/b/renderer/actorManagement/ActorManager.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/actorManagement/ActorManager.js') );};
-
-        self.routes['/dist/b/renderer/modelRepo/ModelLoader.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/modelRepo/ModelLoader.js') );};
-		self.routes['/dist/b/renderer/modelRepo/ModelList.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/modelRepo/ModelList.js') );};
-		self.routes['/dist/b/renderer/modelRepo/ModelStore.js'] = function(req, res) {res.send(self.cache_get('/dist/b/renderer/modelRepo/ModelStore.js') );};
-
-		self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
-
-        self.routes['/dist/b/logic/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/Init.js') );};
-        self.routes['/dist/b/logic/Core.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/Core.js') );};
-		self.routes['/dist/b/logic/GameScene.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/GameScene.js') );};
-        self.routes['/dist/b/logic/RenderBus.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/RenderBus.js') );};
-        self.routes['/dist/b/logic/World.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/World.js') );};
-
-        self.routes['/dist/b/logic/actorManagement/ActorManager.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actorManagement/ActorManager.js') );};
-
-        self.routes['/dist/b/logic/actor/BaseActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/BaseActor.js') );};
-		self.routes['/dist/b/logic/actor/LightActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/LightActor.js') );};
-		self.routes['/dist/b/logic/actor/ShipActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/ShipActor.js') );};
-		self.routes['/dist/b/logic/actor/MookActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/MookActor.js') );};
-        self.routes['/dist/b/logic/actor/WallActor.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/WallActor.js') );};
-
-        self.routes['/dist/b/logic/actor/body/BaseBody.js'] = function(req, res) {res.send(self.cache_get('/dist/b/logic/actor/body/BaseBody.js') );};
-
+		self.routes['/dist/logicInit.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logicInit.min.js') );};
+        self.routes['/dist/logic.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logic.min.js') );};
+        self.routes['/dist/renderer.min.js'] = function(req, res) {res.send(self.cache_get('/dist/renderer.min.js') );};
     };
 
 

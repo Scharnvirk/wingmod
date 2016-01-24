@@ -28,7 +28,7 @@ BaseActor.prototype.update = function(delta){
         this.light.update();
     }
 
-    this.customUpdate(delta);
+    this.customUpdate();
 };
 
 BaseActor.prototype.customUpdate = function(){};

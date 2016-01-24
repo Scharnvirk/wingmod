@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/renderer/modelRepo/ModelList.js"],"names":[],"mappings":";;AAAA,IAAI,SAAS,GAAG;AACZ,UAAM,EAAE,CACJ,mBAAmB,CACtB;CACJ,CAAC","file":"ModelList.js","sourcesContent":["var ModelList = {\r\n    models: [\r\n        '/models/ship.json'\r\n    ]\r\n};\r\n"]}
