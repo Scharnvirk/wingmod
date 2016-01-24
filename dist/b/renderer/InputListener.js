@@ -70,7 +70,7 @@ var InputListener = function InputListener(domElement) {
     }
 
     this.update = function () {
-        for (var key in Object.keys(this.inputState)) {
+        for (var key in this.inputState) {
             switch (key) {
                 case 'scrollUp':
                 case 'scrollDown':

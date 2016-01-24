@@ -66,7 +66,7 @@ class InputListener{
         }
 
         this.update = function () {
-            for (let key in Object.keys(this.inputState)){
+            for (let key in this.inputState){
                 switch(key){
                     case 'scrollUp':
                     case 'scrollDown':

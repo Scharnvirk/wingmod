@@ -7,6 +7,7 @@ function Core(logicCore) {
     this.FRAMERATE = 60;
     this.renderTicks = 0;
     this.logicWorker = logicCore;
+    this.resolutionCoefficient = 1;
 
     this.initRenderer();
     this.initAssets();
@@ -18,7 +19,7 @@ Core.prototype.initRenderer = function () {
     this.camera = this.makeCamera();
     this.scene = this.makeScene();
     this.scene.add(this.camera);
-    this.autoResize(this.renderer, this.camera);
+    this.autoResize();
     this.stats = new Stats();
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.top = '0px';
@@ -27,6 +28,8 @@ Core.prototype.initRenderer = function () {
 
     this.inputListener = new InputListener(this.renderer.domElement);
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
+
+    this.camera.inputListener = this.inputListener;
 
     this.gameScene = new GameScene({
         core: this,
@@ -55,11 +58,18 @@ Core.prototype.makeRenderer = function () {
     return renderer;
 };
 
-Core.prototype.autoResize = function (renderer, camera) {
+Core.prototype.applyResolutionCoefficient = function () {
+    this.renderer.setPixelRatio(this.resolutionCoefficient);
+    this.resetRenderer();
+    this.resetCamera();
+};
+
+Core.prototype.autoResize = function () {
+    var _this = this;
+
     var callback = function callback() {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+        _this.resetRenderer();
+        _this.resetCamera();
     };
     window.addEventListener('resize', callback, false);
     return {
@@ -67,6 +77,15 @@ Core.prototype.autoResize = function (renderer, camera) {
             window.removeEventListener('resize', callback);
         }
     };
+};
+
+Core.prototype.resetRenderer = function () {
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+};
+
+Core.prototype.resetCamera = function () {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
 };
 
 Core.prototype.initAssets = function () {
@@ -82,18 +101,27 @@ Core.prototype.onLoaded = function (event) {
 };
 
 Core.prototype.continueInit = function () {
-    var _this = this;
-
     this.gameScene.make();
 
-    setInterval(function () {
-        console.log('renderTicks: ', _this.renderTicks);
-        _this.renderTicks = 0;
-    }, 1000);
+    setInterval(this.onEachSecond.bind(this), 1000);
 
     var renderLoop = new THREEx.RenderingLoop();
     renderLoop.add(this.render.bind(this));
     renderLoop.start();
+};
+
+Core.prototype.onEachSecond = function () {
+    console.log('renderTicks: ', this.renderTicks);
+
+    if (this.renderTicks < 58 && this.resolutionCoefficient > 0.2) {
+        this.resolutionCoefficient -= 0.1;
+        this.applyResolutionCoefficient();
+    } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
+        this.resolutionCoefficient += 0.1;
+        this.applyResolutionCoefficient();
+    }
+
+    this.renderTicks = 0;
 };
 
 Core.prototype.render = function () {

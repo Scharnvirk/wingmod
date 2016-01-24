@@ -20,13 +20,13 @@ Camera.prototype.update = function(){
         this.position.y = this.actor.position[1];
     }
 
-    if(this.controls){
-        if (this.controls.moveState.scrollUp) {
-            this.position.z += this.controls.moveState.scrollUp;
+    if(this.inputListener){
+        if (this.inputListener.inputState.scrollUp) {
+            this.position.z += this.inputListener.inputState.scrollUp;
         }
 
-        if (this.controls.moveState.scrollDown) {
-            this.position.z -= this.controls.moveState.scrollDown;
+        if (this.inputListener.inputState.scrollDown) {
+            this.position.z -= this.inputListener.inputState.scrollDown;
         }
     }
 };
