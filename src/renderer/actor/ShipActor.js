@@ -10,7 +10,7 @@ function ShipActor(){
         colorRandomness: 0,
         turbulence: 0.5,
         lifetime: 3,
-        size: 8,
+        size: 4,
         sizeRandomness: 1
     };
 

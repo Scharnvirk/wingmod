@@ -10,7 +10,7 @@ function MookActor(){
         colorRandomness: 0,
         turbulence: 0.2,
         lifetime: 2,
-        size: 4,
+        size: 2,
         sizeRandomness: 1
     };
 

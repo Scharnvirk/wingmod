@@ -48,7 +48,7 @@ Core.prototype.makeCamera = function(inputListener) {
 
 Core.prototype.makeParticleSystem = function() {
     return new THREE.GPUParticleSystem({
-        maxParticles: 20000
+        maxParticles: 10000
     });
 };
 
