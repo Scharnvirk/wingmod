@@ -2,13 +2,16 @@ function ActorManager(config){
     config = config || {};
     this.storage = Object.create(null);
     this.scene = null;
-    this.factory = config.factory || new ActorFactory();
+    this.particleSystem = null;
     this.framerate = config.framerate || 60;
 
     this.DELTA_SMOOTHNESS = 0;
 
     Object.assign(this, config);
 
+    this.factory = config.factory || new ActorFactory({
+        particleSystem: this.particleSystem
+    });
     this.currentPhysicsTime = Date.now();
     this.lastPhysicsTime = Date.now()-1;
 

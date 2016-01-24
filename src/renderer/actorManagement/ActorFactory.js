@@ -1,7 +1,8 @@
 //This class is used also in the Logic worker!
 //create mess responsibly
 
-function ActorFactory(){
+function ActorFactory(actorDependencies){
+    this.actorDependencies = actorDependencies;
     this.actorMap = {
         [ActorFactory.SHIP_ACTOR]: ShipActor,
         [ActorFactory.MOOK_ACTOR]: MookActor,
@@ -18,5 +19,5 @@ ActorFactory.WALL_ACTOR = 4;
 //actorDataArray format is: [classId, positionX, positionY, angle, velocityX, velocityY]
 
 ActorFactory.prototype.create = function(actorDataArray){
-    return new this.actorMap[actorDataArray[0]](actorDataArray);
+    return new this.actorMap[actorDataArray[0]](actorDataArray, this.actorDependencies);
 };

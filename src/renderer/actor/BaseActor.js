@@ -1,4 +1,6 @@
-function BaseActor(configArray){
+function BaseActor(configArray, actorDependencies){
+    Object.assign(this, actorDependencies);
+
     this.positionZ = 10;
 
     this.position = new Float32Array([0,0]);

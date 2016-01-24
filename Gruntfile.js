@@ -33,10 +33,6 @@ module.exports = function (grunt) {
             logicInit: {
                 src : ['dist/b/LogicInit.js'],
                 dest : 'dist/logicInit.min.js'
-            },
-            deps: {
-                src : ['lib/**/*.js'],
-                dest : 'dist/deps.min.js'
             }
         }
     });

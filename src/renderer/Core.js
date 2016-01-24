@@ -14,21 +14,15 @@ function Core(logicCore){
 
 Core.prototype.initRenderer = function(){
     this.renderer = this.makeRenderer();
-
-    this.camera = this.makeCamera();
-    this.scene = this.makeScene();
-    this.scene.add(this.camera);
-    this.autoResize();
-    this.stats = new Stats();
-    this.stats.domElement.style.position = 'absolute';
-    this.stats.domElement.style.top = '0px';
-    this.actorManager = new ActorManager({scene: this.scene, core: this});
-    this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
-
     this.inputListener = new InputListener( this.renderer.domElement );
+    this.camera = this.makeCamera(this.inputListener);
+    this.particleSystem = this.makeParticleSystem();
+    this.scene = this.makeScene(this.particleSystem, this.camera);
+    this.actorManager = new ActorManager({scene: this.scene, core: this, particleSystem: this.particleSystem});
+    this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
+    this.startTime = Date.now();
 
-    this.camera.inputListener = this.inputListener;
 
     this.gameScene = new GameScene({
         core: this,
@@ -37,18 +31,32 @@ Core.prototype.initRenderer = function(){
         actorManager: this.actorManager
     });
 
+    this.stats = new Stats();
+    this.stats.domElement.style.position = 'absolute';
+    this.stats.domElement.style.top = '0px';
+    this.autoResize();
+
     document.body.appendChild( this.renderer.domElement );
     document.body.appendChild( this.stats.domElement );
 };
 
-Core.prototype.makeCamera = function() {
+Core.prototype.makeCamera = function(inputListener) {
     console.log('making camera');
-    var camera = new Camera({controls: this.controls});
+    var camera = new Camera({inputListener: inputListener});
     return camera;
 };
 
-Core.prototype.makeScene = function(camera) {
-    return new THREE.Scene();
+Core.prototype.makeParticleSystem = function() {
+    return new THREE.GPUParticleSystem({
+        maxParticles: 20000
+    });
+};
+
+Core.prototype.makeScene = function(particleSystem, camera) {
+    var scene = new THREE.Scene();
+    scene.add(particleSystem);
+    scene.add(camera);
+    return scene;
 };
 
 Core.prototype.makeRenderer = function() {
@@ -108,7 +116,7 @@ Core.prototype.continueInit = function(){
 };
 
 Core.prototype.onEachSecond = function(){
-    console.log('renderTicks: ', this.renderTicks);
+    //console.log('renderTicks: ', this.renderTicks);
 
     if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
         this.resolutionCoefficient -= 0.1;
@@ -130,4 +138,5 @@ Core.prototype.render = function(){
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
+    this.particleSystem.update((Date.now() - this.startTime) / 1000);
 };

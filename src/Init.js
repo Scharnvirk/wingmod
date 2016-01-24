@@ -9,5 +9,4 @@ Init.prototype.start = function(){
     var core = new Core(logicWorker);
 
     gameCore = core;
-
 };
