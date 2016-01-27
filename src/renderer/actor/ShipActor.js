@@ -20,19 +20,19 @@ function ShipActor(){
 ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createMesh = function(){
-    return new ShipMesh({actor: this, scaleX: 4, scaleY: 4, scaleZ: 4});
+    return new RavierMesh({actor: this, scaleX: 6, scaleY: 6, scaleZ: 6});
 };
-
-ShipActor.prototype.customUpdate = function(){
-    var naiveDistance = Math.abs(this.logicPosition[0] - this.logicPreviousPosition[0]) + Math.abs(this.logicPosition[1] - this.logicPreviousPosition[1]);
-
-    this.particleOptions.position.x = this.position[0];
-    this.particleOptions.position.y = this.position[1];
-
-    for (var x = 1; x < naiveDistance; x++) {
-          this.particleSystem.spawnParticle(this.particleOptions);
-          this.particleSystem.spawnParticle(this.particleOptions);
-          this.particleSystem.spawnParticle(this.particleOptions);
-          this.particleSystem.spawnParticle(this.particleOptions);
-    }
-};
+//
+// ShipActor.prototype.customUpdate = function(){
+//     var naiveDistance = Math.abs(this.logicPosition[0] - this.logicPreviousPosition[0]) + Math.abs(this.logicPosition[1] - this.logicPreviousPosition[1]);
+//
+//     this.particleOptions.position.x = this.position[0];
+//     this.particleOptions.position.y = this.position[1];
+//
+//     for (var x = 1; x < naiveDistance; x++) {
+//           this.particleSystem.spawnParticle(this.particleOptions);
+//           this.particleSystem.spawnParticle(this.particleOptions);
+//           this.particleSystem.spawnParticle(this.particleOptions);
+//           this.particleSystem.spawnParticle(this.particleOptions);
+//     }
+// };

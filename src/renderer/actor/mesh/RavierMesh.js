@@ -1,4 +1,4 @@
-function ShipMesh(config){
+function RavierMesh(config){
     BaseMesh.apply(this, arguments);
     //this.angleOffset = Math.PI;
 
@@ -9,4 +9,4 @@ function ShipMesh(config){
 }
 
 
-ShipMesh.extend(BaseMesh);
+RavierMesh.extend(BaseMesh);
