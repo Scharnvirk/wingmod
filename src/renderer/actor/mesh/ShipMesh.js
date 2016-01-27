@@ -3,8 +3,8 @@ function ShipMesh(config){
     //this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = ModelStore.get('ravier').geometry;
-    config.material = ModelStore.get('ravier').material;
+    config.geometry = ModelStore.get('ship').geometry;
+    config.material = ModelStore.get('ship').material;
     Object.assign(this, config);
 }
 

@@ -18,7 +18,7 @@ class GameScene {
             wall = new THREE.Mesh(wallGeometry,material);
             wall.position.x = Utils.rand(-300,300);
             wall.position.y = Utils.rand(-300,300);
-            wall.position.z = Utils.rand(0,5);
+            wall.position.z = Utils.rand(0,2);
             wall.rotateZ(Utils.degToRad(Utils.rand(0,360)));
             walls.push(wall);
         }

@@ -57,6 +57,7 @@ var SampleApp = function() {
         self.zcache['/lib/GPUParticleSystem.js'] = fs.readFileSync('./lib/GPUParticleSystem.js');
 
         self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
+        self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
 
         self.zcache['/dist/logicInit.min.js'] = fs.readFileSync('./dist/logicInit.min.js');
         self.zcache['/dist/logic.min.js'] = fs.readFileSync('./dist/logic.min.js');
@@ -135,6 +136,7 @@ var SampleApp = function() {
         self.routes['/lib/GPUParticleSystem.js'] = function(req, res) {res.send(self.cache_get('/lib/GPUParticleSystem.js') );};
 
         self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
+        self.routes['/models/ravier.json'] = function(req, res) {res.send(self.cache_get('/models/ravier.json') );};
 
 		self.routes['/dist/logicInit.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logicInit.min.js') );};
         self.routes['/dist/logic.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logic.min.js') );};
