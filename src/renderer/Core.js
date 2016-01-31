@@ -62,7 +62,7 @@ Core.prototype.makeScene = function(particleSystem, camera) {
 Core.prototype.makeRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = true;
+    //renderer.shadowMap.enabled = true;
     return renderer;
 };
 
