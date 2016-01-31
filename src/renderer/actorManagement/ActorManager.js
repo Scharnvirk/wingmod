@@ -53,6 +53,7 @@ ActorManager.prototype.createActor = function(actorData){
 
     if(this.actorRequestingCamera && this.actorRequestingCamera === actorId){
         this.core.camera.actor = actor;
+        this.core.gameScene.actor = actor;
     }
 
     this.storage[actorId] = actor;

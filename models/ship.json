@@ -27,7 +27,6 @@
       "colorEmissive": [0,0,0],
       "blending": "NormalBlending",
       "wireframe": false,
-      "colorAmbient": [0.690196,0.690196,0.690196],
       "visible": true,
       "DbgColor": 15658734,
       "depthWrite": true,
@@ -38,6 +37,6 @@
       "transparent": false,
       "shading": "phong",
       "depthTest": true,
-      "colorDiffuse": [0.690196,0.690196,0.690196]
+      "colorDiffuse": [0.7,0.3,0.1]
   }]
 }

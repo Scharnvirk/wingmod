@@ -4,7 +4,7 @@ function WallMesh(config){
 
     config = config || {};
     config.geometry = new THREE.BoxGeometry(400,2,50,50);
-    config.material = new THREE.MeshLambertMaterial({color: 0xffffff});
+    config.material = new THREE.MeshLambertMaterial({color: 0xff0000});
     Object.assign(this, config);
 
 }

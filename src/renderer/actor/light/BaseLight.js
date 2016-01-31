@@ -2,8 +2,8 @@ function BaseLight(config){
     THREE.PointLight.apply(this, arguments);
     config = config || {};
 
-    this.zOffset = 10;
-    this.distance = 50;
+    this.zOffset = 30;
+    this.distance = 100;
     this.color = config.color || new THREE.Color(0xffffff);
     this.followActor = true;
 

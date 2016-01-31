@@ -1,50 +1,42 @@
 class ModelLoader{
-    constructor(modelPaths){
-        if(!modelPaths) throw "ERROR: No model paths have been specified for the loader!";
-        this.modelPaths = modelPaths;
+    constructor(){
         this.batch = {};
-        this.loaded = true;
-
         Utils.mixin(this, THREE.EventDispatcher);
     }
 
-    loadModels(){
-        if(!this.loaded) throw 'ERROR: ModelLoader is still busy loading previous batch!';
+    makeTexturePath(){
 
-        this.loaded = false;
-
-        var loader = new THREE.JSONLoader();
-        this.modelPaths.forEach((modelPath, index)=>{
-            this.batch[this._getModelName(modelPath)] = {
-                geometry: null,
-                material: null,
-                loaded: false
-            };
-
-            loader.load(modelPath, (geometry, material) => {
-                var model = this.batch[this._getModelName(modelPath)];
-                model.geometry = geometry;
-                model.material = material;
-                model.loaded = true;
-
-                if(this.checkIfLoaded()){
-                    this._doneAction();
-                }
-            });
-        });
     }
 
-    checkIfLoaded(){
-        var result = true;
+    loadModels(modelPaths){
+        if(!modelPaths) throw "ERROR: No model paths have been specified for the loader!";
+        var loader = new THREE.JSONLoader();
 
-        for (var modelName in this.batch) {
-            if(!this.batch[modelName].loaded){
-                result = false;
-                return false;
-            }
-        }
+        Promise.all(modelPaths.map(modelPath => {
+            var willLoadModels = new Promise((resolve, reject) => {
+                loader.load(modelPath, (geometry, material) => {
+                    this.batch[this.getModelName(modelPath)] = {
+                        geometry: geometry,
+                        material: material,
+                        texture: material.texture
+                    };
+                    resolve();
+                }, this.getDefaultTexturePath(modelPath));
+            });
+            return willLoadModels;
+        })).then(this.loadTextures.bind(this)).then(this.doneAction.bind(this));
+    }
 
-        return result;
+    loadTextures(){
+        Promise.all(Object.keys(this.batch).map(modelKey => {
+            var willLoadTextures = new Promise((resolve, reject) => {
+                THREE.ImageUtils.loadTexture(this.batch[modelKey].texture, {}, (texture) => {
+                    //this.batch[modelKey].material.map = texture;
+                    resolve();
+                });
+            });
+            return willLoadTextures;
+        }));
     }
 
     getBatch(){
@@ -55,14 +47,18 @@ class ModelLoader{
         this.batch = {};
     }
 
-    _doneAction(){
-        this.loaded = true;
+    doneAction(){
         this.dispatchEvent({type:'loaded'});
     }
 
-    _getModelName(path){
+    getModelName(path){
         var name = path.split('.')[0].split('/').pop();
         if(!name) throw 'ERROR: Bad model path: ' + path;
         return name;
+    }
+
+    //ścieżka taka sama jak dla pliku json - podmianka na png i tyle
+    getDefaultTexturePath(path){
+        return path.replace('json', 'png');
     }
 }

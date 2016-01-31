@@ -6,6 +6,8 @@ function ShipMesh(config){
     config.geometry = ModelStore.get('ship').geometry;
     config.material = ModelStore.get('ship').material;
     Object.assign(this, config);
+
+    this.castShadow = true;
 }
 
 

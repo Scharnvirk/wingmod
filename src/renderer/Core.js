@@ -62,6 +62,7 @@ Core.prototype.makeScene = function(particleSystem, camera) {
 Core.prototype.makeRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
+    renderer.shadowMap.enabled = true;
     return renderer;
 };
 
@@ -94,9 +95,9 @@ Core.prototype.resetCamera = function(){
 };
 
 Core.prototype.initAssets = function() {
-    this.modelLoader = new ModelLoader(ModelList.models);
+    this.modelLoader = new ModelLoader();
     this.modelLoader.addEventListener('loaded', this.onLoaded.bind(this));
-    this.modelLoader.loadModels();
+    this.modelLoader.loadModels(ModelList.models);
 };
 
 Core.prototype.onLoaded = function(event) {
@@ -117,15 +118,17 @@ Core.prototype.continueInit = function(){
 
 Core.prototype.onEachSecond = function(){
     //console.log('renderTicks: ', this.renderTicks);
-
-    if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
-        this.resolutionCoefficient -= 0.1;
-        this.applyResolutionCoefficient();
-    } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
-        this.resolutionCoefficient += 0.1;
-        this.applyResolutionCoefficient();
-    }
-
+    //
+    // if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
+    //     this.resolutionCoefficient -= 0.1;
+    //     this.applyResolutionCoefficient();
+    // } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
+    //     this.resolutionCoefficient += 0.1;
+    //     this.applyResolutionCoefficient();
+    // }
+    //
+    // this.gameScene.enableShadows(this.resolutionCoefficient === 1 && this.renderTicks === 60);
+    //
     this.renderTicks = 0;
 };
 

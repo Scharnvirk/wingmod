@@ -2,6 +2,7 @@ function BaseMesh(config){
     THREE.Mesh.apply(this, arguments);
     this.followActor = true;
     this.angleOffset = 0;
+    //this.castShadow = true;
     //this.frustumCulled = false;
     //this.rotationAutoUpdate = false;
 
