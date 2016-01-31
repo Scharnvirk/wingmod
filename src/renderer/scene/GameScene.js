@@ -82,7 +82,7 @@ class GameScene {
         this.pointLight.shadowBias = 0;
         this.pointLight.shadowDarkness = 0.4;
         this.pointLight.position.set(0,0,50);
-        this.scene.add( this.pointLight );
+        this.scene.add( this.pointLight ); 
     }
 
     update(){
