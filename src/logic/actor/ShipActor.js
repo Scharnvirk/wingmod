@@ -42,6 +42,11 @@ ShipActor.prototype.playerUpdate = function(inputState){
     this.thrust = 0;
     this.horizontalThrust = 0;
     this.rotationForce = 0;
+    //
+    // var radSelf = Math.atan(this.body.position[1]/this.body.position[0]);
+    // var radLook = Math.atan(inputState.lookY/inputState.lookX);
+
+    //console.log(radSelf, radLook);
 
     if (inputState.a) {
         this.horizontalThrust = -1;
@@ -66,4 +71,6 @@ ShipActor.prototype.playerUpdate = function(inputState){
     if (inputState.down) {
         this.thrust = -1;
     }
+
+
 };

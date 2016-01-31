@@ -74,7 +74,7 @@ class GameScene {
 
         this.pointLight = new THREE.PointLight( 0xffffff, 1 );
         this.pointLight.distance = 200;
-        //this.pointLight.castShadow = true;
+        this.pointLight.castShadow = true;
         this.pointLight.shadowCameraNear = 1;
         this.pointLight.shadowCameraFar = 250;
         this.pointLight.shadowMapWidth = 2048;
@@ -82,7 +82,7 @@ class GameScene {
         this.pointLight.shadowBias = 0;
         this.pointLight.shadowDarkness = 0.4;
         this.pointLight.position.set(0,0,50);
-        this.scene.add( this.pointLight ); 
+        this.scene.add( this.pointLight );
     }
 
     update(){

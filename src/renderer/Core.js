@@ -20,7 +20,7 @@ Core.prototype.initRenderer = function(){
     this.scene = this.makeScene(this.particleSystem, this.camera);
     this.actorManager = new ActorManager({scene: this.scene, core: this, particleSystem: this.particleSystem});
     this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
-    this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
+    this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
     this.startTime = Date.now();
 
 
@@ -62,7 +62,8 @@ Core.prototype.makeScene = function(particleSystem, camera) {
 Core.prototype.makeRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    //renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapType = THREE.BasicShadowMap;
     return renderer;
 };
 
@@ -117,7 +118,7 @@ Core.prototype.continueInit = function(){
 };
 
 Core.prototype.onEachSecond = function(){
-    //console.log('renderTicks: ', this.renderTicks);
+    console.log('renderTicks: ', this.renderTicks);
     //
     // if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
     //     this.resolutionCoefficient -= 0.1;

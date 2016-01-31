@@ -49,6 +49,11 @@ class InputListener{
             this.inputState.scrollDown = event.deltaY < 0 ? this.scrollDuration : 0;
         };
 
+        this.mouseMove = function (event) {
+            this.inputState.mouseX = (event.clientX / window.innerWidth)*2 - 1;
+            this.inputState.mouseY = -(event.clientY / window.innerHeight)*2 + 1;
+        };
+
         this.handleEvent = function (event) {
             if (typeof this[ event.type ] === 'function') {
                 this[ event.type ](event);
@@ -84,6 +89,7 @@ class InputListener{
         this.dispose = function () {
             this.domElement.removeEventListener('contextmenu', contextmenu, false);
             this.domElement.removeEventListener('wheel', _wheel, false);
+            this.domElement.removeEventListener('mousemove', _wheel, false);
             window.removeEventListener('keydown', _keydown, false);
             window.removeEventListener('keyup', _keyup, false);
         };
@@ -91,9 +97,11 @@ class InputListener{
         var _keydown = bind(this, this.keydown);
         var _keyup = bind(this, this.keyup);
         var _wheel = bind(this, this.mouseWheel);
+        var _move = bind(this, this.mouseMove);
 
         this.domElement.addEventListener('contextmenu', contextmenu, false);
         this.domElement.addEventListener('wheel', _wheel, false);
+        this.domElement.addEventListener('mousemove', _move, false);
         window.addEventListener('keydown', _keydown, false);
         window.addEventListener('keyup', _keyup, false);
     }
