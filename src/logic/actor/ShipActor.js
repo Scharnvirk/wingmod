@@ -60,17 +60,17 @@ ShipActor.prototype.applyControls = function(inputState){
     var angleVector = MathUtils.angleToVector(this.body.angle, this.body.position[0], this.body.position[1]);
     var angle = MathUtils.angleBetweenPoints(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
-    console.log(
-        Math.floor(angleVector[0]),
-        Math.floor(angleVector[1]), '|',
-        Math.floor(inputState.lookX),
-        Math.floor(inputState.lookY), '|',
-        Math.floor(this.body.position[0]),
-        Math.floor(this.body.position[1]), '|',
-        Math.floor(inputState.lookX - this.body.position[0]),
-        Math.floor(inputState.lookY - this.body.position[1]), '|',
-        Math.floor(angle)
-    );
+    // console.log(
+    //     Math.floor(angleVector[0]),
+    //     Math.floor(angleVector[1]), '|',
+    //     Math.floor(inputState.lookX),
+    //     Math.floor(inputState.lookY), '|',
+    //     Math.floor(this.body.position[0]),
+    //     Math.floor(this.body.position[1]), '|',
+    //     Math.floor(inputState.lookX - this.body.position[0]),
+    //     Math.floor(inputState.lookY - this.body.position[1]), '|',
+    //     Math.floor(angle)
+    // );
 
     if (angle <= 180 && angle > 4) {
         this.rotationForce = -1;
