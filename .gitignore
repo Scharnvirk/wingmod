@@ -2,3 +2,6 @@
 /nbproject/
 /node_modules/
 /dist/b/
+/dist/logic.min.map
+/dist/logicInit.min.map
+/dist/renderer.min.map

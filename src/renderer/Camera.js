@@ -10,6 +10,8 @@ function Camera(config){
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
     this.position.z = 300;
+
+    this.mousePosition = new THREE.Vector3(0,0,1);
 }
 
 Camera.extend(THREE.PerspectiveCamera);
@@ -20,13 +22,20 @@ Camera.prototype.update = function(){
         this.position.y = this.actor.position[1];
     }
 
-    if(this.inputListener){
+    let inputState = this.inputListener.inputState;
+
+    if(this.inputListener && this.actor){
         if (this.inputListener.inputState.scrollUp) {
-            this.position.z += this.inputListener.inputState.scrollUp;
+            this.position.z += inputState.scrollUp;
         }
 
         if (this.inputListener.inputState.scrollDown) {
-            this.position.z -= this.inputListener.inputState.scrollDown;
+            this.position.z -= inputState.scrollDown;
         }
+        // 
+        // if(isFinite(inputState.lookX) && isFinite(inputState.lookY)){
+        //     this.position.x = (this.actor.position[0]*2 + this.inputListener.inputState.lookX) / 3;
+        //     this.position.y = (this.actor.position[1]*2 + this.inputListener.inputState.lookY) / 3;
+        // }
     }
 };

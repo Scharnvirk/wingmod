@@ -118,7 +118,7 @@ Core.prototype.continueInit = function(){
 };
 
 Core.prototype.onEachSecond = function(){
-    console.log('renderTicks: ', this.renderTicks);
+    //console.log('renderTicks: ', this.renderTicks);
     //
     // if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
     //     this.resolutionCoefficient -= 0.1;
