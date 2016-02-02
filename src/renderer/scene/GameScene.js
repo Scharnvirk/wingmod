@@ -84,14 +84,20 @@ class GameScene {
 					var vertex = new THREE.Vector3();
 					vertex.x = Utils.rand(-300,300);
 					vertex.y = Utils.rand(-300,300);
-					vertex.z = Utils.rand(1,100);
+					vertex.z = 0;
 
 					this.particlesGeometry.vertices.push( vertex );
 
 				}
 
-				material = new THREE.PointsMaterial( { size: 10, map: map, blending: THREE.AdditiveBlending, depthTest: false, transparent : true} );
-                material.color.setHSL( 0.1, 0.1, 0.1 );
+				material = new THREE.PointsMaterial( {
+                    size: Utils.rand(5,50),
+                    map: map,
+                    blending: THREE.AdditiveBlending,
+                    depthTest: true,
+                    color: 0x331100,
+                    transparent : true}
+                );
 
 				var particles = new THREE.Points( this.particlesGeometry, material );
 				this.scene.add( particles );
@@ -109,8 +115,8 @@ class GameScene {
 
     update(){
         this.particlesGeometry.vertices.forEach(function(vertex){
-            vertex.x += Utils.rand(-1,1);
-            vertex.y += Utils.rand(-1,1);
+            vertex.x += Utils.rand(-0.1,0.1);
+            vertex.y += Utils.rand(-0.1,0.1);
         });
         this.particlesGeometry.verticesNeedUpdate = true;
 
