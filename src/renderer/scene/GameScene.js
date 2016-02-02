@@ -72,7 +72,7 @@ class GameScene {
         this.pointLight.position.set(0,0,50);
         this.scene.add( this.pointLight );
 
-        var map = THREE.ImageUtils.loadTexture( "/assets/particleAdd.png" );
+        var map = THREE.ImageUtils.loadTexture( "/models/floor.png" );
         this.particleMaterial = new THREE.SpriteMaterial( { map: map, color: 0xffffff, blending: THREE.AdditiveBlending} );
         this.spriteCount = 0;
 
@@ -91,6 +91,7 @@ class GameScene {
 				}
 
 				material = new THREE.PointsMaterial( { size: 10, map: map, blending: THREE.AdditiveBlending, depthTest: false, transparent : true} );
+                material.color.setHSL( 0.1, 0.1, 0.1 );
 
 				var particles = new THREE.Points( this.particlesGeometry, material );
 				this.scene.add( particles );
