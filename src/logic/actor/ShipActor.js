@@ -3,10 +3,16 @@ function ShipActor(configArray){
     BaseActor.apply(this, arguments);
 
     this.acceleration = 10000;
+    this.backwardAccelerationRatio = 0.7;
+    this.horizontalAccelerationRatio = 0.7;
     this.turnSpeed = 4;
+    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.thrust = 0;
     this.rotationForce = 0;
+
+    this.lastInputStateX = 0;
+    this.lastInputStateY = 0;
 }
 
 ShipActor.extend(BaseActor);
@@ -39,45 +45,46 @@ ShipActor.prototype.customUpdate = function(){
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
-    this.applyControls(inputState);
-
-
+    this.applyThrust(inputState);
+    this.applyRotation(inputState);
 };
 
-ShipActor.prototype.applyControls = function(inputState){
-    this.thrust = 0;
-    this.horizontalThrust = 0;
+ShipActor.prototype.applyRotation = function(inputState){
     this.rotationForce = 0;
-
-    if (inputState.a) {
-        this.horizontalThrust = -1;
-    }
-
-    if (inputState.d) {
-        this.horizontalThrust = 1;
-    }
 
     var angleVector = MathUtils.angleToVector(this.body.angle, this.body.position[0], this.body.position[1]);
     var angle = MathUtils.angleBetweenPoints(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
-    // console.log(
-    //     Math.floor(angleVector[0]),
-    //     Math.floor(angleVector[1]), '|',
-    //     Math.floor(inputState.lookX),
-    //     Math.floor(inputState.lookY), '|',
-    //     Math.floor(this.body.position[0]),
-    //     Math.floor(this.body.position[1]), '|',
-    //     Math.floor(inputState.lookX - this.body.position[0]),
-    //     Math.floor(inputState.lookY - this.body.position[1]), '|',
-    //     Math.floor(angle)
-    // );
+    if (angle < 180 && angle > 0) {
+        this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+    }
 
-    if (angle <= 180 && angle > 4) {
+    if (angle >= 180 && angle < 360) {
+        this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
+    }
+
+    if (inputState.q) {
+        this.rotationForce = 1;
+    }
+
+    if (inputState.e) {
         this.rotationForce = -1;
     }
 
-    if (angle > 180 && angle < 356) {
-        this.rotationForce = 1;
+    this.lastInputStateX = inputState.lookX;
+    this.lastInputStateY = inputState.lookY;
+};
+
+ShipActor.prototype.applyThrust = function(inputState){
+    this.thrust = 0;
+    this.horizontalThrust = 0;
+
+    if (inputState.a) {
+        this.horizontalThrust = -1 * this.horizontalAccelerationRatio;
+    }
+
+    if (inputState.d) {
+        this.horizontalThrust = 1 * this.horizontalAccelerationRatio;
     }
 
     if (inputState.w) {
@@ -85,6 +92,6 @@ ShipActor.prototype.applyControls = function(inputState){
     }
 
     if (inputState.s) {
-        this.thrust = -1;
+        this.thrust = -1 * this.backwardAccelerationRatio;
     }
 };

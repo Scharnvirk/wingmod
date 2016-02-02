@@ -12,6 +12,8 @@ class InputListener{
         this.inputState = Object.create(null);
 
         this.keys = {
+            81: 'q',
+            69: 'e',
             87: 'w',
             83: 's',
             65: 'a',

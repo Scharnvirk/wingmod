@@ -8,10 +8,12 @@ function Core(worker){
 
     this.logicTicks = 0;
 
-    setInterval(()=>{
-        console.log('logicTicks: ', this.logicTicks);
-        this.logicTicks = 0;
-    }, 1000);
+    if(Constants.SHOW_FPS){
+        setInterval(()=>{
+            console.log('logicTicks: ', this.logicTicks);
+            this.logicTicks = 0;
+        }, 1000);
+    }
 }
 
 Core.prototype.createWorld = function(){
@@ -23,16 +25,13 @@ Core.prototype.createWorld = function(){
 
 Core.prototype.processGameLogic = function(){
     this.actorManager.update(this.renderBus.inputState);
-    this.world.step(1/30);
-
-
-
+    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
     this.logicTicks ++;
 };
 
 Core.prototype.startGameLoop = function(){
-    var logicLoop = new THREEx.PhysicsLoop(30);
+    var logicLoop = new THREEx.PhysicsLoop(Constants.LOGIC_REFRESH_RATE);
     logicLoop.add(this.processGameLogic.bind(this));
     logicLoop.start();
 };

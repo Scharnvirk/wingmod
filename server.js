@@ -47,6 +47,7 @@ var SampleApp = function() {
         self.zcache['index.html'] = fs.readFileSync('./index.html');
 
         self.zcache['./assets/particle.png'] = fs.readFileSync('./assets/particle.png');
+        self.zcache['./assets/particleAdd.png'] = fs.readFileSync('./assets/particleAdd.png');
         self.zcache['./assets/perlin-512.png'] = fs.readFileSync('./assets/perlin-512.png');
 
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
@@ -128,6 +129,7 @@ var SampleApp = function() {
 
 
         self.routes['/assets/particle.png'] = function(req, res) {res.send(self.cache_get('/assets/particle.png') );};
+        self.routes['/assets/particleAdd.png'] = function(req, res) {res.send(self.cache_get('/assets/particleAdd.png') );};
         self.routes['/assets/perlin-512.png'] = function(req, res) {res.send(self.cache_get('/assets/perlin-512.png') );};
 
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};

@@ -16,9 +16,9 @@ Core.prototype.initRenderer = function(){
     this.renderer = this.makeRenderer();
     this.inputListener = new InputListener( this.renderer.domElement );
     this.camera = this.makeCamera(this.inputListener);
-    this.particleSystem = this.makeParticleSystem();
-    this.scene = this.makeScene(this.particleSystem, this.camera);
-    this.actorManager = new ActorManager({scene: this.scene, core: this, particleSystem: this.particleSystem});
+    //this.particleSystem = this.makeParticleSystem();
+    this.scene = this.makeScene(this.camera);
+    this.actorManager = new ActorManager({scene: this.scene, core: this});
     this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
     this.startTime = Date.now();
@@ -52,9 +52,8 @@ Core.prototype.makeParticleSystem = function() {
     });
 };
 
-Core.prototype.makeScene = function(particleSystem, camera) {
+Core.prototype.makeScene = function(camera) {
     var scene = new THREE.Scene();
-    scene.add(particleSystem);
     scene.add(camera);
     return scene;
 };
@@ -62,8 +61,8 @@ Core.prototype.makeScene = function(particleSystem, camera) {
 Core.prototype.makeRenderer = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    //renderer.shadowMap.enabled = true;
-    //renderer.shadowMapType = THREE.BasicShadowMap;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMapType = THREE.BasicShadowMap;
     return renderer;
 };
 
@@ -115,6 +114,10 @@ Core.prototype.continueInit = function(){
     var renderLoop = new THREEx.RenderingLoop();
     renderLoop.add(this.render.bind(this));
     renderLoop.start();
+
+    var controlsLoop = new THREEx.PhysicsLoop(120);
+    controlsLoop.add(this.controlsUpdate.bind(this));
+    controlsLoop.start();
 };
 
 Core.prototype.onEachSecond = function(){
@@ -133,14 +136,17 @@ Core.prototype.onEachSecond = function(){
     this.renderTicks = 0;
 };
 
-Core.prototype.render = function(){
+Core.prototype.controlsUpdate = function(){
     this.inputListener.update();
     this.controlsHandler.update();
+};
+
+Core.prototype.render = function(){
     this.gameScene.update();
     this.actorManager.update();
     this.camera.update();
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
-    this.particleSystem.update((Date.now() - this.startTime) / 1000);
+    //this.particleSystem.update((Date.now() - this.startTime) / 1000);
 };
