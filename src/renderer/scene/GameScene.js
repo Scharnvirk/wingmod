@@ -90,7 +90,7 @@ class GameScene {
 
 				}
 
-				material = new THREE.PointsMaterial( { size: Utils.rand(1,200), map: map, blending: THREE.AdditiveBlending, depthTest: false, transparent : true, opacity:0.007} );
+				material = new THREE.PointsMaterial( { size: 10, map: map, blending: THREE.AdditiveBlending, depthTest: false, transparent : true} );
 
 				var particles = new THREE.Points( this.particlesGeometry, material );
 				this.scene.add( particles );
