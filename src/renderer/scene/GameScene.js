@@ -91,7 +91,7 @@ class GameScene {
 				}
 
 				material = new THREE.PointsMaterial( {
-                    size: Utils.rand(40),
+                    size: 40,
                     map: map,
                     blending: THREE.AdditiveBlending,
                     depthTest: true,
