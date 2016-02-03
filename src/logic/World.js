@@ -6,7 +6,7 @@ function GameWorld(config){
     config = config || {};
     this.gravity = [0, 0];
     this.islandSplit = false;
-
+    
     Object.assign(this, config);
 }
 

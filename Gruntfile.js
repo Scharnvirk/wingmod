@@ -20,10 +20,15 @@ module.exports = function (grunt) {
                 mangle: true,
                 compress: true,
                 sourceMap: true,
-                sourceMapName: function(path) { return path.replace(/.js/,".map");} 
+                sourceMapName: function(path) { return path.replace(/.js/,".map");}
             },
             logic: {
-                src : ['dist/b/Utils.js','dist/b/renderer/actorManagement/ActorFactory.js','dist/b/logic/**/*.js'],
+                src : [
+                    'dist/b/Utils.js',
+                    'dist/b/Constants.js',
+                    'dist/b/renderer/actorManagement/ActorFactory.js',
+                    'dist/b/logic/**/*.js'
+                ],
                 dest : 'dist/logic.min.js'
             },
             logicInit: {

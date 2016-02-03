@@ -11,45 +11,42 @@ function Core(logicCore){
     this.initAssets();
 }
 
-
 Core.prototype.initRenderer = function(){
+    this.makeMainComponents();
+    this.stats = this.makeStatsWatcher();
+    this.startTime = Date.now();
+    this.attachToDom(this.renderer, this.stats);
+};
+
+Core.prototype.makeMainComponents = function(){
     this.renderer = this.makeRenderer();
     this.inputListener = new InputListener( this.renderer.domElement );
     this.camera = this.makeCamera(this.inputListener);
-    //this.particleSystem = this.makeParticleSystem();
     this.scene = this.makeScene(this.camera);
     this.actorManager = new ActorManager({scene: this.scene, core: this});
     this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.startTime = Date.now();
+    this.gameScene = new GameScene({core: this,scene: this.scene,logicBus: this.logicBus,actorManager: this.actorManager});
+};
 
+Core.prototype.makeStatsWatcher = function(){
+    var stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.top = '0px';
 
-    this.gameScene = new GameScene({
-        core: this,
-        scene: this.scene,
-        logicBus: this.logicBus,
-        actorManager: this.actorManager
-    });
+    return stats;
+};
 
-    this.stats = new Stats();
-    this.stats.domElement.style.position = 'absolute';
-    this.stats.domElement.style.top = '0px';
+Core.prototype.attachToDom = function(renderer, stats){
+    document.body.appendChild( renderer.domElement );
+    document.body.appendChild( stats.domElement );
     this.autoResize();
-
-    document.body.appendChild( this.renderer.domElement );
-    document.body.appendChild( this.stats.domElement );
 };
 
 Core.prototype.makeCamera = function(inputListener) {
     console.log('making camera');
     var camera = new Camera({inputListener: inputListener});
     return camera;
-};
-
-Core.prototype.makeParticleSystem = function() {
-    return new THREE.GPUParticleSystem({
-        maxParticles: 10000
-    });
 };
 
 Core.prototype.makeScene = function(camera) {
@@ -98,6 +95,12 @@ Core.prototype.initAssets = function() {
     this.modelLoader = new ModelLoader();
     this.modelLoader.addEventListener('loaded', this.onLoaded.bind(this));
     this.modelLoader.loadModels(ModelList.models);
+
+    //todo: zrobic customModelBuilder tez jako asyncowy loader i potem promisem zgarnac oba eventy
+    //tym bardziej ze moze byc to potrzebne jesli sie jednak okaze ze tekstury ladujemy asyncowo
+    this.customModelBuilder = new CustomModelBuilder();
+    this.customModelBuilder.loadModels();
+    ModelStore.loadBatch(this.customModelBuilder.getBatch());
 };
 
 Core.prototype.onLoaded = function(event) {
@@ -148,5 +151,4 @@ Core.prototype.render = function(){
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
-    //this.particleSystem.update((Date.now() - this.startTime) / 1000);
 };

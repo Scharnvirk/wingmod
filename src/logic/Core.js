@@ -1,20 +1,26 @@
 function Core(worker){
+    this.makeMainComponents(worker);
+    this.startGameLoop();
+    this.scene.fillScene();
+    this.initFpsCounter();
+}
+
+Core.prototype.makeMainComponents = function(worker){
     this.world = new GameWorld();
     this.actorManager = new ActorManager({world: this.world, core: this});
     this.renderBus = new RenderBus(worker);
     this.scene = new GameScene({world: this.world, actorManager: this.actorManager});
-    this.startGameLoop();
-    this.scene.fillScene();
+};
 
+Core.prototype.initFpsCounter = function(){
     this.logicTicks = 0;
-
     if(Constants.SHOW_FPS){
         setInterval(()=>{
             console.log('logicTicks: ', this.logicTicks);
             this.logicTicks = 0;
         }, 1000);
     }
-}
+};
 
 Core.prototype.createWorld = function(){
     return new p2.World({

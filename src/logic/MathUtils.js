@@ -7,7 +7,6 @@ var MathUtils = {
     angleBetweenPoints: function(p1x, p2x, p1y, p2y){
         // var dotproduct = p1x*p2x + p1y*p2y;
         // var determinant = p1x*p2y - p1y*p2x;
-        //var angle Math.= Math.atan2((p1x*p2y - p1y*p2x), (p1x*p2x + p1y*p2y))*-1 ;
         var angle = Math.atan2(p1y, p1x) - Math.atan2(p2y, p2x);
 
         angle = angle * 360 / (2*Math.PI);

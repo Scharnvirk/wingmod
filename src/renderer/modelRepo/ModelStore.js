@@ -10,7 +10,6 @@ var ModelStore = {
     },
 
     loadBatch: function(batch) {
-        console.log(this);
         Object.keys(batch).forEach( function(modelName){
             this._addGeometry(modelName, batch[modelName].geometry);
             this._addMaterial(modelName, batch[modelName].material);
@@ -18,7 +17,6 @@ var ModelStore = {
     },
 
     _addGeometry: function(name, geometry) {
-        if ((geometry instanceof THREE.Geometry) !== true) throw 'ERROR - geometry not instance of THREE.Geometry';
         this._geometries[name] = geometry;
     },
 

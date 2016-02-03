@@ -13,7 +13,11 @@ MookActor.extend(BaseActor);
 
 MookActor.prototype.createBody = function(){
     return new BaseBody({
-        shape: new p2.Convex({vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]]}),
+        shape: new p2.Convex({
+            vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
+            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+        }),
         actor: this,
         mass: 1,
         damping: 0.75,

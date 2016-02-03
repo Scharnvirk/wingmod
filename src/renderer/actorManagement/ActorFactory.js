@@ -4,17 +4,20 @@
 function ActorFactory(actorDependencies){
     this.actorDependencies = actorDependencies;
     this.actorMap = {
-        [ActorFactory.SHIP_ACTOR]: ShipActor,
-        [ActorFactory.MOOK_ACTOR]: MookActor,
-        [ActorFactory.LIGHT_ACTOR]: LightActor,
-        [ActorFactory.WALL_ACTOR]: WallActor
+        [ActorFactory.SHIP]: ShipActor,
+        [ActorFactory.MOOK]: MookActor,
+        [ActorFactory.LIGHT]: LightActor,
+        [ActorFactory.WALL]: WallActor,
+        [ActorFactory.PROJECTILE]: ProjectileActor
     };
 }
 
-ActorFactory.SHIP_ACTOR = 1;
-ActorFactory.MOOK_ACTOR = 2;
-ActorFactory.LIGHT_ACTOR = 3;
-ActorFactory.WALL_ACTOR = 4;
+ActorFactory.SHIP = 1;
+ActorFactory.MOOK = 2;
+ActorFactory.LIGHT = 3;
+ActorFactory.WALL = 4;
+
+ActorFactory.PROJECTILE = 100;
 
 //actorDataArray format is: [classId, positionX, positionY, angle, velocityX, velocityY]
 

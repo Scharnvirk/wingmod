@@ -15,6 +15,7 @@ function BaseActor(configArray, actorDependencies){
 
     this.mesh = this.createMesh();
     this.light = this.createLight();
+    this.sprite = this.createSprite();
 }
 
 BaseActor.prototype.update = function(delta){
@@ -28,6 +29,10 @@ BaseActor.prototype.update = function(delta){
 
     if (this.light){
         this.light.update();
+    }
+
+    if (this.sprite){
+        this.sprite.update();
     }
 
     this.customUpdate();
@@ -53,6 +58,11 @@ BaseActor.prototype.createLight = function(){
     return null;
 };
 
+BaseActor.prototype.createSprite = function(){
+    return null;
+};
+
+
 BaseActor.prototype.addToScene = function(scene){
     if (this.mesh){
         scene.add(this.mesh);
@@ -60,6 +70,10 @@ BaseActor.prototype.addToScene = function(scene){
 
     if (this.light){
         scene.add(this.light);
+    }
+
+    if (this.sprite){
+        scene.add(this.sprite);
     }
 };
 

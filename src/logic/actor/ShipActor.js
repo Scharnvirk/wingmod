@@ -19,7 +19,11 @@ ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createBody = function(){
     return new BaseBody({
-        shape: new p2.Convex({vertices: [[-15, 8], [-6, -2], [6, -2], [15, 8], [15,14], [0, 20], [-15, 14] ]}),
+        shape: new p2.Convex({
+            vertices: [[-15, 8], [-6, -2], [6, -2], [15, 8], [15,14], [0, 20], [-15, 14] ],
+            collisionGroup: Constants.COLLISION_GROUPS.SHIP,
+            collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+        }),
         actor: this,
         mass: 40,
         damping: 0.75,

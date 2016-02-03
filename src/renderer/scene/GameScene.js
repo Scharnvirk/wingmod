@@ -34,7 +34,6 @@ class GameScene {
     }
 
     make() {
-
         var combine = new THREE.Geometry();
         var planeTex = THREE.ImageUtils.loadTexture("/models/floor.png");
         planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
@@ -79,11 +78,11 @@ class GameScene {
         //for(let i = 0; i < 100; i++){
 
             this.particlesGeometry = new THREE.Geometry();
-            for (let i = 0; i < 20000; i ++ ) {
+            for (let i = 0; i < 50000; i ++ ) {
 
 					var vertex = new THREE.Vector3();
-					vertex.x = Utils.rand(-300,300);
-					vertex.y = Utils.rand(-300,300);
+					vertex.x = Utils.rand(-30000,30000);
+					vertex.y = Utils.rand(-30000,30000);
 					vertex.z = 0;
 
 					this.particlesGeometry.vertices.push( vertex );
@@ -115,8 +114,8 @@ class GameScene {
 
     update(){
         this.particlesGeometry.vertices.forEach(function(vertex){
-            vertex.x += Utils.rand(-0.1,0.1);
-            vertex.y += Utils.rand(-0.1,0.1);
+            //vertex.x += 1;
+            //vertex.y += 1;
         });
         this.particlesGeometry.verticesNeedUpdate = true;
 

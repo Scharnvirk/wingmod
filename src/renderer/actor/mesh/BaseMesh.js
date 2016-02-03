@@ -1,10 +1,6 @@
 function BaseMesh(config){
     THREE.Mesh.apply(this, arguments);
-    this.followActor = true;
     this.angleOffset = 0;
-    //this.castShadow = true;
-    //this.frustumCulled = false;
-    //this.rotationAutoUpdate = false;
 
     config.scaleX = config.scaleX || 1;
     config.scaleY = config.scaleY || 1;
@@ -21,7 +17,7 @@ function BaseMesh(config){
 BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function(){
-    if(this.actor && this.followActor){
+    if(this.actor){
         this.position.x = this.actor.position[0];
         this.position.y = this.actor.position[1];
         this.position.z = this.actor.positionZ;
