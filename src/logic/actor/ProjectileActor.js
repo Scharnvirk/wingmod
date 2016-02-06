@@ -15,8 +15,8 @@ ProjectileActor.prototype.createBody = function(){
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
             collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN,
         }),
-        velocity: [Utils.rand(-200,200), Utils.rand(-200,200)],
+        velocity: [Utils.rand(-400,400), Utils.rand(-400,400)],
         actor: this,
-        mass: 0.001
+        mass: 1
     });
 };

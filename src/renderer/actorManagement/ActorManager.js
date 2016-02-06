@@ -73,4 +73,5 @@ ActorManager.prototype.attachCamera = function(actorId){
 
 ActorManager.prototype.deleteActor = function(actor, actorId){
     actor.removeFromScene(this.scene);
+    delete this.storage[actorId];
 };

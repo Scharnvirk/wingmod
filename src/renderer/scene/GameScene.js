@@ -77,47 +77,41 @@ class GameScene {
 
         //for(let i = 0; i < 100; i++){
 
-            this.particlesGeometry = new THREE.Geometry();
-            for (let i = 0; i < 50000; i ++ ) {
+        this.geometries = [];
 
-					var vertex = new THREE.Vector3();
-					vertex.x = Utils.rand(-30000,30000);
-					vertex.y = Utils.rand(-30000,30000);
-					vertex.z = 0;
+        for(let t = 0; t < 50; t++){
+            this.geometries[t] =  new THREE.Geometry();
+            for (let i = 0; i < 1000; i ++ ) {
 
-					this.particlesGeometry.vertices.push( vertex );
+    			var vertex = new THREE.Vector3();
+    			vertex.x = Utils.rand(-300,300);
+    			vertex.y = Utils.rand(-300,300);
+    			vertex.z = 0;
 
-				}
+    			this.geometries[t].vertices.push( vertex );
 
-				material = new THREE.PointsMaterial( {
-                    size: 40,
-                    map: map,
-                    blending: THREE.AdditiveBlending,
-                    depthTest: true,
-                    color: 0x331100,
-                    transparent : true}
-                );
+    		}
 
-				var particles = new THREE.Points( this.particlesGeometry, material );
-				this.scene.add( particles );
-            //
-            //
-            // var sprite = new THREE.Sprite( this.particleMaterial );
-            // sprite.position.set(Utils.rand(-300,300),Utils.rand(-300,300),Utils.rand(10,100));
-            // var scale = Utils.rand(1,10);
-            // sprite.scale.x = scale;
-            // sprite.scale.y = scale;
-            // sprite.scale.z = scale;
-            // this.scene.add( sprite );
-        //}
-    }
+            material = new THREE.PointsMaterial( {
+                size: 4,
+                map: map,
+                blending: THREE.AdditiveBlending,
+                depthTest: true,
+                color: Utils.makeRandomColor(),
+                transparent : true
+            });
+
+            var particles = new THREE.Points( this.geometries[t], material );
+            this.scene.add( particles );
+        }
+     }
 
     update(){
-        this.particlesGeometry.vertices.forEach(function(vertex){
-            //vertex.x += 1;
-            //vertex.y += 1;
-        });
-        this.particlesGeometry.verticesNeedUpdate = true;
+        // this.particlesGeometry.vertices.forEach(function(vertex){
+        //     vertex.x += Utils.rand(-10,10);
+        //     vertex.y += Utils.rand(-10,10);
+        // });
+        // this.particlesGeometry.verticesNeedUpdate = true;
 
         if(this.actor){
             this.pointLight.position.x = this.actor.position[0] + 20;
