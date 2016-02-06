@@ -1,5 +1,5 @@
 var Constants = {
-    SHOW_FPS: false,
+    SHOW_FPS: true,
 
     LOGIC_REFRESH_RATE: 60,
 
@@ -9,5 +9,7 @@ var Constants = {
             SHIPPROJECTILE: Math.pow(2,2),
             ENEMYPROJECTILE: Math.pow(2,3),
             TERRAIN: Math.pow(2,10),
-    }
+    },
+
+    STORAGE_SIZE: 1000
 };

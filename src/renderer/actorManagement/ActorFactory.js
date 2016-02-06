@@ -22,5 +22,6 @@ ActorFactory.PROJECTILE = 100;
 //actorDataArray format is: [classId, positionX, positionY, angle, velocityX, velocityY]
 
 ActorFactory.prototype.create = function(actorDataArray){
+    //console.log(actorDataArray);
     return new this.actorMap[actorDataArray[0]](actorDataArray, this.actorDependencies);
 };

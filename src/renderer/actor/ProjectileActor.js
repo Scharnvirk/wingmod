@@ -3,7 +3,7 @@ function ProjectileActor(){
 }
 
 ProjectileActor.extend(BaseActor);
-
-ProjectileActor.prototype.createSprite = function(){
-    return new ProjectileSprite({actor: this});
-};
+//
+// ProjectileActor.prototype.createSprite = function(){
+//     return new ProjectileSprite({actor: this});
+// };

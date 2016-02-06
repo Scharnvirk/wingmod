@@ -85,4 +85,8 @@ BaseActor.prototype.removeFromScene = function(scene){
     if (this.light){
         scene.remove(this.light);
     }
+    
+    if (this.sprite){
+        scene.remove(this.sprite);
+    }
 };

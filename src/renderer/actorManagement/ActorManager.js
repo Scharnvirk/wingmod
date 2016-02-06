@@ -25,10 +25,10 @@ ActorManager.prototype.update = function(){
 
 /*
 transferArray[i*5] = body.storageId;
-transferArray[i*5+1] = body.position[0];
-transferArray[i*5+2] = body.position[1];
-transferArray[i*5+3] = body.angle;
-transferArray[i*5+4] = body.classId;
+transferArray[i*5+1] = body.classId;
+transferArray[i*5+2] = body.position[0];
+transferArray[i*5+3] = body.position[1];
+transferArray[i*5+4] = body.angle;
 */
 ActorManager.prototype.updateFromLogic = function(dataObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
@@ -36,10 +36,15 @@ ActorManager.prototype.updateFromLogic = function(dataObject){
     var dataArray = dataObject.transferArray;
 
     for(let i = 0; i < dataObject.length; i++){
-        if(!this.storage[dataArray[i*5]]){
+        let actor = this.storage[dataArray[i*5]];
+        if(!actor){
             this.createActor([dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]]);
         } else {
-            this.storage[dataArray[i*5]].updateFromLogic([dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]]);
+            if(dataArray[i*5+1] === -1){
+                this.deleteActor(actor, dataArray[i*5]);
+            } else {
+                actor.updateFromLogic([dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]]);
+            }
         }
     }
 };
@@ -64,4 +69,8 @@ ActorManager.prototype.attachCamera = function(actorId){
         this.core.camera.actor = this.storage[actorId];
     }
 
+};
+
+ActorManager.prototype.deleteActor = function(actor, actorId){
+    actor.removeFromScene(this.scene);
 };

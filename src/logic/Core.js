@@ -24,7 +24,7 @@ Core.prototype.initFpsCounter = function(){
 
 Core.prototype.createWorld = function(){
     return new p2.World({
-        gravity: [1, 0],
+        gravity: [0, 0],
         islandSplit: false
     });
 };
@@ -34,6 +34,7 @@ Core.prototype.processGameLogic = function(){
     this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
     this.logicTicks ++;
+    this.scene.update();
 };
 
 Core.prototype.startGameLoop = function(){
