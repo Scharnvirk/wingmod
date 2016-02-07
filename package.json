@@ -11,6 +11,7 @@
     "load-grunt-tasks": "^3.3.0"
   },
   "jshintConfig": {
-    "esnext": true
+    "esnext": true,
+    "multistr": true
   }
 }

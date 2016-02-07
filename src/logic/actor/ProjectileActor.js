@@ -17,6 +17,6 @@ ProjectileActor.prototype.createBody = function(){
         }),
         velocity: [Utils.rand(-400,400), Utils.rand(-400,400)],
         actor: this,
-        mass: 1
+        mass: 0.001
     });
 };

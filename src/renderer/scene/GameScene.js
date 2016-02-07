@@ -70,48 +70,129 @@ class GameScene {
         this.pointLight.shadowDarkness = 0.4;
         this.pointLight.position.set(0,0,50);
         this.scene.add( this.pointLight );
-
-        var map = THREE.ImageUtils.loadTexture( "/models/floor.png" );
-        this.particleMaterial = new THREE.SpriteMaterial( { map: map, color: 0xffffff, blending: THREE.AdditiveBlending} );
-        this.spriteCount = 0;
-
-        //for(let i = 0; i < 100; i++){
+        //
+        // var map = THREE.ImageUtils.loadTexture( "/assets/particleAdd.png" );
+        // this.particleMaterial = new THREE.SpriteMaterial( { map: map, color: 0xffffff, blending: THREE.AdditiveBlending} );
+        // this.spriteCount = 0;
 
         this.geometries = [];
 
-        for(let t = 0; t < 50; t++){
-            this.geometries[t] =  new THREE.Geometry();
-            for (let i = 0; i < 1000; i ++ ) {
+        var vertexShader = " \
+            attribute float alpha; \
+            attribute vec3 color; \
+            varying float vAlpha; \
+            varying vec3 vColor; \
+            uniform float scale; \
+            void main() { \
+                vAlpha = alpha; \
+                vColor = color; \
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); \
+                gl_PointSize =  scale * (1000.0 / - mvPosition.z) ; \
+                gl_Position = projectionMatrix * mvPosition; \
+            }";
 
-    			var vertex = new THREE.Vector3();
-    			vertex.x = Utils.rand(-300,300);
-    			vertex.y = Utils.rand(-300,300);
-    			vertex.z = 0;
+        var fragmentShader = " \
+            varying vec3 vColor; \
+            varying float vAlpha; \
+            void main() { \
+                gl_FragColor = vec4( vColor, vAlpha ); \
+            } \
+        ";
 
-    			this.geometries[t].vertices.push( vertex );
+        // for(let t = 0; t < 1; t++){
+        //     this.geometries[t] =  new THREE.BufferGeometry();
+        //     var alphas = new Float32Array( 1000 );
+        //
+        //     var vertices = new Float32Array( 1000 * 3 );
+        //     for ( var i = 0; i < 1000; i++ )
+        //     {
+        //     	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
+        //     	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
+        //     	vertices[ i*3 + 2 ] = 0;
+        //     }
+        //
+        //     this.geometries[t].addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+        //     this.geometries[t].addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ) );
+        //
+        //     var uniforms = {
+        //        color: { type: "c", value: new THREE.Color( 0x00ff00 ) },
+        //    };
 
-    		}
+            var points = 20000;
 
-            material = new THREE.PointsMaterial( {
-                size: 4,
-                map: map,
-                blending: THREE.AdditiveBlending,
-                depthTest: true,
-                color: Utils.makeRandomColor(),
-                transparent : true
-            });
+            this.geometry = new THREE.BufferGeometry();
+            var vertices = new Float32Array( points * 3 );
+            var alphas = new Float32Array( points * 1 );
+            var colors = new Float32Array( points * 3 );
+            for ( let i = 0; i < points; i++ )
+            {
+            	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
+            	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
+            	vertices[ i*3 + 2 ] = 0;
+                alphas[i] = Math.random();
+                colors[ i*3 + 0 ] = Math.random();
+            	colors[ i*3 + 1 ] = Math.random();
+            	colors[ i*3 + 2 ] = Math.random();
+            }
 
-            var particles = new THREE.Points( this.geometries[t], material );
+            this.geometry.addAttribute('position', new THREE.BufferAttribute( vertices, 3 ));
+            this.geometry.addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ));
+            this.geometry.addAttribute('color', new THREE.BufferAttribute( colors, 3 ));
+
+            // var numVertices = geometry.attributes.position.count;
+            // console.log(numVertices);
+            //
+            // for( var i = 0; i < numVertices; i ++ ) {
+            //
+            //     colors[i] = Utils.makeRandomColor();
+            // }
+
+
+
+            this.scale = 2;
+
+            var uniforms = {
+                scale: { type: 'f', value: this.scale },
+                //color: { type: "c", value: new THREE.Color( 0x00ff00 ) }
+            };
+            this.shaderMaterial = new THREE.ShaderMaterial( {
+                 //map: map,
+                 uniforms:       uniforms,
+                 vertexShader:   vertexShader,
+                 fragmentShader: fragmentShader,
+                 transparent:    true
+
+             });
+            //
+            // material = new THREE.PointsMaterial( {
+            //     size: 20,
+            //     //map: map,
+            //     blending: THREE.AdditiveBlending,
+            //     depthTest: true,
+            //     color: Utils.makeRandomColor(),
+            //     transparent : true
+            // });
+
+            var particles = new THREE.Points( this.geometry, this.shaderMaterial );
             this.scene.add( particles );
-        }
+
+        //}
      }
 
     update(){
-        // this.particlesGeometry.vertices.forEach(function(vertex){
-        //     vertex.x += Utils.rand(-10,10);
-        //     vertex.y += Utils.rand(-10,10);
+        // this.geometries[0].vertices.forEach(function(vertex){
+        //     vertex.x += Utils.rand(-1,1);
+        //     vertex.y += Utils.rand(-1,1);
         // });
-        // this.particlesGeometry.verticesNeedUpdate = true;
+        // this.geometries[0].verticesNeedUpdate = true;
+
+        for (var i = 0; i < 20000; i++){
+            gameCore.gameScene.geometry.attributes.alpha.array[i] = Math.random();
+            gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/5;
+            gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/5;
+        }
+        gameCore.gameScene.geometry.attributes.alpha.needsUpdate = true;
+        gameCore.gameScene.geometry.attributes.position.needsUpdate = true;
 
         if(this.actor){
             this.pointLight.position.x = this.actor.position[0] + 20;
