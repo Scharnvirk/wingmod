@@ -5,7 +5,7 @@ function GameScene(config){
 }
 
 GameScene.prototype.fillScene = function(){
-    for (let i = 0; i < 0; i++){
+    for (let i = 0; i < 100; i++){
         this.actorManager.addNew([ActorFactory.MOOK, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360)]);
     }
     this.actorManager.addNew([ActorFactory.WALL, 0, -200, 0]);
@@ -24,6 +24,6 @@ GameScene.prototype.fillScene = function(){
 
  GameScene.prototype.update = function(){
     for (let i = 0; i < 10; i++){
-        this.actorManager.addNew([ActorFactory.PROJECTILE, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360)]);
+        this.actorManager.addNew([ActorFactory.PROJECTILE, 0,0, Utils.rand(0,360)]);
     }
  };
