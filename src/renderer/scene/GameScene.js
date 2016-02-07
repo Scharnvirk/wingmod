@@ -157,7 +157,7 @@ class GameScene {
 
             var uniforms = {
                 scale: { type: 'f', value: this.scale },
-                map: { type: "t", value: new THREE.TextureLoader().load( "/assets/particleAdd.png" ) }
+                map: { type: "t", value: new THREE.TextureLoader().load( "/gfx/particleAdd.png" ) }
                 //color: { type: "c", value: new THREE.Color( 0x00ff00 ) }
             };
             this.shaderMaterial = new THREE.ShaderMaterial( {

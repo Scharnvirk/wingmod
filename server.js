@@ -46,10 +46,6 @@ var SampleApp = function() {
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
 
-        self.zcache['./assets/particle.png'] = fs.readFileSync('./assets/particle.png');
-        self.zcache['./assets/particleAdd.png'] = fs.readFileSync('./assets/particleAdd.png');
-        self.zcache['./assets/perlin-512.png'] = fs.readFileSync('./assets/perlin-512.png');
-
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
@@ -57,6 +53,8 @@ var SampleApp = function() {
         self.zcache['/lib/p2.min.js'] = fs.readFileSync('./lib/p2.min.js');
         self.zcache['/lib/GPUParticleSystem.js'] = fs.readFileSync('./lib/GPUParticleSystem.js');
 
+        self.zcache['/gfx/particle.png'] = fs.readFileSync('./gfx/particle.png');
+        self.zcache['/gfx/particleAdd.png'] = fs.readFileSync('./gfx/particleAdd.png');
         self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
         self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
         self.zcache['/models/ravier.png'] = fs.readFileSync('./models/ravier.png');
@@ -128,9 +126,6 @@ var SampleApp = function() {
         };
 
 
-        self.routes['/assets/particle.png'] = function(req, res) {res.send(self.cache_get('/assets/particle.png') );};
-        self.routes['/assets/particleAdd.png'] = function(req, res) {res.send(self.cache_get('/assets/particleAdd.png') );};
-        self.routes['/assets/perlin-512.png'] = function(req, res) {res.send(self.cache_get('/assets/perlin-512.png') );};
 
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
@@ -139,6 +134,9 @@ var SampleApp = function() {
         self.routes['/lib/p2.min.js'] = function(req, res) {res.send(self.cache_get('/lib/p2.min.js') );};
         self.routes['/lib/GPUParticleSystem.js'] = function(req, res) {res.send(self.cache_get('/lib/GPUParticleSystem.js') );};
 
+        self.routes['/gfx/particle.png'] = function(req, res) {res.send(self.cache_get('/gfx/particle.png') );};
+        self.routes['/gfx/particleAdd.png'] = function(req, res) {res.send(self.cache_get('/gfx/particleAdd.png') );};
+        self.routes['/gfx/perlin-512.png'] = function(req, res) {res.send(self.cache_get('/gfx/perlin-512.png') );};
         self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
         self.routes['/models/ravier.json'] = function(req, res) {res.send(self.cache_get('/models/ravier.json') );};
         self.routes['/models/floor.png'] = function(req, res) {res.send(self.cache_get('/models/floor.png') );};
