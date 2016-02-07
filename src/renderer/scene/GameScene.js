@@ -70,10 +70,6 @@ class GameScene {
         this.pointLight.shadowDarkness = 0.4;
         this.pointLight.position.set(0,0,50);
         this.scene.add( this.pointLight );
-        //
-        // var map = THREE.ImageUtils.loadTexture( "/assets/particleAdd.png" );
-        // this.particleMaterial = new THREE.SpriteMaterial( { map: map, color: 0xffffff, blending: THREE.AdditiveBlending} );
-        // this.spriteCount = 0;
 
         this.geometries = [];
 
@@ -191,13 +187,13 @@ class GameScene {
         //     vertex.y += Utils.rand(-1,1);
         // });
         // this.geometries[0].verticesNeedUpdate = true;
-
-        for (var i = 0; i < 20000; i++){
-            gameCore.gameScene.geometry.attributes.alpha.array[i] = Math.random();
-            gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/5;
-            gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/5;
-            gameCore.gameScene.geometry.attributes.scale.array[i] = Utils.rand(5,12);
-        }
+        //
+        // for (var i = 0; i < 10000; i++){
+        //     gameCore.gameScene.geometry.attributes.alpha.array[i] = Math.random()/10;
+        //     gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/5;
+        //     gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/5;
+        //     gameCore.gameScene.geometry.attributes.scale.array[i] = Utils.rand(5,12);
+        // }
         gameCore.gameScene.geometry.attributes.alpha.needsUpdate = true;
         gameCore.gameScene.geometry.attributes.color.needsUpdate = true;
         gameCore.gameScene.geometry.attributes.scale.needsUpdate = true;

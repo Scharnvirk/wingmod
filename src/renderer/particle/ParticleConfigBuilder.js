@@ -1,6 +1,6 @@
 function ParticleConfigBuilder(){
     this.particleMapConfig = {
-        particleAdd: THREE.ImageUtils.loadTexture( "/assets/particleAdd.png" )
+        particleAdd: THREE.ImageUtils.loadTexture( "/gfx/particleAdd.png" )
     };
 
     this.particleMaterialConfig = {

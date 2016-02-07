@@ -23,7 +23,7 @@ GameScene.prototype.fillScene = function(){
 };
 
  GameScene.prototype.update = function(){
-    for (let i = 0; i < 0; i++){
+    for (let i = 0; i < 10; i++){
         this.actorManager.addNew([ActorFactory.PROJECTILE, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360)]);
     }
  };
