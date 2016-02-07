@@ -82,7 +82,7 @@ class GameScene {
             attribute vec3 color; \
             varying float vAlpha; \
             varying vec3 vColor; \
-            uniform float scale; \
+            attribute float scale; \
             void main() { \
                 vAlpha = alpha; \
                 vColor = color; \
@@ -92,10 +92,11 @@ class GameScene {
             }";
 
         var fragmentShader = " \
+            uniform sampler2D map; \
             varying vec3 vColor; \
             varying float vAlpha; \
             void main() { \
-                gl_FragColor = vec4( vColor, vAlpha ); \
+				gl_FragColor = vec4(vColor, vAlpha) * texture2D( map, gl_PointCoord ); \
             } \
         ";
 
@@ -124,13 +125,15 @@ class GameScene {
             var vertices = new Float32Array( points * 3 );
             var alphas = new Float32Array( points * 1 );
             var colors = new Float32Array( points * 3 );
+            var scales = new Float32Array( points * 1 );
             for ( let i = 0; i < points; i++ )
             {
             	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
             	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
             	vertices[ i*3 + 2 ] = 0;
                 alphas[i] = Math.random();
-                colors[ i*3 + 0 ] = Math.random(); 
+                scales[i] =  Utils.rand(5,12);
+                colors[ i*3 + 0 ] = Math.random();
             	colors[ i*3 + 1 ] = Math.random();
             	colors[ i*3 + 2 ] = Math.random();
             }
@@ -138,6 +141,7 @@ class GameScene {
             this.geometry.addAttribute('position', new THREE.BufferAttribute( vertices, 3 ));
             this.geometry.addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ));
             this.geometry.addAttribute('color', new THREE.BufferAttribute( colors, 3 ));
+            this.geometry.addAttribute('scale', new THREE.BufferAttribute( scales, 1 ));
 
             // var numVertices = geometry.attributes.position.count;
             // console.log(numVertices);
@@ -153,6 +157,7 @@ class GameScene {
 
             var uniforms = {
                 scale: { type: 'f', value: this.scale },
+                map: { type: "t", value: new THREE.TextureLoader().load( "/assets/particleAdd.png" ) }
                 //color: { type: "c", value: new THREE.Color( 0x00ff00 ) }
             };
             this.shaderMaterial = new THREE.ShaderMaterial( {
@@ -160,6 +165,7 @@ class GameScene {
                  uniforms:       uniforms,
                  vertexShader:   vertexShader,
                  fragmentShader: fragmentShader,
+                 blending: THREE.AdditiveBlending,
                  transparent:    true
 
              });
@@ -190,8 +196,11 @@ class GameScene {
             gameCore.gameScene.geometry.attributes.alpha.array[i] = Math.random();
             gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/5;
             gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/5;
+            gameCore.gameScene.geometry.attributes.scale.array[i] = Utils.rand(5,12);
         }
         gameCore.gameScene.geometry.attributes.alpha.needsUpdate = true;
+        gameCore.gameScene.geometry.attributes.color.needsUpdate = true;
+        gameCore.gameScene.geometry.attributes.scale.needsUpdate = true;
         gameCore.gameScene.geometry.attributes.position.needsUpdate = true;
 
         if(this.actor){
