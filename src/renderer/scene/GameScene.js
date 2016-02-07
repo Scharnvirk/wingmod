@@ -130,7 +130,7 @@ class GameScene {
             	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
             	vertices[ i*3 + 2 ] = 0;
                 alphas[i] = Math.random();
-                colors[ i*3 + 0 ] = Math.random();
+                colors[ i*3 + 0 ] = Math.random(); 
             	colors[ i*3 + 1 ] = Math.random();
             	colors[ i*3 + 2 ] = Math.random();
             }
