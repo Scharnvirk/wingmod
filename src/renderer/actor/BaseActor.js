@@ -16,9 +16,13 @@ function BaseActor(configArray, actorDependencies){
     this.mesh = this.createMesh();
     this.light = this.createLight();
     this.sprite = this.createSprite();
+
+    this.timer = 0;
 }
 
 BaseActor.prototype.update = function(delta){
+    this.timer ++;
+
     this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
     this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
@@ -85,7 +89,7 @@ BaseActor.prototype.removeFromScene = function(scene){
     if (this.light){
         scene.remove(this.light);
     }
-    
+
     if (this.sprite){
         scene.remove(this.sprite);
     }

@@ -23,10 +23,11 @@ Core.prototype.makeMainComponents = function(){
     this.inputListener = new InputListener( this.renderer.domElement );
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
-    this.actorManager = new ActorManager({scene: this.scene, core: this});
+    this.particleManager = new ParticleManager({scene: this.scene});
+    this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager, core: this});
     this.logicBus = new LogicBus({logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.gameScene = new GameScene({core: this,scene: this.scene,logicBus: this.logicBus,actorManager: this.actorManager});
+    this.gameScene = new GameScene({core: this, scene: this.scene,logicBus: this.logicBus,actorManager: this.actorManager});
 };
 
 Core.prototype.makeStatsWatcher = function(){
@@ -150,6 +151,7 @@ Core.prototype.controlsUpdate = function(){
 Core.prototype.render = function(){
     this.gameScene.update();
     this.actorManager.update();
+    this.particleManager.update();
     this.camera.update();
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);

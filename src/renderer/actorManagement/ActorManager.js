@@ -8,11 +8,12 @@ function ActorManager(config){
 
     Object.assign(this, config);
 
-    this.factory = config.factory || new ActorFactory({});
+    if(!this.scene) throw new Error('No scene for Renderer ActorManager!');
+    if(!this.particleManager) throw new Error('No particleManager for Renderer ActorManager!');
+
+    this.factory = config.factory || new ActorFactory({particleManager: this.particleManager});
     this.currentPhysicsTime = Date.now();
     this.lastPhysicsTime = Date.now()-1;
-
-    if(!this.scene) throw new Error('No scene for Renderer ActorManager!');
 }
 
 ActorManager.prototype.update = function(){

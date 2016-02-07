@@ -95,109 +95,59 @@ class GameScene {
 				gl_FragColor = vec4(vColor, vAlpha) * texture2D( map, gl_PointCoord ); \
             } \
         ";
-
-        // for(let t = 0; t < 1; t++){
-        //     this.geometries[t] =  new THREE.BufferGeometry();
-        //     var alphas = new Float32Array( 1000 );
-        //
-        //     var vertices = new Float32Array( 1000 * 3 );
-        //     for ( var i = 0; i < 1000; i++ )
-        //     {
-        //     	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
-        //     	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
-        //     	vertices[ i*3 + 2 ] = 0;
-        //     }
-        //
-        //     this.geometries[t].addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        //     this.geometries[t].addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ) );
-        //
-        //     var uniforms = {
-        //        color: { type: "c", value: new THREE.Color( 0x00ff00 ) },
-        //    };
-
-            var points = 20000;
-
-            this.geometry = new THREE.BufferGeometry();
-            var vertices = new Float32Array( points * 3 );
-            var alphas = new Float32Array( points * 1 );
-            var colors = new Float32Array( points * 3 );
-            var scales = new Float32Array( points * 1 );
-            for ( let i = 0; i < points; i++ )
-            {
-            	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
-            	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
-            	vertices[ i*3 + 2 ] = 0;
-                alphas[i] = Math.random();
-                scales[i] =  Utils.rand(5,12);
-                colors[ i*3 + 0 ] = Math.random();
-            	colors[ i*3 + 1 ] = Math.random();
-            	colors[ i*3 + 2 ] = Math.random();
-            }
-
-            this.geometry.addAttribute('position', new THREE.BufferAttribute( vertices, 3 ));
-            this.geometry.addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ));
-            this.geometry.addAttribute('color', new THREE.BufferAttribute( colors, 3 ));
-            this.geometry.addAttribute('scale', new THREE.BufferAttribute( scales, 1 ));
-
-            // var numVertices = geometry.attributes.position.count;
-            // console.log(numVertices);
+            // var points = 30000;
             //
-            // for( var i = 0; i < numVertices; i ++ ) {
-            //
-            //     colors[i] = Utils.makeRandomColor();
+            // this.geometry = new THREE.BufferGeometry();
+            // var vertices = new Float32Array( points * 3 );
+            // var alphas = new Float32Array( points * 1 );
+            // var colors = new Float32Array( points * 3 );
+            // var scales = new Float32Array( points * 1 );
+            // for ( let i = 0; i < points; i++ )
+            // {
+            // 	vertices[ i*3 + 0 ] = Utils.rand(-300,300);
+            // 	vertices[ i*3 + 1 ] = Utils.rand(-300,300);
+            // 	vertices[ i*3 + 2 ] = 30;
+            //     alphas[i] = Math.random()*0.4;
+            //     scales[i] =  Utils.rand(20,80);
+            //      colors[ i*3 + 0 ] = 1;
+            // 	 colors[ i*3 + 1 ] = 1;
+            // 	 colors[ i*3 + 2 ] = 1;
             // }
-
-
-
-            this.scale = 2;
-
-            var uniforms = {
-                scale: { type: 'f', value: this.scale },
-                map: { type: "t", value: new THREE.TextureLoader().load( "/gfx/particleAdd.png" ) }
-                //color: { type: "c", value: new THREE.Color( 0x00ff00 ) }
-            };
-            this.shaderMaterial = new THREE.ShaderMaterial( {
-                 //map: map,
-                 uniforms:       uniforms,
-                 vertexShader:   vertexShader,
-                 fragmentShader: fragmentShader,
-                 blending: THREE.AdditiveBlending,
-                 transparent:    true
-
-             });
             //
-            // material = new THREE.PointsMaterial( {
-            //     size: 20,
-            //     //map: map,
-            //     blending: THREE.AdditiveBlending,
-            //     depthTest: true,
-            //     color: Utils.makeRandomColor(),
-            //     transparent : true
-            // });
+            // this.geometry.addAttribute('position', new THREE.BufferAttribute( vertices, 3 ));
+            // this.geometry.addAttribute('alpha', new THREE.BufferAttribute( alphas, 1 ));
+            // this.geometry.addAttribute('color', new THREE.BufferAttribute( colors, 3 ));
+            // this.geometry.addAttribute('scale', new THREE.BufferAttribute( scales, 1 ));
+            //
+            // var uniforms = {
+            //     map: { type: "t", value: new THREE.TextureLoader().load( "/gfx/smokePuffAlpha.png" ) }
+            // };
+            //
+            // this.shaderMaterial = new THREE.ShaderMaterial( {
+            //      uniforms:       uniforms,
+            //      vertexShader:   vertexShader,
+            //      fragmentShader: fragmentShader,
+            //      //blending: THREE.AdditiveBlending,
+            //      transparent:    true
+            //  });
+            // var particles = new THREE.Points( this.geometry, this.shaderMaterial );
+            // this.scene.add( particles );
 
-            var particles = new THREE.Points( this.geometry, this.shaderMaterial );
-            this.scene.add( particles );
-
-        //}
      }
 
     update(){
-        // this.geometries[0].vertices.forEach(function(vertex){
-        //     vertex.x += Utils.rand(-1,1);
-        //     vertex.y += Utils.rand(-1,1);
-        // });
-        // this.geometries[0].verticesNeedUpdate = true;
         //
-        // for (var i = 0; i < 10000; i++){
-        //     gameCore.gameScene.geometry.attributes.alpha.array[i] = Math.random()/10;
-        //     gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/5;
-        //     gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/5;
-        //     gameCore.gameScene.geometry.attributes.scale.array[i] = Utils.rand(5,12);
+
+        // for (var i = 0; i < 30000; i++){
+        //     gameCore.gameScene.geometry.attributes.alpha.array[i] *= 0.998;
+        //     gameCore.gameScene.geometry.attributes.position.array[i*3] += Utils.rand(-2,2)/10;
+        //     gameCore.gameScene.geometry.attributes.position.array[i*3+1]  += Utils.rand(-2,2)/10;
+        //     gameCore.gameScene.geometry.attributes.scale.array[i] *= 0.999;
         // }
-        gameCore.gameScene.geometry.attributes.alpha.needsUpdate = true;
-        gameCore.gameScene.geometry.attributes.color.needsUpdate = true;
-        gameCore.gameScene.geometry.attributes.scale.needsUpdate = true;
-        gameCore.gameScene.geometry.attributes.position.needsUpdate = true;
+        // gameCore.gameScene.geometry.attributes.alpha.needsUpdate = true;
+        // gameCore.gameScene.geometry.attributes.color.needsUpdate = true;
+        // gameCore.gameScene.geometry.attributes.scale.needsUpdate = true;
+        // gameCore.gameScene.geometry.attributes.position.needsUpdate = true;
 
         if(this.actor){
             this.pointLight.position.x = this.actor.position[0] + 20;
