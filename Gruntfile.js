@@ -17,8 +17,8 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                mangle: true,
-                compress: true,
+                //mangle: true,
+                //compress: true,
                 sourceMap: true,
                 sourceMapName: function(path) { return path.replace(/.js/,".map");}
             },

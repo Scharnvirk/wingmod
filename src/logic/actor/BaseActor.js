@@ -1,9 +1,10 @@
-function BaseActor(configArray){
-    this.body = this.createBody(configArray);
+function BaseActor(positionX, positionY, angle){
+    this.body = this.createBody();
     if(!this.body) throw new Error('No body defined for Logic Actor!');
 
-    this.body.position = [configArray[1] || 0, configArray[2] || 0];
-    this.body.angle = configArray[3] || 0;
+    this.body.position = [positionX || 0, positionY || 0];
+    this.body.angle = angle || 0;
+    this.body.actor = this;
 
     this.acceleration = 0;
     this.turnSpeed = 0;
@@ -18,13 +19,12 @@ function BaseActor(configArray){
     this.collisionArmor = Infinity;
 }
 
-BaseActor.prototype.createBody = function(configArray){
+BaseActor.prototype.createBody = function(){
     return null;
 };
 
 BaseActor.prototype.update = function(){
     this.customUpdate();
-    this.checkForDeath();
 };
 
 BaseActor.prototype.customUpdate = function(){};
@@ -33,10 +33,11 @@ BaseActor.prototype.playerUpdate = function(){};
 
 BaseActor.prototype.onCollision = function(otherActor, collisionEvent){
     this.hp -= Math.max(otherActor.collisionDamage - this.collisionArmor, 0);
+    if (this.hp <= 0){
+        this.body.scheduleDestruction();
+    }
 };
 
-BaseActor.prototype.checkForDeath = function(){
-    if (this.hp <= 0){
-        this.manager.deleteActor(this);
-    }
+BaseActor.prototype.remove = function(){
+    this.manager.removeActorAt(this.body.storageId);
 };

@@ -5,7 +5,7 @@ function ParticleGenerator(config){
     config.positionZ = config.positionZ || 10;
     config.maxParticles = config.maxParticles || 100;
 
-    config.positionHiddenFromView = 500;
+    config.positionHiddenFromView = 100000;
 
     Object.assign(this, config);
 
@@ -13,7 +13,6 @@ function ParticleGenerator(config){
 
     this.usedPoints = new Float32Array( this.maxParticles );
     this.nextPointer = 0;
-    //this.freePoints = Array.apply(null, {length: this.maxParticles}).map(Number.call, Number);
     this.geometry = this.createGeometry();
 }
 
@@ -46,22 +45,14 @@ ParticleGenerator.prototype.createGeometry = function(){
     return geometry;
 };
 
-ParticleGenerator.prototype.create = function(initConfig){
+ParticleGenerator.prototype.create = function(positionX, positionY, colorR, colorG, colorB, scale, alpha, lifeTime){
     var particleId = this.nextPointer;
     this.nextPointer ++;
     if (this.nextPointer > this.maxParticles){
         this.nextPointer = 0;
     }
 
-    this.initParticle(particleId, initConfig);
-    // var particleId = this.freePoints.length > 0 ? this.freePoints.shift() : this.usedPoints.shift();
-    // this.usedPoints.push(particleId); //tak, moze wyslac ten sam obiekt na koniec - to jest ok
-    //this.initParticle(particleId, initConfig);
-};
-
-ParticleGenerator.prototype.release = function(particleId){
-    this.usedPoints.splice(this.usedPoints.indexOf(particleId), 1);
-    this.freePoints.push(particleId);
+    this.initParticle(particleId, positionX, positionY, colorR, colorG, colorB, scale, alpha, lifeTime);
 };
 
 ParticleGenerator.prototype.deactivate = function(particleId){
@@ -80,25 +71,26 @@ ParticleGenerator.prototype.update = function(){
 };
 
 ParticleGenerator.prototype.updateParticle = function(particleId){
-    if (this.geometry.lifeTime[particleId] === 0){
+    var lifeTime = this.geometry.lifeTime;
+    if (lifeTime[particleId] === 0){
         this.deactivate(particleId);
-        this.geometry.lifeTime[particleId] = -1;
+        //lifeTime[particleId] = -1;
     } else {
         this.geometry.attributes.alpha.array[particleId] *= 0.95;
-        this.geometry.lifeTime[particleId] -= 1;
+        lifeTime[particleId] -= 1;
     }
 
 
 };
 
-ParticleGenerator.prototype.initParticle = function(particleId, initConfig){
+ParticleGenerator.prototype.initParticle = function(particleId, positionX, positionY, colorR, colorG, colorB, scale, alpha, lifeTime){
     let attributes = this.geometry.attributes;
-    attributes.position.array[particleId * 3] = initConfig[0];
-    attributes.position.array[particleId * 3 + 1] = initConfig[1];
-    attributes.color.array[particleId * 3] = initConfig[2];
-    attributes.color.array[particleId * 3 + 1] = initConfig[3];
-    attributes.color.array[particleId * 3 + 2] = initConfig[4];
-    attributes.scale.array[particleId] = initConfig[5];
-    attributes.alpha.array[particleId] = initConfig[6];
-    this.geometry.lifeTime[particleId] = initConfig[7];
+    attributes.position.array[particleId * 3] = positionX;
+    attributes.position.array[particleId * 3 + 1] = positionY;
+    attributes.color.array[particleId * 3] = colorR;
+    attributes.color.array[particleId * 3 + 1] = colorG;
+    attributes.color.array[particleId * 3 + 2] = colorB;
+    attributes.scale.array[particleId] = scale;
+    attributes.alpha.array[particleId] = alpha;
+    this.geometry.lifeTime[particleId] = lifeTime;
 };

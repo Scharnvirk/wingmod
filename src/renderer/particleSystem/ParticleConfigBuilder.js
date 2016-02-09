@@ -18,7 +18,7 @@ function ParticleConfigBuilder(){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 5000,
+            maxParticles: 2000,
             positionZ: 9
         },
         particleAdd: {

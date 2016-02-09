@@ -12,15 +12,15 @@ function ActorManager(config){
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 }
 
-ActorManager.prototype.addNew = function(actorParameters){
+ActorManager.prototype.addNew = function(classId, positionX, positionY, angle){
     if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
         //console.warn('Actor manager storage is full! Cannot create new Actor!');
         return;
     }
-    var actor = this.factory.create(actorParameters);
+    var actor = this.factory.create(classId, positionX, positionY, angle);
     actor.manager = this;
     actor.body.storageId = this.currentId;
-    actor.body.classId = actorParameters[0];
+    actor.body.classId = classId;
     this.storage[this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.body);
@@ -42,7 +42,6 @@ ActorManager.prototype.setPlayerActor = function(actor){
     this.core.renderBus.postMessage('attachCamera', {actorId: actor.body.storageId});
 };
 
-ActorManager.prototype.deleteActor = function(actor){
-    actor.body.scheduleDestruction();
-    delete this.storage[actor.body.storageId];
+ActorManager.prototype.removeActorAt = function(storageId){
+    delete this.storage[storageId];
 };

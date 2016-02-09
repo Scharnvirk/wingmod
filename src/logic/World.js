@@ -16,7 +16,9 @@ function GameWorld(config){
 GameWorld.extend(p2.World);
 
 GameWorld.prototype.makeUpdateData = function(){
+    var deadActors = [];
     var transferArray = this.transferArray;
+
     for(let i = 0; i < this.bodies.length; i ++){
         let body = this.bodies[i];
         transferArray[i*5] = body.storageId;
@@ -26,13 +28,16 @@ GameWorld.prototype.makeUpdateData = function(){
         transferArray[i*5+4] = body.angle;
 
         if(body.dead){
+            deadActors.push(body.storageId);
+            body.removeActor();
             this.removeBody(body);
         }
     }
 
     return {
         length: this.bodies.length,
-        transferArray: this.transferArray
+        transferArray: this.transferArray,
+        deadActors: deadActors
     };
 };
 

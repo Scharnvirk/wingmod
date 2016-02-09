@@ -14,7 +14,7 @@ ShipActor.prototype.createMesh = function(){
 ShipActor.prototype.customUpdate = function(){
 
     if(this.timer % 3 === 0){
-        this.particleManager.createParticle('smokePuffAlpha',[this.position[0] + Utils.rand(-3,3), this.position[1] + Utils.rand(-3,3), 1,1,1, Utils.rand(5,20), 0.5, 60]);
+        this.particleManager.createParticle('smokePuffAlpha',this.position[0] + Utils.rand(-3,3), this.position[1] + Utils.rand(-3,3), 1,1,1, Utils.rand(5,20), 0.5, 60);
     }
 
 

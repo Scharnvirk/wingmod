@@ -25,3 +25,7 @@ BaseBody.prototype.createShape = function(){
 BaseBody.prototype.scheduleDestruction = function(){
     this.dead = true;
 };
+
+BaseBody.prototype.removeActor = function(){
+    this.actor.remove();
+};

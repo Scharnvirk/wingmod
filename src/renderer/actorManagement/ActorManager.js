@@ -35,24 +35,26 @@ ActorManager.prototype.updateFromLogic = function(dataObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
     this.currentPhysicsTime = Date.now();
     var dataArray = dataObject.transferArray;
+    var deadActorStorageIds = dataObject.deadActors;
 
     for(let i = 0; i < dataObject.length; i++){
         let actor = this.storage[dataArray[i*5]];
         if(!actor){
-            this.createActor([dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]]);
-        } else {
-            if(dataArray[i*5+1] === -1){
-                this.deleteActor(actor, dataArray[i*5]);
-            } else {
-                actor.updateFromLogic([dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]]);
+            if(dataArray[i*5+1] > 0){
+                this.createActor(dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]);
             }
+        } else {
+            actor.updateFromLogic(dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]);
         }
+    }
+
+    for(let i = 0; i < deadActorStorageIds.length; i++){
+        this.deleteActor(deadActorStorageIds[i]);
     }
 };
 
-ActorManager.prototype.createActor = function(actorData){
-    var actorId = actorData.shift();
-    var actor = this.factory.create(actorData);
+ActorManager.prototype.createActor = function(actorId, classId, positionX, positionY, angle){
+    var actor = this.factory.create(classId, positionX, positionY, angle);
 
     if(this.actorRequestingCamera && this.actorRequestingCamera === actorId){
         this.core.camera.actor = actor;
@@ -72,7 +74,11 @@ ActorManager.prototype.attachCamera = function(actorId){
 
 };
 
-ActorManager.prototype.deleteActor = function(actor, actorId){
-    actor.removeFromScene(this.scene);
+ActorManager.prototype.deleteActor = function(actorId){
+    var actor = this.storage[actorId];
+    if(actor){
+        actor.onDeath();
+        actor.removeFromScene(this.scene);
+    }
     delete this.storage[actorId];
 };

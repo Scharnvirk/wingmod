@@ -16,7 +16,7 @@ MookActor.prototype.createBody = function(){
         shape: new p2.Convex({
             vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
-            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE |  Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
         mass: 1,

@@ -1,17 +1,19 @@
-function BaseActor(configArray, actorDependencies){
+function BaseActor(positionX, positionY, angle, actorDependencies){
     Object.assign(this, actorDependencies);
 
     this.positionZ = 10;
 
     this.position = new Float32Array([0,0]);
-    this.angle = 0;
-
     this.logicPosition = new Float32Array([0,0]);
     this.logicPreviousPosition = new Float32Array([0,0]);
     this.logicAngle = 0;
     this.logicPreviousAngle = 0;
 
-    this.updateFromLogic(configArray);
+    this.angle = angle || 0;
+    this.position[0] = positionX || 0;
+    this.position[1] = positionY || 0;
+
+    this.updateFromLogic(positionX, positionY, angle);
 
     this.mesh = this.createMesh();
     this.light = this.createLight();
@@ -44,14 +46,14 @@ BaseActor.prototype.update = function(delta){
 
 BaseActor.prototype.customUpdate = function(){};
 
-BaseActor.prototype.updateFromLogic = function(configArray){
+BaseActor.prototype.updateFromLogic = function(positionX, positionY, angle){
     this.logicPreviousPosition[0] = this.logicPosition[0];
     this.logicPreviousPosition[1] = this.logicPosition[1];
     this.logicPreviousAngle = this.logicAngle;
 
-    this.logicPosition[0] = configArray[2] || 0;
-    this.logicPosition[1] = configArray[3] || 0;
-    this.logicAngle = configArray[4] || 0;
+    this.logicPosition[0] = positionX || 0;
+    this.logicPosition[1] = positionY || 0;
+    this.logicAngle = angle || 0;
 };
 
 BaseActor.prototype.createMesh = function(){
@@ -93,4 +95,8 @@ BaseActor.prototype.removeFromScene = function(scene){
     if (this.sprite){
         scene.remove(this.sprite);
     }
+};
+
+BaseActor.prototype.onDeath = function(){
+
 };
