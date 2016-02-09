@@ -13,10 +13,10 @@ ProjectileActor.prototype.createBody = function(){
         shape: new p2.Circle({
             radius: 3,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
-            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN,
+            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN,
         }),
-        velocity: [Utils.rand(-120,120), Utils.rand(-120,120)],
+        velocity: [Utils.rand(-160,160), Utils.rand(-160,160)],
         actor: this,
-        mass: 1
+        mass: 2
     });
 };
