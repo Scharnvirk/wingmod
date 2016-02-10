@@ -43,15 +43,6 @@ GameScene.prototype.fillScene = function(){
         angle: Math.PI/2
     });
 
-    for (let i = 0; i < 0; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.PROJECTILE,
-            positionX: Utils.rand(-150,150),
-            positionY: Utils.rand(-150,150),
-            angle: Utils.rand(0,360)
-        });
-    }
-
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
         positionX: 0,
@@ -65,13 +56,18 @@ GameScene.prototype.fillScene = function(){
 
  GameScene.prototype.update = function(){
     this.timer++;
+    //
+    // if(this.timer % 60 === 0){
+    //
+    // }
 
     for(let i = 0; i < 10; i++){
         this.actorManager.addNew({
             classId: ActorFactory.PROJECTILE,
             positionX: 0,
             positionY: 0,
-            angle: Utils.rand(0,360)
+            angle: Utils.rand(0,360),
+            velocity: 200
         });
     }
  };

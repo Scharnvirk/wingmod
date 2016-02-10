@@ -42,6 +42,7 @@ GameWorld.prototype.makeUpdateData = function(){
 };
 
 GameWorld.prototype.onCollision = function(collisionEvent){
+    //console.log(collisionEvent.bodyA.actor, collisionEvent.bodyB.actor);
     collisionEvent.bodyA.actor.onCollision(collisionEvent.bodyB.actor, collisionEvent);
     collisionEvent.bodyB.actor.onCollision(collisionEvent.bodyA.actor, collisionEvent);
 };

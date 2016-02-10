@@ -1,5 +1,5 @@
-function WallActor(configArray){
-    configArray = configArray || [];
+function WallActor(config){
+    config = config || [];
     BaseActor.apply(this, arguments);
     //this.collisionDamage = 0;
 }

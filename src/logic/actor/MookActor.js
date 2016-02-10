@@ -1,5 +1,5 @@
-function MookActor(configArray){
-    configArray = configArray || [];
+function MookActor(config){
+    config = config || [];
     BaseActor.apply(this, arguments);
 
     this.acceleration = 200;
@@ -16,10 +16,16 @@ MookActor.prototype.createBody = function(){
         shape: new p2.Convex({
             vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
-            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+            collisionMask:
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN |
+                Constants.COLLISION_GROUPS.EXPLOSION
         }),
         actor: this,
-        mass: 1,
+        mass: 2,
         damping: 0.75,
         angularDamping: 0,
         inertia: 10

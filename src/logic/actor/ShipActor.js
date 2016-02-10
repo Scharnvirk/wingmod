@@ -1,5 +1,5 @@
-function ShipActor(configArray){
-    configArray = configArray || [];
+function ShipActor(config){
+    config = config || [];
     BaseActor.apply(this, arguments);
 
     this.acceleration = 10000;
@@ -22,7 +22,11 @@ ShipActor.prototype.createBody = function(){
         shape: new p2.Convex({
             vertices: [[-15, 8], [-6, -2], [6, -2], [15, 8], [15,14], [0, 20], [-15, 14] ],
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
-            collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+            collisionMask:
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN |
+                Constants.COLLISION_GROUPS.EXPLOSION
         }),
         actor: this,
         mass: 40,
@@ -56,7 +60,7 @@ ShipActor.prototype.playerUpdate = function(inputState){
 ShipActor.prototype.applyRotation = function(inputState){
     this.rotationForce = 0;
 
-    var angleVector = MathUtils.angleToVector(this.body.angle, this.body.position[0], this.body.position[1]);
+    var angleVector = MathUtils.angleToVector(this.body.angle, 1);
     var angle = MathUtils.angleBetweenPoints(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
     if (angle < 180 && angle > 0) {

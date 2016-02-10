@@ -1,7 +1,8 @@
 var MathUtils = {
 
-    angleToVector: function(angle){
-        return [(Math.sin(angle) * -1), Math.cos(angle)];
+    angleToVector: function(angle, velocity){
+        velocity = velocity || 0;
+        return [(Math.sin(angle) * -1) * velocity, Math.cos(angle) * velocity];
     },
 
     angleBetweenPoints: function(p1x, p2x, p1y, p2y){

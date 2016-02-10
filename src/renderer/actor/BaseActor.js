@@ -3,15 +3,13 @@ function BaseActor(config, actorDependencies){
 
     this.positionZ = 10;
 
-    this.position = new Float32Array([0,0]);
-    this.logicPosition = new Float32Array([0,0]);
-    this.logicPreviousPosition = new Float32Array([0,0]);
-    this.logicAngle = 0;
-    this.logicPreviousAngle = 0;
+    this.position = new Float32Array([config.positionX || 0, config.positionY || 0]);
+    this.logicPosition = new Float32Array([this.position[0],this.position[1]]);
+    this.logicPreviousPosition = new Float32Array([this.position[0],this.position[1]]);
 
     this.angle = config.angle || 0;
-    this.position[0] = config.positionX || 0;
-    this.position[1] = config.positionY || 0;
+    this.logicAngle = this.angle;
+    this.logicPreviousAngle = this.angle;
 
     this.updateFromLogic(config.positionX, config.positionY, config.angle);
 
