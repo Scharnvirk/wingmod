@@ -21,14 +21,14 @@ GameWorld.prototype.makeUpdateData = function(){
 
     for(let i = 0; i < this.bodies.length; i ++){
         let body = this.bodies[i];
-        transferArray[i*5] = body.storageId;
+        transferArray[i*5] = body.actorId;
         transferArray[i*5+1] = body.dead ? -1 : body.classId;
         transferArray[i*5+2] = body.position[0];
         transferArray[i*5+3] = body.position[1];
         transferArray[i*5+4] = body.angle;
 
         if(body.dead){
-            deadActors.push(body.storageId);
+            deadActors.push(body.actorId);
             body.removeActor();
             this.removeBody(body);
         }

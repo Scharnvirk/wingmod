@@ -7,18 +7,58 @@ function GameScene(config){
 
 GameScene.prototype.fillScene = function(){
     for (let i = 0; i < 100; i++){
-        this.actorManager.addNew(ActorFactory.MOOK, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360));
+        this.actorManager.addNew({
+            classId: ActorFactory.MOOK,
+            positionX: Utils.rand(-150,150),
+            positionY: Utils.rand(-150,150),
+            angle: Utils.rand(0,360)
+        });
     }
-    this.actorManager.addNew(ActorFactory.WALL, 0, -200, 0);
-    this.actorManager.addNew(ActorFactory.WALL, 0, 200, 0);
-    this.actorManager.addNew(ActorFactory.WALL, 200, 0, Math.PI/2);
-    this.actorManager.addNew(ActorFactory.WALL, -200, 0, Math.PI/2);
+
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 0,
+        positionY: -200,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 0,
+        positionY: 200,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 200,
+        positionY: 0,
+        angle: Math.PI/2
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: -200,
+        positionY: 0,
+        angle: Math.PI/2
+    });
 
     for (let i = 0; i < 0; i++){
-        this.actorManager.addNew(ActorFactory.PROJECTILE, Utils.rand(-150,150), Utils.rand(-150,150), Utils.rand(0,360));
+        this.actorManager.addNew({
+            classId: ActorFactory.PROJECTILE,
+            positionX: Utils.rand(-150,150),
+            positionY: Utils.rand(-150,150),
+            angle: Utils.rand(0,360)
+        });
     }
 
-    var playerActor = this.actorManager.addNew(ActorFactory.SHIP, 0,0,0);
+    var playerActor = this.actorManager.addNew({
+        classId: ActorFactory.SHIP,
+        positionX: 0,
+        positionY: 0,
+        angle: 0
+    });
+
     this.actorManager.setPlayerActor(playerActor);
     console.log("scene complete");
 };
@@ -27,6 +67,11 @@ GameScene.prototype.fillScene = function(){
     this.timer++;
 
     for(let i = 0; i < 10; i++){
-        this.actorManager.addNew(ActorFactory.PROJECTILE, 0,0, Utils.rand(0,360));
+        this.actorManager.addNew({
+            classId: ActorFactory.PROJECTILE,
+            positionX: 0,
+            positionY: 0,
+            angle: Utils.rand(0,360)
+        });
     }
  };

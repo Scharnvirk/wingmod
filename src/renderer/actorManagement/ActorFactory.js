@@ -6,7 +6,6 @@ function ActorFactory(actorDependencies){
     this.actorMap = {
         [ActorFactory.SHIP]: ShipActor,
         [ActorFactory.MOOK]: MookActor,
-        [ActorFactory.LIGHT]: LightActor,
         [ActorFactory.WALL]: WallActor,
         [ActorFactory.PROJECTILE]: ProjectileActor
     };
@@ -14,12 +13,10 @@ function ActorFactory(actorDependencies){
 
 ActorFactory.SHIP = 1;
 ActorFactory.MOOK = 2;
-ActorFactory.LIGHT = 3;
 ActorFactory.WALL = 4;
 
 ActorFactory.PROJECTILE = 100;
 
-//actorDataArray format is: [classId, positionX, positionY, angle, velocityX, velocityY]
-ActorFactory.prototype.create = function(classId, positionX, positionY, angle){
-    return new this.actorMap[classId](positionX, positionY, angle, this.actorDependencies);
+ActorFactory.prototype.create = function(config){
+    return new this.actorMap[config.classId](config, this.actorDependencies);
 };

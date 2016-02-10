@@ -25,7 +25,7 @@ ActorManager.prototype.update = function(){
 };
 
 /*
-transferArray[i*5] = body.storageId;
+transferArray[i*5] = body.actorId;
 transferArray[i*5+1] = body.classId;
 transferArray[i*5+2] = body.position[0];
 transferArray[i*5+3] = body.position[1];
@@ -35,33 +35,39 @@ ActorManager.prototype.updateFromLogic = function(dataObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
     this.currentPhysicsTime = Date.now();
     var dataArray = dataObject.transferArray;
-    var deadActorStorageIds = dataObject.deadActors;
+    var deadActorIds = dataObject.deadActors;
 
     for(let i = 0; i < dataObject.length; i++){
         let actor = this.storage[dataArray[i*5]];
         if(!actor){
             if(dataArray[i*5+1] > 0){
-                this.createActor(dataArray[i*5], dataArray[i*5+1], dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]);
+                this.createActor({
+                    actorId: dataArray[i*5],
+                    classId: dataArray[i*5+1],
+                    positionX: dataArray[i*5+2],
+                    positionY: dataArray[i*5+3],
+                    angle: dataArray[i*5+4]
+                });
             }
         } else {
             actor.updateFromLogic(dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]);
         }
     }
 
-    for(let i = 0; i < deadActorStorageIds.length; i++){
-        this.deleteActor(deadActorStorageIds[i]);
+    for(let i = 0; i < deadActorIds.length; i++){
+        this.deleteActor(deadActorIds[i]);
     }
 };
 
-ActorManager.prototype.createActor = function(actorId, classId, positionX, positionY, angle){
-    var actor = this.factory.create(classId, positionX, positionY, angle);
+ActorManager.prototype.createActor = function(config){
+    var actor = this.factory.create(config);
 
-    if(this.actorRequestingCamera && this.actorRequestingCamera === actorId){
+    if(this.actorRequestingCamera && this.actorRequestingCamera === config.actorId){
         this.core.camera.actor = actor;
         this.core.gameScene.actor = actor;
     }
 
-    this.storage[actorId] = actor;
+    this.storage[config.actorId] = actor;
     actor.addToScene(this.scene);
 };
 

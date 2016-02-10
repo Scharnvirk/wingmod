@@ -12,15 +12,15 @@ function ActorManager(config){
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 }
 
-ActorManager.prototype.addNew = function(classId, positionX, positionY, angle){
+ActorManager.prototype.addNew = function(config){
     if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
         //console.warn('Actor manager storage is full! Cannot create new Actor!');
         return;
     }
-    var actor = this.factory.create(classId, positionX, positionY, angle);
+    var actor = this.factory.create(config);
     actor.manager = this;
-    actor.body.storageId = this.currentId;
-    actor.body.classId = classId;
+    actor.body.actorId = this.currentId;
+    actor.body.classId = config.classId;
     this.storage[this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.body);
@@ -28,8 +28,8 @@ ActorManager.prototype.addNew = function(classId, positionX, positionY, angle){
 };
 
 ActorManager.prototype.update = function(inputState){
-    this.playerActors.forEach(function(actorStorageId){
-        this.storage[actorStorageId].playerUpdate(inputState);
+    this.playerActors.forEach(function(actorId){
+        this.storage[actorId].playerUpdate(inputState);
     }.bind(this));
 
     for (let actor in this.storage) {
@@ -38,10 +38,10 @@ ActorManager.prototype.update = function(inputState){
 };
 
 ActorManager.prototype.setPlayerActor = function(actor){
-    this.playerActors.push(actor.body.storageId);
-    this.core.renderBus.postMessage('attachCamera', {actorId: actor.body.storageId});
+    this.playerActors.push(actor.body.actorId);
+    this.core.renderBus.postMessage('attachCamera', {actorId: actor.body.actorId});
 };
 
-ActorManager.prototype.removeActorAt = function(storageId){
-    delete this.storage[storageId];
+ActorManager.prototype.removeActorAt = function(actorId){
+    delete this.storage[actorId];
 };

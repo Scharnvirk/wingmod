@@ -1,9 +1,9 @@
-function BaseActor(positionX, positionY, angle){
+function BaseActor(config){
     this.body = this.createBody();
     if(!this.body) throw new Error('No body defined for Logic Actor!');
 
-    this.body.position = [positionX || 0, positionY || 0];
-    this.body.angle = angle || 0;
+    this.body.position = [config.positionX || 0, config.positionY || 0];
+    this.body.angle = config.angle || 0;
     this.body.actor = this;
 
     this.acceleration = 0;
@@ -39,5 +39,5 @@ BaseActor.prototype.onCollision = function(otherActor, collisionEvent){
 };
 
 BaseActor.prototype.remove = function(){
-    this.manager.removeActorAt(this.body.storageId);
+    this.manager.removeActorAt(this.body.actorId);
 };
