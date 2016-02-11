@@ -33,7 +33,7 @@ ProjectileActor.prototype.onDeath = function(){
         position: this.body.position,
         radius: 20,
         lifetime: 1,
-        mass: 0.1
+        mass: 0.001
     });
 
     this.world.addBody(explosionBody);
