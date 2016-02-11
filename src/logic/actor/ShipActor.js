@@ -2,7 +2,7 @@ function ShipActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
 
-    this.acceleration = 10000;
+    this.acceleration = 1000;
     this.backwardAccelerationRatio = 0.7;
     this.horizontalAccelerationRatio = 0.7;
     this.turnSpeed = 4;
@@ -29,7 +29,7 @@ ShipActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.EXPLOSION
         }),
         actor: this,
-        mass: 40,
+        mass: 4,
         damping: 0.75,
         angularDamping: 0,
         inertia: 10
@@ -61,7 +61,7 @@ ShipActor.prototype.applyRotation = function(inputState){
     this.rotationForce = 0;
 
     var angleVector = MathUtils.angleToVector(this.body.angle, 1);
-    var angle = MathUtils.angleBetweenPoints(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+    var angle = MathUtils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;

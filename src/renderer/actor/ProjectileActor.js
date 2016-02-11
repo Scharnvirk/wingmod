@@ -8,7 +8,7 @@ function ProjectileActor(){
 ProjectileActor.extend(BaseActor);
 
 ProjectileActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAdd', this.position[0], this.position[1], 1,1,1, 5, 0.5, 120);
+    this.particleManager.createParticle('particleAdd', this.position[0], this.position[1], 1,1,1, 5, 0.5, 5);
     this.particleManager.createParticle('particleAdd', this.position[0], this.position[1], this.colorR, this.colorG, this.colorB, 20, 0.1, 2);
 };
 //

@@ -22,7 +22,7 @@ ProjectileActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
-        mass: 0.2
+        mass: 0.1
     });
 };
 

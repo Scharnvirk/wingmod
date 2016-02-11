@@ -27,7 +27,7 @@ ExplosionActor.prototype.createBody = function(){
 };
 
 ExplosionActor.prototype.onCollision = function(otherActor, collisionEvent){
-
-    //console.log(otherActor, );
-    //otherActor.body.applyForce([ this.body.position[0] -otherActor.body.position[0], this.body.position[1]-otherActor.body.position[1]]);
+    var angleToOtherActor = MathUtils.angleBetweenPoints(this.body.position[0], this.body.position[1], otherActor.body.position[0], otherActor.body.position[1]);
+    var forceVector = [(Math.sin(Utils.degToRad(angleToOtherActor))) * 10000, Math.cos(Utils.degToRad(angleToOtherActor)) * 10000];
+    otherActor.body.applyForce(forceVector);
 };
