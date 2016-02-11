@@ -29,9 +29,11 @@ GameWorld.prototype.makeUpdateData = function(){
 
         if(body.dead){
             deadActors.push(body.actorId);
-            body.removeActor();
+            body.onDeath();
             this.removeBody(body);
         }
+
+        body.update();
     }
 
     return {
@@ -42,7 +44,7 @@ GameWorld.prototype.makeUpdateData = function(){
 };
 
 GameWorld.prototype.onCollision = function(collisionEvent){
-    //console.log(collisionEvent.bodyA.actor, collisionEvent.bodyB.actor);
-    collisionEvent.bodyA.actor.onCollision(collisionEvent.bodyB.actor, collisionEvent);
-    collisionEvent.bodyB.actor.onCollision(collisionEvent.bodyA.actor, collisionEvent);
+    //console.log(collisionEvent.bodyA.shape, collisionEvent.bodyB.shape);
+    collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
+    collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
 };

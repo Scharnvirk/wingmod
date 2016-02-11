@@ -14,11 +14,12 @@ function ActorManager(config){
 
 ActorManager.prototype.addNew = function(config){
     if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
-        //console.warn('Actor manager storage is full! Cannot create new Actor!');
+        console.warn('Actor manager storage is full! Cannot create new Actor!');
         return;
     }
     var actor = this.factory.create(config);
     actor.manager = this;
+    actor.world = this.world;
     actor.body.actorId = this.currentId;
     actor.body.classId = config.classId;
     this.storage[this.currentId] = actor;

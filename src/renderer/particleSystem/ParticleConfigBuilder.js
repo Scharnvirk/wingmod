@@ -23,7 +23,7 @@ function ParticleConfigBuilder(){
         },
         particleAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 15000,
+            maxParticles: 5000,
             positionZ: 9
         }
     };

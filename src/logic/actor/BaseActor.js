@@ -32,30 +32,26 @@ BaseActor.prototype.createBody = function(){
 BaseActor.prototype.update = function(){
     this.timer ++;
     if(this.timer > this.timeout){
-        this.onTimeout();
+        this.onDeath();
     }
     this.customUpdate();
 };
 
-BaseActor.prototype.onCollision = function(otherActor, collisionEvent){
-    this.hp -= Math.max(otherActor.collisionDamage - this.collisionArmor, 0);
+BaseActor.prototype.onCollision = function(otherActor){
+    this.hp -= Math.max((otherActor ? otherActor.collisionDamage : 0) - this.collisionArmor, 0);
     if (this.hp <= 0){
         this.onDeath();
     }
 };
 
-BaseActor.prototype.remove = function(){
-    this.manager.removeActorAt(this.body.actorId);
+BaseActor.prototype.remove = function(actorId){
+    this.manager.removeActorAt(actorId);
 };
 
 BaseActor.prototype.customUpdate = function(){};
 
 BaseActor.prototype.playerUpdate = function(){};
 
-BaseActor.prototype.onTimeout = function(){
-    this.onDeath();
-};
-
 BaseActor.prototype.onDeath = function(){
-    this.body.scheduleDestruction();
+    this.body.dead = true;
 };

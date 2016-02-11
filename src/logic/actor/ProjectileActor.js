@@ -22,18 +22,19 @@ ProjectileActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
-        mass: 0.1
+        mass: 0.0001
     });
 };
 
 ProjectileActor.prototype.onDeath = function(){
-    this.body.scheduleDestruction();
-    this.manager.addNew({
-        classId: ActorFactory.EXPLOSION,
-        positionX: this.body.position[0],
-        positionY: this.body.position[1],
-        angle: 0,
-        radius: 400,
-        power: 1000
+    this.body.dead = true;
+
+    var explosionBody = new ExplosionBody({
+        position: this.body.position,
+        radius: 20,
+        lifetime: 1,
+        mass: 0.1
     });
+
+    this.world.addBody(explosionBody);
 };

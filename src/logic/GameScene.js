@@ -56,12 +56,8 @@ GameScene.prototype.fillScene = function(){
 
  GameScene.prototype.update = function(){
     this.timer++;
-    // //
-    // if(this.timer % 60 === 0){
-    //
-    // }
 
-    for(let i = 0; i < 1; i++){
+    for(let i = 0; i < 10; i++){
         this.actorManager.addNew({
             classId: ActorFactory.PROJECTILE,
             positionX: 0,
