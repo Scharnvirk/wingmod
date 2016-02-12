@@ -63,7 +63,7 @@ GameScene.prototype.fillScene = function(){
             positionX: 0,
             positionY: 0,
             angle: Utils.rand(0,360),
-            velocity: Utils.rand(120,180)
+            velocity: Utils.rand(220,280)
         });
     }
  };
