@@ -1,6 +1,7 @@
 function ExplosionBody(config){
     Object.assign(this, config);
     BaseBody.apply(this, arguments);
+    this.collisionResponse = false;
 }
 
 ExplosionBody.extend(BaseBody);

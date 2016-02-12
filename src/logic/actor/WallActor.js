@@ -1,7 +1,6 @@
 function WallActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
-    //this.collisionDamage = 0;
 }
 
 WallActor.extend(BaseActor);

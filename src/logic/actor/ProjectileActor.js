@@ -1,11 +1,11 @@
 function ProjectileActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
+    this.collisionResponse = false;
 
     this.hp = 1;
-    this.collisionArmor = 0;
 
-    //this.timeout = 30;
+    this.removeOnHit = true;
 }
 
 ProjectileActor.extend(BaseActor);
@@ -16,9 +16,9 @@ ProjectileActor.prototype.createBody = function(){
             radius: 3,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
             collisionMask:
-                Constants.COLLISION_GROUPS.SHIP |
-                Constants.COLLISION_GROUPS.ENEMY |
-                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                // Constants.COLLISION_GROUPS.SHIP |
+                // Constants.COLLISION_GROUPS.ENEMY |
+                // Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,

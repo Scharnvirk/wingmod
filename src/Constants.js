@@ -1,5 +1,5 @@
 var Constants = {
-    SHOW_FPS: false,
+    SHOW_FPS: true,
 
     LOGIC_REFRESH_RATE: 60,
 
@@ -12,5 +12,5 @@ var Constants = {
             TERRAIN: Math.pow(2,10),
     },
 
-    STORAGE_SIZE: 1000
+    STORAGE_SIZE: 2000
 };

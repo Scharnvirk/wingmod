@@ -78,7 +78,7 @@ ParticleGenerator.prototype.updateParticle = function(particleId){
         this.deactivate(particleId);
         //lifeTime[particleId] = -1;
     } else {
-        this.geometry.attributes.alpha.array[particleId] *= 0.95;
+        this.geometry.attributes.alpha.array[particleId] *= 0.9;
         this.geometry.attributes.position.array[particleId * 3] += this.geometry.attributes.speed.array[particleId * 2];
         this.geometry.attributes.position.array[particleId * 3 + 1] += this.geometry.attributes.speed.array[particleId * 2 + 1];
         lifeTime[particleId] -= 1;

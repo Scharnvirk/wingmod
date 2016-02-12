@@ -6,7 +6,7 @@ function GameScene(config){
 }
 
 GameScene.prototype.fillScene = function(){
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 0; i++){
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
             positionX: Utils.rand(-150,150),
@@ -57,7 +57,7 @@ GameScene.prototype.fillScene = function(){
  GameScene.prototype.update = function(){
     this.timer++;
 
-    for(let i = 0; i < 10; i++){
+    for(let i = 0; i < 25; i++){
         this.actorManager.addNew({
             classId: ActorFactory.PROJECTILE,
             positionX: 0,

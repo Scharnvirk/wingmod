@@ -11,7 +11,7 @@ function BaseBody(config){
 BaseBody.extend(p2.Body);
 
 BaseBody.prototype.createShape = function(){
-    return new p2.Box({height: 5, width: 5});
+    return new p2.Circle({radius:1});
 };
 
 BaseBody.prototype.initShape = function(){

@@ -22,13 +22,6 @@ Core.prototype.initFpsCounter = function(){
     }
 };
 
-Core.prototype.createWorld = function(){
-    return new p2.World({
-        gravity: [0, 0],
-        islandSplit: false
-    });
-};
-
 Core.prototype.processGameLogic = function(){
     this.actorManager.update(this.renderBus.inputState);
     this.world.step(1 / Constants.LOGIC_REFRESH_RATE);

@@ -16,13 +16,11 @@ function BaseActor(config){
 
     this.hp = Infinity;
     this.damage = 0;
-    this.collisionDamage = 1;
-
-    this.armor = 0;
-    this.collisionArmor = Infinity;
 
     this.timeout = Infinity;
     this.timer = 0;
+
+    this.removeOnHit = false;
 }
 
 BaseActor.prototype.createBody = function(){
@@ -38,8 +36,11 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.onCollision = function(otherActor){
-    this.hp -= Math.max((otherActor ? otherActor.collisionDamage : 0) - this.collisionArmor, 0);
-    if (this.hp <= 0){
+    if(otherActor){
+        this.hp -= otherActor.damage;
+    }
+
+    if (this.hp <= 0 || this.removeOnHit){
         this.onDeath();
     }
 };
