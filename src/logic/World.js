@@ -6,11 +6,14 @@ function GameWorld(config){
     config = config || {};
     this.gravity = [0, 0];
     this.islandSplit = false;
-    this.applyDamping = false;
     this.applyGravity = false;
     this.applySpringForces = false;
     this.defaultContactMaterial.friction = 0;
+    this.solver.iterations = 20;
+    this.solver.tolerance = 0.02;
     //this.emitImpactEvent = false;
+
+    console.log(this);
 
     Object.assign(this, config);
 

@@ -13,12 +13,12 @@ ProjectileActor.extend(BaseActor);
 ProjectileActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Circle({
-            radius: 3,
+            radius: 1,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
             collisionMask:
-                // Constants.COLLISION_GROUPS.SHIP |
-                // Constants.COLLISION_GROUPS.ENEMY |
-                // Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
