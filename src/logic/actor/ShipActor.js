@@ -1,6 +1,7 @@
 function ShipActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
+    Object.assign(this, config);
 
     this.acceleration = 1000;
     this.backwardAccelerationRatio = 0.7;
@@ -13,6 +14,12 @@ function ShipActor(config){
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
+
+    this.daze = 0;
+    this.primaryWeaponTimer = 0;
+    this.secondaryWeaponTimer = 0;
+
+    this.hp = 10;
 }
 
 ShipActor.extend(BaseActor);
@@ -26,7 +33,7 @@ ShipActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.ENEMY |
                 Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
                 Constants.COLLISION_GROUPS.TERRAIN |
-                Constants.COLLISION_GROUPS.EXPLOSION
+                Constants.COLLISION_GROUPS.ENEMYEXPLOSION
         }),
         actor: this,
         mass: 4,
@@ -37,32 +44,52 @@ ShipActor.prototype.createBody = function(){
 };
 
 ShipActor.prototype.customUpdate = function(){
-    if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
-    }
+    this.processMovement();
+    this.processWeapon();
+};
 
+ShipActor.prototype.processMovement = function(){
     if(this.rotationForce !== 0){
         this.body.angularVelocity = this.rotationForce * this.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }
 
+    if(this.thrust !== 0){
+        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+    }
+
     if(this.horizontalThrust !== 0){
         this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
+};
 
+ShipActor.prototype.processWeapon = function(){
+    if(this.primaryWeaponTimer > 0){
+        this.primaryWeaponTimer --;
+    }
+    if(this.requestShootPrimary && this.primaryWeaponTimer === 0){
+        this.shootPrimary();
+    }
+    if(this.secondaryWeaponTimer > 0){
+        this.secondaryWeaponTimer --;
+    }
+    if(this.requestShootSecondary && this.secondaryWeaponTimer === 0){
+        this.shootSecondary();
+    }
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
-    this.applyThrust(inputState);
-    this.applyRotation(inputState);
+    this.applyThrustInput(inputState);
+    this.applyRotationInput(inputState);
+    this.applyWeaponInput(inputState);
 };
 
-ShipActor.prototype.applyRotation = function(inputState){
+ShipActor.prototype.applyRotationInput = function(inputState){
     this.rotationForce = 0;
 
-    var angleVector = MathUtils.angleToVector(this.body.angle, 1);
-    var angle = MathUtils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+    var angleVector = Utils.angleToVector(this.body.angle, 1);
+    var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
@@ -84,7 +111,7 @@ ShipActor.prototype.applyRotation = function(inputState){
     this.lastInputStateY = inputState.lookY;
 };
 
-ShipActor.prototype.applyThrust = function(inputState){
+ShipActor.prototype.applyThrustInput = function(inputState){
     this.thrust = 0;
     this.horizontalThrust = 0;
 
@@ -103,4 +130,72 @@ ShipActor.prototype.applyThrust = function(inputState){
     if (inputState.s) {
         this.thrust = -1 * this.backwardAccelerationRatio;
     }
+};
+
+
+ShipActor.prototype.applyWeaponInput = function(inputState){
+    this.requestShootPrimary = !!inputState.mouseLeft;
+    this.requestShootSecondary = !!inputState.mouseRight;
+};
+
+ShipActor.prototype.shootPrimary = function(){
+    this.primaryWeaponTimer += 10;
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 9);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
+
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 9);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
+
+    //this.body.applyForceLocal([0,-5000]);
+};
+
+ShipActor.prototype.shootSecondary = function(){
+    this.secondaryWeaponTimer += 40;
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 7);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
+
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 7);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
+
+    offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 7);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
+
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 7);
+    this.manager.addNew({
+        classId: ActorFactory.PLASMAPROJECTILE,
+        positionX: this.body.position[0] + offsetPosition[0],
+        positionY: this.body.position[1] + offsetPosition[1],
+        angle: this.body.angle,
+        velocity: 500
+    });
 };

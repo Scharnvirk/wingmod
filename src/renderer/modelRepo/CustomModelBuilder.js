@@ -7,7 +7,7 @@ CustomModelBuilder.prototype.configure = function(){
     return {
         'projectile': {
             material: new THREE.SpriteMaterial({
-                map: THREE.ImageUtils.loadTexture( "/gfx/particleAdd.png" ),
+                map: THREE.ImageUtils.loadTexture( "/gfx/elongatedParticleAdd.png" ),
                 color: 0xffffff,
                 blending: THREE.AdditiveBlending
             })

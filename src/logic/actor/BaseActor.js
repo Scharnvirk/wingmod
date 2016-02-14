@@ -7,7 +7,7 @@ function BaseActor(config){
     this.body.position = [this.positionX || 0, this.positionY || 0];
     this.body.angle = this.angle || 0;
     this.body.actor = this;
-    this.body.velocity = MathUtils.angleToVector(this.angle, this.velocity || 0);
+    this.body.velocity = Utils.angleToVector(this.angle, this.velocity || 0);
 
     this.acceleration = 0;
     this.turnSpeed = 0;

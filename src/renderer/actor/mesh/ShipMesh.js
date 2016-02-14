@@ -1,6 +1,6 @@
 function ShipMesh(config){
     BaseMesh.apply(this, arguments);
-    //this.angleOffset = Math.PI;
+    this.angleOffset = Math.PI;
 
     config = config || {};
     config.geometry = ModelStore.get('ship').geometry;

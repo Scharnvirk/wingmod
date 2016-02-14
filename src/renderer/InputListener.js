@@ -22,9 +22,10 @@ class InputListener{
             38: 'up',
             39: 'right',
             40: 'down',
-            //mouse below
             1001: 'scrollUp',
-            1002: 'scrollDown'
+            1002: 'scrollDown',
+            1003: 'mouseLeft',
+            1004: 'mouseRight'
         };
 
         Object.keys(this.keys).forEach(function (key) {
@@ -54,6 +55,28 @@ class InputListener{
         this.mouseMove = function (event) {
             this.inputState.mouseX = (event.clientX / window.innerWidth)*2 - 1;
             this.inputState.mouseY = -(event.clientY / window.innerHeight)*2 + 1;
+        };
+
+        this.mouseDown = function (event) {
+            switch(event.button){
+                case 0:
+                    this.inputState.mouseLeft = 1;
+                    break;
+                case 2:
+                    this.inputState.mouseRight = 1;
+                    break;
+            }
+        };
+
+        this.mouseUp = function(event) {
+            switch(event.button){
+                case 0:
+                    this.inputState.mouseLeft = 0;
+                    break;
+                case 2:
+                    this.inputState.mouseRight = 0;
+                    break;
+            }
         };
 
         this.handleEvent = function (event) {
@@ -92,6 +115,8 @@ class InputListener{
             this.domElement.removeEventListener('contextmenu', contextmenu, false);
             this.domElement.removeEventListener('wheel', _wheel, false);
             this.domElement.removeEventListener('mousemove', _wheel, false);
+            this.domElement.removeEventListener('mousedown', _mousedown, false);
+            this.domElement.removeEventListener('mouseup', _mouseup, false);
             window.removeEventListener('keydown', _keydown, false);
             window.removeEventListener('keyup', _keyup, false);
         };
@@ -100,10 +125,14 @@ class InputListener{
         var _keyup = bind(this, this.keyup);
         var _wheel = bind(this, this.mouseWheel);
         var _move = bind(this, this.mouseMove);
+        var _mousedown = bind(this, this.mouseDown);
+        var _mouseup = bind(this, this.mouseUp);
 
         this.domElement.addEventListener('contextmenu', contextmenu, false);
         this.domElement.addEventListener('wheel', _wheel, false);
         this.domElement.addEventListener('mousemove', _move, false);
+        this.domElement.addEventListener('mousedown', _mousedown, false);
+        this.domElement.addEventListener('mouseup', _mouseup, false);
         window.addEventListener('keydown', _keydown, false);
         window.addEventListener('keyup', _keyup, false);
     }

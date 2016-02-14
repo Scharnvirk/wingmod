@@ -6,17 +6,17 @@ function ActorFactory(actorDependencies){
     this.actorMap = {
         [ActorFactory.SHIP]: ShipActor,
         [ActorFactory.MOOK]: MookActor,
-        [ActorFactory.EXPLOSION]: ExplosionActor,
         [ActorFactory.WALL]: WallActor,
-        [ActorFactory.PROJECTILE]: ProjectileActor
+        [ActorFactory.PLASMAPROJECTILE]: ShipPlasmaProjectileActor,
+        [ActorFactory.MOLTENPROJECTILE]: EnemyMoltenProjectileActor
     };
 }
 
 ActorFactory.SHIP = 1;
 ActorFactory.MOOK = 2;
-ActorFactory.EXPLOSION = 3;
 ActorFactory.WALL = 4;
-ActorFactory.PROJECTILE = 100;
+ActorFactory.PLASMAPROJECTILE = 100;
+ActorFactory.MOLTENPROJECTILE = 101;
 
 ActorFactory.prototype.create = function(config){
     if(!this.actorMap[config.classId]){

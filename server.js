@@ -50,7 +50,7 @@ var SampleApp = function() {
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
 		self.zcache['/lib/utils/polyfills.js'] = fs.readFileSync('./lib/utils/polyfills.js');
-        self.zcache['/lib/p2.min.js'] = fs.readFileSync('./lib/p2.min.js');
+        self.zcache['/lib/p2.js'] = fs.readFileSync('./lib/p2.js');
         self.zcache['/lib/GPUParticleSystem.js'] = fs.readFileSync('./lib/GPUParticleSystem.js');
 
         self.zcache['/gfx/particle.png'] = fs.readFileSync('./gfx/particle.png');
@@ -132,7 +132,7 @@ var SampleApp = function() {
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
 		self.routes['/lib/threex.loop.js'] = function(req, res) {res.send(self.cache_get('/lib/threex.loop.js') );};
 		self.routes['/lib/utils/polyfills.js'] = function(req, res) {res.send(self.cache_get('/lib/utils/polyfills.js') );};
-        self.routes['/lib/p2.min.js'] = function(req, res) {res.send(self.cache_get('/lib/p2.min.js') );};
+        self.routes['/lib/p2.js'] = function(req, res) {res.send(self.cache_get('/lib/p2.js') );};
         self.routes['/lib/GPUParticleSystem.js'] = function(req, res) {res.send(self.cache_get('/lib/GPUParticleSystem.js') );};
 
         self.routes['/gfx/particle.png'] = function(req, res) {res.send(self.cache_get('/gfx/particle.png') );};

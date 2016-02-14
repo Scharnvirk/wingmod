@@ -12,8 +12,8 @@ LogicBus.prototype.handleMessage = function(message){
         case 'updateActors':
             this.actorManager.updateFromLogic(message.data);
             break;
-        case 'attachCamera':
-            this.actorManager.attachCamera(message.data.actorId);
+        case 'attachPlayer':
+            this.actorManager.attachPlayer(message.data.actorId);
             break;
     }
 };

@@ -1,12 +1,17 @@
 function MookActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
+    Object.assign(this, config);
 
     this.acceleration = 200;
     this.turnSpeed = 0.8;
 
     this.thrust = 0;
     this.rotationForce = 0;
+
+    this.hp = 4;
+
+    this.weaponTimer = 0;
 }
 
 MookActor.extend(BaseActor);
@@ -14,7 +19,7 @@ MookActor.extend(BaseActor);
 MookActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Convex({
-            vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
+            vertices: [[-10, 6], [0, 0], [10, 6], [0, 8]],
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
             collisionMask:
                 Constants.COLLISION_GROUPS.SHIP |
@@ -22,7 +27,7 @@ MookActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                 Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
                 Constants.COLLISION_GROUPS.TERRAIN |
-                Constants.COLLISION_GROUPS.EXPLOSION
+                Constants.COLLISION_GROUPS.SHIPEXPLOSION
         }),
         actor: this,
         mass: 2,
@@ -44,6 +49,17 @@ MookActor.prototype.customUpdate = function(){
     } else {
         this.body.angularVelocity = 0;
     }
+
+    this.processWeapon();
+};
+
+MookActor.prototype.processWeapon = function(){
+    if(this.weaponTimer > 0){
+        this.weaponTimer --;
+    }
+    if(this.requestShoot && this.weaponTimer === 0){
+        this.shoot();
+    }
 };
 
 MookActor.prototype.actorLogic = function(){
@@ -58,4 +74,23 @@ MookActor.prototype.actorLogic = function(){
             this.thrust = 0;
         }
     }
+    var weaponRand = Utils.rand(0,100);
+    if (weaponRand > 98){
+        this.requestShoot = true;
+    }
+    if (weaponRand < 10){
+        this.requestShoot = false;
+    }
+};
+
+MookActor.prototype.shoot = function(){
+    this.weaponTimer += 20;
+    this.manager.addNew({
+        classId: ActorFactory.MOLTENPROJECTILE,
+        positionX: this.body.position[0],
+        positionY: this.body.position[1],
+        angle: this.body.angle,
+        velocity: 200
+    });
+    this.body.applyForceLocal([0,2000]);
 };

@@ -11,15 +11,12 @@ function GameWorld(config){
     this.defaultContactMaterial.friction = 0;
     this.solver.iterations = 20;
     this.solver.tolerance = 0.02;
-    //this.emitImpactEvent = false;
 
     console.log(this);
 
     Object.assign(this, config);
 
     this.on('impact', this.onCollision.bind(this));
-
-
 }
 
 GameWorld.extend(p2.World);
@@ -53,7 +50,6 @@ GameWorld.prototype.makeUpdateData = function(){
 };
 
 GameWorld.prototype.onCollision = function(collisionEvent){
-    //console.log(collisionEvent.bodyA.shape, collisionEvent.bodyB.shape);
     collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
 };

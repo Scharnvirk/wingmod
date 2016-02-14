@@ -30,7 +30,9 @@ ActorManager.prototype.addNew = function(config){
 
 ActorManager.prototype.update = function(inputState){
     this.playerActors.forEach(function(actorId){
-        this.storage[actorId].playerUpdate(inputState);
+        if(this.storage[actorId]){
+            this.storage[actorId].playerUpdate(inputState);
+        }
     }.bind(this));
 
     for (let actor in this.storage) {
@@ -40,7 +42,7 @@ ActorManager.prototype.update = function(inputState){
 
 ActorManager.prototype.setPlayerActor = function(actor){
     this.playerActors.push(actor.body.actorId);
-    this.core.renderBus.postMessage('attachCamera', {actorId: actor.body.actorId});
+    this.core.renderBus.postMessage('attachPlayer', {actorId: actor.body.actorId});
 };
 
 ActorManager.prototype.removeActorAt = function(actorId){

@@ -1,27 +1,29 @@
-function ProjectileActor(){
+function EnemyMoltenProjectileActor(config){
     BaseActor.apply(this, arguments);
-    this.colorR = Math.random();
-    this.colorG = Math.random();
-    this.colorB = Math.random();
-    this.particleVelocity = 3.5;
+    this.colorR = 1;
+    this.colorG = 0.3;
+    this.colorB = 0.1;
 }
 
-ProjectileActor.extend(BaseActor);
+EnemyMoltenProjectileActor.extend(BaseActor);
 
-ProjectileActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 6,
-        alpha: 1,
-        alphaMultiplier: 0.6,
-        particleVelocity: 2,
-        particleAngle: this.angle,
-        lifeTime: 10
-    });
+EnemyMoltenProjectileActor.prototype.customUpdate = function(){
+    for(let i = 0; i < 3; i++){
+        var offsetPosition = Utils.angleToVector(this.angle, -i*0.6);
+        this.particleManager.createParticle('particleAdd', {
+            positionX: this.position[0] + offsetPosition[0],
+            positionY: this.position[1] + offsetPosition[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 4-0.6*i,
+            alpha: 1-0.19*i,
+            alphaMultiplier: 0.8,
+            particleVelocity: 1,
+            particleAngle: this.angle,
+            lifeTime: 1
+        });
+    }
 
     this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
@@ -29,27 +31,27 @@ ProjectileActor.prototype.customUpdate = function(){
         colorR: this.colorR,
         colorG: this.colorG,
         colorB: this.colorB,
-        scale: 20,
-        alpha: 0.2,
-        alphaMultiplier: 1,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 1
+        scale: 14,
+        alpha: 0.4,
+        alphaMultiplier: 0.6,
+        particleVelocity: 2,
+        particleAngle: this.angle,
+        lifeTime: 2
     });
 };
 
-ProjectileActor.prototype.onDeath = function(){
+EnemyMoltenProjectileActor.prototype.onDeath = function(){
     for (let i = 0; i < 20; i++){
         this.particleManager.createParticle('smokePuffAlpha',{
-            positionX: this.position[0] + Utils.rand(-5,5),
-            positionY: this.position[1] + Utils.rand(-5,5),
+            positionX: this.position[0] + Utils.rand(-2,2),
+            positionY: this.position[1] + Utils.rand(-2,2),
             colorR: this.colorR*0.3+0.7,
             colorG: this.colorG*0.3+0.7,
             colorB: this.colorB*0.3+0.7,
-            scale: Utils.rand(2,10),
+            scale: Utils.rand(2,6),
             alpha: 0.6,
             alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(0,3) / 10,
+            particleVelocity: Utils.rand(0,2) / 10,
             particleAngle: Utils.rand(0,360),
             lifeTime: 60
         });
@@ -61,7 +63,7 @@ ProjectileActor.prototype.onDeath = function(){
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 120,
+        scale: 70,
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -75,7 +77,7 @@ ProjectileActor.prototype.onDeath = function(){
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 30,
+        scale: 15,
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
@@ -89,7 +91,7 @@ ProjectileActor.prototype.onDeath = function(){
         colorR: this.colorR*0.3+0.7,
         colorG: this.colorG*0.3+0.7,
         colorB: this.colorB*0.3+0.7,
-        scale: 40,
+        scale: 20,
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,

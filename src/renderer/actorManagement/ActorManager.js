@@ -62,22 +62,22 @@ ActorManager.prototype.updateFromLogic = function(dataObject){
 ActorManager.prototype.createActor = function(config){
     var actor = this.factory.create(config);
 
-    if(this.actorRequestingCamera && this.actorRequestingCamera === config.actorId){
+    if(this.actorRequestingPlayer && this.actorRequestingPlayer === config.actorId){
         this.core.camera.actor = actor;
         this.core.gameScene.actor = actor;
+        actor.inputListener = this.core.inputListener;
     }
 
     this.storage[config.actorId] = actor;
     actor.addToScene(this.scene);
 };
 
-ActorManager.prototype.attachCamera = function(actorId){
+ActorManager.prototype.attachPlayer = function(actorId){
     if (!this.storage[actorId]){
-        this.actorRequestingCamera = actorId;
+        this.actorRequestingPlayer = actorId;
     } else {
         this.core.camera.actor = this.storage[actorId];
     }
-
 };
 
 ActorManager.prototype.deleteActor = function(actorId){

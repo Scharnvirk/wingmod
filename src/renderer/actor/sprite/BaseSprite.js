@@ -13,5 +13,6 @@ BaseSprite.prototype.update = function(){
         this.position.x = this.actor.position[0];
         this.position.y = this.actor.position[1];
         this.position.z = this.actor.positionZ;
+        //this.rotation.z = this.actor.angle + this.angleOffset;
     }
 };
