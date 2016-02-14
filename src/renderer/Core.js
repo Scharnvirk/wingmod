@@ -39,8 +39,9 @@ Core.prototype.makeStatsWatcher = function(){
 };
 
 Core.prototype.attachToDom = function(renderer, stats){
-    document.body.appendChild( renderer.domElement );
     document.body.appendChild( stats.domElement );
+    document.body.appendChild( renderer.domElement );
+
     this.autoResize();
 };
 
