@@ -9,28 +9,19 @@ ShipActor.prototype.createMesh = function(){
     return new RavierMesh({actor: this, scaleX: 6, scaleY: 6, scaleZ: 6});
 };
 
-
-
 ShipActor.prototype.customUpdate = function(){
 
-    if(this.timer % 3 === 0){
-        this.particleManager.createParticle('smokePuffAlpha',this.position[0] + Utils.rand(-3,3), this.position[1] + Utils.rand(-3,3), 1,1,1, Utils.rand(5,20), 0.5, 60);
-    }
-
-
-
-
-
+        this.particleManager.createParticle('smokePuffAlpha',{
+            positionX: this.position[0] + Utils.rand(-5,5),
+            positionY: this.position[1] + Utils.rand(-5,5),
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: Utils.rand(5,20),
+            alpha: 0.6,
+            alphaMultiplier: 0.96,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 120
+        });
 };
-//     var naiveDistance = Math.abs(this.logicPosition[0] - this.logicPreviousPosition[0]) + Math.abs(this.logicPosition[1] - this.logicPreviousPosition[1]);
-//
-//     this.particleOptions.position.x = this.position[0];
-//     this.particleOptions.position.y = this.position[1];
-//
-//     for (var x = 1; x < naiveDistance; x++) {
-//           this.particleSystem.spawnParticle(this.particleOptions);
-//           this.particleSystem.spawnParticle(this.particleOptions);
-//           this.particleSystem.spawnParticle(this.particleOptions);
-//           this.particleSystem.spawnParticle(this.particleOptions);
-//     }
-// };

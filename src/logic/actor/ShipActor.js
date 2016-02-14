@@ -50,6 +50,7 @@ ShipActor.prototype.customUpdate = function(){
     if(this.horizontalThrust !== 0){
         this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
+
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){

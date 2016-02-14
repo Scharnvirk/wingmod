@@ -19,12 +19,20 @@ function ParticleConfigBuilder(){
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
             maxParticles: 2000,
-            positionZ: 9
+            positionZ: 9,
+            customUpdate: function(particleId){
+
+            }
         },
         particleAdd: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 5000,
-            positionZ: 9
+            positionZ: 9,
+            customUpdate: function(particleId){
+                this.geometry.attributes.alpha.array[particleId] *= 0.8;
+                this.geometry.attributes.position.array[particleId * 3] += this.geometry.attributes.speed.array[particleId * 2];
+                this.geometry.attributes.position.array[particleId * 3 + 1] += this.geometry.attributes.speed.array[particleId * 2 + 1];
+            }
         }
     };
 }

@@ -4,7 +4,7 @@ function ExplosionActor(config){
 
     Object.assign(this, config);
 
-    this.timeout = 1;
+    this.timeout = 10;
 }
 
 ExplosionActor.extend(BaseActor);
@@ -22,7 +22,7 @@ ExplosionActor.prototype.createBody = function(){
         }),
         collisionResponse: false,
         actor: this,
-        mass: 0.01
+        mass: this.mass
     });
 };
 

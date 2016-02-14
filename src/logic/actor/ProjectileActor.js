@@ -22,7 +22,7 @@ ProjectileActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
-        mass: 0.0001
+        mass: 0.001
     });
 };
 
@@ -31,9 +31,9 @@ ProjectileActor.prototype.onDeath = function(){
 
     var explosionBody = new ExplosionBody({
         position: this.body.position,
-        radius: 20,
+        radius: 50,
         lifetime: 1,
-        mass: 0.001
+        mass: 10
     });
 
     this.world.addBody(explosionBody);

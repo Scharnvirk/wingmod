@@ -16,6 +16,7 @@ ExplosionBody.prototype.createShape = function(){
             Constants.COLLISION_GROUPS.SHIPPROJECTILE |
             Constants.COLLISION_GROUPS.ENEMYPROJECTILE
     });
+
 };
 
 ExplosionBody.prototype.onDeath = function(){};

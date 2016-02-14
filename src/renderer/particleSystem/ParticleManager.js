@@ -30,6 +30,6 @@ ParticleManager.prototype.update = function(){
     }
 };
 
-ParticleManager.prototype.createParticle = function(typeName, positionX, positionY, colorR, colorG, colorB, scale, alpha, lifeTime, speedX, speedY){
-    this.generators[typeName].create(positionX, positionY, colorR, colorG, colorB, scale, alpha, lifeTime, speedX, speedY);
+ParticleManager.prototype.createParticle = function(typeName, config){
+    this.generators[typeName].create(config);
 };
