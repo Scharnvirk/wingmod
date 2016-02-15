@@ -5,7 +5,7 @@ function MookActor(){
 MookActor.extend(BaseActor);
 
 MookActor.prototype.createMesh = function(){
-    return new ShipMesh({actor: this, scaleX: 2, scaleY: 2, scaleZ: 2});
+    return new ShipMesh({actor: this, scaleX: 1, scaleY: 1, scaleZ: 1});
 };
 
 MookActor.prototype.onDeath = function(){
@@ -25,7 +25,7 @@ MookActor.prototype.onDeath = function(){
         });
     }
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -39,7 +39,7 @@ MookActor.prototype.onDeath = function(){
         lifeTime: 20
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -53,7 +53,7 @@ MookActor.prototype.onDeath = function(){
         lifeTime: 80
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,

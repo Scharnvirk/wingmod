@@ -3,7 +3,7 @@ function MookActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 200;
+    this.acceleration = 100;
     this.turnSpeed = 0.8;
 
     this.thrust = 0;
@@ -19,7 +19,7 @@ MookActor.extend(BaseActor);
 MookActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Convex({
-            vertices: [[-10, 6], [0, 0], [10, 6], [0, 8]],
+            vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
             collisionMask:
                 Constants.COLLISION_GROUPS.SHIP |
@@ -90,7 +90,7 @@ MookActor.prototype.shoot = function(){
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
-        velocity: 200
+        velocity: 100
     });
-    this.body.applyForceLocal([0,2000]);
+    this.body.applyForceLocal([0,-4000]);
 };

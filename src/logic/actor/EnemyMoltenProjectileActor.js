@@ -6,7 +6,7 @@ function EnemyMoltenProjectileActor(config){
     this.hp = 1;
     this.damage = 1;
     this.removeOnHit = true;
-    this.timeout = 300;
+    this.timeout = 1000;
 }
 
 EnemyMoltenProjectileActor.extend(BaseActor);
@@ -14,7 +14,7 @@ EnemyMoltenProjectileActor.extend(BaseActor);
 EnemyMoltenProjectileActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Circle({
-            radius: 3,
+            radius: 1,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
             collisionMask:
                 Constants.COLLISION_GROUPS.SHIP |
@@ -23,21 +23,21 @@ EnemyMoltenProjectileActor.prototype.createBody = function(){
         }),
         actor: this,
         mass: 2,
-        ccdSpeedThreshold: 5,
+        ccdSpeedThreshold: -1,
         ccdIterations: 4
     });
 };
 
 EnemyMoltenProjectileActor.prototype.onDeath = function(){
     this.body.dead = true;
+    //
+    // var explosionBody = new ExplosionBody({
+    //     position: this.body.position,
+    //     radius: 20,
+    //     lifetime: 1,
+    //     mass: 1,
+    //     damage: 1
+    // });
 
-    var explosionBody = new ExplosionBody({
-        position: this.body.position,
-        radius: 20,
-        lifetime: 1,
-        mass: 1,
-        damage: 1
-    });
-
-    this.world.addBody(explosionBody);
+    //this.world.addBody(explosionBody);
 };

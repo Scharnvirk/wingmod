@@ -126,21 +126,6 @@ Core.prototype.continueInit = function(){
 };
 
 Core.prototype.onEachSecond = function(){
-    // if(Constants.SHOW_FPS){
-    //     console.log('renderTicks: ', this.renderTicks);
-    // }
-
-    //
-    // if (this.renderTicks < 58 && this.resolutionCoefficient > 0.4){
-    //     this.resolutionCoefficient -= 0.1;
-    //     this.applyResolutionCoefficient();
-    // } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
-    //     this.resolutionCoefficient += 0.1;
-    //     this.applyResolutionCoefficient();
-    // }
-    //
-    // this.gameScene.enableShadows(this.resolutionCoefficient === 1 && this.renderTicks === 60);
-    //
     this.renderTicks = 0;
 };
 

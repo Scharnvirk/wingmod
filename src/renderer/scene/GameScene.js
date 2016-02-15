@@ -12,12 +12,12 @@ class GameScene {
             color: 0xffffff
         });
 
-        var wallGeometry = new THREE.BoxGeometry(10,100,10);
+        var wallGeometry = new THREE.BoxGeometry(5,50,5,1,1,1);
 
         for(var i = 0; i < 100; i++){
             wall = new THREE.Mesh(wallGeometry,material);
-            wall.position.x = Utils.rand(-300,300);
-            wall.position.y = Utils.rand(-300,300);
+            wall.position.x = Utils.rand(-200,200);
+            wall.position.y = Utils.rand(-200,200);
             wall.position.z = Utils.rand(0,2);
             wall.rotateZ(Utils.degToRad(Utils.rand(0,360)));
             walls.push(wall);
@@ -38,7 +38,7 @@ class GameScene {
         var planeTex = THREE.ImageUtils.loadTexture("/models/floor.png");
         planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
         planeTex.repeat.set( 10, 10 );
-        var geometry = new THREE.PlaneGeometry(1000, 1000, 2, 2);
+        var geometry = new THREE.PlaneGeometry(400, 400, 2, 2);
         var material = new THREE.MeshPhongMaterial({ color: 0x888888, map: planeTex });
         var floor = new THREE.Mesh(geometry, material);
 
@@ -63,7 +63,7 @@ class GameScene {
         this.pointLight.distance = 200;
         this.pointLight.castShadow = true;
         this.pointLight.shadowCameraNear = 1;
-        this.pointLight.shadowCameraFar = 250;
+        this.pointLight.shadowCameraFar = 200;
         this.pointLight.shadowMapWidth = 2048;
         this.pointLight.shadowMapHeight = 2048;
         this.pointLight.shadowBias = 0;

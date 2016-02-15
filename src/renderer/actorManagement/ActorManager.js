@@ -70,6 +70,7 @@ ActorManager.prototype.createActor = function(config){
 
     this.storage[config.actorId] = actor;
     actor.addToScene(this.scene);
+    actor.onSpawn();
 };
 
 ActorManager.prototype.attachPlayer = function(actorId){

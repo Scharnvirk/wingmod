@@ -4,12 +4,12 @@ function Camera(config){
     this.VIEW_ANGLE = 45;
     this.ASPECT = this.WIDTH / this.HEIGHT;
     this.NEAR = 0.1;
-    this.FAR = 10000;
+    this.FAR = 1000;
 
     config = config || {};
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
-    this.position.z = 300;
+    this.position.z = 200;
 
     this.mousePosition = new THREE.Vector3(0,0,1);
 }
@@ -32,7 +32,7 @@ Camera.prototype.update = function(){
         if (this.inputListener.inputState.scrollDown) {
             this.position.z -= inputState.scrollDown;
         }
-        // 
+        //
         // if(isFinite(inputState.lookX) && isFinite(inputState.lookY)){
         //     this.position.x = (this.actor.position[0]*2 + this.inputListener.inputState.lookX) / 3;
         //     this.position.y = (this.actor.position[1]*2 + this.inputListener.inputState.lookY) / 3;

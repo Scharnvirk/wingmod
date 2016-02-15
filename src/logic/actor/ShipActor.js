@@ -3,7 +3,7 @@ function ShipActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 1000;
+    this.acceleration = 500;
     this.backwardAccelerationRatio = 0.7;
     this.horizontalAccelerationRatio = 0.7;
     this.turnSpeed = 4;
@@ -27,7 +27,7 @@ ShipActor.extend(BaseActor);
 ShipActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Convex({
-            vertices: [[-15, 8], [-6, -2], [6, -2], [15, 8], [15,14], [0, 20], [-15, 14] ],
+            vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5] ],
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
             collisionMask:
                 Constants.COLLISION_GROUPS.ENEMY |
@@ -140,62 +140,44 @@ ShipActor.prototype.applyWeaponInput = function(inputState){
 
 ShipActor.prototype.shootPrimary = function(){
     this.primaryWeaponTimer += 10;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 9);
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 4.5);
     this.manager.addNew({
         classId: ActorFactory.PLASMAPROJECTILE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 500
+        velocity: 200
     });
 
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 9);
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 4.5);
     this.manager.addNew({
         classId: ActorFactory.PLASMAPROJECTILE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 500
+        velocity: 200
     });
 
     //this.body.applyForceLocal([0,-5000]);
 };
 
 ShipActor.prototype.shootSecondary = function(){
-    this.secondaryWeaponTimer += 40;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 7);
+    this.secondaryWeaponTimer += 15;
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 3.5);
     this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
+        classId: ActorFactory.LASERPROJECITLE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 500
+        velocity: 300
     });
 
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 7);
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 3.5);
     this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
+        classId: ActorFactory.LASERPROJECITLE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 500
-    });
-
-    offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 7);
-    this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 500
-    });
-
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 7);
-    this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 500
+        velocity: 300
     });
 };

@@ -1,20 +1,19 @@
-function ShipPlasmaProjectileActor(config){
+function ShipLaserProjectileActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
     this.hp = 1;
-    this.damage = 1;
+    this.damage = 2;
     this.removeOnHit = true;
     this.timeout = 60;
 }
 
-ShipPlasmaProjectileActor.extend(BaseActor);
+ShipLaserProjectileActor.extend(BaseActor);
 
-ShipPlasmaProjectileActor.prototype.createBody = function(){
+ShipLaserProjectileActor.prototype.createBody = function(){
     return new BaseBody({
-        shape: new p2.Circle({
-            radius: 1,
+        shape: new p2.Particle({
             collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
             collisionMask:
                 Constants.COLLISION_GROUPS.ENEMY |
@@ -23,21 +22,11 @@ ShipPlasmaProjectileActor.prototype.createBody = function(){
         }),
         actor: this,
         mass: 1,
-        ccdSpeedThreshold: -1,
+        ccdSpeedThreshold: 1,
         ccdIterations: 4
     });
 };
 
-ShipPlasmaProjectileActor.prototype.onDeath = function(){
+ShipLaserProjectileActor.prototype.onDeath = function(){
     this.body.dead = true;
-    //
-    // var explosionBody = new ExplosionBody({
-    //     position: this.body.position,
-    //     radius: 20,
-    //     lifetime: 1,
-    //     mass: 2,
-    //     damage: 1
-    // });
-
-    //this.world.addBody(explosionBody);
 };

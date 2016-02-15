@@ -78,6 +78,6 @@ BaseActor.prototype.removeFromScene = function(scene){
     }
 };
 
-BaseActor.prototype.onDeath = function(){
+BaseActor.prototype.onDeath = function(){};
 
-};
+BaseActor.prototype.onSpawn = function(){};
