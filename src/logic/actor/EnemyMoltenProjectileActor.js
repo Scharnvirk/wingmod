@@ -30,14 +30,4 @@ EnemyMoltenProjectileActor.prototype.createBody = function(){
 
 EnemyMoltenProjectileActor.prototype.onDeath = function(){
     this.body.dead = true;
-    //
-    // var explosionBody = new ExplosionBody({
-    //     position: this.body.position,
-    //     radius: 20,
-    //     lifetime: 1,
-    //     mass: 1,
-    //     damage: 1
-    // });
-
-    //this.world.addBody(explosionBody);
 };

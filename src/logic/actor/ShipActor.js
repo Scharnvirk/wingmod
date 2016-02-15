@@ -157,8 +157,6 @@ ShipActor.prototype.shootPrimary = function(){
         angle: this.body.angle,
         velocity: 200
     });
-
-    //this.body.applyForceLocal([0,-5000]);
 };
 
 ShipActor.prototype.shootSecondary = function(){
@@ -180,4 +178,17 @@ ShipActor.prototype.shootSecondary = function(){
         angle: this.body.angle,
         velocity: 300
     });
+};
+
+ShipActor.prototype.onDeath = function(){
+    for(let i = 0; i < 40; i++){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(0,100)
+        });
+    }
+    this.body.dead = true;
 };

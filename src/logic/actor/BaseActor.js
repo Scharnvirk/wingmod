@@ -56,3 +56,5 @@ BaseActor.prototype.playerUpdate = function(){};
 BaseActor.prototype.onDeath = function(){
     this.body.dead = true;
 };
+
+BaseActor.prototype.onSpawn = function(){};

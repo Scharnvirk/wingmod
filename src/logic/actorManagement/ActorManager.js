@@ -25,6 +25,7 @@ ActorManager.prototype.addNew = function(config){
     this.storage[this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.body);
+    actor.onSpawn();
     return actor;
 };
 

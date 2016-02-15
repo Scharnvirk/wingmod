@@ -94,6 +94,22 @@ MookActor.prototype.shoot = function(){
         positionY: this.body.position[1],
         angle: this.body.angle,
         velocity: 100
-    }); 
+    });
     this.body.applyForceLocal([0,-3000]);
 };
+
+
+MookActor.prototype.onDeath = function(){
+    for(let i = 0; i < 10; i++){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(0,100)
+        });
+    }
+    this.body.dead = true;
+};
+
+BaseActor.prototype.onSpawn = function(){};

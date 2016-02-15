@@ -10,6 +10,7 @@ var Constants = {
             ENEMYPROJECTILE: Math.pow(2,3),
             SHIPEXPLOSION: Math.pow(2,4),
             ENEMYEXPLOSION: Math.pow(2,5),
+            OBJECT: Math.pow(2,6),
             TERRAIN: Math.pow(2,10),
     },
 
