@@ -12,6 +12,7 @@ function MookActor(config){
     this.hp = 4;
 
     this.weaponTimer = 0;
+    this.shotsFired = 0;
 }
 
 MookActor.extend(BaseActor);
@@ -59,6 +60,10 @@ MookActor.prototype.processWeapon = function(){
     }
     if(this.requestShoot && this.weaponTimer === 0){
         this.shoot();
+        this.shotsFired ++;
+    }
+    if(this.shotsFired >= 3){
+        this.requestShoot = false;
     }
 };
 
@@ -74,23 +79,21 @@ MookActor.prototype.actorLogic = function(){
             this.thrust = 0;
         }
     }
-    var weaponRand = Utils.rand(0,100);
-    if (weaponRand > 98){
+    var weaponRand = Utils.rand(0,200);
+    if (weaponRand === 199){
+        this.shotsFired = 0;
         this.requestShoot = true;
-    }
-    if (weaponRand < 10){
-        this.requestShoot = false;
     }
 };
 
 MookActor.prototype.shoot = function(){
-    this.weaponTimer += 20;
+    this.weaponTimer += 3;
     this.manager.addNew({
         classId: ActorFactory.MOLTENPROJECTILE,
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
         velocity: 100
-    });
-    this.body.applyForceLocal([0,-4000]);
+    }); 
+    this.body.applyForceLocal([0,-3000]);
 };

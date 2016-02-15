@@ -98,6 +98,35 @@ EnemyMoltenProjectileActor.prototype.onDeath = function(){
         particleAngle: 0,
         lifeTime: 20
     });
-    //this.particleManager.createParticle('particleAdd', this.position[0], this.position[1], this.colorR, this.colorG, this.colorB, 80, 0.3, 2, 0, 0);
-    //this.particleManager.createParticle('particleAdd', this.position[0], this.position[1], this.colorR, this.colorG, this.colorB, 20, 1, 20, 0, 0);
+};
+
+
+EnemyMoltenProjectileActor.prototype.onSpawn = function(){
+    this.particleManager.createParticle('particleAdd', {
+        positionX: this.position[0],
+        positionY: this.position[1],
+        colorR: this.colorR*0.3+0.7,
+        colorG: this.colorG*0.3+0.7,
+        colorB: this.colorB*0.3+0.7,
+        scale: 30,
+        alpha: 0.8,
+        alphaMultiplier: 0.2,
+        particleVelocity: 0,
+        particleAngle: 0,
+        lifeTime: 1
+    });
+
+    this.particleManager.createParticle('particleAdd', {
+        positionX: this.position[0],
+        positionY: this.position[1],
+        colorR: this.colorR*0.3+0.7,
+        colorG: this.colorG*0.3+0.7,
+        colorB: this.colorB*0.3+0.7,
+        scale: 15,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        particleAngle: this.angle,
+        lifeTime: 10
+    });
 };
