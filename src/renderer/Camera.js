@@ -10,6 +10,7 @@ function Camera(config){
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
     this.position.z = 200;
+    //this.rotateX(0.5);
 
     this.mousePosition = new THREE.Vector3(0,0,1);
 }
@@ -20,6 +21,7 @@ Camera.prototype.update = function(){
     if(this.actor){
         this.position.x = this.actor.position[0];
         this.position.y = this.actor.position[1];
+        //this.rotation.z = this.actor.mesh.rotation.z;
     }
 
     let inputState = this.inputListener.inputState;

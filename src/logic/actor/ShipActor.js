@@ -3,10 +3,10 @@ function ShipActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 500;
-    this.backwardAccelerationRatio = 0.7;
-    this.horizontalAccelerationRatio = 0.7;
-    this.turnSpeed = 4;
+    this.acceleration = 700;
+    this.backwardAccelerationRatio = 1;
+    this.horizontalAccelerationRatio = 1;
+    this.turnSpeed = 6;
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.thrust = 0;
@@ -37,7 +37,7 @@ ShipActor.prototype.createBody = function(){
         }),
         actor: this,
         mass: 4,
-        damping: 0.75,
+        damping: 0.8,
         angularDamping: 0,
         inertia: 10
     });
