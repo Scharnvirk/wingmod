@@ -7,6 +7,7 @@ function WallMesh(config){
     config.material = new THREE.MeshLambertMaterial({color: 0x505050});
     Object.assign(this, config);
 
+    this.receiveShadow = true;
 }
 
 
