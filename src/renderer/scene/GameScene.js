@@ -38,7 +38,7 @@ class GameScene {
         var planeTex = THREE.ImageUtils.loadTexture("/models/floor.png");
         planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
         planeTex.repeat.set( 10, 10 );
-        var geometry = new THREE.PlaneGeometry(400, 400, 2, 2);
+        var geometry = new THREE.PlaneGeometry(800, 800, 2, 2);
         var material = new THREE.MeshPhongMaterial({ color: 0x888888, map: planeTex });
         var floor = new THREE.Mesh(geometry, material);
 

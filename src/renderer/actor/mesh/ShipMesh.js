@@ -8,6 +8,7 @@ function ShipMesh(config){
     Object.assign(this, config);
 
     this.castShadow = true;
+    this.receiveShadow = true;
 }
 
 

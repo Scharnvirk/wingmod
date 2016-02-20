@@ -15,45 +15,42 @@ GameScene.prototype.fillScene = function(){
         });
     }
 
-    for(let i = 0; i < 25; i++){
+    for(let i = 0; i < 100; i++){
         this.actorManager.addNew({
-            classId: ActorFactory.WALL,
-            positionX: 0,
-            positionY: -200 - i*5,
+            classId: ActorFactory.PILLAR,
+            positionX: Utils.rand(0,1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
+            positionY: Utils.rand(0,1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
             angle: 0
         });
     }
 
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 0,
+        positionY: -400,
+        angle: 0
+    });
 
-    for(let i = 0; i < 25; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.WALL,
-            positionX: 0,
-            positionY: 200 + i*5,
-            angle: 0
-        });
-    }
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 0,
+        positionY: 400,
+        angle: 0
+    });
 
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: 400,
+        positionY: 0,
+        angle: Math.PI/2
+    });
 
-    for(let i = 0; i < 25; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.WALL,
-            positionX: 200 + i*5,
-            positionY: 0,
-            angle: Math.PI/2
-        });
-    }
-
-
-    for(let i = 0; i < 25; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.WALL,
-            positionX: -200 - i*5,
-            positionY: 0,
-            angle: Math.PI/2
-        });
-    }
-
+    this.actorManager.addNew({
+        classId: ActorFactory.WALL,
+        positionX: -400,
+        positionY: 0,
+        angle: Math.PI/2
+    });
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,

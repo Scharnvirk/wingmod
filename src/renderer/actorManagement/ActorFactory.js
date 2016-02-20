@@ -7,6 +7,7 @@ function ActorFactory(actorDependencies){
         [ActorFactory.SHIP]: ShipActor,
         [ActorFactory.MOOK]: MookActor,
         [ActorFactory.WALL]: WallActor,
+        [ActorFactory.PILLAR]: PillarActor,
         [ActorFactory.CHUNK]: ChunkActor,
         [ActorFactory.PLASMAPROJECTILE]: ShipPlasmaProjectileActor,
         [ActorFactory.MOLTENPROJECTILE]: EnemyMoltenProjectileActor,
@@ -16,6 +17,7 @@ function ActorFactory(actorDependencies){
 
 ActorFactory.SHIP = 1;
 ActorFactory.MOOK = 2;
+ActorFactory.PILLAR = 3;
 ActorFactory.WALL = 4;
 ActorFactory.CHUNK = 5;
 ActorFactory.PLASMAPROJECTILE = 100;
