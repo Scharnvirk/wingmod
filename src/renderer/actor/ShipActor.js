@@ -28,7 +28,7 @@ ShipActor.prototype.doBank = function(){
 
 ShipActor.prototype.doEngineGlow = function(){
     if(this.inputListener.inputState.w){
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -42,7 +42,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -56,7 +56,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -70,7 +70,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -86,7 +86,7 @@ ShipActor.prototype.doEngineGlow = function(){
     }
 
     if(this.inputListener.inputState.a){
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -100,7 +100,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -114,7 +114,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -128,7 +128,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -144,7 +144,7 @@ ShipActor.prototype.doEngineGlow = function(){
     }
 
     if(this.inputListener.inputState.d){
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -158,7 +158,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -172,7 +172,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -186,7 +186,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -203,7 +203,7 @@ ShipActor.prototype.doEngineGlow = function(){
 
     if(this.inputListener.inputState.s){
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -217,7 +217,7 @@ ShipActor.prototype.doEngineGlow = function(){
             lifeTime: 1
         });
 
-        this.particleManager.createParticle('particleAdd',{
+        this.particleManager.createParticle('particleAddTrail',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,

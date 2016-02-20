@@ -74,8 +74,9 @@ class GameScene {
 
     update(){
         if(this.actor){
-            this.pointLight.position.x = this.actor.position[0] + 20;
-            this.pointLight.position.y = this.actor.position[1] + 20;
+            var offsetPosition = Utils.angleToVector(this.actor.angle, 20);
+            this.pointLight.position.x = this.actor.position[0] + offsetPosition[0];
+            this.pointLight.position.y = this.actor.position[1] + offsetPosition[1];
         }
     }
 }

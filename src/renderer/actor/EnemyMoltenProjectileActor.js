@@ -10,7 +10,7 @@ EnemyMoltenProjectileActor.extend(BaseActor);
 EnemyMoltenProjectileActor.prototype.customUpdate = function(){
     for(let i = 0; i < 3; i++){
         var offsetPosition = Utils.angleToVector(this.angle, -i*0.3);
-        this.particleManager.createParticle('particleAdd', {
+        this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: 1,
@@ -25,7 +25,7 @@ EnemyMoltenProjectileActor.prototype.customUpdate = function(){
         });
     }
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR,
@@ -57,7 +57,7 @@ EnemyMoltenProjectileActor.prototype.onDeath = function(){
         });
     }
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -71,7 +71,7 @@ EnemyMoltenProjectileActor.prototype.onDeath = function(){
         lifeTime: 10
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -85,7 +85,7 @@ EnemyMoltenProjectileActor.prototype.onDeath = function(){
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -102,7 +102,7 @@ EnemyMoltenProjectileActor.prototype.onDeath = function(){
 
 
 EnemyMoltenProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -116,7 +116,7 @@ EnemyMoltenProjectileActor.prototype.onSpawn = function(){
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,

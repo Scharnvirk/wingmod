@@ -43,7 +43,7 @@ ChunkActor.prototype.onDeath = function(){
         });
     }
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -57,7 +57,7 @@ ChunkActor.prototype.onDeath = function(){
         lifeTime: 40
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,

@@ -15,33 +15,45 @@ GameScene.prototype.fillScene = function(){
         });
     }
 
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: -200,
-        angle: 0
-    });
+    for(let i = 0; i < 25; i++){
+        this.actorManager.addNew({
+            classId: ActorFactory.WALL,
+            positionX: 0,
+            positionY: -200 - i*5,
+            angle: 0
+        });
+    }
 
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: 200,
-        angle: 0
-    });
 
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 200,
-        positionY: 0,
-        angle: Math.PI/2
-    });
+    for(let i = 0; i < 25; i++){
+        this.actorManager.addNew({
+            classId: ActorFactory.WALL,
+            positionX: 0,
+            positionY: 200 + i*5,
+            angle: 0
+        });
+    }
 
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: -200,
-        positionY: 0,
-        angle: Math.PI/2
-    });
+
+    for(let i = 0; i < 25; i++){
+        this.actorManager.addNew({
+            classId: ActorFactory.WALL,
+            positionX: 200 + i*5,
+            positionY: 0,
+            angle: Math.PI/2
+        });
+    }
+
+
+    for(let i = 0; i < 25; i++){
+        this.actorManager.addNew({
+            classId: ActorFactory.WALL,
+            positionX: -200 - i*5,
+            positionY: 0,
+            angle: Math.PI/2
+        });
+    }
+
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,

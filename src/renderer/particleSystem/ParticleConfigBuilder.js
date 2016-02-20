@@ -28,9 +28,14 @@ function ParticleConfigBuilder(){
             maxParticles: 1000,
             positionZ: 9
         },
-        particleAdd: {
+        particleAddTrail: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 10000,
+            maxParticles: 7000,
+            positionZ: 9
+        },
+        particleAddSplash: {
+            material: this.particleMaterialConfig.particleAdd,
+            maxParticles: 3000,
             positionZ: 9
         },
         mainExplosionAdd: {

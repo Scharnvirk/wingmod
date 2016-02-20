@@ -10,7 +10,7 @@ ShipLaserProjectileActor.extend(BaseActor);
 ShipLaserProjectileActor.prototype.customUpdate = function(){
     for(let i = 0; i < 20; i++){
         let offsetPosition = Utils.angleToVector(this.angle, -i*0.4);
-        this.particleManager.createParticle('particleAdd', {
+        this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: 1,
@@ -27,7 +27,7 @@ ShipLaserProjectileActor.prototype.customUpdate = function(){
 
     for(let i = 0; i < 5; i++){
         let offsetPosition = Utils.angleToVector(this.angle, -i*1.8);
-        this.particleManager.createParticle('particleAdd', {
+        this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: this.colorR,
@@ -44,8 +44,8 @@ ShipLaserProjectileActor.prototype.customUpdate = function(){
 };
 
 ShipLaserProjectileActor.prototype.onDeath = function(){
-    for (let i = 0; i < 30; i++){
-        this.particleManager.createParticle('particleAdd',{
+    for (let i = 0; i < 100; i++){
+        this.particleManager.createParticle('particleAddSplash',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: this.colorR*0.3+0.7,
@@ -56,11 +56,11 @@ ShipLaserProjectileActor.prototype.onDeath = function(){
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(1,6) / 10,
             particleAngle: Utils.rand(0,360),
-            lifeTime: Utils.rand(40,60)
+            lifeTime: Utils.rand(20,100)
         });
     }
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -74,7 +74,7 @@ ShipLaserProjectileActor.prototype.onDeath = function(){
         lifeTime: 10
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -88,7 +88,7 @@ ShipLaserProjectileActor.prototype.onDeath = function(){
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddSplash', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR,
@@ -104,7 +104,7 @@ ShipLaserProjectileActor.prototype.onDeath = function(){
 };
 
 ShipLaserProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -118,7 +118,7 @@ ShipLaserProjectileActor.prototype.onSpawn = function(){
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAdd', {
+    this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
