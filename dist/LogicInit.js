@@ -140,13 +140,15 @@ function Core(worker) {
     this.startGameLoop();
     this.scene.fillScene();
     this.initFpsCounter();
+
+    this.running = false;
 }
 
 Core.prototype.makeMainComponents = function (worker) {
-    this.renderBus = new RenderBus(worker);
+    this.renderBus = new RenderBus({ worker: worker, core: this });
     this.world = new GameWorld();
     this.actorManager = new ActorManager({ world: this.world, core: this });
-    this.scene = new GameScene({ world: this.world, actorManager: this.actorManager });
+    this.scene = new GameScene({ world: this.world, actorManager: this.actorManager, core: this });
 };
 
 Core.prototype.initFpsCounter = function () {
@@ -162,6 +164,12 @@ Core.prototype.initFpsCounter = function () {
 };
 
 Core.prototype.processGameLogic = function () {
+    if (this.running) {
+        this.doTick();
+    }
+};
+
+Core.prototype.doTick = function () {
     this.actorManager.update(this.renderBus.inputState);
     this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
@@ -175,6 +183,14 @@ Core.prototype.startGameLoop = function () {
     logicLoop.start();
 };
 
+Core.prototype.start = function () {
+    this.running = true;
+};
+
+Core.prototype.pause = function () {
+    this.running = false;
+};
+
 module.exports = Core;
 
 },{"wm/logic/GameScene":5,"wm/logic/GameWorld":6,"wm/logic/RenderBus":7,"wm/logic/actorManagement/ActorManager":8}],5:[function(require,module,exports){
@@ -186,6 +202,7 @@ function GameScene(config) {
     Object.assign(this, config);
     if (!this.world) throw new Error('No world specified for Logic GameScene');
     if (!this.actorManager) throw new Error('No actorManager specified for Logic GameScene');
+    if (!this.core) throw new Error('No core specified for Logic GameScene');
     this.timer = 0;
 }
 
@@ -244,6 +261,9 @@ GameScene.prototype.fillScene = function () {
     });
 
     this.actorManager.setPlayerActor(playerActor);
+
+    this.core.doTick();
+
     console.log("scene complete");
 };
 
@@ -327,9 +347,10 @@ module.exports = GameWorld;
 },{}],7:[function(require,module,exports){
 'use strict';
 
-function RenderBus(worker) {
-    if (!worker) throw new Error('No worker object specified for Logic Render Bus');
-    this.worker = worker;
+function RenderBus(config) {
+    if (!config.worker) throw new Error('No worker object specified for Logic Render Bus');
+    this.worker = config.worker;
+    this.core = config.core;
     this.inputState = {};
 
     this.worker.onmessage = this.handleMessage.bind(this);
@@ -347,6 +368,12 @@ RenderBus.prototype.handleMessage = function (message) {
             break;
         case "debug":
             console.log(event.data.message);
+            break;
+        case "pause":
+            this.core.pause();
+            break;
+        case "start":
+            this.core.start();
             break;
     }
 };
@@ -868,7 +895,7 @@ ShipActor.prototype.applyWeaponInput = function (inputState) {
 
 ShipActor.prototype.shootPrimary = function () {
     this.primaryWeaponTimer += 10;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 4.5);
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 5);
     this.manager.addNew({
         classId: ActorFactory.PLASMAPROJECTILE,
         positionX: this.body.position[0] + offsetPosition[0],
@@ -877,7 +904,7 @@ ShipActor.prototype.shootPrimary = function () {
         velocity: 200
     });
 
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 4.5);
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 5);
     this.manager.addNew({
         classId: ActorFactory.PLASMAPROJECTILE,
         positionX: this.body.position[0] + offsetPosition[0],
@@ -889,22 +916,22 @@ ShipActor.prototype.shootPrimary = function () {
 
 ShipActor.prototype.shootSecondary = function () {
     this.secondaryWeaponTimer += 15;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(140), 3.5);
+    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 3.2);
     this.manager.addNew({
         classId: ActorFactory.LASERPROJECITLE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 300
+        velocity: 400
     });
 
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(140), 3.5);
+    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 3.2);
     this.manager.addNew({
         classId: ActorFactory.LASERPROJECITLE,
         positionX: this.body.position[0] + offsetPosition[0],
         positionY: this.body.position[1] + offsetPosition[1],
         angle: this.body.angle,
-        velocity: 300
+        velocity: 400
     });
 };
 
@@ -944,7 +971,8 @@ LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.createBody = function () {
     return new BaseBody({
-        shape: new p2.Particle({
+        shape: new p2.Circle({
+            radius: 1,
             collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
             collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
         }),
@@ -1012,7 +1040,7 @@ function PlasmaProjectileActor(config) {
     Object.assign(this, config);
 
     this.hp = 1;
-    this.damage = 1;
+    this.damage = 0.5;
     this.removeOnHit = true;
     this.timeout = 60;
 }
@@ -1022,7 +1050,7 @@ PlasmaProjectileActor.extend(BaseActor);
 PlasmaProjectileActor.prototype.createBody = function () {
     return new BaseBody({
         shape: new p2.Circle({
-            radius: 1,
+            radius: 2,
             collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
             collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
         }),
@@ -1549,19 +1577,11 @@ ShipActor.prototype.customUpdate = function () {
 };
 
 ShipActor.prototype.doBank = function () {
-    if (this.logicPreviousAngle < this.angle) {
-        this.mesh.rotation.x = Utils.degToRad(-15);
-    }
-    if (this.logicPreviousAngle > this.angle) {
-        this.mesh.rotation.x = Utils.degToRad(15);
-    }
-    if (this.logicPreviousAngle === this.angle) {
-        this.mesh.rotation.x = 0;
-    }
+    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
 };
 
 ShipActor.prototype.doEngineGlow = function () {
-    if (this.inputListener.inputState.w) {
+    if (this.inputListener.inputState.w && !this.inputListener.inputState.s) {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -1619,7 +1639,7 @@ ShipActor.prototype.doEngineGlow = function () {
         });
     }
 
-    if (this.inputListener.inputState.a) {
+    if (this.inputListener.inputState.a && !this.inputListener.inputState.d) {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -1963,7 +1983,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         scale: 8,
         alpha: 1,
         alphaMultiplier: 0.7,
-        particleVelocity: 3,
+        particleVelocity: 2,
         particleAngle: this.angle,
         lifeTime: 10
     });

@@ -45,6 +45,7 @@ var SampleApp = function() {
 
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
+        self.zcache['/styles.css'] = fs.readFileSync('./styles.css');
 
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
@@ -124,7 +125,10 @@ var SampleApp = function() {
             res.send(self.cache_get('index.html') );
         };
 
-
+        self.routes['/styles.css'] = function(req, res) {
+            res.setHeader('Content-Type', 'text/css');
+            res.send(self.cache_get('/styles.css') );
+        };
 
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};

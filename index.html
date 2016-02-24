@@ -7,6 +7,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <link rel="stylesheet" type="text/css" href="styles.css">
+
         <script src="lib/three.js"></script>
         <script src="lib/stats.min.js"></script>
         <script src="lib/threex.loop.js"></script>
@@ -18,12 +20,11 @@
 
     </head>
 
-    <style>
-        body {
-            margin:0;
-            padding: 0;
-            overflow: hidden;
-        }
-    </style>
-    <body>
+    <body class="gameviewport ">
+      <div>
+        <div id="viewport" class="noselect blur"></div>
+      </div>
+      <!-- <div id="ui" class="noselect ui ">
+        Start
+      </div> -->
     </body>
