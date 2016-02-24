@@ -1268,6 +1268,8 @@ function Core(logicCore) {
     this.resolutionCoefficient = 1;
     this.initRenderer();
     this.initAssets();
+
+    this.logicBus.postMessage('start', {});
 }
 
 Core.prototype.initRenderer = function () {
