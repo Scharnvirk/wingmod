@@ -1,6 +1,8 @@
 /nbproject/private/
 /nbproject/
-/node_modules/
+/node_modules/*
+!/node_modules/wm
+/node_modules/wm/b/
 /dist/b/
 /dist/logic.min.map
 /dist/logicInit.min.map

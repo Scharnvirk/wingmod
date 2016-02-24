@@ -51,7 +51,6 @@ var SampleApp = function() {
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
 		self.zcache['/lib/utils/polyfills.js'] = fs.readFileSync('./lib/utils/polyfills.js');
         self.zcache['/lib/p2.js'] = fs.readFileSync('./lib/p2.js');
-        self.zcache['/lib/GPUParticleSystem.js'] = fs.readFileSync('./lib/GPUParticleSystem.js');
 
         self.zcache['/gfx/particle.png'] = fs.readFileSync('./gfx/particle.png');
         self.zcache['/gfx/particleAdd.png'] = fs.readFileSync('./gfx/particleAdd.png');
@@ -61,13 +60,10 @@ var SampleApp = function() {
         self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
         self.zcache['/models/ravier.png'] = fs.readFileSync('./models/ravier.png');
         self.zcache['/models/floor.png'] = fs.readFileSync('./models/floor.png');
-        self.zcache['/models/chunk.jpg'] = fs.readFileSync('./models/chunk.jpg');
+        self.zcache['/models/chunk.png'] = fs.readFileSync('./models/chunk.png');
 
-        self.zcache['/dist/logicInit.min.js'] = fs.readFileSync('./dist/logicInit.min.js');
-        self.zcache['/dist/logic.min.js'] = fs.readFileSync('./dist/logic.min.js');
-        self.zcache['/dist/renderer.min.js'] = fs.readFileSync('./dist/renderer.min.js');
-
-
+        self.zcache['/dist/Init.js'] = fs.readFileSync('./dist/Init.js');
+        self.zcache['/dist/LogicInit.js'] = fs.readFileSync('./dist/LogicInit.js');
     };
 
     /**
@@ -145,11 +141,10 @@ var SampleApp = function() {
         self.routes['/models/floor.png'] = function(req, res) {res.send(self.cache_get('/models/floor.png') );};
         self.routes['/models/ravier.png'] = function(req, res) {res.send(self.cache_get('/models/ravier.png') );};
         self.routes['/models/chunk.json'] = function(req, res) {res.send(self.cache_get('/models/chunk.json') );};
-        self.routes['/models/chunk.jpg'] = function(req, res) {res.send(self.cache_get('/models/chunk.jpg') );};
+        self.routes['/models/chunk.png'] = function(req, res) {res.send(self.cache_get('/models/chunk.png') );};
 
-		self.routes['/dist/logicInit.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logicInit.min.js') );};
-        self.routes['/dist/logic.min.js'] = function(req, res) {res.send(self.cache_get('/dist/logic.min.js') );};
-        self.routes['/dist/renderer.min.js'] = function(req, res) {res.send(self.cache_get('/dist/renderer.min.js') );};
+		self.routes['/dist/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/Init.js') );};
+        self.routes['/dist/LogicInit.js'] = function(req, res) {res.send(self.cache_get('/dist/LogicInit.js') );};
     };
 
 
