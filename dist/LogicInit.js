@@ -191,6 +191,10 @@ Core.prototype.pause = function () {
     this.running = false;
 };
 
+Core.prototype.endGame = function (info) {
+    this.renderBus.postMessage('gameEnded', info);
+};
+
 module.exports = Core;
 
 },{"wm/logic/GameScene":5,"wm/logic/GameWorld":6,"wm/logic/RenderBus":7,"wm/logic/actorManagement/ActorManager":8}],5:[function(require,module,exports){
@@ -221,7 +225,7 @@ GameScene.prototype.fillScene = function () {
             classId: ActorFactory.PILLAR,
             positionX: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
             positionY: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            angle: 0
+            angle: Utils.rand(0, 360)
         });
     }
 
@@ -397,6 +401,8 @@ function ActorManager(config) {
     Object.assign(this, config);
 
     if (!this.world) throw new Error('No world for Logic ActorManager!');
+
+    setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function (config) {
@@ -423,8 +429,8 @@ ActorManager.prototype.update = function (inputState) {
         }
     }.bind(this));
 
-    for (var actor in this.storage) {
-        this.storage[actor].update();
+    for (var actorId in this.storage) {
+        this.storage[actorId].update();
     }
 };
 
@@ -435,6 +441,29 @@ ActorManager.prototype.setPlayerActor = function (actor) {
 
 ActorManager.prototype.removeActorAt = function (actorId) {
     delete this.storage[actorId];
+};
+
+ActorManager.prototype.endGame = function () {
+    var startingMooks = 100; //todo: definitely not the place for that
+    var mookCount = 0;
+    for (var actorId in this.storage) {
+        if (this.storage[actorId].classId === ActorFactory.MOOK) {
+            mookCount++;
+        }
+    }
+    this.core.endGame({ remaining: mookCount, killed: startingMooks - mookCount });
+};
+
+ActorManager.prototype.checkEndGameCondition = function () {
+    var mookCount = 0;
+    for (var actorId in this.storage) {
+        if (this.storage[actorId].classId === ActorFactory.MOOK) {
+            mookCount++;
+        }
+    }
+    if (mookCount === 0) {
+        this.endGame();
+    }
 };
 
 module.exports = ActorManager;
@@ -946,6 +975,7 @@ ShipActor.prototype.onDeath = function () {
         });
     }
     this.body.dead = true;
+    this.manager.endGame();
 };
 
 module.exports = ShipActor;

@@ -251,6 +251,10 @@ Core.prototype.pause = function () {
     this.running = false;
 };
 
+Core.prototype.endGame = function (info) {
+    this.renderBus.postMessage('gameEnded', info);
+};
+
 module.exports = Core;
 
 },{"wm/logic/GameScene":7,"wm/logic/GameWorld":8,"wm/logic/RenderBus":9,"wm/logic/actorManagement/ActorManager":10}],7:[function(require,module,exports){
@@ -281,7 +285,7 @@ GameScene.prototype.fillScene = function () {
             classId: ActorFactory.PILLAR,
             positionX: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
             positionY: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            angle: 0
+            angle: Utils.rand(0, 360)
         });
     }
 
@@ -457,6 +461,8 @@ function ActorManager(config) {
     Object.assign(this, config);
 
     if (!this.world) throw new Error('No world for Logic ActorManager!');
+
+    setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function (config) {
@@ -483,8 +489,8 @@ ActorManager.prototype.update = function (inputState) {
         }
     }.bind(this));
 
-    for (var actor in this.storage) {
-        this.storage[actor].update();
+    for (var actorId in this.storage) {
+        this.storage[actorId].update();
     }
 };
 
@@ -495,6 +501,29 @@ ActorManager.prototype.setPlayerActor = function (actor) {
 
 ActorManager.prototype.removeActorAt = function (actorId) {
     delete this.storage[actorId];
+};
+
+ActorManager.prototype.endGame = function () {
+    var startingMooks = 100; //todo: definitely not the place for that
+    var mookCount = 0;
+    for (var actorId in this.storage) {
+        if (this.storage[actorId].classId === ActorFactory.MOOK) {
+            mookCount++;
+        }
+    }
+    this.core.endGame({ remaining: mookCount, killed: startingMooks - mookCount });
+};
+
+ActorManager.prototype.checkEndGameCondition = function () {
+    var mookCount = 0;
+    for (var actorId in this.storage) {
+        if (this.storage[actorId].classId === ActorFactory.MOOK) {
+            mookCount++;
+        }
+    }
+    if (mookCount === 0) {
+        this.endGame();
+    }
 };
 
 module.exports = ActorManager;
@@ -1006,6 +1035,7 @@ ShipActor.prototype.onDeath = function () {
         });
     }
     this.body.dead = true;
+    this.manager.endGame();
 };
 
 module.exports = ShipActor;
@@ -1148,11 +1178,15 @@ function Camera(config) {
     this.NEAR = 0.1;
     this.FAR = 1000;
 
+    this.ZOOM_THRESHOLD = 0.995;
+    this.zoomSpeed = 5;
+
     config = config || {};
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
-    this.position.z = 200;
-    //this.rotateX(0.5);
+    this.position.z = 800;
+
+    this.expectedPositionZ = this.position.z;
 
     this.mousePosition = new THREE.Vector3(0, 0, 1);
 }
@@ -1163,7 +1197,6 @@ Camera.prototype.update = function () {
     if (this.actor) {
         this.position.x = this.actor.position[0];
         this.position.y = this.actor.position[1];
-        //this.rotation.z = this.actor.mesh.rotation.z;
     }
 
     var inputState = this.inputListener.inputState;
@@ -1176,12 +1209,21 @@ Camera.prototype.update = function () {
         if (this.inputListener.inputState.scrollDown) {
             this.position.z -= inputState.scrollDown;
         }
-        //
-        // if(isFinite(inputState.lookX) && isFinite(inputState.lookY)){
-        //     this.position.x = (this.actor.position[0]*2 + this.inputListener.inputState.lookX) / 3;
-        //     this.position.y = (this.actor.position[1]*2 + this.inputListener.inputState.lookY) / 3;
-        // }
     }
+
+    if (this.expectedPositionZ != this.position.z) {
+        if (this.expectedPositionZ / this.position.z > this.ZOOM_THRESHOLD) {
+            this.position.z = this.expectedPositionZ;
+        } else {
+            this.position.z += this.expectedPositionZ > this.position.z ? (this.expectedPositionZ + this.position.z) / this.zoomSpeed : (this.expectedPositionZ - this.position.z) / this.zoomSpeed;
+        }
+        this.updateProjectionMatrix();
+    }
+};
+
+Camera.prototype.setPositionZ = function (newPositionZ, zoomSpeed) {
+    this.zoomSpeed = zoomSpeed ? zoomSpeed : this.zoomSpeed;
+    this.expectedPositionZ = newPositionZ;
 };
 
 module.exports = Camera;
@@ -1257,6 +1299,7 @@ var ModelLoader = require("wm/renderer/modelRepo/ModelLoader");
 var ModelList = require("wm/renderer/modelRepo/ModelList");
 var ModelStore = require("wm/renderer/modelRepo/ModelStore");
 var CustomModelBuilder = require("wm/renderer/modelRepo/CustomModelBuilder");
+var Ui = require("wm/renderer/ui/Ui");
 
 function Core(logicCore) {
     if (!logicCore) throw new Error('Logic core initialization failure!');
@@ -1268,8 +1311,6 @@ function Core(logicCore) {
     this.resolutionCoefficient = 1;
     this.initRenderer();
     this.initAssets();
-
-    this.logicBus.postMessage('start', {});
 }
 
 Core.prototype.initRenderer = function () {
@@ -1286,9 +1327,10 @@ Core.prototype.makeMainComponents = function () {
     this.scene = this.makeScene(this.camera);
     this.particleManager = new ParticleManager({ scene: this.scene });
     this.actorManager = new ActorManager({ scene: this.scene, particleManager: this.particleManager, core: this });
-    this.logicBus = new LogicBus({ logicWorker: this.logicWorker, actorManager: this.actorManager });
+    this.logicBus = new LogicBus({ core: this, logicWorker: this.logicWorker, actorManager: this.actorManager });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera });
     this.gameScene = new GameScene({ core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager });
+    this.ui = new Ui({ core: this, logicBus: this.logicBus });
 };
 
 Core.prototype.makeStatsWatcher = function () {
@@ -1379,9 +1421,13 @@ Core.prototype.continueInit = function () {
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
-    var renderLoop = new THREEx.RenderingLoop();
-    renderLoop.add(this.render.bind(this));
-    renderLoop.start();
+    this.renderLoop = new THREEx.RenderingLoop();
+    this.renderLoop.add(this.render.bind(this));
+    this.renderLoop.start();
+
+    setTimeout(function () {
+        this.renderLoop.stop();
+    }.bind(this), 1000);
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
@@ -1407,9 +1453,20 @@ Core.prototype.render = function () {
     this.stats.update();
 };
 
+Core.prototype.startGameRenderMode = function () {
+    this.camera.setPositionZ(200, 20);
+    this.renderLoop.start();
+};
+
+Core.prototype.stopGame = function (info) {
+    setTimeout(function () {
+        this.ui.showStopGame(info);
+    }.bind(this), 2000);
+};
+
 module.exports = Core;
 
-},{"wm/renderer/Camera":21,"wm/renderer/ControlsHandler":22,"wm/renderer/InputListener":24,"wm/renderer/LogicBus":25,"wm/renderer/actorManagement/ActorManager":27,"wm/renderer/modelRepo/CustomModelBuilder":43,"wm/renderer/modelRepo/ModelList":44,"wm/renderer/modelRepo/ModelLoader":45,"wm/renderer/modelRepo/ModelStore":46,"wm/renderer/particleSystem/ParticleManager":49,"wm/renderer/scene/GameScene":51}],24:[function(require,module,exports){
+},{"wm/renderer/Camera":21,"wm/renderer/ControlsHandler":22,"wm/renderer/InputListener":24,"wm/renderer/LogicBus":25,"wm/renderer/actorManagement/ActorManager":27,"wm/renderer/modelRepo/CustomModelBuilder":43,"wm/renderer/modelRepo/ModelList":44,"wm/renderer/modelRepo/ModelLoader":45,"wm/renderer/modelRepo/ModelStore":46,"wm/renderer/particleSystem/ParticleManager":49,"wm/renderer/scene/GameScene":51,"wm/renderer/ui/Ui":52}],24:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1563,6 +1620,7 @@ function LogicBus(config) {
     Object.assign(this, config);
     if (!this.logicWorker) throw new Error('No logicWorker object specified for LogicBus!');
     if (!this.actorManager) throw new Error('No actorManager object specified for LogicBus!');
+    if (!this.core) throw new Error('No core object specified for LogicBus!');
 
     this.logicWorker.onmessage = this.handleMessage.bind(this);
 }
@@ -1574,6 +1632,9 @@ LogicBus.prototype.handleMessage = function (message) {
             break;
         case 'attachPlayer':
             this.actorManager.attachPlayer(message.data.actorId);
+            break;
+        case 'gameEnded':
+            this.core.stopGame(message.data);
             break;
     }
 };
@@ -2886,23 +2947,16 @@ function CustomModelBuilder() {
 
 CustomModelBuilder.prototype.configure = function () {
     return {
-        'projectile': {
-            material: new THREE.SpriteMaterial({
-                map: THREE.ImageUtils.loadTexture("/gfx/elongatedParticleAdd.png"),
-                color: 0xffffff,
-                blending: THREE.AdditiveBlending
-            })
-        },
         'chunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x888888,
-                map: THREE.ImageUtils.loadTexture("/models/chunk.png")
+                map: new THREE.TextureLoader().load("/models/chunk.png")
             })
         },
         'orangeChunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x885522,
-                map: THREE.ImageUtils.loadTexture("/models/chunk.png")
+                map: new THREE.TextureLoader().load("/models/chunk.png")
             })
         }
     };
@@ -3321,7 +3375,7 @@ var GameScene = function () {
         key: "make",
         value: function make() {
             var combine = new THREE.Geometry();
-            var planeTex = THREE.ImageUtils.loadTexture("/models/floor.png");
+            var planeTex = new THREE.TextureLoader().load("/models/floor.png");
             planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
             planeTex.repeat.set(10, 10);
             var geometry = new THREE.PlaneGeometry(800, 800, 2, 2);
@@ -3372,5 +3426,83 @@ var GameScene = function () {
 }();
 
 module.exports = GameScene;
+
+},{}],52:[function(require,module,exports){
+'use strict';
+
+function Ui(config) {
+    Object.assign(this, config);
+    if (!this.logicBus) throw new Error('No logicBus object specified for Ui!');
+    if (!this.core) throw new Error('No core object specified for Ui!');
+
+    this.makeUi();
+}
+
+Ui.prototype.makeUi = function () {
+    var startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', this.onStartButtonClick.bind(this, startButton));
+};
+
+Ui.prototype.onStartButtonClick = function () {
+    this.logicBus.postMessage('start', {});
+    this.core.startGameRenderMode();
+
+    var viewportElement = document.getElementById('viewport');
+
+    viewportElement.removeClass('blur');
+    viewportElement.addClass('blurEnd');
+
+    viewportElement.addEventListener('animationend', function () {
+        viewportElement.removeClass('blurEnd');
+    });
+
+    this.hide(document.getElementById('startScreen'));
+};
+
+Ui.prototype.hide = function (element) {
+    element.style.display = 'none';
+};
+
+Ui.prototype.show = function (element) {
+    element.style.display = '';
+};
+
+Ui.prototype.showStopGame = function (info) {
+    document.getElementById('viewport').addClass('blurStart');
+    document.getElementById('endText').addClass('textAppear');
+    document.getElementById('scoreText').addClass('textAppear');
+    document.getElementById('scoreText').innerHTML = 'KILLED: ' + info.killed + '<br>REMAINING: ' + info.remaining + '<br><br>' + this.getOpinionOnResult(info.remaining);
+    this.show(document.getElementById('endScreen'));
+};
+
+Ui.prototype.getOpinionOnResult = function (remainingMooks) {
+    if (remainingMooks === 100) {
+        return 'You didn\'t even try, did you?';
+    } else if (remainingMooks > 90 && remainingMooks < 100) {
+        return 'You seem to have discovered shooting function.';
+    } else if (remainingMooks > 80 && remainingMooks < 90) {
+        return 'Far, far away.';
+    } else if (remainingMooks > 70 && remainingMooks < 80) {
+        return 'Come on. You can do better! I hope, for this is only a techtest and they still suck.';
+    } else if (remainingMooks > 60 && remainingMooks < 70) {
+        return 'Try using your second weapon on them. Works much better.';
+    } else if (remainingMooks > 50 && remainingMooks < 60) {
+        return 'You know you can shoot down these orange blobs with your primary weapon?';
+    } else if (remainingMooks > 40 && remainingMooks < 50) {
+        return 'Only half more to go.';
+    } else if (remainingMooks > 30 && remainingMooks < 40) {
+        return 'That is a formidable effort.';
+    } else if (remainingMooks > 20 && remainingMooks < 30) {
+        return 'It should be getting easier by now.';
+    } else if (remainingMooks > 10 && remainingMooks < 20) {
+        return 'So close.';
+    } else if (remainingMooks > 0 && remainingMooks < 10) {
+        return 'Almost there. Got unlucky with a stray shot?';
+    } else {
+        return 'You got them all! Grats!';
+    }
+};
+
+module.exports = Ui;
 
 },{}]},{},[3]);

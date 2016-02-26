@@ -47,6 +47,8 @@ var SampleApp = function() {
         self.zcache['index.html'] = fs.readFileSync('./index.html');
         self.zcache['/styles.css'] = fs.readFileSync('./styles.css');
 
+        self.zcache['/fonts/Oswald-Regular.ttf'] = fs.readFileSync('./fonts/Oswald-Regular.ttf');
+
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
@@ -129,6 +131,8 @@ var SampleApp = function() {
             res.setHeader('Content-Type', 'text/css');
             res.send(self.cache_get('/styles.css') );
         };
+
+        self.routes['/fonts/Oswald-Regular.ttf'] = function(req, res) {res.send(self.cache_get('/fonts/Oswald-Regular.ttf') );};
 
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
