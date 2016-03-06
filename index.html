@@ -14,14 +14,16 @@
         <script src="lib/threex.loop.js"></script>
         <script src="lib/utils/polyfills.js"></script>
         <script src="lib/p2.js"></script>
-        <!-- <script src="lib/GPUParticleSystem.js"></script>
-        <script src="dist/renderer.min.js"></script> -->
+        <script src="lib/react.js"></script>
+        <script src="lib/react-dom.js"></script>
+
         <script src="dist/Init.js"></script>
 
     </head>
 
     <body class="gameViewport ">
-      <div id="viewport" class="noSelect blur"></div>
+      <div id="react-content"></div>
+      <div id="viewport" class="noSelect"></div>
       <div id="startScreen">
         <div class="titleText Oswald"><span>WINGMOD</span><span style="color: red;">2</span></div>
         <div id="startButton" class="button buttonText Oswald">START</div>
@@ -33,8 +35,4 @@
 
 
 
-
-      <!-- <div id="ui" class="noselect ui ">
-        Start
-      </div> -->
     </body>

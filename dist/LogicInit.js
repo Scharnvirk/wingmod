@@ -141,7 +141,7 @@ function Core(worker) {
     this.scene.fillScene();
     this.initFpsCounter();
 
-    this.running = false;
+    this.running = true;
 }
 
 Core.prototype.makeMainComponents = function (worker) {

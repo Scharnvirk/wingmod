@@ -71,13 +71,14 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  /*pointer-events:none;*/
 }
 
 .gameViewport {
   margin:0;
   padding: 0;
   overflow: hidden;
-  background: #000000;
+  /*background: #000000;*/
 }
 
 .ui{
@@ -124,10 +125,6 @@
   height: 40px;
   margin: auto;
   position: absolute;
-  left:0;
-  right: 0;
-  top: 0;
-  bottom: 0;
   background: rgba(255, 255, 255, .05);
   animation-name: buttonHoverOut;
   animation-duration: 0.1s;
@@ -163,8 +160,6 @@
   text-align: center;
   position: absolute;
   letter-spacing: 40px;
-  width: 100%;
-  top: 30%;
   font-size: 100px;
   color: white;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
@@ -174,8 +169,6 @@
   text-align: center;
   position: absolute;
   letter-spacing: 10px;
-  width: 100%;
-  top: 50%;
   font-size: 50;
   color: white;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);

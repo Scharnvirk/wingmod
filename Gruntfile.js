@@ -6,7 +6,7 @@ module.exports = function (grunt) {
                 options: {
                     transform: [
                         ["babelify", {
-                            presets: ["es2015"]
+                            presets: ["es2015", "react"]
                         }]
                     ]
                 },
@@ -22,21 +22,21 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        babel: {
-            options: {
-                sourceMap: true
-            },
-            dist: {
-                files:[
-                    {
-                        expand: true,
-                        cwd : 'node_modules/wm/',
-                        src : ['**/*.js'],
-                        dest : 'node_modules/wm/b/'
-                    }
-                ]
-            }
-        },
+        // babel: {
+        //     options: {
+        //         sourceMap: true
+        //     },
+        //     dist: {
+        //         files:[
+        //             {
+        //                 expand: true,
+        //                 cwd : 'node_modules/wm/',
+        //                 src : ['**/*.js'],
+        //                 dest : 'node_modules/wm/b/'
+        //             }
+        //         ]
+        //     }
+        // },
         clean: {
             folder: ['node_modules/wm/b']
         }
@@ -70,6 +70,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-babel');
     // grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-browserify");
+    grunt.loadNpmTasks("grunt-watchify");
     grunt.loadNpmTasks('grunt-contrib-clean');
    //grunt.loadNpmTasks("grunt-contrib-watch");
 
