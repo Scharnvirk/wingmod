@@ -51,6 +51,7 @@ var SampleApp = function() {
 
 		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
         self.zcache['/lib/react.js'] = fs.readFileSync('./lib/react.js');
+        self.zcache['/lib/react-dom.js'] = fs.readFileSync('./lib/react-dom.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
 		self.zcache['/lib/threex.loop.js'] = fs.readFileSync('./lib/threex.loop.js');
 		self.zcache['/lib/utils/polyfills.js'] = fs.readFileSync('./lib/utils/polyfills.js');
@@ -137,6 +138,7 @@ var SampleApp = function() {
 
 		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
         self.routes['/lib/react.js'] = function(req, res) {res.send(self.cache_get('/lib/react.js') );};
+        self.routes['/lib/react-dom.js'] = function(req, res) {res.send(self.cache_get('/lib/react-dom.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
 		self.routes['/lib/threex.loop.js'] = function(req, res) {res.send(self.cache_get('/lib/threex.loop.js') );};
 		self.routes['/lib/utils/polyfills.js'] = function(req, res) {res.send(self.cache_get('/lib/utils/polyfills.js') );};
