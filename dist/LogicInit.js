@@ -141,7 +141,7 @@ function Core(worker) {
     this.scene.fillScene();
     this.initFpsCounter();
 
-    this.running = true;
+    this.running = false;
 }
 
 Core.prototype.makeMainComponents = function (worker) {
@@ -303,8 +303,6 @@ function GameWorld(config) {
     this.defaultContactMaterial.friction = 0;
     this.solver.iterations = 20;
     this.solver.tolerance = 0.02;
-
-    console.log(this);
 
     Object.assign(this, config);
 

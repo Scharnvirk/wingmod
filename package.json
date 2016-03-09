@@ -16,7 +16,9 @@
     "grunt-watchify": "^0.1.0",
     "gulp": "^3.9.1",
     "load-grunt-tasks": "^3.3.0",
+    "pubsub-js": "^1.5.3",
     "readable-stream": "^2.0.5",
+    "signals": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   },

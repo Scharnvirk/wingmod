@@ -86,6 +86,256 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 },{}],3:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+/*
+Copyright (c) 2010,2011,2012,2013,2014 Morgan Roderick http://roderick.dk
+License: MIT - http://mrgnrdrck.mit-license.org
+
+https://github.com/mroderick/PubSubJS
+*/
+(function (root, factory) {
+	'use strict';
+
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['exports'], factory);
+	} else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+		// CommonJS
+		factory(exports);
+	}
+
+	// Browser globals
+	var PubSub = {};
+	root.PubSub = PubSub;
+	factory(PubSub);
+})((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object' && window || undefined, function (PubSub) {
+	'use strict';
+
+	var messages = {},
+	    lastUid = -1;
+
+	function hasKeys(obj) {
+		var key;
+
+		for (key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+  *	Returns a function that throws the passed exception, for use as argument for setTimeout
+  *	@param { Object } ex An Error object
+  */
+	function throwException(ex) {
+		return function reThrowException() {
+			throw ex;
+		};
+	}
+
+	function callSubscriberWithDelayedExceptions(subscriber, message, data) {
+		try {
+			subscriber(message, data);
+		} catch (ex) {
+			setTimeout(throwException(ex), 0);
+		}
+	}
+
+	function callSubscriberWithImmediateExceptions(subscriber, message, data) {
+		subscriber(message, data);
+	}
+
+	function deliverMessage(originalMessage, matchedMessage, data, immediateExceptions) {
+		var subscribers = messages[matchedMessage],
+		    callSubscriber = immediateExceptions ? callSubscriberWithImmediateExceptions : callSubscriberWithDelayedExceptions,
+		    s;
+
+		if (!messages.hasOwnProperty(matchedMessage)) {
+			return;
+		}
+
+		for (s in subscribers) {
+			if (subscribers.hasOwnProperty(s)) {
+				callSubscriber(subscribers[s], originalMessage, data);
+			}
+		}
+	}
+
+	function createDeliveryFunction(message, data, immediateExceptions) {
+		return function deliverNamespaced() {
+			var topic = String(message),
+			    position = topic.lastIndexOf('.');
+
+			// deliver the message as it is now
+			deliverMessage(message, message, data, immediateExceptions);
+
+			// trim the hierarchy and deliver message to each level
+			while (position !== -1) {
+				topic = topic.substr(0, position);
+				position = topic.lastIndexOf('.');
+				deliverMessage(message, topic, data, immediateExceptions);
+			}
+		};
+	}
+
+	function messageHasSubscribers(message) {
+		var topic = String(message),
+		    found = Boolean(messages.hasOwnProperty(topic) && hasKeys(messages[topic])),
+		    position = topic.lastIndexOf('.');
+
+		while (!found && position !== -1) {
+			topic = topic.substr(0, position);
+			position = topic.lastIndexOf('.');
+			found = Boolean(messages.hasOwnProperty(topic) && hasKeys(messages[topic]));
+		}
+
+		return found;
+	}
+
+	function publish(message, data, sync, immediateExceptions) {
+		var deliver = createDeliveryFunction(message, data, immediateExceptions),
+		    hasSubscribers = messageHasSubscribers(message);
+
+		if (!hasSubscribers) {
+			return false;
+		}
+
+		if (sync === true) {
+			deliver();
+		} else {
+			setTimeout(deliver, 0);
+		}
+		return true;
+	}
+
+	/**
+  *	PubSub.publish( message[, data] ) -> Boolean
+  *	- message (String): The message to publish
+  *	- data: The data to pass to subscribers
+  *	Publishes the the message, passing the data to it's subscribers
+ **/
+	PubSub.publish = function (message, data) {
+		return publish(message, data, false, PubSub.immediateExceptions);
+	};
+
+	/**
+  *	PubSub.publishSync( message[, data] ) -> Boolean
+  *	- message (String): The message to publish
+  *	- data: The data to pass to subscribers
+  *	Publishes the the message synchronously, passing the data to it's subscribers
+ **/
+	PubSub.publishSync = function (message, data) {
+		return publish(message, data, true, PubSub.immediateExceptions);
+	};
+
+	/**
+  *	PubSub.subscribe( message, func ) -> String
+  *	- message (String): The message to subscribe to
+  *	- func (Function): The function to call when a new message is published
+  *	Subscribes the passed function to the passed message. Every returned token is unique and should be stored if
+  *	you need to unsubscribe
+ **/
+	PubSub.subscribe = function (message, func) {
+		if (typeof func !== 'function') {
+			return false;
+		}
+
+		// message is not registered yet
+		if (!messages.hasOwnProperty(message)) {
+			messages[message] = {};
+		}
+
+		// forcing token as String, to allow for future expansions without breaking usage
+		// and allow for easy use as key names for the 'messages' object
+		var token = 'uid_' + String(++lastUid);
+		messages[message][token] = func;
+
+		// return token for unsubscribing
+		return token;
+	};
+
+	/* Public: Clears all subscriptions
+  */
+	PubSub.clearAllSubscriptions = function clearAllSubscriptions() {
+		messages = {};
+	};
+
+	/*Public: Clear subscriptions by the topic
+ */
+	PubSub.clearSubscriptions = function clearSubscriptions(topic) {
+		var m;
+		for (m in messages) {
+			if (messages.hasOwnProperty(m) && m.indexOf(topic) === 0) {
+				delete messages[m];
+			}
+		}
+	};
+
+	/* Public: removes subscriptions.
+  * When passed a token, removes a specific subscription.
+  * When passed a function, removes all subscriptions for that function
+  * When passed a topic, removes all subscriptions for that topic (hierarchy)
+  *
+  * value - A token, function or topic to unsubscribe.
+  *
+  * Examples
+  *
+  *		// Example 1 - unsubscribing with a token
+  *		var token = PubSub.subscribe('mytopic', myFunc);
+  *		PubSub.unsubscribe(token);
+  *
+  *		// Example 2 - unsubscribing with a function
+  *		PubSub.unsubscribe(myFunc);
+  *
+  *		// Example 3 - unsubscribing a topic
+  *		PubSub.unsubscribe('mytopic');
+  */
+	PubSub.unsubscribe = function (value) {
+		var isTopic = typeof value === 'string' && messages.hasOwnProperty(value),
+		    isToken = !isTopic && typeof value === 'string',
+		    isFunction = typeof value === 'function',
+		    result = false,
+		    m,
+		    message,
+		    t;
+
+		if (isTopic) {
+			delete messages[value];
+			return;
+		}
+
+		for (m in messages) {
+			if (messages.hasOwnProperty(m)) {
+				message = messages[m];
+
+				if (isToken && message[value]) {
+					delete message[value];
+					result = value;
+					// tokens are unique, so we can just stop here
+					break;
+				}
+
+				if (isFunction) {
+					for (t in message) {
+						if (message.hasOwnProperty(t) && message[t] === value) {
+							delete message[t];
+							result = true;
+						}
+					}
+				}
+			}
+		}
+
+		return result;
+	};
+});
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -109,7 +359,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -136,7 +386,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":2,"wm/Constants":3,"wm/LogicInit":5,"wm/Utils":6,"wm/renderer/Core":24}],5:[function(require,module,exports){
+},{"domready":2,"wm/Constants":4,"wm/LogicInit":6,"wm/Utils":7,"wm/renderer/Core":25}],6:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -151,7 +401,7 @@ if ('function' === typeof importScripts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"wm/Constants":3,"wm/Utils":6,"wm/logic/Core":7}],6:[function(require,module,exports){
+},{"wm/Constants":4,"wm/Utils":7,"wm/logic/Core":8}],7:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -241,7 +491,7 @@ if (!Function.prototype.extend) {
 
 module.exports = Utils;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var RenderBus = require("wm/logic/RenderBus");
@@ -255,7 +505,7 @@ function Core(worker) {
     this.scene.fillScene();
     this.initFpsCounter();
 
-    this.running = true;
+    this.running = false;
 }
 
 Core.prototype.makeMainComponents = function (worker) {
@@ -311,7 +561,7 @@ Core.prototype.endGame = function (info) {
 
 module.exports = Core;
 
-},{"wm/logic/GameScene":8,"wm/logic/GameWorld":9,"wm/logic/RenderBus":10,"wm/logic/actorManagement/ActorManager":11}],8:[function(require,module,exports){
+},{"wm/logic/GameScene":9,"wm/logic/GameWorld":10,"wm/logic/RenderBus":11,"wm/logic/actorManagement/ActorManager":12}],9:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
@@ -401,7 +651,7 @@ GameScene.prototype.update = function () {
 
 module.exports = GameScene;
 
-},{"wm/renderer/actorManagement/ActorFactory":27}],9:[function(require,module,exports){
+},{"wm/renderer/actorManagement/ActorFactory":28}],10:[function(require,module,exports){
 'use strict';
 
 function GameWorld(config) {
@@ -417,8 +667,6 @@ function GameWorld(config) {
     this.defaultContactMaterial.friction = 0;
     this.solver.iterations = 20;
     this.solver.tolerance = 0.02;
-
-    console.log(this);
 
     Object.assign(this, config);
 
@@ -462,7 +710,7 @@ GameWorld.prototype.onCollision = function (collisionEvent) {
 
 module.exports = GameWorld;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 function RenderBus(config) {
@@ -498,7 +746,7 @@ RenderBus.prototype.handleMessage = function (message) {
 
 module.exports = RenderBus;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
@@ -582,7 +830,7 @@ ActorManager.prototype.checkEndGameCondition = function () {
 
 module.exports = ActorManager;
 
-},{"wm/renderer/actorManagement/ActorFactory":27}],12:[function(require,module,exports){
+},{"wm/renderer/actorManagement/ActorFactory":28}],13:[function(require,module,exports){
 'use strict';
 
 function BaseActor(config) {
@@ -648,7 +896,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 function BaseBody(config) {
@@ -683,7 +931,7 @@ BaseBody.prototype.update = function () {};
 
 module.exports = BaseBody;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -801,7 +1049,7 @@ MookActor.prototype.onSpawn = function () {};
 
 module.exports = MookActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13,"wm/renderer/actorManagement/ActorFactory":27}],15:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14,"wm/renderer/actorManagement/ActorFactory":28}],16:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -830,7 +1078,7 @@ PillarActor.prototype.createBody = function () {
 
 module.exports = PillarActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],16:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],17:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -859,7 +1107,7 @@ WallActor.prototype.createBody = function () {
 
 module.exports = WallActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],17:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],18:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -894,7 +1142,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],18:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],19:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -1094,7 +1342,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13,"wm/renderer/actorManagement/ActorFactory":27}],19:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14,"wm/renderer/actorManagement/ActorFactory":28}],20:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -1133,7 +1381,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],20:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],21:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -1172,7 +1420,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],21:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],22:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("wm/logic/actor/components/body/BaseBody");
@@ -1221,7 +1469,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"wm/logic/actor/BaseActor":12,"wm/logic/actor/components/body/BaseBody":13}],22:[function(require,module,exports){
+},{"wm/logic/actor/BaseActor":13,"wm/logic/actor/components/body/BaseBody":14}],23:[function(require,module,exports){
 "use strict";
 
 function Camera(config) {
@@ -1282,7 +1530,7 @@ Camera.prototype.setPositionZ = function (newPositionZ, zoomSpeed) {
 
 module.exports = Camera;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 function ControlsHandler(config) {
@@ -1339,7 +1587,7 @@ ControlsHandler.prototype.setSceneMousePosition = function () {
 
 module.exports = ControlsHandler;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 var InputListener = require("wm/renderer/InputListener");
@@ -1389,15 +1637,15 @@ Core.prototype.makeMainComponents = function () {
 
 Core.prototype.makeStatsWatcher = function () {
     var stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    //stats.domElement.style.top = '50px';
-
+    stats.domElement.style.position = 'fixed';
+    stats.domElement.style.top = 0;
+    stats.domElement.style['z-index'] = 999999999;
     return stats;
 };
 
 Core.prototype.attachToDom = function (renderer, stats) {
     console.log("doc", document.body);
-    document.getElementById('viewport').appendChild(stats.domElement);
+    document.body.appendChild(stats.domElement);
     document.getElementById('viewport').appendChild(renderer.domElement);
     this.autoResize();
 };
@@ -1480,8 +1728,7 @@ Core.prototype.continueInit = function () {
     this.renderLoop.start();
 
     setTimeout(function () {
-        this.startGameRenderMode();
-        //this.renderLoop.stop();
+        this.renderLoop.stop();
     }.bind(this), 1000);
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
@@ -1515,14 +1762,14 @@ Core.prototype.startGameRenderMode = function () {
 
 Core.prototype.stopGame = function (info) {
     setTimeout(function () {
-        this.ui.showStopGame(info);
+        this.ui.stopGame(info);
         this.renderLoop.stop();
     }.bind(this), 2000);
 };
 
 module.exports = Core;
 
-},{"wm/renderer/Camera":22,"wm/renderer/ControlsHandler":23,"wm/renderer/InputListener":25,"wm/renderer/LogicBus":26,"wm/renderer/actorManagement/ActorManager":28,"wm/renderer/modelRepo/CustomModelBuilder":44,"wm/renderer/modelRepo/ModelList":45,"wm/renderer/modelRepo/ModelLoader":46,"wm/renderer/modelRepo/ModelStore":47,"wm/renderer/particleSystem/ParticleManager":50,"wm/renderer/scene/GameScene":52,"wm/renderer/ui/Ui":55}],25:[function(require,module,exports){
+},{"wm/renderer/Camera":23,"wm/renderer/ControlsHandler":24,"wm/renderer/InputListener":26,"wm/renderer/LogicBus":27,"wm/renderer/actorManagement/ActorManager":29,"wm/renderer/modelRepo/CustomModelBuilder":45,"wm/renderer/modelRepo/ModelList":46,"wm/renderer/modelRepo/ModelLoader":47,"wm/renderer/modelRepo/ModelStore":48,"wm/renderer/particleSystem/ParticleManager":51,"wm/renderer/scene/GameScene":53,"wm/renderer/ui/Ui":56}],26:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1668,7 +1915,7 @@ var InputListener = function InputListener(domElement) {
 
 module.exports = InputListener;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 function LogicBus(config) {
@@ -1702,7 +1949,7 @@ LogicBus.prototype.postMessage = function (type, message) {
 
 module.exports = LogicBus;
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1755,7 +2002,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"wm/logic/actor/enemy/MookActor":14,"wm/logic/actor/map/PillarActor":15,"wm/logic/actor/map/WallActor":16,"wm/logic/actor/object/ChunkActor":17,"wm/logic/actor/player/ShipActor":18,"wm/logic/actor/projectile/LaserProjectileActor":19,"wm/logic/actor/projectile/MoltenProjectileActor":20,"wm/logic/actor/projectile/PlasmaProjectileActor":21,"wm/renderer/actor/enemy/MookActor":36,"wm/renderer/actor/map/PillarActor":37,"wm/renderer/actor/map/WallActor":38,"wm/renderer/actor/object/ChunkActor":39,"wm/renderer/actor/player/ShipActor":40,"wm/renderer/actor/projectile/LaserProjectileActor":41,"wm/renderer/actor/projectile/MoltenProjectileActor":42,"wm/renderer/actor/projectile/PlasmaProjectileActor":43}],28:[function(require,module,exports){
+},{"wm/logic/actor/enemy/MookActor":15,"wm/logic/actor/map/PillarActor":16,"wm/logic/actor/map/WallActor":17,"wm/logic/actor/object/ChunkActor":18,"wm/logic/actor/player/ShipActor":19,"wm/logic/actor/projectile/LaserProjectileActor":20,"wm/logic/actor/projectile/MoltenProjectileActor":21,"wm/logic/actor/projectile/PlasmaProjectileActor":22,"wm/renderer/actor/enemy/MookActor":37,"wm/renderer/actor/map/PillarActor":38,"wm/renderer/actor/map/WallActor":39,"wm/renderer/actor/object/ChunkActor":40,"wm/renderer/actor/player/ShipActor":41,"wm/renderer/actor/projectile/LaserProjectileActor":42,"wm/renderer/actor/projectile/MoltenProjectileActor":43,"wm/renderer/actor/projectile/PlasmaProjectileActor":44}],29:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('renderer');
@@ -1854,7 +2101,7 @@ ActorManager.prototype.deleteActor = function (actorId) {
 
 module.exports = ActorManager;
 
-},{"wm/renderer/actorManagement/ActorFactory":27}],29:[function(require,module,exports){
+},{"wm/renderer/actorManagement/ActorFactory":28}],30:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -1942,7 +2189,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 function BaseMesh(config) {
@@ -1974,7 +2221,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
@@ -1996,7 +2243,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":30,"wm/renderer/modelRepo/ModelStore":47}],32:[function(require,module,exports){
+},{"wm/renderer/actor/components/mesh/BaseMesh":31,"wm/renderer/modelRepo/ModelStore":48}],33:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
@@ -2018,7 +2265,7 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":30}],33:[function(require,module,exports){
+},{"wm/renderer/actor/components/mesh/BaseMesh":31}],34:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
@@ -2039,7 +2286,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":30,"wm/renderer/modelRepo/ModelStore":47}],34:[function(require,module,exports){
+},{"wm/renderer/actor/components/mesh/BaseMesh":31,"wm/renderer/modelRepo/ModelStore":48}],35:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
@@ -2062,7 +2309,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":30,"wm/renderer/modelRepo/ModelStore":47}],35:[function(require,module,exports){
+},{"wm/renderer/actor/components/mesh/BaseMesh":31,"wm/renderer/modelRepo/ModelStore":48}],36:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
@@ -2083,7 +2330,7 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":30}],36:[function(require,module,exports){
+},{"wm/renderer/actor/components/mesh/BaseMesh":31}],37:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("wm/renderer/actor/components/mesh/ShipMesh");
@@ -2161,7 +2408,7 @@ MookActor.prototype.onDeath = function () {
 
 module.exports = MookActor;
 
-},{"wm/renderer/actor/BaseActor":29,"wm/renderer/actor/components/mesh/ShipMesh":34}],37:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30,"wm/renderer/actor/components/mesh/ShipMesh":35}],38:[function(require,module,exports){
 "use strict";
 
 var PillarMesh = require("wm/renderer/actor/components/mesh/PillarMesh");
@@ -2179,7 +2426,7 @@ PillarActor.prototype.createMesh = function () {
 
 module.exports = PillarActor;
 
-},{"wm/renderer/actor/BaseActor":29,"wm/renderer/actor/components/mesh/PillarMesh":32}],38:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30,"wm/renderer/actor/components/mesh/PillarMesh":33}],39:[function(require,module,exports){
 "use strict";
 
 var WallMesh = require("wm/renderer/actor/components/mesh/WallMesh");
@@ -2197,7 +2444,7 @@ WallActor.prototype.createMesh = function () {
 
 module.exports = WallActor;
 
-},{"wm/renderer/actor/BaseActor":29,"wm/renderer/actor/components/mesh/WallMesh":35}],39:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30,"wm/renderer/actor/components/mesh/WallMesh":36}],40:[function(require,module,exports){
 "use strict";
 
 var ChunkMesh = require("wm/renderer/actor/components/mesh/ChunkMesh");
@@ -2279,7 +2526,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"wm/renderer/actor/BaseActor":29,"wm/renderer/actor/components/mesh/ChunkMesh":31}],40:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30,"wm/renderer/actor/components/mesh/ChunkMesh":32}],41:[function(require,module,exports){
 "use strict";
 
 var RavierMesh = require("wm/renderer/actor/components/mesh/RavierMesh");
@@ -2573,7 +2820,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"wm/renderer/actor/BaseActor":29,"wm/renderer/actor/components/mesh/RavierMesh":33}],41:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30,"wm/renderer/actor/components/mesh/RavierMesh":34}],42:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("wm/renderer/actor/BaseActor");
@@ -2715,7 +2962,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":29}],42:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30}],43:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("wm/renderer/actor/BaseActor");
@@ -2854,7 +3101,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":29}],43:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30}],44:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("wm/renderer/actor/BaseActor");
@@ -2993,7 +3240,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":29}],44:[function(require,module,exports){
+},{"wm/renderer/actor/BaseActor":30}],45:[function(require,module,exports){
 'use strict';
 
 function CustomModelBuilder() {
@@ -3039,7 +3286,7 @@ CustomModelBuilder.prototype.clearBatch = function () {
 
 module.exports = CustomModelBuilder;
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 var ModelList = {
@@ -3048,7 +3295,7 @@ var ModelList = {
 
 module.exports = ModelList;
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 function ModelLoader() {
@@ -3100,7 +3347,7 @@ ModelLoader.prototype.getDefaultTexturePath = function (path) {
 
 module.exports = ModelLoader;
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 var ModelStore = {
@@ -3133,7 +3380,7 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 
 var ParticleShaders = require("wm/renderer/particleSystem/ParticleShaders");
@@ -3196,7 +3443,7 @@ ParticleConfigBuilder.prototype.getAllConfigs = function () {
 
 module.exports = ParticleConfigBuilder;
 
-},{"wm/renderer/particleSystem/ParticleShaders":51}],49:[function(require,module,exports){
+},{"wm/renderer/particleSystem/ParticleShaders":52}],50:[function(require,module,exports){
 'use strict';
 
 function ParticleGenerator(config) {
@@ -3306,7 +3553,7 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
 
 module.exports = ParticleGenerator;
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 "use strict";
 
 var ParticleConfigBuilder = require("wm/renderer/particleSystem/ParticleConfigBuilder");
@@ -3352,7 +3599,7 @@ ParticleManager.prototype.createParticle = function (typeName, config) {
 
 module.exports = ParticleManager;
 
-},{"wm/renderer/particleSystem/ParticleConfigBuilder":48,"wm/renderer/particleSystem/ParticleGenerator":49}],51:[function(require,module,exports){
+},{"wm/renderer/particleSystem/ParticleConfigBuilder":49,"wm/renderer/particleSystem/ParticleGenerator":50}],52:[function(require,module,exports){
 "use strict";
 
 var ParticleShaders = {
@@ -3382,7 +3629,7 @@ var ParticleShaders = {
 
 module.exports = ParticleShaders;
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3483,7 +3730,7 @@ var GameScene = function () {
 
 module.exports = GameScene;
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3500,28 +3747,35 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Button = function (_React$Component) {
-    _inherits(Button, _React$Component);
+var PubSub = require('pubsub-js');
 
-    function Button() {
-        _classCallCheck(this, Button);
+var UiButton = function (_React$Component) {
+    _inherits(UiButton, _React$Component);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Button).apply(this, arguments));
+    function UiButton() {
+        _classCallCheck(this, UiButton);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(UiButton).apply(this, arguments));
     }
 
-    _createClass(Button, [{
+    _createClass(UiButton, [{
         key: 'render',
         value: function render() {
             var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
             return React.createElement(
                 'div',
-                { className: classes },
+                {
+                    onClick: function onClick() {
+                        PubSub.publish('buttonClick', 'start');
+                    },
+                    className: classes
+                },
                 this.props.text
             );
         }
     }]);
 
-    return Button;
+    return UiButton;
 }(React.Component);
 
 var StyledText = function (_React$Component2) {
@@ -3539,12 +3793,8 @@ var StyledText = function (_React$Component2) {
             var classes = (0, _classnames2.default)('title', [this.props.style, 'Oswald', 'noSelect']);
             return React.createElement(
                 'div',
-                null,
-                React.createElement(
-                    'div',
-                    { className: classes },
-                    this.props.text
-                )
+                { className: classes },
+                this.props.children
             );
         }
     }]);
@@ -3552,9 +3802,60 @@ var StyledText = function (_React$Component2) {
     return StyledText;
 }(React.Component);
 
-module.exports = { StyledText: StyledText, Button: Button };
+var Viewport = function (_React$Component3) {
+    _inherits(Viewport, _React$Component3);
 
-},{"classnames":1}],54:[function(require,module,exports){
+    function Viewport() {
+        _classCallCheck(this, Viewport);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).apply(this, arguments));
+    }
+
+    _createClass(Viewport, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement('div', { id: 'viewport', className: (0, _classnames2.default)('class', ['fullScreen', 'allPointerEvents', 'noSelect']) });
+        }
+    }]);
+
+    return Viewport;
+}(React.Component);
+
+var FullScreenEffect = React.createClass({
+    displayName: 'FullScreenEffect',
+    render: function render() {
+        console.log("rendering FullScreenEffect", this.props.blur);
+        var blur = undefined;
+        switch (this.props.blur) {
+            case 'start':
+                blur = 'blurStart';
+                break;
+            case 'end':
+                blur = 'blurEnd';
+                break;
+            case 'on':
+                blur = 'blur';
+                break;
+            default:
+                blur = '';
+        }
+
+        return React.createElement(
+            'div',
+            { className: (0, _classnames2.default)('class', ['fullScreen', blur]) },
+            this.props.children
+        );
+    }
+});
+
+module.exports = {
+    StyledText: StyledText,
+    UiButton: UiButton,
+    FullScreenEffect: FullScreenEffect,
+    Viewport: Viewport
+};
+
+},{"classnames":1,"pubsub-js":3}],55:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3571,17 +3872,81 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Button = require('wm/renderer/ui/Components').Button;
+var UiButton = require('wm/renderer/ui/Components').UiButton;
 var StyledText = require('wm/renderer/ui/Components').StyledText;
+var FullScreenEffect = require('wm/renderer/ui/Components').FullScreenEffect;
+var Viewport = require('wm/renderer/ui/Components').Viewport;
+
+var currentKey = 0;
 
 function ReactUi() {
-    ReactDOM.render(React.createElement(
-        'div',
-        null,
-        React.createElement(StartScreen, null),
-        React.createElement(EndScreen, null)
-    ), document.getElementById('react-content'));
+    Utils.mixin(this, THREE.EventDispatcher);
+    this.Ui = React.createElement(Ui, null);
+    this.render();
 }
+
+ReactUi.prototype.render = function () {
+    ReactDOM.render(this.Ui, document.getElementById('react-content'));
+};
+
+ReactUi.prototype.changeMode = function (newMode, context) {
+    var additionalConfig = context || null;
+    this.Ui = React.createElement(Ui, { mode: newMode, context: context });
+    this.render();
+};
+
+var generateKey = function generateKey() {
+    return currentKey++;
+};
+
+var multilinize = function multilinize(multilineString) {
+    return multilineString.split('\n').map(function (item) {
+        return React.createElement(
+            'span',
+            { key: generateKey() },
+            item,
+            React.createElement('br', null)
+        );
+    });
+};
+
+var Ui = React.createClass({
+    displayName: 'Ui',
+    render: function render() {
+        var UIcontent = [];
+        switch (this.props.mode || 'startScreen') {
+            case 'startScreen':
+                UIcontent.push(React.createElement(StartScreen, { key: generateKey() }));
+                break;
+            case 'gameOverScreen':
+                UIcontent.push(React.createElement(EndScreen, { key: generateKey(), scoreText: multilinize(this.props.context.scoreText) }));
+                break;
+        }
+
+        var blurState = undefined;
+        switch (this.props.mode) {
+            case 'running':
+                blurState = 'end';
+                break;
+            case 'gameOverScreen':
+                blurState = 'start';
+                break;
+            default:
+                blurState = 'on';
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                FullScreenEffect,
+                { blur: blurState },
+                React.createElement(Viewport, null)
+            ),
+            UIcontent
+        );
+    }
+});
 
 var StartScreen = function (_React$Component) {
     _inherits(StartScreen, _React$Component);
@@ -3595,25 +3960,24 @@ var StartScreen = function (_React$Component) {
     _createClass(StartScreen, [{
         key: 'render',
         value: function render() {
-            var text = React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'span',
-                    null,
-                    'WINGMOD'
-                ),
-                React.createElement(
-                    'span',
-                    { style: { color: 'red' } },
-                    '2'
-                )
-            );
             return React.createElement(
                 'div',
-                null,
-                React.createElement(StyledText, { style: 'titleText', text: text }),
-                React.createElement(Button, { text: 'START' })
+                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
+                React.createElement(
+                    StyledText,
+                    { style: 'titleText' },
+                    React.createElement(
+                        'span',
+                        null,
+                        'WINGMOD'
+                    ),
+                    React.createElement(
+                        'span',
+                        { style: { color: 'red' } },
+                        '2'
+                    )
+                ),
+                React.createElement(UiButton, { text: 'START' })
             );
         }
     }]);
@@ -3635,9 +3999,17 @@ var EndScreen = function (_React$Component2) {
         value: function render() {
             return React.createElement(
                 'div',
-                null,
-                React.createElement(StyledText, { style: 'titleText', text: 'GAME OVER' }),
-                React.createElement(StyledText, { style: 'scoreText', text: 'Score data template' })
+                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
+                React.createElement(
+                    StyledText,
+                    { style: 'titleText' },
+                    'GAME OVER'
+                ),
+                React.createElement(
+                    StyledText,
+                    { style: 'scoreText' },
+                    this.props.scoreText
+                )
             );
         }
     }]);
@@ -3652,67 +4024,41 @@ module.exports = ReactUi;
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/
 
-/*
-div id="react-content"></div>
-<div id="viewport" class="noSelect"></div>
-<div id="startScreen">
-<div class="titleText Oswald"><span>WINGMOD</span><span style="color: red;">2</span></div>
-<div id="startButton" class="button buttonText Oswald">START</div>
-</div>
-<div id="endScreen" style="display: none">
-<div id="endText" class="titleText Oswald" ><span>GAME OVER</span></div>
-<div id="scoreText" class="scoreText Oswald" ><span>SCOREDATA</span></div>
-</div>*/
-
-},{"classnames":1,"wm/renderer/ui/Components":53}],55:[function(require,module,exports){
+},{"classnames":1,"wm/renderer/ui/Components":54}],56:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('wm/renderer/ui/ReactUi');
+var PubSub = require('pubsub-js');
 
 function Ui(config) {
+    var _this = this;
+
     Object.assign(this, config);
     if (!this.logicBus) throw new Error('No logicBus object specified for Ui!');
     if (!this.core) throw new Error('No core object specified for Ui!');
 
-    //var reactUi = new ReactUi();
-    this.makeUi();
+    this.reactUi = new ReactUi();
+    var listener = PubSub.subscribe('buttonClick', function (msg, data) {
+        switch (data) {
+            case 'start':
+                _this.onStartButtonClick();
+                break;
+            case 'stop':
+                _this.onStop();
+                break;
+        }
+    });
 }
 
-Ui.prototype.makeUi = function () {
-    var startButton = document.getElementById('startButton');
-    startButton.addEventListener('click', this.onStartButtonClick.bind(this, startButton));
+Ui.prototype.stopGame = function (info) {
+    var scoreText = 'KILLED: ' + info.killed + '\nREMAINING: ' + info.remaining + '\n\n' + this.getOpinionOnResult(info.remaining);
+    this.reactUi.changeMode('gameOverScreen', { scoreText: scoreText });
 };
 
 Ui.prototype.onStartButtonClick = function () {
     this.logicBus.postMessage('start', {});
     this.core.startGameRenderMode();
-
-    var viewportElement = document.getElementById('viewport');
-
-    viewportElement.removeClass('blur');
-    viewportElement.addClass('blurEnd');
-
-    viewportElement.addEventListener('animationend', function () {
-        viewportElement.removeClass('blurEnd');
-    });
-
-    this.hide(document.getElementById('startScreen'));
-};
-
-Ui.prototype.hide = function (element) {
-    element.style.display = 'none';
-};
-
-Ui.prototype.show = function (element) {
-    element.style.display = '';
-};
-
-Ui.prototype.showStopGame = function (info) {
-    document.getElementById('viewport').addClass('blurStart');
-    document.getElementById('endText').addClass('textAppear');
-    document.getElementById('scoreText').addClass('textAppear');
-    document.getElementById('scoreText').innerHTML = 'KILLED: ' + info.killed + '<br>REMAINING: ' + info.remaining + '<br><br>' + this.getOpinionOnResult(info.remaining);
-    this.show(document.getElementById('endScreen'));
+    this.reactUi.changeMode('running');
 };
 
 Ui.prototype.getOpinionOnResult = function (remainingMooks) {
@@ -3745,4 +4091,4 @@ Ui.prototype.getOpinionOnResult = function (remainingMooks) {
 
 module.exports = Ui;
 
-},{"wm/renderer/ui/ReactUi":54}]},{},[4]);
+},{"pubsub-js":3,"wm/renderer/ui/ReactUi":55}]},{},[5]);
