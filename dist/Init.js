@@ -3718,9 +3718,8 @@ var GameScene = function () {
         key: "update",
         value: function update() {
             if (this.actor) {
-                var offsetPosition = Utils.angleToVector(this.actor.angle, 20);
-                this.pointLight.position.x = this.actor.position[0] + offsetPosition[0];
-                this.pointLight.position.y = this.actor.position[1] + offsetPosition[1];
+                this.pointLight.position.x = this.actor.position[0] + 20;
+                this.pointLight.position.y = this.actor.position[1] + 20;
             }
         }
     }]);
@@ -3778,8 +3777,37 @@ var UiButton = function (_React$Component) {
     return UiButton;
 }(React.Component);
 
-var StyledText = function (_React$Component2) {
-    _inherits(StyledText, _React$Component2);
+var UiToggleButton = function (_React$Component2) {
+    _inherits(UiToggleButton, _React$Component2);
+
+    function UiToggleButton() {
+        _classCallCheck(this, UiToggleButton);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(UiToggleButton).apply(this, arguments));
+    }
+
+    _createClass(UiToggleButton, [{
+        key: 'render',
+        value: function render() {
+            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
+            return React.createElement(
+                'div',
+                {
+                    onClick: function onClick() {
+                        PubSub.publish('buttonClick', 'start');
+                    },
+                    className: classes
+                },
+                this.props.text
+            );
+        }
+    }]);
+
+    return UiToggleButton;
+}(React.Component);
+
+var StyledText = function (_React$Component3) {
+    _inherits(StyledText, _React$Component3);
 
     function StyledText() {
         _classCallCheck(this, StyledText);
@@ -3802,8 +3830,8 @@ var StyledText = function (_React$Component2) {
     return StyledText;
 }(React.Component);
 
-var Viewport = function (_React$Component3) {
-    _inherits(Viewport, _React$Component3);
+var Viewport = function (_React$Component4) {
+    _inherits(Viewport, _React$Component4);
 
     function Viewport() {
         _classCallCheck(this, Viewport);
@@ -3823,21 +3851,37 @@ var Viewport = function (_React$Component3) {
 
 var FullScreenEffect = React.createClass({
     displayName: 'FullScreenEffect',
+    getInitialState: function getInitialState() {
+        return {
+            noEffects: false
+        };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+        if (newProps.blur === 'start' && this.state.noEffects) {
+            this.setState({ noEffects: false });
+        }
+    },
     render: function render() {
         console.log("rendering FullScreenEffect", this.props.blur);
-        var blur = undefined;
-        switch (this.props.blur) {
-            case 'start':
-                blur = 'blurStart';
-                break;
-            case 'end':
-                blur = 'blurEnd';
-                break;
-            case 'on':
-                blur = 'blur';
-                break;
-            default:
-                blur = '';
+        var blur = '';
+        if (!this.state.noEffects) {
+            switch (this.props.blur) {
+                case 'start':
+                    blur = 'blurStart';
+                    break;
+                case 'end':
+                    setTimeout(function () {
+                        console.log('set to true');
+                        this.setState({ noEffects: true });
+                    }.bind(this), 2000);
+                    blur = 'blurEnd';
+                    break;
+                case 'on':
+                    blur = 'blur';
+                    break;
+                default:
+                    blur = '';
+            }
         }
 
         return React.createElement(
@@ -3851,6 +3895,7 @@ var FullScreenEffect = React.createClass({
 module.exports = {
     StyledText: StyledText,
     UiButton: UiButton,
+    UiToggleButton: UiToggleButton,
     FullScreenEffect: FullScreenEffect,
     Viewport: Viewport
 };

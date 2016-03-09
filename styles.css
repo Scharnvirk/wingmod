@@ -77,6 +77,13 @@
   pointer-events: all;
 }
 
+.gameViewport {
+  margin:0;
+  padding: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
 .ui{
   position: fixed;
   width: 100%;
