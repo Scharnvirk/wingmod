@@ -377,8 +377,7 @@ Init.prototype.start = function () {
     domready(function () {
         var logicWorker = new Worker('dist/LogicInit.js');
         var core = new Core(logicWorker);
-        gameCore = core;
-        console.log(gameCore);
+        global.gameCore = core;
     });
 };
 
@@ -1617,9 +1616,10 @@ function Core(logicCore) {
 
 Core.prototype.initRenderer = function () {
     this.makeMainComponents();
+    this.renderStats = this.makeRenderStatsWatcher();
     this.stats = this.makeStatsWatcher();
     this.startTime = Date.now();
-    this.attachToDom(this.renderer, this.stats);
+    this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
 Core.prototype.makeMainComponents = function () {
@@ -1635,17 +1635,26 @@ Core.prototype.makeMainComponents = function () {
     this.ui = new Ui({ core: this, logicBus: this.logicBus });
 };
 
-Core.prototype.makeStatsWatcher = function () {
-    var stats = new Stats();
+Core.prototype.makeRenderStatsWatcher = function () {
+    var stats = new THREEx.RendererStats();
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.top = 0;
     stats.domElement.style['z-index'] = 999999999;
     return stats;
 };
 
-Core.prototype.attachToDom = function (renderer, stats) {
+Core.prototype.makeStatsWatcher = function () {
+    var stats = new Stats();
+    stats.domElement.style.position = 'fixed';
+    stats.domElement.style.left = '100px';
+    stats.domElement.style['z-index'] = 999999999;
+    return stats;
+};
+
+Core.prototype.attachToDom = function (renderer, stats, renderStats) {
     console.log("doc", document.body);
     document.body.appendChild(stats.domElement);
+    document.body.appendChild(renderStats.domElement);
     document.getElementById('viewport').appendChild(renderer.domElement);
     this.autoResize();
 };
@@ -1752,6 +1761,7 @@ Core.prototype.render = function () {
     this.camera.update();
     this.renderTicks++;
     this.renderer.render(this.scene, this.camera);
+    this.renderStats.update(this.renderer);
     this.stats.update();
 };
 
@@ -3777,77 +3787,27 @@ var UiButton = function (_React$Component) {
     return UiButton;
 }(React.Component);
 
-var UiToggleButton = function (_React$Component2) {
-    _inherits(UiToggleButton, _React$Component2);
-
-    function UiToggleButton() {
-        _classCallCheck(this, UiToggleButton);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(UiToggleButton).apply(this, arguments));
-    }
-
-    _createClass(UiToggleButton, [{
-        key: 'render',
-        value: function render() {
-            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
-            return React.createElement(
-                'div',
-                {
-                    onClick: function onClick() {
-                        PubSub.publish('buttonClick', 'start');
-                    },
-                    className: classes
+var UiToggleButton = React.createClass({
+    displayName: 'UiToggleButton',
+    getInitialState: function getInitialState() {
+        return {
+            active: false
+        };
+    },
+    render: function render() {
+        var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
+        return React.createElement(
+            'div',
+            {
+                onClick: function onClick() {
+                    PubSub.publish('buttonToggle', 'toggle');
                 },
-                this.props.text
-            );
-        }
-    }]);
-
-    return UiToggleButton;
-}(React.Component);
-
-var StyledText = function (_React$Component3) {
-    _inherits(StyledText, _React$Component3);
-
-    function StyledText() {
-        _classCallCheck(this, StyledText);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StyledText).apply(this, arguments));
+                className: classes
+            },
+            this.props.text
+        );
     }
-
-    _createClass(StyledText, [{
-        key: 'render',
-        value: function render() {
-            var classes = (0, _classnames2.default)('title', [this.props.style, 'Oswald', 'noSelect']);
-            return React.createElement(
-                'div',
-                { className: classes },
-                this.props.children
-            );
-        }
-    }]);
-
-    return StyledText;
-}(React.Component);
-
-var Viewport = function (_React$Component4) {
-    _inherits(Viewport, _React$Component4);
-
-    function Viewport() {
-        _classCallCheck(this, Viewport);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).apply(this, arguments));
-    }
-
-    _createClass(Viewport, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement('div', { id: 'viewport', className: (0, _classnames2.default)('class', ['fullScreen', 'allPointerEvents', 'noSelect']) });
-        }
-    }]);
-
-    return Viewport;
-}(React.Component);
+});
 
 var FullScreenEffect = React.createClass({
     displayName: 'FullScreenEffect',
@@ -3891,6 +3851,49 @@ var FullScreenEffect = React.createClass({
         );
     }
 });
+
+var StyledText = function (_React$Component2) {
+    _inherits(StyledText, _React$Component2);
+
+    function StyledText() {
+        _classCallCheck(this, StyledText);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(StyledText).apply(this, arguments));
+    }
+
+    _createClass(StyledText, [{
+        key: 'render',
+        value: function render() {
+            var classes = (0, _classnames2.default)('title', [this.props.style, 'Oswald', 'noSelect']);
+            return React.createElement(
+                'div',
+                { className: classes },
+                this.props.children
+            );
+        }
+    }]);
+
+    return StyledText;
+}(React.Component);
+
+var Viewport = function (_React$Component3) {
+    _inherits(Viewport, _React$Component3);
+
+    function Viewport() {
+        _classCallCheck(this, Viewport);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).apply(this, arguments));
+    }
+
+    _createClass(Viewport, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement('div', { id: 'viewport', className: (0, _classnames2.default)('class', ['fullScreen', 'allPointerEvents', 'noSelect']) });
+        }
+    }]);
+
+    return Viewport;
+}(React.Component);
 
 module.exports = {
     StyledText: StyledText,
