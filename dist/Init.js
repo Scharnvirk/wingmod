@@ -3398,20 +3398,20 @@ var ParticleShaders = require("wm/renderer/particleSystem/ParticleShaders");
 function ParticleConfigBuilder() {
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load("/gfx/smokePuffAlpha.png") } },
+            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             transparent: true
         }),
         particleAdd: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load("/gfx/particleAdd.png") } },
+            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
             transparent: true
         }),
         mainExplosionAdd: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load("/gfx/particleAdd.png") } },
+            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
