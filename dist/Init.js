@@ -3733,190 +3733,13 @@ module.exports = GameScene;
 },{}],54:[function(require,module,exports){
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PubSub = require('pubsub-js');
-
-var UiButton = function (_React$Component) {
-    _inherits(UiButton, _React$Component);
-
-    function UiButton() {
-        _classCallCheck(this, UiButton);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(UiButton).apply(this, arguments));
-    }
-
-    _createClass(UiButton, [{
-        key: 'render',
-        value: function render() {
-            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
-            return React.createElement(
-                'div',
-                {
-                    onClick: function onClick() {
-                        PubSub.publish('buttonClick', 'start');
-                    },
-                    className: classes
-                },
-                this.props.text
-            );
-        }
-    }]);
-
-    return UiButton;
-}(React.Component);
-
-var UiToggleButton = React.createClass({
-    displayName: 'UiToggleButton',
-    getInitialState: function getInitialState() {
-        return {
-            active: false
-        };
-    },
-    render: function render() {
-        var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
-        return React.createElement(
-            'div',
-            {
-                onClick: function onClick() {
-                    PubSub.publish('buttonToggle', 'toggle');
-                },
-                className: classes
-            },
-            this.props.text
-        );
-    }
-});
-
-var FullScreenEffect = React.createClass({
-    displayName: 'FullScreenEffect',
-    getInitialState: function getInitialState() {
-        return {
-            noEffects: false
-        };
-    },
-    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-        if (newProps.blur === 'start' && this.state.noEffects) {
-            this.setState({ noEffects: false });
-        }
-    },
-    render: function render() {
-        console.log("rendering FullScreenEffect", this.props.blur);
-        var blur = '';
-        if (!this.state.noEffects) {
-            switch (this.props.blur) {
-                case 'start':
-                    blur = 'blurStart';
-                    break;
-                case 'end':
-                    setTimeout(function () {
-                        console.log('set to true');
-                        this.setState({ noEffects: true });
-                    }.bind(this), 2000);
-                    blur = 'blurEnd';
-                    break;
-                case 'on':
-                    blur = 'blur';
-                    break;
-                default:
-                    blur = '';
-            }
-        }
-
-        return React.createElement(
-            'div',
-            { className: (0, _classnames2.default)('class', ['fullScreen', blur]) },
-            this.props.children
-        );
-    }
-});
-
-var StyledText = function (_React$Component2) {
-    _inherits(StyledText, _React$Component2);
-
-    function StyledText() {
-        _classCallCheck(this, StyledText);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StyledText).apply(this, arguments));
-    }
-
-    _createClass(StyledText, [{
-        key: 'render',
-        value: function render() {
-            var classes = (0, _classnames2.default)('title', [this.props.style, 'Oswald', 'noSelect']);
-            return React.createElement(
-                'div',
-                { className: classes },
-                this.props.children
-            );
-        }
-    }]);
-
-    return StyledText;
-}(React.Component);
-
-var Viewport = function (_React$Component3) {
-    _inherits(Viewport, _React$Component3);
-
-    function Viewport() {
-        _classCallCheck(this, Viewport);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).apply(this, arguments));
-    }
-
-    _createClass(Viewport, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement('div', { id: 'viewport', className: (0, _classnames2.default)('class', ['fullScreen', 'allPointerEvents', 'noSelect']) });
-        }
-    }]);
-
-    return Viewport;
-}(React.Component);
-
-module.exports = {
-    StyledText: StyledText,
-    UiButton: UiButton,
-    UiToggleButton: UiToggleButton,
-    FullScreenEffect: FullScreenEffect,
-    Viewport: Viewport
-};
-
-},{"classnames":1,"pubsub-js":3}],55:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var UiButton = require('renderer/ui/Components').UiButton;
-var StyledText = require('renderer/ui/Components').StyledText;
-var FullScreenEffect = require('renderer/ui/Components').FullScreenEffect;
-var Viewport = require('renderer/ui/Components').Viewport;
-
-var currentKey = 0;
+var Ui = require('renderer/ui/components/Ui');
 
 function ReactUi() {
     Utils.mixin(this, THREE.EventDispatcher);
@@ -3934,128 +3757,6 @@ ReactUi.prototype.changeMode = function (newMode, context) {
     this.render();
 };
 
-var generateKey = function generateKey() {
-    return currentKey++;
-};
-
-var multilinize = function multilinize(multilineString) {
-    return multilineString.split('\n').map(function (item) {
-        return React.createElement(
-            'span',
-            { key: generateKey() },
-            item,
-            React.createElement('br', null)
-        );
-    });
-};
-
-var Ui = React.createClass({
-    displayName: 'Ui',
-    render: function render() {
-        var UIcontent = [];
-        switch (this.props.mode || 'startScreen') {
-            case 'startScreen':
-                UIcontent.push(React.createElement(StartScreen, { key: generateKey() }));
-                break;
-            case 'gameOverScreen':
-                UIcontent.push(React.createElement(EndScreen, { key: generateKey(), scoreText: multilinize(this.props.context.scoreText) }));
-                break;
-        }
-
-        var blurState = undefined;
-        switch (this.props.mode) {
-            case 'running':
-                blurState = 'end';
-                break;
-            case 'gameOverScreen':
-                blurState = 'start';
-                break;
-            default:
-                blurState = 'on';
-        }
-
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
-                FullScreenEffect,
-                { blur: blurState },
-                React.createElement(Viewport, null)
-            ),
-            UIcontent
-        );
-    }
-});
-
-var StartScreen = function (_React$Component) {
-    _inherits(StartScreen, _React$Component);
-
-    function StartScreen() {
-        _classCallCheck(this, StartScreen);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StartScreen).apply(this, arguments));
-    }
-
-    _createClass(StartScreen, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
-                React.createElement(
-                    StyledText,
-                    { style: 'titleText' },
-                    React.createElement(
-                        'span',
-                        null,
-                        'WINGMOD'
-                    ),
-                    React.createElement(
-                        'span',
-                        { style: { color: 'red' } },
-                        '2'
-                    )
-                ),
-                React.createElement(UiButton, { text: 'START' })
-            );
-        }
-    }]);
-
-    return StartScreen;
-}(React.Component);
-
-var EndScreen = function (_React$Component2) {
-    _inherits(EndScreen, _React$Component2);
-
-    function EndScreen() {
-        _classCallCheck(this, EndScreen);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(EndScreen).apply(this, arguments));
-    }
-
-    _createClass(EndScreen, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
-                React.createElement(
-                    StyledText,
-                    { style: 'titleText' },
-                    'GAME OVER'
-                ),
-                React.createElement(
-                    StyledText,
-                    { style: 'scoreText' },
-                    this.props.scoreText
-                )
-            );
-        }
-    }]);
-
-    return EndScreen;
-}(React.Component);
-
 module.exports = ReactUi;
 
 //https://blog.risingstack.com/the-react-way-getting-started-tutorial/
@@ -4063,7 +3764,29 @@ module.exports = ReactUi;
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/
 
-},{"classnames":1,"renderer/ui/Components":54}],56:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/components/Ui":59}],55:[function(require,module,exports){
+'use strict';
+
+var ReactUtils = {
+    currentKey: 0,
+    generateKey: function generateKey() {
+        return this.currentKey++;
+    },
+    multilinize: function multilinize(multilineString) {
+        return multilineString.split('\n').map(function (item) {
+            return React.createElement(
+                'span',
+                { key: this.generateKey() },
+                item,
+                React.createElement('br', null)
+            );
+        }.bind(this));
+    }
+};
+
+module.exports = ReactUtils;
+
+},{}],56:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
@@ -4130,4 +3853,357 @@ Ui.prototype.getOpinionOnResult = function (remainingMooks) {
 
 module.exports = Ui;
 
-},{"pubsub-js":3,"renderer/ui/ReactUi":55}]},{},[5]);
+},{"pubsub-js":3,"renderer/ui/ReactUi":54}],57:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StyledText = require('renderer/ui/components/base/StyledText');
+
+var EndScreen = function (_React$Component) {
+    _inherits(EndScreen, _React$Component);
+
+    function EndScreen() {
+        _classCallCheck(this, EndScreen);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(EndScreen).apply(this, arguments));
+    }
+
+    _createClass(EndScreen, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
+                React.createElement(
+                    StyledText,
+                    { style: 'titleText' },
+                    'GAME OVER'
+                ),
+                React.createElement(
+                    StyledText,
+                    { style: 'scoreText' },
+                    this.props.scoreText
+                )
+            );
+        }
+    }]);
+
+    return EndScreen;
+}(React.Component);
+
+module.exports = EndScreen;
+
+},{"classnames":1,"renderer/ui/components/base/StyledText":62}],58:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StyledText = require('renderer/ui/components/base/StyledText');
+var Button = require('renderer/ui/components/base/Button');
+
+var StartScreen = function (_React$Component) {
+    _inherits(StartScreen, _React$Component);
+
+    function StartScreen() {
+        _classCallCheck(this, StartScreen);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(StartScreen).apply(this, arguments));
+    }
+
+    _createClass(StartScreen, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
+                React.createElement(
+                    StyledText,
+                    { style: 'titleText' },
+                    React.createElement(
+                        'span',
+                        null,
+                        'WINGMOD'
+                    ),
+                    React.createElement(
+                        'span',
+                        { style: { color: 'red' } },
+                        '2'
+                    )
+                ),
+                React.createElement(Button, { text: 'START' })
+            );
+        }
+    }]);
+
+    return StartScreen;
+}(React.Component);
+
+module.exports = StartScreen;
+
+},{"classnames":1,"renderer/ui/components/base/Button":60,"renderer/ui/components/base/StyledText":62}],59:[function(require,module,exports){
+'use strict';
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StartScreen = require('renderer/ui/components/StartScreen');
+var EndScreen = require('renderer/ui/components/EndScreen');
+var FullScreenEffect = require('renderer/ui/components/base/FullScreenEffect');
+var Viewport = require('renderer/ui/components/base/Viewport');
+
+var ReactUtils = require('renderer/ui/ReactUtils');
+
+var Ui = React.createClass({
+    displayName: 'Ui',
+    render: function render() {
+        var UIcontent = [];
+        switch (this.props.mode || 'startScreen') {
+            case 'startScreen':
+                UIcontent.push(React.createElement(StartScreen, { key: ReactUtils.generateKey() }));
+                break;
+            case 'gameOverScreen':
+                UIcontent.push(React.createElement(EndScreen, { key: ReactUtils.generateKey(), scoreText: ReactUtils.multilinize(this.props.context.scoreText) }));
+                break;
+        }
+
+        var blurState = undefined;
+        switch (this.props.mode) {
+            case 'running':
+                blurState = 'end';
+                break;
+            case 'gameOverScreen':
+                blurState = 'start';
+                break;
+            default:
+                blurState = 'on';
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                FullScreenEffect,
+                { blur: blurState },
+                React.createElement(Viewport, null)
+            ),
+            UIcontent
+        );
+    }
+});
+
+module.exports = Ui;
+
+},{"classnames":1,"renderer/ui/ReactUtils":55,"renderer/ui/components/EndScreen":57,"renderer/ui/components/StartScreen":58,"renderer/ui/components/base/FullScreenEffect":61,"renderer/ui/components/base/Viewport":63}],60:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PubSub = require('pubsub-js');
+
+var Button = function (_React$Component) {
+    _inherits(Button, _React$Component);
+
+    function Button() {
+        _classCallCheck(this, Button);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Button).apply(this, arguments));
+    }
+
+    _createClass(Button, [{
+        key: 'render',
+        value: function render() {
+            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
+            return React.createElement(
+                'div',
+                {
+                    onClick: function onClick() {
+                        PubSub.publish('buttonClick', 'start');
+                    },
+                    className: classes
+                },
+                this.props.text
+            );
+        }
+    }]);
+
+    return Button;
+}(React.Component);
+
+module.exports = Button;
+
+},{"classnames":1,"pubsub-js":3}],61:[function(require,module,exports){
+'use strict';
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var FullScreenEffect = React.createClass({
+    displayName: 'FullScreenEffect',
+    getInitialState: function getInitialState() {
+        return {
+            noEffects: false
+        };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+        if (newProps.blur === 'start' && this.state.noEffects) {
+            this.setState({ noEffects: false });
+        }
+    },
+    render: function render() {
+        console.log("rendering FullScreenEffect", this.props.blur);
+        var blur = '';
+        if (!this.state.noEffects) {
+            switch (this.props.blur) {
+                case 'start':
+                    blur = 'blurStart';
+                    break;
+                case 'end':
+                    setTimeout(function () {
+                        console.log('set to true');
+                        this.setState({ noEffects: true });
+                    }.bind(this), 2000);
+                    blur = 'blurEnd';
+                    break;
+                case 'on':
+                    blur = 'blur';
+                    break;
+                default:
+                    blur = '';
+            }
+        }
+
+        return React.createElement(
+            'div',
+            { className: (0, _classnames2.default)('class', ['fullScreen', blur]) },
+            this.props.children
+        );
+    }
+});
+
+module.exports = FullScreenEffect;
+
+},{"classnames":1}],62:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StyledText = function (_React$Component) {
+    _inherits(StyledText, _React$Component);
+
+    function StyledText() {
+        _classCallCheck(this, StyledText);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(StyledText).apply(this, arguments));
+    }
+
+    _createClass(StyledText, [{
+        key: 'render',
+        value: function render() {
+            var classes = (0, _classnames2.default)('title', [this.props.style, 'Oswald', 'noSelect']);
+            return React.createElement(
+                'div',
+                { className: classes },
+                this.props.children
+            );
+        }
+    }]);
+
+    return StyledText;
+}(React.Component);
+
+module.exports = StyledText;
+
+},{"classnames":1}],63:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Viewport = function (_React$Component) {
+    _inherits(Viewport, _React$Component);
+
+    function Viewport() {
+        _classCallCheck(this, Viewport);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).apply(this, arguments));
+    }
+
+    _createClass(Viewport, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement('div', { id: 'viewport', className: (0, _classnames2.default)('class', ['fullScreen', 'allPointerEvents', 'noSelect']) });
+        }
+    }]);
+
+    return Viewport;
+}(React.Component);
+
+module.exports = Viewport;
+
+},{"classnames":1}]},{},[5]);
