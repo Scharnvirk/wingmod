@@ -26,18 +26,18 @@ module.exports = Constants;
 (function (global){
 "use strict";
 
-global.Utils = require("wm/Utils");
-global.Constants = require("wm/Constants");
+global.Utils = require("Utils");
+global.Constants = require("Constants");
 
 if ('function' === typeof importScripts) {
     importScripts('../../lib/p2.js');
     importScripts('../../lib/threex.loop.js');
-    var LogicCore = require('wm/logic/Core');
+    var LogicCore = require('logic/Core');
     self.core = new LogicCore(self);
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"wm/Constants":1,"wm/Utils":3,"wm/logic/Core":4}],3:[function(require,module,exports){
+},{"Constants":1,"Utils":3,"logic/Core":4}],3:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -130,10 +130,10 @@ module.exports = Utils;
 },{}],4:[function(require,module,exports){
 "use strict";
 
-var RenderBus = require("wm/logic/RenderBus");
-var GameWorld = require("wm/logic/GameWorld");
-var ActorManager = require("wm/logic/actorManagement/ActorManager");
-var GameScene = require("wm/logic/GameScene");
+var RenderBus = require("logic/RenderBus");
+var GameWorld = require("logic/GameWorld");
+var ActorManager = require("logic/actorManagement/ActorManager");
+var GameScene = require("logic/GameScene");
 
 function Core(worker) {
     this.makeMainComponents(worker);
@@ -197,10 +197,10 @@ Core.prototype.endGame = function (info) {
 
 module.exports = Core;
 
-},{"wm/logic/GameScene":5,"wm/logic/GameWorld":6,"wm/logic/RenderBus":7,"wm/logic/actorManagement/ActorManager":8}],5:[function(require,module,exports){
+},{"logic/GameScene":5,"logic/GameWorld":6,"logic/RenderBus":7,"logic/actorManagement/ActorManager":8}],5:[function(require,module,exports){
 'use strict';
 
-var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function GameScene(config) {
     Object.assign(this, config);
@@ -287,7 +287,7 @@ GameScene.prototype.update = function () {
 
 module.exports = GameScene;
 
-},{"wm/renderer/actorManagement/ActorFactory":19}],6:[function(require,module,exports){
+},{"renderer/actorManagement/ActorFactory":19}],6:[function(require,module,exports){
 'use strict';
 
 function GameWorld(config) {
@@ -385,7 +385,7 @@ module.exports = RenderBus;
 },{}],8:[function(require,module,exports){
 'use strict';
 
-var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function ActorManager(config) {
     config = config || {};
@@ -466,7 +466,7 @@ ActorManager.prototype.checkEndGameCondition = function () {
 
 module.exports = ActorManager;
 
-},{"wm/renderer/actorManagement/ActorFactory":19}],9:[function(require,module,exports){
+},{"renderer/actorManagement/ActorFactory":19}],9:[function(require,module,exports){
 'use strict';
 
 function BaseActor(config) {
@@ -570,9 +570,9 @@ module.exports = BaseBody;
 },{}],11:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
-var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function MookActor(config) {
     config = config || [];
@@ -685,11 +685,11 @@ MookActor.prototype.onSpawn = function () {};
 
 module.exports = MookActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10,"wm/renderer/actorManagement/ActorFactory":19}],12:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],12:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function PillarActor(config) {
     config = config || [];
@@ -698,7 +698,6 @@ function PillarActor(config) {
 }
 
 PillarActor.extend(BaseActor);
-
 PillarActor.prototype.createBody = function () {
     return new BaseBody({
         shape: new p2.Box({
@@ -714,11 +713,11 @@ PillarActor.prototype.createBody = function () {
 
 module.exports = PillarActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],13:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],13:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function WallActor(config) {
     config = config || [];
@@ -743,11 +742,11 @@ WallActor.prototype.createBody = function () {
 
 module.exports = WallActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],14:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],14:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function ChunkActor(config) {
     config = config || [];
@@ -778,12 +777,12 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],15:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],15:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
-var ActorFactory = require("wm/renderer/actorManagement/ActorFactory")('logic');
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function ShipActor(config) {
     config = config || [];
@@ -978,11 +977,11 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10,"wm/renderer/actorManagement/ActorFactory":19}],16:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],16:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function LaserProjectileActor(config) {
     config = config || [];
@@ -1017,11 +1016,11 @@ LaserProjectileActor.prototype.onDeath = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],17:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],17:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function MoltenProjectileActor(config) {
     config = config || [];
@@ -1056,11 +1055,11 @@ MoltenProjectileActor.prototype.onDeath = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],18:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],18:[function(require,module,exports){
 "use strict";
 
-var BaseBody = require("wm/logic/actor/components/body/BaseBody");
-var BaseActor = require("wm/logic/actor/BaseActor");
+var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseActor = require("logic/actor/BaseActor");
 
 function PlasmaProjectileActor(config) {
     config = config || [];
@@ -1105,7 +1104,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"wm/logic/actor/BaseActor":9,"wm/logic/actor/components/body/BaseBody":10}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],19:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1136,14 +1135,14 @@ ActorFactory.prototype.create = function (config) {
 };
 
 module.exports = function (context) {
-    ActorFactory.ShipActor = context === 'renderer' ? require("wm/renderer/actor/player/ShipActor") : require("wm/logic/actor/player/ShipActor");
-    ActorFactory.MookActor = context === 'renderer' ? require("wm/renderer/actor/enemy/MookActor") : require("wm/logic/actor/enemy/MookActor");
-    ActorFactory.WallActor = context === 'renderer' ? require("wm/renderer/actor/map/WallActor") : require("wm/logic/actor/map/WallActor");
-    ActorFactory.PillarActor = context === 'renderer' ? require("wm/renderer/actor/map/PillarActor") : require("wm/logic/actor/map/PillarActor");
-    ActorFactory.ChunkActor = context === 'renderer' ? require("wm/renderer/actor/object/ChunkActor") : require("wm/logic/actor/object/ChunkActor");
-    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("wm/renderer/actor/projectile/PlasmaProjectileActor") : require("wm/logic/actor/projectile/PlasmaProjectileActor");
-    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("wm/renderer/actor/projectile/MoltenProjectileActor") : require("wm/logic/actor/projectile/MoltenProjectileActor");
-    ActorFactory.LaserProjectileActor = context === 'renderer' ? require("wm/renderer/actor/projectile/LaserProjectileActor") : require("wm/logic/actor/projectile/LaserProjectileActor");
+    ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
+    ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
+    ActorFactory.WallActor = context === 'renderer' ? require("renderer/actor/map/WallActor") : require("logic/actor/map/WallActor");
+    ActorFactory.PillarActor = context === 'renderer' ? require("renderer/actor/map/PillarActor") : require("logic/actor/map/PillarActor");
+    ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
+    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
+    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
+    ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
 
     var returnObject = {};
 
@@ -1158,7 +1157,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"wm/logic/actor/enemy/MookActor":11,"wm/logic/actor/map/PillarActor":12,"wm/logic/actor/map/WallActor":13,"wm/logic/actor/object/ChunkActor":14,"wm/logic/actor/player/ShipActor":15,"wm/logic/actor/projectile/LaserProjectileActor":16,"wm/logic/actor/projectile/MoltenProjectileActor":17,"wm/logic/actor/projectile/PlasmaProjectileActor":18,"wm/renderer/actor/enemy/MookActor":27,"wm/renderer/actor/map/PillarActor":28,"wm/renderer/actor/map/WallActor":29,"wm/renderer/actor/object/ChunkActor":30,"wm/renderer/actor/player/ShipActor":31,"wm/renderer/actor/projectile/LaserProjectileActor":32,"wm/renderer/actor/projectile/MoltenProjectileActor":33,"wm/renderer/actor/projectile/PlasmaProjectileActor":34}],20:[function(require,module,exports){
+},{"logic/actor/enemy/MookActor":11,"logic/actor/map/PillarActor":12,"logic/actor/map/WallActor":13,"logic/actor/object/ChunkActor":14,"logic/actor/player/ShipActor":15,"logic/actor/projectile/LaserProjectileActor":16,"logic/actor/projectile/MoltenProjectileActor":17,"logic/actor/projectile/PlasmaProjectileActor":18,"renderer/actor/enemy/MookActor":27,"renderer/actor/map/PillarActor":28,"renderer/actor/map/WallActor":29,"renderer/actor/object/ChunkActor":30,"renderer/actor/player/ShipActor":31,"renderer/actor/projectile/LaserProjectileActor":32,"renderer/actor/projectile/MoltenProjectileActor":33,"renderer/actor/projectile/PlasmaProjectileActor":34}],20:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -1281,8 +1280,8 @@ module.exports = BaseMesh;
 },{}],22:[function(require,module,exports){
 "use strict";
 
-var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
-var ModelStore = require("wm/renderer/modelRepo/ModelStore");
+var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
+var ModelStore = require("renderer/modelRepo/ModelStore");
 
 function ChunkMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -1300,10 +1299,10 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":21,"wm/renderer/modelRepo/ModelStore":35}],23:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],23:[function(require,module,exports){
 "use strict";
 
-var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
+var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
 
 function PillarMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -1322,11 +1321,11 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":21}],24:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":21}],24:[function(require,module,exports){
 "use strict";
 
-var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
-var ModelStore = require("wm/renderer/modelRepo/ModelStore");
+var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
+var ModelStore = require("renderer/modelRepo/ModelStore");
 
 function RavierMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -1343,11 +1342,11 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":21,"wm/renderer/modelRepo/ModelStore":35}],25:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],25:[function(require,module,exports){
 "use strict";
 
-var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
-var ModelStore = require("wm/renderer/modelRepo/ModelStore");
+var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
+var ModelStore = require("renderer/modelRepo/ModelStore");
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -1366,10 +1365,10 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":21,"wm/renderer/modelRepo/ModelStore":35}],26:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],26:[function(require,module,exports){
 "use strict";
 
-var BaseMesh = require("wm/renderer/actor/components/mesh/BaseMesh");
+var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
 
 function WallMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -1387,11 +1386,11 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"wm/renderer/actor/components/mesh/BaseMesh":21}],27:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":21}],27:[function(require,module,exports){
 "use strict";
 
-var ShipMesh = require("wm/renderer/actor/components/mesh/ShipMesh");
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var ShipMesh = require("renderer/actor/components/mesh/ShipMesh");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function MookActor() {
     BaseActor.apply(this, arguments);
@@ -1465,11 +1464,11 @@ MookActor.prototype.onDeath = function () {
 
 module.exports = MookActor;
 
-},{"wm/renderer/actor/BaseActor":20,"wm/renderer/actor/components/mesh/ShipMesh":25}],28:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/ShipMesh":25}],28:[function(require,module,exports){
 "use strict";
 
-var PillarMesh = require("wm/renderer/actor/components/mesh/PillarMesh");
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var PillarMesh = require("renderer/actor/components/mesh/PillarMesh");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function PillarActor() {
     BaseActor.apply(this, arguments);
@@ -1483,11 +1482,11 @@ PillarActor.prototype.createMesh = function () {
 
 module.exports = PillarActor;
 
-},{"wm/renderer/actor/BaseActor":20,"wm/renderer/actor/components/mesh/PillarMesh":23}],29:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/PillarMesh":23}],29:[function(require,module,exports){
 "use strict";
 
-var WallMesh = require("wm/renderer/actor/components/mesh/WallMesh");
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var WallMesh = require("renderer/actor/components/mesh/WallMesh");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function WallActor() {
     BaseActor.apply(this, arguments);
@@ -1501,11 +1500,11 @@ WallActor.prototype.createMesh = function () {
 
 module.exports = WallActor;
 
-},{"wm/renderer/actor/BaseActor":20,"wm/renderer/actor/components/mesh/WallMesh":26}],30:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/WallMesh":26}],30:[function(require,module,exports){
 "use strict";
 
-var ChunkMesh = require("wm/renderer/actor/components/mesh/ChunkMesh");
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var ChunkMesh = require("renderer/actor/components/mesh/ChunkMesh");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function ChunkActor() {
     BaseActor.apply(this, arguments);
@@ -1583,11 +1582,11 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"wm/renderer/actor/BaseActor":20,"wm/renderer/actor/components/mesh/ChunkMesh":22}],31:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/ChunkMesh":22}],31:[function(require,module,exports){
 "use strict";
 
-var RavierMesh = require("wm/renderer/actor/components/mesh/RavierMesh");
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var RavierMesh = require("renderer/actor/components/mesh/RavierMesh");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function ShipActor() {
     BaseActor.apply(this, arguments);
@@ -1877,10 +1876,10 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"wm/renderer/actor/BaseActor":20,"wm/renderer/actor/components/mesh/RavierMesh":24}],32:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/RavierMesh":24}],32:[function(require,module,exports){
 'use strict';
 
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function LaserProjectileActor(config) {
     BaseActor.apply(this, arguments);
@@ -2019,10 +2018,10 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":20}],33:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20}],33:[function(require,module,exports){
 'use strict';
 
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function MoltenProjectileActor(config) {
     BaseActor.apply(this, arguments);
@@ -2158,10 +2157,10 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":20}],34:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20}],34:[function(require,module,exports){
 'use strict';
 
-var BaseActor = require("wm/renderer/actor/BaseActor");
+var BaseActor = require("renderer/actor/BaseActor");
 
 function PlasmaProjectileActor(config) {
     BaseActor.apply(this, arguments);
@@ -2297,7 +2296,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"wm/renderer/actor/BaseActor":20}],35:[function(require,module,exports){
+},{"renderer/actor/BaseActor":20}],35:[function(require,module,exports){
 'use strict';
 
 var ModelStore = {

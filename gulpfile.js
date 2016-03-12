@@ -2,15 +2,22 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
+var fs = require('fs');
+
+var SOURCE_PATH = 'src';
+var LOG_PATH = 'gulpLog.txt';
+var VERSION_PATH = 'version';
+
+var buildIds = [];
 
 var sources = [
     {
-        src: 'node_modules/wm/Init.js',
+        src: SOURCE_PATH + '/Init.js',
         output: 'Init.js',
         dest: 'dist/'
     },
     {
-        src: 'node_modules/wm/LogicInit.js',
+        src: SOURCE_PATH + '/LogicInit.js',
         output: 'LogicInit.js',
         dest: 'dist/'
     }
@@ -24,15 +31,59 @@ var customOptions = {
     ]
 };
 
+function buildCurrentTimeString(){
+    var time = new Date();
+    return '[' + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + ']';
+}
+
+function onError(buildInfo, message){
+    var time = buildCurrentTimeString();
+    var completeMessage = time + ' ' + message + '\n';
+    fs.appendFileSync(LOG_PATH, completeMessage);
+
+    if(buildInfo.lastBuildId !== buildIds[buildInfo.src]){
+        console.log(time + ' [ERROR] Build failure in ' + buildInfo.src + '. Refer to ' + LOG_PATH + ' for details.');
+        buildInfo.lastBuildId = buildIds[buildInfo.src];
+    }
+}
+
+function onSuccess(){
+    var time = buildCurrentTimeString();
+    var version = JSON.parse(fs.readFileSync(VERSION_PATH, "utf8"));
+    version.build ++;
+    fs.writeFileSync(VERSION_PATH, JSON.stringify(version));
+
+    var versionString = version.major + '.' + version.minor + '.' + version.patch + '.' + version.build;
+
+    console.log(time + ' Build complete! Current version: ' + versionString);
+}
+
 function rebundle(bundler, config){
+    if(!buildIds[config.src]){
+        buildIds[config.src] = 0;
+    }
+
     bundler.bundle()
-    .on('error', function(){console.log(arguments); })
+    .on('end', onSuccess)
+    .on('error', onError.bind(this, {src: config.src, lastBuildId: buildIds[config.src]}))
     .pipe(source(config.output))
     .pipe(gulp.dest(config.dest));
+
+    buildIds[config.src] ++;
 }
 
 function createBundle(config, watching){
-    var bundler = browserify( Object.assign({}, watchify.args, {entries:config.src}, customOptions));
+    var bundler = browserify(
+        Object.assign(
+            {},
+            watchify.args,
+            {
+                entries:config.src,
+                paths: ['./node_modules', './' + SOURCE_PATH]
+            },
+            customOptions
+        )
+    );
 
     if(watching){
         bundler = watchify(bundler);
@@ -47,7 +98,7 @@ function createBundles(bundles, watching){
         createBundle({
             src: bundle.src,
             output: bundle.output,
-            dest: bundle.dest
+            dest: bundle.dest,
         }, watching);
     });
 }
