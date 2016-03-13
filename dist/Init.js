@@ -1248,8 +1248,11 @@ function Core(config) {
     this.FRAMERATE = 60;
     this.renderTicks = 0;
     this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
+    this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
     this.initRenderer(config);
     this.initAssets();
+
+    console.log(config);
 }
 
 Core.prototype.initRenderer = function (config) {
@@ -1265,7 +1268,7 @@ Core.prototype.makeMainComponents = function (config) {
     this.inputListener = new InputListener(this.renderer.domElement);
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
-    this.particleManager = new ParticleManager({ scene: this.scene, resolutionCoefficient: this.resolutionCoefficient });
+    this.particleManager = new ParticleManager({ scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ scene: this.scene, particleManager: this.particleManager, core: this });
     this.logicBus = new LogicBus({ core: this, logicWorker: this.logicWorker, actorManager: this.actorManager });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera });
@@ -3056,7 +3059,7 @@ function ParticleConfigBuilder(config) {
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500,
+            maxParticles: 1500 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         },
@@ -3068,17 +3071,19 @@ function ParticleConfigBuilder(config) {
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000,
+            maxParticles: 3000 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 500,
+            maxParticles: 500 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         }
     };
+
+    console.log(this.particleGeneratorConfig);
 }
 
 ParticleConfigBuilder.prototype.getConfig = function (configName) {
@@ -3454,9 +3459,7 @@ function Ui(config) {
     Object.assign(this, config);
     this.reactUi = new ReactUi();
 
-    this.configState = {
-        shadows: false
-    };
+    this.configState = {};
 
     var listener = PubSub.subscribe('buttonClick', function (msg, data) {
         switch (data.buttonEvent) {
@@ -3472,6 +3475,9 @@ function Ui(config) {
             case 'lowResConfig':
                 _this.onLowResConfig(data);
                 break;
+            case 'lowParticlesConfig':
+                _this.onLowParticleConfig(data);
+                break;
         }
     });
 }
@@ -3481,8 +3487,9 @@ Ui.prototype.startGame = function () {
     var core = new Core({
         logicWorker: logicWorker,
         ui: this,
-        shadows: this.configState.shadows,
-        lowRes: this.configState.lowRes
+        shadows: !this.configState.shadows,
+        lowRes: this.configState.lowRes,
+        lowParticles: this.configState.lowParticles
     });
     global.gameCore = core;
 };
@@ -3503,6 +3510,10 @@ Ui.prototype.onShadowConfig = function (data) {
 
 Ui.prototype.onLowResConfig = function (data) {
     this.configState.lowRes = data.state;
+};
+
+Ui.prototype.onLowParticleConfig = function (data) {
+    this.configState.lowParticles = data.state;
 };
 
 Ui.prototype.getOpinionOnResult = function (remainingMooks) {
@@ -3749,8 +3760,9 @@ var SettingsMenu = function (_React$Component2) {
                         'Performance settings'
                     )
                 ),
-                React.createElement(ToggleButton, { text: 'SHADOWS', buttonEvent: 'shadowConfig' }),
-                React.createElement(ToggleButton, { text: 'LOW-RES', buttonEvent: 'lowResConfig' })
+                React.createElement(ToggleButton, { text: 'No shadows', buttonEvent: 'shadowConfig' }),
+                React.createElement(ToggleButton, { text: 'Low-res', buttonEvent: 'lowResConfig' }),
+                React.createElement(ToggleButton, { text: 'Less particles', buttonEvent: 'lowParticlesConfig' })
             );
         }
     }]);

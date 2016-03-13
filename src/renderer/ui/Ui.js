@@ -6,9 +6,7 @@ function Ui(config){
     Object.assign(this, config);
     this.reactUi = new ReactUi();
 
-    this.configState = {
-        shadows: false
-    };
+    this.configState = {};
 
     var listener = PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
@@ -24,6 +22,9 @@ function Ui(config){
             case 'lowResConfig':
                 this.onLowResConfig(data);
                 break;
+            case 'lowParticlesConfig':
+                this.onLowParticleConfig(data);
+                break;
         }
     } );
 }
@@ -33,8 +34,9 @@ Ui.prototype.startGame = function(){
     var core = new Core({
         logicWorker: logicWorker,
         ui: this,
-        shadows: this.configState.shadows,
-        lowRes: this.configState.lowRes
+        shadows: !this.configState.shadows,
+        lowRes: this.configState.lowRes,
+        lowParticles: this.configState.lowParticles
     });
     global.gameCore = core;
 };
@@ -55,6 +57,10 @@ Ui.prototype.onShadowConfig = function(data){
 
 Ui.prototype.onLowResConfig = function(data){
     this.configState.lowRes = data.state;
+};
+
+Ui.prototype.onLowParticleConfig = function(data){
+    this.configState.lowParticles = data.state;
 };
 
 Ui.prototype.getOpinionOnResult = function(remainingMooks){

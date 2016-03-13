@@ -44,8 +44,9 @@ class SettingsMenu extends React.Component {
             <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
                 <span className={'textDark'} >{'Performance settings'}</span>
             </StyledText>
-            <ToggleButton text={'SHADOWS'} buttonEvent={'shadowConfig'}/>
-            <ToggleButton text={'LOW-RES'} buttonEvent={'lowResConfig'}/>
+            <ToggleButton text={'No shadows'} buttonEvent={'shadowConfig'}/>
+            <ToggleButton text={'Low-res'} buttonEvent={'lowResConfig'}/>
+            <ToggleButton text={'Less particles'} buttonEvent={'lowParticlesConfig'}/>
         </div>;
     }
 }

@@ -27,7 +27,7 @@ function ParticleConfigBuilder(config){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500,
+            maxParticles: 1500 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         },
@@ -39,17 +39,19 @@ function ParticleConfigBuilder(config){
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000,
+            maxParticles: 3000 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 500,
+            maxParticles: 500 * this.particleLimitMultiplier,
             positionZ: 9,
             resolutionCoefficient: config.resolutionCoefficient
         }
     };
+
+    console.log(this.particleGeneratorConfig);
 }
 
 ParticleConfigBuilder.prototype.getConfig = function(configName){

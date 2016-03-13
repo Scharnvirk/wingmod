@@ -22,8 +22,11 @@ function Core(config){
     this.FRAMERATE = 60;
     this.renderTicks = 0;
     this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
+    this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
     this.initRenderer(config);
     this.initAssets();
+
+    console.log(config);
 }
 
 Core.prototype.initRenderer = function(config){
@@ -39,7 +42,7 @@ Core.prototype.makeMainComponents = function(config){
     this.inputListener = new InputListener( this.renderer.domElement );
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
-    this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient});
+    this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager, core: this});
     this.logicBus = new LogicBus({core: this, logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
