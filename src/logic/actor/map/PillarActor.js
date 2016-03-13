@@ -1,10 +1,12 @@
 var BaseBody = require("logic/actor/components/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function PillarActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
+    this.hp = 50;
 }
 
 PillarActor.extend(BaseActor);
@@ -19,6 +21,19 @@ PillarActor.prototype.createBody = function(){
         actor: this,
         mass: 0
     });
+};
+
+PillarActor.prototype.onDeath = function(){
+    for(let i = 0; i < 40; i++){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0] + Utils.rand(-5,5),
+            positionY: this.body.position[1] + Utils.rand(-5,5),
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(5,50)
+        });
+    }
+    this.body.dead = true;
 };
 
 module.exports = PillarActor;

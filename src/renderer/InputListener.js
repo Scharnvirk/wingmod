@@ -61,6 +61,7 @@ class InputListener{
             var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
             this.inputState.mouseAngle -= mouseX * 0.002;
+            this.inputState.mouseY = mouseY;
         };
 
         this.mouseDown = function (event) {

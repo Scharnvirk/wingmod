@@ -690,11 +690,13 @@ module.exports = MookActor;
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function PillarActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
+    this.hp = 50;
 }
 
 PillarActor.extend(BaseActor);
@@ -711,9 +713,22 @@ PillarActor.prototype.createBody = function () {
     });
 };
 
+PillarActor.prototype.onDeath = function () {
+    for (var i = 0; i < 40; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0] + Utils.rand(-5, 5),
+            positionY: this.body.position[1] + Utils.rand(-5, 5),
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(5, 50)
+        });
+    }
+    this.body.dead = true;
+};
+
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],13:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],13:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -806,10 +821,6 @@ function ShipActor(config) {
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
-
-    this.PI_2 = Math.PI / 2;
-
-    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);
@@ -1318,7 +1329,7 @@ function PillarMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = new THREE.BoxGeometry(20, 20, 50, 50);
+    config.geometry = new THREE.BoxGeometry(20, 20, 15, 50);
     config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
     Object.assign(this, config);
 
@@ -1344,7 +1355,7 @@ function RavierMesh(config) {
     config.material = ModelStore.get('ravier').material;
     Object.assign(this, config);
 
-    this.castShadow = true;
+    //this.castShadow = true;
 }
 
 RavierMesh.extend(BaseMesh);
@@ -1503,6 +1514,66 @@ PillarActor.prototype.createMesh = function () {
     return new PillarMesh({ actor: this });
 };
 
+PillarActor.prototype.onDeath = function () {
+    for (var i = 0; i < 20; i++) {
+        this.particleManager.createParticle('smokePuffAlpha', {
+            positionX: this.position[0] + Utils.rand(-10, 10),
+            positionY: this.position[1] + Utils.rand(-10, 10),
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: Utils.rand(30, 50),
+            alpha: Utils.rand(0, 3) / 10 + 0.3,
+            alphaMultiplier: 0.9,
+            particleVelocity: Utils.rand(0, 4) / 10,
+            particleAngle: Utils.rand(0, 360),
+            lifeTime: 120
+        });
+    }
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 1,
+    //     colorB: 1,
+    //     scale: 500,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.4,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 30
+    // });
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 1,
+    //     colorB: 1,
+    //     scale: 120,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.95,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 80
+    // });
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 0.6,
+    //     colorB: 0.2,
+    //     scale: 300,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.95,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 90
+    // });
+};
+
 module.exports = PillarActor;
 
 },{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/PillarMesh":23}],29:[function(require,module,exports){
@@ -1540,7 +1611,7 @@ ChunkActor.prototype.createMesh = function () {
 };
 
 ChunkActor.prototype.customUpdate = function () {
-    if (this.timer % Utils.rand(5, 10) === 0) {
+    if (this.timer % Utils.rand(5, 15) === 0) {
         this.particleManager.createParticle('smokePuffAlpha', {
             positionX: this.position[0] + Utils.rand(-2, 2),
             positionY: this.position[1] + Utils.rand(-2, 2),
@@ -1573,34 +1644,6 @@ ChunkActor.prototype.onDeath = function () {
             lifeTime: 60
         });
     }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.1,
-        scale: 20,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
 };
 
 module.exports = ChunkActor;

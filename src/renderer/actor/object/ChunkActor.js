@@ -12,7 +12,7 @@ ChunkActor.prototype.createMesh = function(){
 };
 
 ChunkActor.prototype.customUpdate = function(){
-    if(this.timer % Utils.rand(5,10) === 0){
+    if(this.timer % Utils.rand(5,15) === 0){
         this.particleManager.createParticle('smokePuffAlpha',{
             positionX: this.position[0] + Utils.rand(-2,2),
             positionY: this.position[1] + Utils.rand(-2,2),
@@ -45,34 +45,6 @@ ChunkActor.prototype.onDeath = function(){
             lifeTime: 60
         });
     }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.1,
-        scale: 20,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
 };
 
 module.exports = ChunkActor;

@@ -689,11 +689,13 @@ module.exports = MookActor;
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
+var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
 function PillarActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
+    this.hp = 50;
 }
 
 PillarActor.extend(BaseActor);
@@ -710,9 +712,22 @@ PillarActor.prototype.createBody = function () {
     });
 };
 
+PillarActor.prototype.onDeath = function () {
+    for (var i = 0; i < 40; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0] + Utils.rand(-5, 5),
+            positionY: this.body.position[1] + Utils.rand(-5, 5),
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(5, 50)
+        });
+    }
+    this.body.dead = true;
+};
+
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],11:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8,"renderer/actorManagement/ActorFactory":22}],11:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -805,10 +820,6 @@ function ShipActor(config) {
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
-
-    this.PI_2 = Math.PI / 2;
-
-    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);
@@ -1489,6 +1500,7 @@ var InputListener = function InputListener(config) {
         var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
         this.inputState.mouseAngle -= mouseX * 0.002;
+        this.inputState.mouseY = mouseY;
     };
 
     this.mouseDown = function (event) {
@@ -1914,7 +1926,7 @@ function PillarMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = new THREE.BoxGeometry(20, 20, 50, 50);
+    config.geometry = new THREE.BoxGeometry(20, 20, 15, 50);
     config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
     Object.assign(this, config);
 
@@ -1940,7 +1952,7 @@ function RavierMesh(config) {
     config.material = ModelStore.get('ravier').material;
     Object.assign(this, config);
 
-    this.castShadow = true;
+    //this.castShadow = true;
 }
 
 RavierMesh.extend(BaseMesh);
@@ -2099,6 +2111,66 @@ PillarActor.prototype.createMesh = function () {
     return new PillarMesh({ actor: this });
 };
 
+PillarActor.prototype.onDeath = function () {
+    for (var i = 0; i < 20; i++) {
+        this.particleManager.createParticle('smokePuffAlpha', {
+            positionX: this.position[0] + Utils.rand(-10, 10),
+            positionY: this.position[1] + Utils.rand(-10, 10),
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: Utils.rand(30, 50),
+            alpha: Utils.rand(0, 3) / 10 + 0.3,
+            alphaMultiplier: 0.9,
+            particleVelocity: Utils.rand(0, 4) / 10,
+            particleAngle: Utils.rand(0, 360),
+            lifeTime: 120
+        });
+    }
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 1,
+    //     colorB: 1,
+    //     scale: 500,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.4,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 30
+    // });
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 1,
+    //     colorB: 1,
+    //     scale: 120,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.95,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 80
+    // });
+    //
+    // this.particleManager.createParticle('mainExplosionAdd', {
+    //     positionX: this.position[0],
+    //     positionY: this.position[1],
+    //     colorR: 1,
+    //     colorG: 0.6,
+    //     colorB: 0.2,
+    //     scale: 300,
+    //     alpha: 1,
+    //     alphaMultiplier: 0.95,
+    //     particleVelocity: 0,
+    //     particleAngle: 0,
+    //     lifeTime: 90
+    // });
+};
+
 module.exports = PillarActor;
 
 },{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/PillarMesh":27}],33:[function(require,module,exports){
@@ -2136,7 +2208,7 @@ ChunkActor.prototype.createMesh = function () {
 };
 
 ChunkActor.prototype.customUpdate = function () {
-    if (this.timer % Utils.rand(5, 10) === 0) {
+    if (this.timer % Utils.rand(5, 15) === 0) {
         this.particleManager.createParticle('smokePuffAlpha', {
             positionX: this.position[0] + Utils.rand(-2, 2),
             positionY: this.position[1] + Utils.rand(-2, 2),
@@ -2169,34 +2241,6 @@ ChunkActor.prototype.onDeath = function () {
             lifeTime: 60
         });
     }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.1,
-        scale: 20,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 40
-    });
 };
 
 module.exports = ChunkActor;
@@ -3399,11 +3443,11 @@ var GameScene = function () {
             var lcolor = Utils.makeRandomColor();
             //var lcolor = 0xffffff;
 
-            var directionalLight = new THREE.DirectionalLight(lcolor, Utils.rand(4, 8) / 10);
+            var directionalLight = new THREE.DirectionalLight(lcolor, Utils.rand(0, 8) / 10);
             directionalLight.position.set(2, 2, 10);
             this.scene.add(directionalLight);
 
-            this.pointLight = new THREE.PointLight(lcolor, 1);
+            this.pointLight = new THREE.PointLight(lcolor, 2);
             this.pointLight.distance = 200;
             this.pointLight.castShadow = this.shadows;
             this.pointLight.shadowCameraNear = 1;
@@ -3412,15 +3456,16 @@ var GameScene = function () {
             this.pointLight.shadowMapHeight = 2048;
             this.pointLight.shadowBias = 0;
             this.pointLight.shadowDarkness = 0.4;
-            this.pointLight.position.set(0, 0, 50);
+            this.pointLight.position.set(0, 0, 13);
             this.scene.add(this.pointLight);
         }
     }, {
         key: "update",
         value: function update() {
             if (this.actor) {
-                this.pointLight.position.x = this.actor.position[0] + 20;
-                this.pointLight.position.y = this.actor.position[1] + 20;
+                var shipPosition = Utils.angleToVector(this.actor.angle, 15);
+                this.pointLight.position.x = this.actor.position[0] + shipPosition[0];
+                this.pointLight.position.y = this.actor.position[1] + shipPosition[1];
             }
         }
     }]);

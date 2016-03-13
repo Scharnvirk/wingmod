@@ -60,11 +60,11 @@ class GameScene {
         var lcolor = Utils.makeRandomColor();
         //var lcolor = 0xffffff;
 
-        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(4, 8)/10 );
+        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(0, 8)/10 );
         directionalLight.position.set( 2, 2, 10 );
         this.scene.add( directionalLight );
 
-        this.pointLight = new THREE.PointLight( lcolor, 1 );
+        this.pointLight = new THREE.PointLight( lcolor, 2 );
         this.pointLight.distance = 200;
         this.pointLight.castShadow = this.shadows;
         this.pointLight.shadowCameraNear = 1;
@@ -73,14 +73,16 @@ class GameScene {
         this.pointLight.shadowMapHeight = 2048;
         this.pointLight.shadowBias = 0;
         this.pointLight.shadowDarkness = 0.4;
-        this.pointLight.position.set(0,0,50);
+        this.pointLight.position.set(0,0,13);
         this.scene.add( this.pointLight );
+
      }
 
     update(){
         if(this.actor){
-            this.pointLight.position.x = this.actor.position[0] + 20;
-            this.pointLight.position.y = this.actor.position[1] + 20;
+            let shipPosition = Utils.angleToVector(this.actor.angle, 15);
+            this.pointLight.position.x = this.actor.position[0] + shipPosition[0];
+            this.pointLight.position.y = this.actor.position[1] + shipPosition[1];
         }
     }
 }

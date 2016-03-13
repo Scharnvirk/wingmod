@@ -39,7 +39,7 @@ Camera.prototype.update = function(){
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];
     }
-    
+
     if(this.inputListener && this.actor){
         if (this.inputListener.inputState.scrollUp) {
             this.position.z += inputState.scrollUp;

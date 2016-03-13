@@ -24,10 +24,6 @@ function ShipActor(config){
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
-
-    this.PI_2 = Math.PI / 2;
-
-    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);

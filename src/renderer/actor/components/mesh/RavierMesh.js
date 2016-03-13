@@ -9,7 +9,7 @@ function RavierMesh(config){
     config.material = ModelStore.get('ravier').material;
     Object.assign(this, config);
 
-    this.castShadow = true;
+    //this.castShadow = true;
 }
 
 
