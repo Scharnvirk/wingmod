@@ -866,45 +866,28 @@ ShipActor.prototype.processWeapon = function () {
 
 ShipActor.prototype.playerUpdate = function (inputState) {
     this.applyThrustInput(inputState);
-    this.applyDiffRotationInput(inputState);
+    this.applyLookAtRotationInput(inputState);
     this.applyWeaponInput(inputState);
 };
 
 ShipActor.prototype.applyDiffRotationInput = function (inputState) {
-    // console.log(inputState.mouseDiffX, inputState.mouseDiffY);
-    // this.rotationForce = -inputState.mouseDiffX * 10 || 0;
     this.body.angle = inputState.mouseAngle;
-
-    //
-    // this.body.angle -= (inputState.accumulatedMouseX || 0) * 0.002;
-    // this.body.angle = Math.max( - this.PI_2, Math.min( this.PI_2, this.body.angle ) );
-
-    //console.log(inputState.accumulatedMouseX);
 };
 
 ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
     this.rotationForce = 0;
 
+    var look = Utils.angleToVector(inputState.mouseAngle, 1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
-    //var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+    var angle = Utils.vectorAngleToPoint(angleVector[0], look[0], angleVector[1], look[1]);
 
-    var normalizedAngle = inputState.mouseAngle || 0;
-    //if (normalizedAngle < 0) normalizedAngle += Math.PI;
-
-    var angle = normalizedAngle; // - this.body.angle;
-    console.log(angle, this.body.angle);
-
-    if (angle < this.body.angle) {
-        this.rotationForce = Math.min((angle - this.body.angle) / this.stepAngle, 1) * -1;
-    } else {
-        this.rotationForce = Math.min((this.body.angle - angle) / this.stepAngle, 1);
+    if (angle < 180 && angle > 0) {
+        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
-    console.log(this.rotationForce);
-    //
-    // if (angle >= 180 && angle < 360) {
-    //     this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
-    // }
+    if (angle >= 180 && angle < 360) {
+        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+    }
 
     if (inputState.q) {
         this.rotationForce = 1;
