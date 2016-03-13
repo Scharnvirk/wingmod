@@ -111,17 +111,25 @@ ShipActor.prototype.applyLookAtRotationInput = function(inputState){
     this.rotationForce = 0;
 
     var angleVector = Utils.angleToVector(this.body.angle, 1);
-    var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+    //var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
 
-    //console.log('is', inputState);
+    var normalizedAngle = inputState.mouseAngle || 0;
+    //if (normalizedAngle < 0) normalizedAngle += Math.PI;
 
-    if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+    var angle = normalizedAngle;// - this.body.angle;
+    console.log(angle, this.body.angle);
+
+    if (angle < this.body.angle) {
+        this.rotationForce = Math.min((angle-this.body.angle)/this.stepAngle, 1) * -1;
+    } else {
+        this.rotationForce = Math.min((this.body.angle-angle)/this.stepAngle, 1);
     }
 
-    if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
-    }
+    console.log(this.rotationForce);
+    //
+    // if (angle >= 180 && angle < 360) {
+    //     this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
+    // }
 
     if (inputState.q) {
         this.rotationForce = 1;

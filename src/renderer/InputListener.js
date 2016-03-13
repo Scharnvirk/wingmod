@@ -60,7 +60,7 @@ class InputListener{
             var mouseX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-            this.inputState.mouseAngle -= mouseX * 0.002;		    
+            this.inputState.mouseAngle -= mouseX * 0.002;
         };
 
         this.mouseDown = function (event) {
@@ -142,10 +142,8 @@ class InputListener{
         window.addEventListener('keydown', _keydown, false);
         window.addEventListener('keyup', _keyup, false);
 
-
-        this.domElement.onclick = function(){
-            this.domElement.requestPointerLock();
-        }.bind(this);
+        var pointerLockFunction = this.domElement.requestPointerLock || this.domElement.mozRequestPointerLock || this.domElement.webkitRequestPointerLock;
+        this.domElement.onclick = pointerLockFunction;
     }
 }
 
