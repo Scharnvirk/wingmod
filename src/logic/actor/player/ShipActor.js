@@ -24,6 +24,10 @@ function ShipActor(config){
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
+
+    this.PI_2 = Math.PI / 2;
+
+    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);
@@ -85,15 +89,31 @@ ShipActor.prototype.processWeapon = function(){
 
 ShipActor.prototype.playerUpdate = function(inputState){
     this.applyThrustInput(inputState);
-    this.applyRotationInput(inputState);
+    this.applyDiffRotationInput(inputState);
     this.applyWeaponInput(inputState);
 };
 
-ShipActor.prototype.applyRotationInput = function(inputState){
+ShipActor.prototype.applyDiffRotationInput = function(inputState){
+    // console.log(inputState.mouseDiffX, inputState.mouseDiffY);
+    // this.rotationForce = -inputState.mouseDiffX * 10 || 0;
+    this.body.angle = inputState.mouseAngle;
+
+
+    //
+    // this.body.angle -= (inputState.accumulatedMouseX || 0) * 0.002;
+    // this.body.angle = Math.max( - this.PI_2, Math.min( this.PI_2, this.body.angle ) );
+
+    //console.log(inputState.accumulatedMouseX);
+
+};
+
+ShipActor.prototype.applyLookAtRotationInput = function(inputState){
     this.rotationForce = 0;
 
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+
+    //console.log('is', inputState);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;

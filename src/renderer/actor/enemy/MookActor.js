@@ -3,12 +3,26 @@ var BaseActor = require("renderer/actor/BaseActor");
 
 function MookActor(){
     BaseActor.apply(this, arguments);
+    this.speedZ = 0.04;
 }
 
 MookActor.extend(BaseActor);
 
 MookActor.prototype.createMesh = function(){
     return new ShipMesh({actor: this, scaleX: 1, scaleY: 1, scaleZ: 1});
+};
+
+MookActor.prototype.customUpdate = function(){
+    this.positionZ += this.speedZ;
+    this.doBob();
+};
+
+MookActor.prototype.doBob = function(){
+    if (this.positionZ > 10){
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 MookActor.prototype.onDeath = function(){

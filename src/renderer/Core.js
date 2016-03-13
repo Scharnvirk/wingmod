@@ -14,17 +14,20 @@ function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
     if(!config.ui) throw new Error('Missing Ui object for Core!');
 
-    this.ui = config.ui;
-    this.logicWorker = config.logicWorker;
-
     this.WIDTH = document.documentElement.clientWidth;
     this.HEIGHT = document.documentElement.clientHeight;
     this.FRAMERATE = 60;
+
+    this.ui = config.ui;
+    this.logicWorker = config.logicWorker;
+    this.viewportElement = document.getElementById('viewport');
+
     this.renderTicks = 0;
     this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
     this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
     this.initRenderer(config);
     this.initAssets();
+
 
     console.log(config);
 }
@@ -39,7 +42,7 @@ Core.prototype.initRenderer = function(config){
 
 Core.prototype.makeMainComponents = function(config){
     this.renderer = this.makeRenderer(config);
-    this.inputListener = new InputListener( this.renderer.domElement );
+    this.inputListener = new InputListener({domElement: this.renderer.domElement});
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
     this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
@@ -68,7 +71,7 @@ Core.prototype.makeStatsWatcher = function(){
 Core.prototype.attachToDom = function(renderer, stats, renderStats){
     document.body.appendChild( stats.domElement );
     document.body.appendChild( renderStats.domElement );
-    document.getElementById('viewport').appendChild( renderer.domElement );
+    this.viewportElement.appendChild( renderer.domElement );
     this.autoResize();
 };
 
@@ -175,7 +178,7 @@ Core.prototype.render = function(){
 };
 
 Core.prototype.startGameRenderMode = function(){
-    this.camera.setPositionZ(200, 20);
+    this.camera.setPositionZ(80, 20);
     this.renderLoop.start();
 };
 
@@ -184,7 +187,6 @@ Core.prototype.stopGame = function(info){
         this.ui.stopGame(info);
         this.renderLoop.stop();
     }.bind(this), 2000);
-
 };
 
 module.exports = Core;

@@ -58,10 +58,9 @@ class GameScene {
         this.scene.add(combinedObject);
 
         var lcolor = Utils.makeRandomColor();
+        //var lcolor = 0xffffff;
 
-        console.log('color', lcolor);
-
-        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(0, 8)/10 );
+        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(4, 8)/10 );
         directionalLight.position.set( 2, 2, 10 );
         this.scene.add( directionalLight );
 

@@ -131,7 +131,7 @@ LaserProjectileActor.prototype.onSpawn = function(){
         alphaMultiplier: 0.7,
         particleVelocity: 2,
         particleAngle: this.angle,
-        lifeTime: 10
+        lifeTime: 3
     });
 };
 

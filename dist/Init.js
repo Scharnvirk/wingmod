@@ -805,6 +805,10 @@ function ShipActor(config) {
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
+
+    this.PI_2 = Math.PI / 2;
+
+    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);
@@ -862,15 +866,29 @@ ShipActor.prototype.processWeapon = function () {
 
 ShipActor.prototype.playerUpdate = function (inputState) {
     this.applyThrustInput(inputState);
-    this.applyRotationInput(inputState);
+    this.applyDiffRotationInput(inputState);
     this.applyWeaponInput(inputState);
 };
 
-ShipActor.prototype.applyRotationInput = function (inputState) {
+ShipActor.prototype.applyDiffRotationInput = function (inputState) {
+    // console.log(inputState.mouseDiffX, inputState.mouseDiffY);
+    // this.rotationForce = -inputState.mouseDiffX * 10 || 0;
+    this.body.angle = inputState.mouseAngle;
+
+    //
+    // this.body.angle -= (inputState.accumulatedMouseX || 0) * 0.002;
+    // this.body.angle = Math.max( - this.PI_2, Math.min( this.PI_2, this.body.angle ) );
+
+    //console.log(inputState.accumulatedMouseX);
+};
+
+ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
     this.rotationForce = 0;
 
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+
+    //console.log('is', inputState);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
@@ -1068,7 +1086,7 @@ function PlasmaProjectileActor(config) {
     this.hp = 1;
     this.damage = 0.5;
     this.removeOnHit = true;
-    this.timeout = 60;
+    this.timeout = 120;
 }
 
 PlasmaProjectileActor.extend(BaseActor);
@@ -1104,7 +1122,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 module.exports = PlasmaProjectileActor;
 
 },{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],17:[function(require,module,exports){
-"use strict";
+'use strict';
 
 function Camera(config) {
     this.WIDTH = document.documentElement.clientWidth;
@@ -1122,20 +1140,31 @@ function Camera(config) {
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
     this.position.z = 800;
 
+    this.tailVector = new THREE.Vector3(0, 0, 10);
+
     this.expectedPositionZ = this.position.z;
 
     this.mousePosition = new THREE.Vector3(0, 0, 1);
+
+    this.rotation.reorder('ZXY');
 }
 
 Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function () {
-    if (this.actor) {
-        this.position.x = this.actor.position[0];
-        this.position.y = this.actor.position[1];
-    }
 
     var inputState = this.inputListener.inputState;
+
+    if (this.actor) {
+        var offsetPosition = Utils.angleToVector(this.actor.angle, -50);
+
+        this.rotation.x = 0.9;
+        this.rotation.z = this.actor.angle;
+        this.rotation.y = 0;
+
+        this.position.x = this.actor.position[0] + offsetPosition[0];
+        this.position.y = this.actor.position[1] + offsetPosition[1];
+    }
 
     if (this.inputListener && this.actor) {
         if (this.inputListener.inputState.scrollUp) {
@@ -1147,13 +1176,15 @@ Camera.prototype.update = function () {
         }
     }
 
-    if (this.expectedPositionZ != this.position.z) {
+    if (this.expectedPositionZ != this.position.z && this.expectedPositionZ > -1) {
         if (this.expectedPositionZ / this.position.z > this.ZOOM_THRESHOLD) {
             this.position.z = this.expectedPositionZ;
         } else {
             this.position.z += this.expectedPositionZ > this.position.z ? (this.expectedPositionZ + this.position.z) / this.zoomSpeed : (this.expectedPositionZ - this.position.z) / this.zoomSpeed;
         }
         this.updateProjectionMatrix();
+    } else {
+        this.expectedPositionZ = -1;
     }
 };
 
@@ -1179,14 +1210,11 @@ function ControlsHandler(config) {
     this.inputState = {};
 
     this.camera = config.camera;
-    this.mousePosition = new THREE.Vector3(0, 0, 1);
 }
 
 ControlsHandler.prototype.update = function () {
     Object.assign(this.oldInputState, this.inputState);
     Object.assign(this.inputState, this.inputListener.inputState);
-
-    this.setSceneMousePosition();
 
     var changed = false;
     for (var key in this.inputState) {
@@ -1200,23 +1228,6 @@ ControlsHandler.prototype.update = function () {
 
 ControlsHandler.prototype.sendUpdate = function () {
     this.logicBus.postMessage('inputState', this.inputState);
-};
-
-ControlsHandler.prototype.setSceneMousePosition = function () {
-    if (!this.camera) {
-        return;
-    }
-
-    this.mousePosition.x = this.inputState.mouseX;
-    this.mousePosition.y = this.inputState.mouseY;
-    this.mousePosition.z = 1;
-
-    this.mousePosition.unproject(this.camera);
-
-    var heightModifier = this.mousePosition.z / (this.mousePosition.z - this.camera.position.z);
-
-    this.inputListener.inputState.lookX = this.mousePosition.x + (this.camera.position.x - this.mousePosition.x) * heightModifier;
-    this.inputListener.inputState.lookY = this.mousePosition.y + (this.camera.position.y - this.mousePosition.y) * heightModifier;
 };
 
 module.exports = ControlsHandler;
@@ -1240,12 +1251,14 @@ function Core(config) {
     if (!config.logicWorker) throw new Error('Logic core initialization failure!');
     if (!config.ui) throw new Error('Missing Ui object for Core!');
 
-    this.ui = config.ui;
-    this.logicWorker = config.logicWorker;
-
     this.WIDTH = document.documentElement.clientWidth;
     this.HEIGHT = document.documentElement.clientHeight;
     this.FRAMERATE = 60;
+
+    this.ui = config.ui;
+    this.logicWorker = config.logicWorker;
+    this.viewportElement = document.getElementById('viewport');
+
     this.renderTicks = 0;
     this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
     this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
@@ -1265,7 +1278,7 @@ Core.prototype.initRenderer = function (config) {
 
 Core.prototype.makeMainComponents = function (config) {
     this.renderer = this.makeRenderer(config);
-    this.inputListener = new InputListener(this.renderer.domElement);
+    this.inputListener = new InputListener({ domElement: this.renderer.domElement });
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
     this.particleManager = new ParticleManager({ scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier });
@@ -1294,7 +1307,7 @@ Core.prototype.makeStatsWatcher = function () {
 Core.prototype.attachToDom = function (renderer, stats, renderStats) {
     document.body.appendChild(stats.domElement);
     document.body.appendChild(renderStats.domElement);
-    document.getElementById('viewport').appendChild(renderer.domElement);
+    this.viewportElement.appendChild(renderer.domElement);
     this.autoResize();
 };
 
@@ -1403,7 +1416,7 @@ Core.prototype.render = function () {
 };
 
 Core.prototype.startGameRenderMode = function () {
-    this.camera.setPositionZ(200, 20);
+    this.camera.setPositionZ(80, 20);
     this.renderLoop.start();
 };
 
@@ -1421,18 +1434,23 @@ module.exports = Core;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var InputListener = function InputListener(domElement) {
+var InputListener = function InputListener(config) {
     _classCallCheck(this, InputListener);
 
     this.scrollDuration = 4;
     this.scrollFallOffPercent = 10;
 
-    this.domElement = domElement !== undefined ? domElement : document;
-    if (domElement) {
+    this.domElement = config.domElement !== undefined ? config.domElement : document;
+    if (this.domElement) {
         this.domElement.setAttribute('tabindex', -1);
     }
 
+    this.viewportElement = config.viewportElement;
+
     this.inputState = Object.create(null);
+    this.inputState.mouseAngle = 0;
+
+    this.PI_2 = Math.PI / 2;
 
     this.keys = {
         81: 'q',
@@ -1476,8 +1494,10 @@ var InputListener = function InputListener(domElement) {
     };
 
     this.mouseMove = function (event) {
-        this.inputState.mouseX = event.clientX / window.innerWidth * 2 - 1;
-        this.inputState.mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        var mouseX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+        var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+        this.inputState.mouseAngle -= mouseX * 0.002;
     };
 
     this.mouseDown = function (event) {
@@ -1558,6 +1578,10 @@ var InputListener = function InputListener(domElement) {
     this.domElement.addEventListener('mouseup', _mouseup, false);
     window.addEventListener('keydown', _keydown, false);
     window.addEventListener('keyup', _keyup, false);
+
+    this.domElement.onclick = function () {
+        this.domElement.requestPointerLock();
+    }.bind(this);
 };
 
 module.exports = InputListener;
@@ -1985,12 +2009,26 @@ var BaseActor = require("renderer/actor/BaseActor");
 
 function MookActor() {
     BaseActor.apply(this, arguments);
+    this.speedZ = 0.04;
 }
 
 MookActor.extend(BaseActor);
 
 MookActor.prototype.createMesh = function () {
     return new ShipMesh({ actor: this, scaleX: 1, scaleY: 1, scaleZ: 1 });
+};
+
+MookActor.prototype.customUpdate = function () {
+    this.positionZ += this.speedZ;
+    this.doBob();
+};
+
+MookActor.prototype.doBob = function () {
+    if (this.positionZ > 10) {
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 MookActor.prototype.onDeath = function () {
@@ -2182,6 +2220,7 @@ var BaseActor = require("renderer/actor/BaseActor");
 function ShipActor() {
     BaseActor.apply(this, arguments);
     this.count = 0;
+    this.speedZ = 0.04;
 }
 
 ShipActor.extend(BaseActor);
@@ -2192,10 +2231,20 @@ ShipActor.prototype.createMesh = function () {
 
 ShipActor.prototype.customUpdate = function () {
     this.doEngineGlow();
+    this.positionZ += this.speedZ;
+    this.doBob();
 };
 
 ShipActor.prototype.doBank = function () {
     this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+};
+
+ShipActor.prototype.doBob = function () {
+    if (this.positionZ > 10) {
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
@@ -2603,7 +2652,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alphaMultiplier: 0.7,
         particleVelocity: 2,
         particleAngle: this.angle,
-        lifeTime: 10
+        lifeTime: 3
     });
 };
 
@@ -3038,47 +3087,50 @@ function ParticleConfigBuilder(config) {
             uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
-            transparent: true
+            transparent: true,
+            depthWrite: false
         }),
         particleAdd: new THREE.ShaderMaterial({
             uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
-            transparent: true
+            transparent: true,
+            depthWrite: false
         }),
         mainExplosionAdd: new THREE.ShaderMaterial({
             uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
-            transparent: true
+            transparent: true,
+            depthWrite: false
         })
     };
 
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500 * this.particleLimitMultiplier,
-            positionZ: 9,
+            maxParticles: 1500 * config.particleLimitMultiplier,
+            positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddTrail: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 6000,
-            positionZ: 9,
+            positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000 * this.particleLimitMultiplier,
-            positionZ: 9,
+            maxParticles: 3000 * config.particleLimitMultiplier,
+            positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 500 * this.particleLimitMultiplier,
-            positionZ: 9,
+            maxParticles: 500 * config.particleLimitMultiplier,
+            positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         }
     };
@@ -3355,10 +3407,9 @@ var GameScene = function () {
             this.scene.add(combinedObject);
 
             var lcolor = Utils.makeRandomColor();
+            //var lcolor = 0xffffff;
 
-            console.log('color', lcolor);
-
-            var directionalLight = new THREE.DirectionalLight(lcolor, Utils.rand(0, 8) / 10);
+            var directionalLight = new THREE.DirectionalLight(lcolor, Utils.rand(4, 8) / 10);
             directionalLight.position.set(2, 2, 10);
             this.scene.add(directionalLight);
 

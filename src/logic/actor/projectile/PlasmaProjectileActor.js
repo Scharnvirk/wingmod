@@ -9,7 +9,7 @@ function PlasmaProjectileActor(config){
     this.hp = 1;
     this.damage = 0.5;
     this.removeOnHit = true;
-    this.timeout = 60;
+    this.timeout = 120;
 }
 
 PlasmaProjectileActor.extend(BaseActor);

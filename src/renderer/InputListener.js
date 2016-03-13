@@ -1,14 +1,19 @@
 class InputListener{
-    constructor(domElement) {
+    constructor(config) {
         this.scrollDuration = 4;
         this.scrollFallOffPercent = 10;
 
-        this.domElement = (domElement !== undefined) ? domElement : document;
-        if (domElement) {
+        this.domElement = (config.domElement !== undefined) ? config.domElement : document;
+        if (this.domElement) {
             this.domElement.setAttribute('tabindex', -1);
         }
 
+        this.viewportElement = config.viewportElement;
+
         this.inputState = Object.create(null);
+        this.inputState.mouseAngle = 0;
+
+        this.PI_2 = Math.PI/2;
 
         this.keys = {
             81: 'q',
@@ -52,8 +57,10 @@ class InputListener{
         };
 
         this.mouseMove = function (event) {
-            this.inputState.mouseX = (event.clientX / window.innerWidth)*2 - 1;
-            this.inputState.mouseY = -(event.clientY / window.innerHeight)*2 + 1;
+            var mouseX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+            this.inputState.mouseAngle -= mouseX * 0.002;		    
         };
 
         this.mouseDown = function (event) {
@@ -134,6 +141,11 @@ class InputListener{
         this.domElement.addEventListener('mouseup', _mouseup, false);
         window.addEventListener('keydown', _keydown, false);
         window.addEventListener('keyup', _keyup, false);
+
+
+        this.domElement.onclick = function(){
+            this.domElement.requestPointerLock();
+        }.bind(this);
     }
 }
 

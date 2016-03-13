@@ -13,7 +13,7 @@ function ActorManager(config){
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 
-    setInterval(this.checkEndGameCondition.bind(this), 3000);
+    //setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function(config){

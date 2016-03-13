@@ -14,21 +14,32 @@ function Camera(config){
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
     this.position.z = 800;
 
+    this.tailVector = new THREE.Vector3(0,0,10);
+
     this.expectedPositionZ = this.position.z;
 
     this.mousePosition = new THREE.Vector3(0,0,1);
+
+    this.rotation.reorder('ZXY');
 }
 
 Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function(){
-    if(this.actor){
-        this.position.x = this.actor.position[0];
-        this.position.y = this.actor.position[1];
-    }
 
     let inputState = this.inputListener.inputState;
 
+    if(this.actor){
+        let offsetPosition = Utils.angleToVector(this.actor.angle, -50);
+
+        this.rotation.x = 0.9;
+        this.rotation.z = this.actor.angle;
+        this.rotation.y = 0;
+
+        this.position.x = this.actor.position[0] + offsetPosition[0];
+        this.position.y = this.actor.position[1] + offsetPosition[1];
+    }
+    
     if(this.inputListener && this.actor){
         if (this.inputListener.inputState.scrollUp) {
             this.position.z += inputState.scrollUp;
@@ -39,7 +50,7 @@ Camera.prototype.update = function(){
         }
     }
 
-    if(this.expectedPositionZ != this.position.z){
+    if(this.expectedPositionZ != this.position.z && this.expectedPositionZ > -1){
         if (this.expectedPositionZ / this.position.z > this.ZOOM_THRESHOLD){
             this.position.z = this.expectedPositionZ;
         } else {
@@ -48,6 +59,8 @@ Camera.prototype.update = function(){
             (this.expectedPositionZ - this.position.z) / this.zoomSpeed;
         }
         this.updateProjectionMatrix();
+    }else{
+        this.expectedPositionZ = -1;
     }
 };
 

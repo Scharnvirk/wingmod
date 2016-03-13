@@ -400,7 +400,7 @@ function ActorManager(config) {
 
     if (!this.world) throw new Error('No world for Logic ActorManager!');
 
-    setInterval(this.checkEndGameCondition.bind(this), 3000);
+    //setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function (config) {
@@ -806,6 +806,10 @@ function ShipActor(config) {
     this.secondaryWeaponTimer = 0;
 
     this.hp = 10;
+
+    this.PI_2 = Math.PI / 2;
+
+    console.log(this.body);
 }
 
 ShipActor.extend(BaseActor);
@@ -863,15 +867,29 @@ ShipActor.prototype.processWeapon = function () {
 
 ShipActor.prototype.playerUpdate = function (inputState) {
     this.applyThrustInput(inputState);
-    this.applyRotationInput(inputState);
+    this.applyDiffRotationInput(inputState);
     this.applyWeaponInput(inputState);
 };
 
-ShipActor.prototype.applyRotationInput = function (inputState) {
+ShipActor.prototype.applyDiffRotationInput = function (inputState) {
+    // console.log(inputState.mouseDiffX, inputState.mouseDiffY);
+    // this.rotationForce = -inputState.mouseDiffX * 10 || 0;
+    this.body.angle = inputState.mouseAngle;
+
+    //
+    // this.body.angle -= (inputState.accumulatedMouseX || 0) * 0.002;
+    // this.body.angle = Math.max( - this.PI_2, Math.min( this.PI_2, this.body.angle ) );
+
+    //console.log(inputState.accumulatedMouseX);
+};
+
+ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
     this.rotationForce = 0;
 
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.vectorAngleToPoint(angleVector[0], inputState.lookX - this.body.position[0], angleVector[1], inputState.lookY - this.body.position[1]);
+
+    //console.log('is', inputState);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
@@ -1069,7 +1087,7 @@ function PlasmaProjectileActor(config) {
     this.hp = 1;
     this.damage = 0.5;
     this.removeOnHit = true;
-    this.timeout = 60;
+    this.timeout = 120;
 }
 
 PlasmaProjectileActor.extend(BaseActor);
@@ -1394,12 +1412,26 @@ var BaseActor = require("renderer/actor/BaseActor");
 
 function MookActor() {
     BaseActor.apply(this, arguments);
+    this.speedZ = 0.04;
 }
 
 MookActor.extend(BaseActor);
 
 MookActor.prototype.createMesh = function () {
     return new ShipMesh({ actor: this, scaleX: 1, scaleY: 1, scaleZ: 1 });
+};
+
+MookActor.prototype.customUpdate = function () {
+    this.positionZ += this.speedZ;
+    this.doBob();
+};
+
+MookActor.prototype.doBob = function () {
+    if (this.positionZ > 10) {
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 MookActor.prototype.onDeath = function () {
@@ -1591,6 +1623,7 @@ var BaseActor = require("renderer/actor/BaseActor");
 function ShipActor() {
     BaseActor.apply(this, arguments);
     this.count = 0;
+    this.speedZ = 0.04;
 }
 
 ShipActor.extend(BaseActor);
@@ -1601,10 +1634,20 @@ ShipActor.prototype.createMesh = function () {
 
 ShipActor.prototype.customUpdate = function () {
     this.doEngineGlow();
+    this.positionZ += this.speedZ;
+    this.doBob();
 };
 
 ShipActor.prototype.doBank = function () {
     this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+};
+
+ShipActor.prototype.doBob = function () {
+    if (this.positionZ > 10) {
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
@@ -2012,7 +2055,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alphaMultiplier: 0.7,
         particleVelocity: 2,
         particleAngle: this.angle,
-        lifeTime: 10
+        lifeTime: 3
     });
 };
 

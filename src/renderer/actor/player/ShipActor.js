@@ -4,6 +4,7 @@ var BaseActor = require("renderer/actor/BaseActor");
 function ShipActor(){
     BaseActor.apply(this, arguments);
     this.count = 0;
+    this.speedZ = 0.04;
 }
 
 ShipActor.extend(BaseActor);
@@ -14,10 +15,20 @@ ShipActor.prototype.createMesh = function(){
 
 ShipActor.prototype.customUpdate = function(){
     this.doEngineGlow();
+    this.positionZ += this.speedZ;
+    this.doBob();
 };
 
 ShipActor.prototype.doBank = function(){
     this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+};
+
+ShipActor.prototype.doBob = function(){
+    if (this.positionZ > 10){
+        this.speedZ -= 0.002;
+    } else {
+        this.speedZ += 0.002;
+    }
 };
 
 ShipActor.prototype.doEngineGlow = function(){
