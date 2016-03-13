@@ -826,8 +826,10 @@ ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createBody = function () {
     return new BaseBody({
-        shape: new p2.Convex({
-            vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5]],
+        shape: new p2.Circle({
+            radius: 5,
+            //shape: new p2.Convex({
+            //    vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5] ],
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
             collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.ENEMYEXPLOSION
         }),
@@ -1140,29 +1142,24 @@ function Camera(config) {
     config = config || {};
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
-    this.position.z = 800;
-
-    this.tailVector = new THREE.Vector3(0, 0, 10);
 
     this.expectedPositionZ = this.position.z;
-
-    this.mousePosition = new THREE.Vector3(0, 0, 1);
-
     this.rotation.reorder('ZXY');
+
+    this.position.z = 800;
+    this.rotation.x = 0.9;
+    this.rotation.y = 0;
 }
 
 Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function () {
-
     var inputState = this.inputListener.inputState;
 
     if (this.actor) {
         var offsetPosition = Utils.angleToVector(this.actor.angle, -50);
 
-        this.rotation.x = 0.9;
         this.rotation.z = this.actor.angle;
-        this.rotation.y = 0;
 
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];

@@ -12,29 +12,24 @@ function Camera(config){
     config = config || {};
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
-    this.position.z = 800;
-
-    this.tailVector = new THREE.Vector3(0,0,10);
-
+    
     this.expectedPositionZ = this.position.z;
-
-    this.mousePosition = new THREE.Vector3(0,0,1);
-
     this.rotation.reorder('ZXY');
+
+    this.position.z = 800;
+    this.rotation.x = 0.9;
+    this.rotation.y = 0;
 }
 
 Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function(){
-
     let inputState = this.inputListener.inputState;
 
     if(this.actor){
         let offsetPosition = Utils.angleToVector(this.actor.angle, -50);
 
-        this.rotation.x = 0.9;
         this.rotation.z = this.actor.angle;
-        this.rotation.y = 0;
 
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];

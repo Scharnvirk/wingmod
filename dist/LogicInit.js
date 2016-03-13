@@ -827,8 +827,10 @@ ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createBody = function () {
     return new BaseBody({
-        shape: new p2.Convex({
-            vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5]],
+        shape: new p2.Circle({
+            radius: 5,
+            //shape: new p2.Convex({
+            //    vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5] ],
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
             collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.ENEMYEXPLOSION
         }),
