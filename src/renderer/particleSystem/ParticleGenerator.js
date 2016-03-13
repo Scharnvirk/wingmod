@@ -4,6 +4,7 @@ function ParticleGenerator(config){
     config = config || {};
     config.positionZ = config.positionZ || 10;
     config.maxParticles = config.maxParticles || 100;
+    config.resolutionCoefficient = config.resolutionCoefficient || 1;
 
     config.positionHiddenFromView = 100000;
 
@@ -96,7 +97,7 @@ ParticleGenerator.prototype.initParticle = function(particleId, config){
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;
-    this.scaleHandle[particleId] = config.scale;
+    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient;
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
     this.speedHandle[particleId * 2] = (Math.sin(config.particleAngle) * -1) * config.particleVelocity;

@@ -1,23 +1,43 @@
 var ReactUi = require('renderer/ui/ReactUi');
 var PubSub = require('pubsub-js');
+var Core = require('renderer/Core');
 
 function Ui(config){
     Object.assign(this, config);
-    if(!this.logicBus) throw new Error('No logicBus object specified for Ui!');
-    if(!this.core) throw new Error('No core object specified for Ui!');
-
     this.reactUi = new ReactUi();
+
+    this.configState = {
+        shadows: false
+    };
+
     var listener = PubSub.subscribe( 'buttonClick', (msg, data) => {
-        switch(data){
+        switch(data.buttonEvent){
             case 'start':
                 this.onStartButtonClick();
                 break;
             case 'stop':
                 this.onStop();
                 break;
+            case 'shadowConfig':
+                this.onShadowConfig(data);
+                break;
+            case 'lowResConfig':
+                this.onLowResConfig(data);
+                break;
         }
     } );
 }
+
+Ui.prototype.startGame = function(){
+    var logicWorker = new Worker('dist/LogicInit.js');
+    var core = new Core({
+        logicWorker: logicWorker,
+        ui: this,
+        shadows: this.configState.shadows,
+        lowRes: this.configState.lowRes
+    });
+    global.gameCore = core;
+};
 
 Ui.prototype.stopGame = function(info){
     var scoreText = 'KILLED: ' + info.killed + '\nREMAINING: ' + info.remaining + '\n\n' + this.getOpinionOnResult(info.remaining);
@@ -25,9 +45,16 @@ Ui.prototype.stopGame = function(info){
 };
 
 Ui.prototype.onStartButtonClick = function(){
-    this.logicBus.postMessage('start',{});
-    this.core.startGameRenderMode();
+    this.startGame();
     this.reactUi.changeMode('running');
+};
+
+Ui.prototype.onShadowConfig = function(data){
+    this.configState.shadows = data.state;
+};
+
+Ui.prototype.onLowResConfig = function(data){
+    this.configState.lowRes = data.state;
 };
 
 Ui.prototype.getOpinionOnResult = function(remainingMooks){

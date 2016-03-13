@@ -1,23 +1,23 @@
 import classnames from 'classnames';
 
-var Ui = require('renderer/ui/components/Ui');
+var InitialView = require('renderer/ui/components/InitialView');
 
 function ReactUi(){
     Utils.mixin(this, THREE.EventDispatcher);
-    this.Ui = <Ui/>;
+    this.InitialView = <InitialView/>;
     this.render();
 }
 
 ReactUi.prototype.render = function(){
     ReactDOM.render(
-        this.Ui,
+        this.InitialView,
         document.getElementById('react-content')
     );
 };
 
 ReactUi.prototype.changeMode = function(newMode, context){
     var additionalConfig = context || null;
-    this.Ui = <Ui mode={newMode} context={context}/>;
+    this.InitialView = <InitialView mode={newMode} context={context}/>;
     this.render();
 };
 

@@ -1,6 +1,6 @@
 var ParticleShaders = require("renderer/particleSystem/ParticleShaders");
 
-function ParticleConfigBuilder(){
+function ParticleConfigBuilder(config){
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial( {
              uniforms:       { map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/smokePuffAlpha.png" ) }},
@@ -27,23 +27,27 @@ function ParticleConfigBuilder(){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1000,
-            positionZ: 9
+            maxParticles: 1500,
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddTrail: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 7000,
-            positionZ: 9
+            maxParticles: 6000,
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 3000,
-            positionZ: 9
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 500,
-            positionZ: 9
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         }
     };
 }

@@ -9,39 +9,41 @@ var ModelLoader = require("renderer/modelRepo/ModelLoader");
 var ModelList = require("renderer/modelRepo/ModelList");
 var ModelStore = require("renderer/modelRepo/ModelStore");
 var CustomModelBuilder = require("renderer/modelRepo/CustomModelBuilder");
-var Ui = require("renderer/ui/Ui");
 
-function Core(logicCore){
-    if(!logicCore) throw new Error('Logic core initialization failure!');
+function Core(config){
+    if(!config.logicWorker) throw new Error('Logic core initialization failure!');
+    if(!config.ui) throw new Error('Missing Ui object for Core!');
+
+    this.ui = config.ui;
+    this.logicWorker = config.logicWorker;
+
     this.WIDTH = document.documentElement.clientWidth;
     this.HEIGHT = document.documentElement.clientHeight;
     this.FRAMERATE = 60;
     this.renderTicks = 0;
-    this.logicWorker = logicCore;
-    this.resolutionCoefficient = 1;
-    this.initRenderer();
+    this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
+    this.initRenderer(config);
     this.initAssets();
 }
 
-Core.prototype.initRenderer = function(){
-    this.makeMainComponents();
+Core.prototype.initRenderer = function(config){
+    this.makeMainComponents(config);
     this.renderStats = this.makeRenderStatsWatcher();
     this.stats = this.makeStatsWatcher();
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
-Core.prototype.makeMainComponents = function(){
-    this.renderer = this.makeRenderer();
+Core.prototype.makeMainComponents = function(config){
+    this.renderer = this.makeRenderer(config);
     this.inputListener = new InputListener( this.renderer.domElement );
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
-    this.particleManager = new ParticleManager({scene: this.scene});
+    this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient});
     this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager, core: this});
     this.logicBus = new LogicBus({core: this, logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.gameScene = new GameScene({core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager});
-    this.ui = new Ui({core: this, logicBus: this.logicBus});
+    this.gameScene = new GameScene({core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -60,9 +62,7 @@ Core.prototype.makeStatsWatcher = function(){
     return stats;
 };
 
-
 Core.prototype.attachToDom = function(renderer, stats, renderStats){
-    console.log("doc", document.body);
     document.body.appendChild( stats.domElement );
     document.body.appendChild( renderStats.domElement );
     document.getElementById('viewport').appendChild( renderer.domElement );
@@ -70,7 +70,6 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
 };
 
 Core.prototype.makeCamera = function(inputListener) {
-    console.log('making camera');
     var camera = new Camera({inputListener: inputListener});
     return camera;
 };
@@ -81,11 +80,13 @@ Core.prototype.makeScene = function(camera) {
     return scene;
 };
 
-Core.prototype.makeRenderer = function() {
+Core.prototype.makeRenderer = function(config) {
+    config = config || {};
     var renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(this.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap;
+    renderer.shadowMap.enabled = !!config.shadows;
+    renderer.shadowMap.type = !!config.shadows ? THREE.BasicShadowMap : null;
     return renderer;
 };
 
@@ -122,8 +123,6 @@ Core.prototype.initAssets = function() {
     this.modelLoader.addEventListener('loaded', this.onLoaded.bind(this));
     this.modelLoader.loadModels(ModelList.models);
 
-    //todo: zrobic customModelBuilder tez jako asyncowy loader i potem promisem zgarnac oba eventy
-    //tym bardziej ze moze byc to potrzebne jesli sie jednak okaze ze tekstury ladujemy asyncowo
     this.customModelBuilder = new CustomModelBuilder();
     this.customModelBuilder.loadModels();
     ModelStore.loadBatch(this.customModelBuilder.getBatch());
@@ -136,21 +135,20 @@ Core.prototype.onLoaded = function(event) {
 };
 
 Core.prototype.continueInit = function(){
-    this.gameScene.make();
+    this.gameScene.make(false);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
     this.renderLoop = new THREEx.RenderingLoop();
     this.renderLoop.add(this.render.bind(this));
-    this.renderLoop.start();
 
-    setTimeout(function(){
-        this.renderLoop.stop();
-    }.bind(this), 1000);
+    this.logicBus.postMessage('start',{});
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
     controlsLoop.start();
+
+    setTimeout(this.startGameRenderMode.bind(this), 1000);
 };
 
 Core.prototype.onEachSecond = function(){

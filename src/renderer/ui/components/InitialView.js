@@ -7,7 +7,7 @@ var Viewport = require('renderer/ui/components/base/Viewport');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
-var Ui = React.createClass({
+var InitialView = React.createClass({
     render(){
         let UIcontent = [];
         switch(this.props.mode || 'startScreen'){
@@ -40,4 +40,4 @@ var Ui = React.createClass({
     }
 });
 
-module.exports = Ui;
+module.exports = InitialView;

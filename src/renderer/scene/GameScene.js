@@ -2,6 +2,7 @@ class GameScene {
     constructor(config) {
         Object.assign(this, config);
         this.lightCounter = 0;
+        this.shadows = config.shadows;
     }
 
     makeWalls () {
@@ -34,6 +35,7 @@ class GameScene {
     }
 
     make() {
+
         var combine = new THREE.Geometry();
         var planeTex = new THREE.TextureLoader().load("/models/floor.png");
         planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
@@ -55,13 +57,17 @@ class GameScene {
 
         this.scene.add(combinedObject);
 
-        var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.2 );
+        var lcolor = Utils.makeRandomColor();
+
+        console.log('color', lcolor);
+
+        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(0, 8)/10 );
         directionalLight.position.set( 2, 2, 10 );
         this.scene.add( directionalLight );
 
-        this.pointLight = new THREE.PointLight( 0xffffff, 1 );
+        this.pointLight = new THREE.PointLight( lcolor, 1 );
         this.pointLight.distance = 200;
-        this.pointLight.castShadow = true;
+        this.pointLight.castShadow = this.shadows;
         this.pointLight.shadowCameraNear = 1;
         this.pointLight.shadowCameraFar = 200;
         this.pointLight.shadowMapWidth = 2048;

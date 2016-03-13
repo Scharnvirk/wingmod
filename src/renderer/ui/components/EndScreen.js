@@ -8,7 +8,7 @@ class EndScreen extends React.Component {
             <StyledText style={'titleText'}>
                 {'GAME OVER'}
             </StyledText>
-            <StyledText style={'scoreText'}>
+            <StyledText style={'smallText'}>
                 {this.props.scoreText}
             </StyledText>
         </div>;

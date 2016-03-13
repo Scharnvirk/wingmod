@@ -7,7 +7,7 @@ function ParticleManager(config){
 
     if(!this.scene) throw new Error('No scene specified for ParticleGenerator!');
 
-    this.configBuilder = new ParticleConfigBuilder();
+    this.configBuilder = new ParticleConfigBuilder(config);
     this.configs = this.configBuilder.getAllConfigs();
 
     this.generators = {};

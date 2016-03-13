@@ -359,17 +359,15 @@ global.Utils = require("Utils");
 global.Constants = require("Constants");
 
 var domready = require("domready");
-var Core = require("renderer/Core");
-var LogicInit = require('LogicInit');
+var Ui = require("renderer/ui/Ui");
 var gameCore;
 
 function Init() {}
 
 Init.prototype.start = function () {
     domready(function () {
-        var logicWorker = new Worker('dist/LogicInit.js');
-        var core = new Core(logicWorker);
-        global.gameCore = core;
+        var ui = new Ui();
+        global.uiDebugHandle = ui;
     });
 };
 
@@ -377,22 +375,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"Constants":4,"LogicInit":6,"Utils":7,"domready":2,"renderer/Core":25}],6:[function(require,module,exports){
-(function (global){
-"use strict";
-
-global.Utils = require("Utils");
-global.Constants = require("Constants");
-
-if ('function' === typeof importScripts) {
-    importScripts('../../lib/p2.js');
-    importScripts('../../lib/threex.loop.js');
-    var LogicCore = require('logic/Core');
-    self.core = new LogicCore(self);
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"Constants":4,"Utils":7,"logic/Core":8}],7:[function(require,module,exports){
+},{"Constants":4,"Utils":6,"domready":2,"renderer/ui/Ui":50}],6:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -482,346 +465,7 @@ if (!Function.prototype.extend) {
 
 module.exports = Utils;
 
-},{}],8:[function(require,module,exports){
-"use strict";
-
-var RenderBus = require("logic/RenderBus");
-var GameWorld = require("logic/GameWorld");
-var ActorManager = require("logic/actorManagement/ActorManager");
-var GameScene = require("logic/GameScene");
-
-function Core(worker) {
-    this.makeMainComponents(worker);
-    this.startGameLoop();
-    this.scene.fillScene();
-    this.initFpsCounter();
-
-    this.running = false;
-}
-
-Core.prototype.makeMainComponents = function (worker) {
-    this.renderBus = new RenderBus({ worker: worker, core: this });
-    this.world = new GameWorld();
-    this.actorManager = new ActorManager({ world: this.world, core: this });
-    this.scene = new GameScene({ world: this.world, actorManager: this.actorManager, core: this });
-};
-
-Core.prototype.initFpsCounter = function () {
-    var _this = this;
-
-    this.logicTicks = 0;
-    if (Constants.SHOW_FPS) {
-        setInterval(function () {
-            console.log('logicTicks: ', _this.logicTicks);
-            _this.logicTicks = 0;
-        }, 1000);
-    }
-};
-
-Core.prototype.processGameLogic = function () {
-    if (this.running) {
-        this.doTick();
-    }
-};
-
-Core.prototype.doTick = function () {
-    this.actorManager.update(this.renderBus.inputState);
-    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
-    this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
-    this.logicTicks++;
-    this.scene.update();
-};
-
-Core.prototype.startGameLoop = function () {
-    var logicLoop = new THREEx.PhysicsLoop(Constants.LOGIC_REFRESH_RATE);
-    logicLoop.add(this.processGameLogic.bind(this));
-    logicLoop.start();
-};
-
-Core.prototype.start = function () {
-    this.running = true;
-};
-
-Core.prototype.pause = function () {
-    this.running = false;
-};
-
-Core.prototype.endGame = function (info) {
-    this.renderBus.postMessage('gameEnded', info);
-};
-
-module.exports = Core;
-
-},{"logic/GameScene":9,"logic/GameWorld":10,"logic/RenderBus":11,"logic/actorManagement/ActorManager":12}],9:[function(require,module,exports){
-'use strict';
-
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
-
-function GameScene(config) {
-    Object.assign(this, config);
-    if (!this.world) throw new Error('No world specified for Logic GameScene');
-    if (!this.actorManager) throw new Error('No actorManager specified for Logic GameScene');
-    if (!this.core) throw new Error('No core specified for Logic GameScene');
-    this.timer = 0;
-}
-
-GameScene.prototype.fillScene = function () {
-    for (var i = 0; i < 100; i++) {
-        this.actorManager.addNew({
-            classId: ActorFactory.MOOK,
-            positionX: Utils.rand(100, 150),
-            positionY: Utils.rand(100, 150),
-            angle: Utils.rand(0, 360)
-        });
-    }
-
-    for (var i = 0; i < 100; i++) {
-        this.actorManager.addNew({
-            classId: ActorFactory.PILLAR,
-            positionX: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            positionY: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            angle: Utils.rand(0, 360)
-        });
-    }
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: -400,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: 400,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 400,
-        positionY: 0,
-        angle: Math.PI / 2
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: -400,
-        positionY: 0,
-        angle: Math.PI / 2
-    });
-
-    var playerActor = this.actorManager.addNew({
-        classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
-        angle: 0
-    });
-
-    this.actorManager.setPlayerActor(playerActor);
-
-    this.core.doTick();
-
-    console.log("scene complete");
-};
-
-GameScene.prototype.update = function () {
-    this.timer++;
-
-    for (var i = 0; i < 0; i++) {
-        this.actorManager.addNew({
-            classId: ActorFactory.PROJECTILE,
-            positionX: 0,
-            positionY: 0,
-            angle: Utils.rand(0, 360),
-            velocity: Utils.rand(220, 280)
-        });
-    }
-};
-
-module.exports = GameScene;
-
-},{"renderer/actorManagement/ActorFactory":28}],10:[function(require,module,exports){
-'use strict';
-
-function GameWorld(config) {
-    p2.World.apply(this, arguments);
-
-    this.transferArray = new Float32Array(Constants.STORAGE_SIZE * 5);
-
-    config = config || {};
-    this.gravity = [0, 0];
-    this.islandSplit = false;
-    this.applyGravity = false;
-    this.applySpringForces = false;
-    this.defaultContactMaterial.friction = 0;
-    this.solver.iterations = 20;
-    this.solver.tolerance = 0.02;
-
-    Object.assign(this, config);
-
-    this.on('impact', this.onCollision.bind(this));
-}
-
-GameWorld.extend(p2.World);
-
-GameWorld.prototype.makeUpdateData = function () {
-    var deadActors = [];
-    var transferArray = this.transferArray;
-
-    for (var i = 0; i < this.bodies.length; i++) {
-        var body = this.bodies[i];
-        transferArray[i * 5] = body.actorId;
-        transferArray[i * 5 + 1] = body.dead ? -1 : body.classId;
-        transferArray[i * 5 + 2] = body.position[0];
-        transferArray[i * 5 + 3] = body.position[1];
-        transferArray[i * 5 + 4] = body.angle;
-
-        if (body.dead) {
-            deadActors.push(body.actorId);
-            body.onDeath();
-            this.removeBody(body);
-        }
-
-        body.update();
-    }
-
-    return {
-        length: this.bodies.length,
-        transferArray: this.transferArray,
-        deadActors: deadActors
-    };
-};
-
-GameWorld.prototype.onCollision = function (collisionEvent) {
-    collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
-    collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
-};
-
-module.exports = GameWorld;
-
-},{}],11:[function(require,module,exports){
-'use strict';
-
-function RenderBus(config) {
-    if (!config.worker) throw new Error('No worker object specified for Logic Render Bus');
-    this.worker = config.worker;
-    this.core = config.core;
-    this.inputState = {};
-
-    this.worker.onmessage = this.handleMessage.bind(this);
-}
-
-RenderBus.prototype.postMessage = function (type, message) {
-    message.type = type;
-    this.worker.postMessage(message);
-};
-
-RenderBus.prototype.handleMessage = function (message) {
-    switch (message.data.type) {
-        case 'inputState':
-            this.inputState = message.data;
-            break;
-        case "debug":
-            console.log(event.data.message);
-            break;
-        case "pause":
-            this.core.pause();
-            break;
-        case "start":
-            this.core.start();
-            break;
-    }
-};
-
-module.exports = RenderBus;
-
-},{}],12:[function(require,module,exports){
-'use strict';
-
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
-
-function ActorManager(config) {
-    config = config || {};
-    this.core = null;
-    this.storage = Object.create(null);
-    this.world = null;
-    this.factory = config.factory || ActorFactory.getInstance();
-    this.currentId = 1;
-    this.playerActors = [];
-
-    Object.assign(this, config);
-
-    if (!this.world) throw new Error('No world for Logic ActorManager!');
-
-    setInterval(this.checkEndGameCondition.bind(this), 3000);
-}
-
-ActorManager.prototype.addNew = function (config) {
-    if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE) {
-        console.warn('Actor manager storage is full! Cannot create new Actor!');
-        return;
-    }
-    var actor = this.factory.create(config);
-    actor.manager = this;
-    actor.world = this.world;
-    actor.body.actorId = this.currentId;
-    actor.body.classId = config.classId;
-    this.storage[this.currentId] = actor;
-    this.currentId++;
-    this.world.addBody(actor.body);
-    actor.onSpawn();
-    return actor;
-};
-
-ActorManager.prototype.update = function (inputState) {
-    this.playerActors.forEach(function (actorId) {
-        if (this.storage[actorId]) {
-            this.storage[actorId].playerUpdate(inputState);
-        }
-    }.bind(this));
-
-    for (var actorId in this.storage) {
-        this.storage[actorId].update();
-    }
-};
-
-ActorManager.prototype.setPlayerActor = function (actor) {
-    this.playerActors.push(actor.body.actorId);
-    this.core.renderBus.postMessage('attachPlayer', { actorId: actor.body.actorId });
-};
-
-ActorManager.prototype.removeActorAt = function (actorId) {
-    delete this.storage[actorId];
-};
-
-ActorManager.prototype.endGame = function () {
-    var startingMooks = 100; //todo: definitely not the place for that
-    var mookCount = 0;
-    for (var actorId in this.storage) {
-        if (this.storage[actorId].classId === ActorFactory.MOOK) {
-            mookCount++;
-        }
-    }
-    this.core.endGame({ remaining: mookCount, killed: startingMooks - mookCount });
-};
-
-ActorManager.prototype.checkEndGameCondition = function () {
-    var mookCount = 0;
-    for (var actorId in this.storage) {
-        if (this.storage[actorId].classId === ActorFactory.MOOK) {
-            mookCount++;
-        }
-    }
-    if (mookCount === 0) {
-        this.endGame();
-    }
-};
-
-module.exports = ActorManager;
-
-},{"renderer/actorManagement/ActorFactory":28}],13:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 function BaseActor(config) {
@@ -887,7 +531,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],14:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 function BaseBody(config) {
@@ -922,7 +566,7 @@ BaseBody.prototype.update = function () {};
 
 module.exports = BaseBody;
 
-},{}],15:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1040,7 +684,7 @@ MookActor.prototype.onSpawn = function () {};
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14,"renderer/actorManagement/ActorFactory":28}],16:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8,"renderer/actorManagement/ActorFactory":22}],10:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1068,7 +712,7 @@ PillarActor.prototype.createBody = function () {
 
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],17:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],11:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1097,7 +741,7 @@ WallActor.prototype.createBody = function () {
 
 module.exports = WallActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],18:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],12:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1132,7 +776,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],13:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1332,7 +976,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14,"renderer/actorManagement/ActorFactory":28}],20:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8,"renderer/actorManagement/ActorFactory":22}],14:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1371,7 +1015,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],21:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],15:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1410,7 +1054,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],22:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],16:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1459,7 +1103,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":13,"logic/actor/components/body/BaseBody":14}],23:[function(require,module,exports){
+},{"logic/actor/BaseActor":7,"logic/actor/components/body/BaseBody":8}],17:[function(require,module,exports){
 "use strict";
 
 function Camera(config) {
@@ -1520,7 +1164,7 @@ Camera.prototype.setPositionZ = function (newPositionZ, zoomSpeed) {
 
 module.exports = Camera;
 
-},{}],24:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 function ControlsHandler(config) {
@@ -1577,7 +1221,7 @@ ControlsHandler.prototype.setSceneMousePosition = function () {
 
 module.exports = ControlsHandler;
 
-},{}],25:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 var InputListener = require("renderer/InputListener");
@@ -1591,39 +1235,41 @@ var ModelLoader = require("renderer/modelRepo/ModelLoader");
 var ModelList = require("renderer/modelRepo/ModelList");
 var ModelStore = require("renderer/modelRepo/ModelStore");
 var CustomModelBuilder = require("renderer/modelRepo/CustomModelBuilder");
-var Ui = require("renderer/ui/Ui");
 
-function Core(logicCore) {
-    if (!logicCore) throw new Error('Logic core initialization failure!');
+function Core(config) {
+    if (!config.logicWorker) throw new Error('Logic core initialization failure!');
+    if (!config.ui) throw new Error('Missing Ui object for Core!');
+
+    this.ui = config.ui;
+    this.logicWorker = config.logicWorker;
+
     this.WIDTH = document.documentElement.clientWidth;
     this.HEIGHT = document.documentElement.clientHeight;
     this.FRAMERATE = 60;
     this.renderTicks = 0;
-    this.logicWorker = logicCore;
-    this.resolutionCoefficient = 1;
-    this.initRenderer();
+    this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
+    this.initRenderer(config);
     this.initAssets();
 }
 
-Core.prototype.initRenderer = function () {
-    this.makeMainComponents();
+Core.prototype.initRenderer = function (config) {
+    this.makeMainComponents(config);
     this.renderStats = this.makeRenderStatsWatcher();
     this.stats = this.makeStatsWatcher();
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
-Core.prototype.makeMainComponents = function () {
-    this.renderer = this.makeRenderer();
+Core.prototype.makeMainComponents = function (config) {
+    this.renderer = this.makeRenderer(config);
     this.inputListener = new InputListener(this.renderer.domElement);
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
-    this.particleManager = new ParticleManager({ scene: this.scene });
+    this.particleManager = new ParticleManager({ scene: this.scene, resolutionCoefficient: this.resolutionCoefficient });
     this.actorManager = new ActorManager({ scene: this.scene, particleManager: this.particleManager, core: this });
     this.logicBus = new LogicBus({ core: this, logicWorker: this.logicWorker, actorManager: this.actorManager });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera });
-    this.gameScene = new GameScene({ core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager });
-    this.ui = new Ui({ core: this, logicBus: this.logicBus });
+    this.gameScene = new GameScene({ core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows });
 };
 
 Core.prototype.makeRenderStatsWatcher = function () {
@@ -1643,7 +1289,6 @@ Core.prototype.makeStatsWatcher = function () {
 };
 
 Core.prototype.attachToDom = function (renderer, stats, renderStats) {
-    console.log("doc", document.body);
     document.body.appendChild(stats.domElement);
     document.body.appendChild(renderStats.domElement);
     document.getElementById('viewport').appendChild(renderer.domElement);
@@ -1651,7 +1296,6 @@ Core.prototype.attachToDom = function (renderer, stats, renderStats) {
 };
 
 Core.prototype.makeCamera = function (inputListener) {
-    console.log('making camera');
     var camera = new Camera({ inputListener: inputListener });
     return camera;
 };
@@ -1662,11 +1306,13 @@ Core.prototype.makeScene = function (camera) {
     return scene;
 };
 
-Core.prototype.makeRenderer = function () {
+Core.prototype.makeRenderer = function (config) {
+    config = config || {};
     var renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(this.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap;
+    renderer.shadowMap.enabled = !!config.shadows;
+    renderer.shadowMap.type = !!config.shadows ? THREE.BasicShadowMap : null;
     return renderer;
 };
 
@@ -1705,8 +1351,6 @@ Core.prototype.initAssets = function () {
     this.modelLoader.addEventListener('loaded', this.onLoaded.bind(this));
     this.modelLoader.loadModels(ModelList.models);
 
-    //todo: zrobic customModelBuilder tez jako asyncowy loader i potem promisem zgarnac oba eventy
-    //tym bardziej ze moze byc to potrzebne jesli sie jednak okaze ze tekstury ladujemy asyncowo
     this.customModelBuilder = new CustomModelBuilder();
     this.customModelBuilder.loadModels();
     ModelStore.loadBatch(this.customModelBuilder.getBatch());
@@ -1719,21 +1363,20 @@ Core.prototype.onLoaded = function (event) {
 };
 
 Core.prototype.continueInit = function () {
-    this.gameScene.make();
+    this.gameScene.make(false);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
     this.renderLoop = new THREEx.RenderingLoop();
     this.renderLoop.add(this.render.bind(this));
-    this.renderLoop.start();
 
-    setTimeout(function () {
-        this.renderLoop.stop();
-    }.bind(this), 1000);
+    this.logicBus.postMessage('start', {});
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
     controlsLoop.start();
+
+    setTimeout(this.startGameRenderMode.bind(this), 1000);
 };
 
 Core.prototype.onEachSecond = function () {
@@ -1770,7 +1413,7 @@ Core.prototype.stopGame = function (info) {
 
 module.exports = Core;
 
-},{"renderer/Camera":23,"renderer/ControlsHandler":24,"renderer/InputListener":26,"renderer/LogicBus":27,"renderer/actorManagement/ActorManager":29,"renderer/modelRepo/CustomModelBuilder":45,"renderer/modelRepo/ModelList":46,"renderer/modelRepo/ModelLoader":47,"renderer/modelRepo/ModelStore":48,"renderer/particleSystem/ParticleManager":51,"renderer/scene/GameScene":53,"renderer/ui/Ui":56}],26:[function(require,module,exports){
+},{"renderer/Camera":17,"renderer/ControlsHandler":18,"renderer/InputListener":20,"renderer/LogicBus":21,"renderer/actorManagement/ActorManager":23,"renderer/modelRepo/CustomModelBuilder":39,"renderer/modelRepo/ModelList":40,"renderer/modelRepo/ModelLoader":41,"renderer/modelRepo/ModelStore":42,"renderer/particleSystem/ParticleManager":45,"renderer/scene/GameScene":47}],20:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1916,7 +1559,7 @@ var InputListener = function InputListener(domElement) {
 
 module.exports = InputListener;
 
-},{}],27:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 function LogicBus(config) {
@@ -1950,7 +1593,7 @@ LogicBus.prototype.postMessage = function (type, message) {
 
 module.exports = LogicBus;
 
-},{}],28:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -2003,7 +1646,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/enemy/MookActor":15,"logic/actor/map/PillarActor":16,"logic/actor/map/WallActor":17,"logic/actor/object/ChunkActor":18,"logic/actor/player/ShipActor":19,"logic/actor/projectile/LaserProjectileActor":20,"logic/actor/projectile/MoltenProjectileActor":21,"logic/actor/projectile/PlasmaProjectileActor":22,"renderer/actor/enemy/MookActor":37,"renderer/actor/map/PillarActor":38,"renderer/actor/map/WallActor":39,"renderer/actor/object/ChunkActor":40,"renderer/actor/player/ShipActor":41,"renderer/actor/projectile/LaserProjectileActor":42,"renderer/actor/projectile/MoltenProjectileActor":43,"renderer/actor/projectile/PlasmaProjectileActor":44}],29:[function(require,module,exports){
+},{"logic/actor/enemy/MookActor":9,"logic/actor/map/PillarActor":10,"logic/actor/map/WallActor":11,"logic/actor/object/ChunkActor":12,"logic/actor/player/ShipActor":13,"logic/actor/projectile/LaserProjectileActor":14,"logic/actor/projectile/MoltenProjectileActor":15,"logic/actor/projectile/PlasmaProjectileActor":16,"renderer/actor/enemy/MookActor":31,"renderer/actor/map/PillarActor":32,"renderer/actor/map/WallActor":33,"renderer/actor/object/ChunkActor":34,"renderer/actor/player/ShipActor":35,"renderer/actor/projectile/LaserProjectileActor":36,"renderer/actor/projectile/MoltenProjectileActor":37,"renderer/actor/projectile/PlasmaProjectileActor":38}],23:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('renderer');
@@ -2102,7 +1745,7 @@ ActorManager.prototype.deleteActor = function (actorId) {
 
 module.exports = ActorManager;
 
-},{"renderer/actorManagement/ActorFactory":28}],30:[function(require,module,exports){
+},{"renderer/actorManagement/ActorFactory":22}],24:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -2190,7 +1833,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],31:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 function BaseMesh(config) {
@@ -2222,7 +1865,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],32:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -2244,7 +1887,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":31,"renderer/modelRepo/ModelStore":48}],33:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":25,"renderer/modelRepo/ModelStore":42}],27:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -2266,7 +1909,7 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":31}],34:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":25}],28:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -2287,7 +1930,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":31,"renderer/modelRepo/ModelStore":48}],35:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":25,"renderer/modelRepo/ModelStore":42}],29:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -2310,7 +1953,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":31,"renderer/modelRepo/ModelStore":48}],36:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":25,"renderer/modelRepo/ModelStore":42}],30:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -2331,7 +1974,7 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":31}],37:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":25}],31:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("renderer/actor/components/mesh/ShipMesh");
@@ -2409,7 +2052,7 @@ MookActor.prototype.onDeath = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":30,"renderer/actor/components/mesh/ShipMesh":35}],38:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/ShipMesh":29}],32:[function(require,module,exports){
 "use strict";
 
 var PillarMesh = require("renderer/actor/components/mesh/PillarMesh");
@@ -2427,7 +2070,7 @@ PillarActor.prototype.createMesh = function () {
 
 module.exports = PillarActor;
 
-},{"renderer/actor/BaseActor":30,"renderer/actor/components/mesh/PillarMesh":33}],39:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/PillarMesh":27}],33:[function(require,module,exports){
 "use strict";
 
 var WallMesh = require("renderer/actor/components/mesh/WallMesh");
@@ -2445,7 +2088,7 @@ WallActor.prototype.createMesh = function () {
 
 module.exports = WallActor;
 
-},{"renderer/actor/BaseActor":30,"renderer/actor/components/mesh/WallMesh":36}],40:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/WallMesh":30}],34:[function(require,module,exports){
 "use strict";
 
 var ChunkMesh = require("renderer/actor/components/mesh/ChunkMesh");
@@ -2527,7 +2170,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":30,"renderer/actor/components/mesh/ChunkMesh":32}],41:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/ChunkMesh":26}],35:[function(require,module,exports){
 "use strict";
 
 var RavierMesh = require("renderer/actor/components/mesh/RavierMesh");
@@ -2821,7 +2464,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":30,"renderer/actor/components/mesh/RavierMesh":34}],42:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24,"renderer/actor/components/mesh/RavierMesh":28}],36:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2963,7 +2606,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":30}],43:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24}],37:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3102,7 +2745,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":30}],44:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24}],38:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3241,7 +2884,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":30}],45:[function(require,module,exports){
+},{"renderer/actor/BaseActor":24}],39:[function(require,module,exports){
 'use strict';
 
 function CustomModelBuilder() {
@@ -3287,7 +2930,7 @@ CustomModelBuilder.prototype.clearBatch = function () {
 
 module.exports = CustomModelBuilder;
 
-},{}],46:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 var ModelList = {
@@ -3296,7 +2939,7 @@ var ModelList = {
 
 module.exports = ModelList;
 
-},{}],47:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 function ModelLoader() {
@@ -3348,7 +2991,7 @@ ModelLoader.prototype.getDefaultTexturePath = function (path) {
 
 module.exports = ModelLoader;
 
-},{}],48:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 var ModelStore = {
@@ -3381,12 +3024,12 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],49:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 "use strict";
 
 var ParticleShaders = require("renderer/particleSystem/ParticleShaders");
 
-function ParticleConfigBuilder() {
+function ParticleConfigBuilder(config) {
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial({
             uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") } },
@@ -3413,23 +3056,27 @@ function ParticleConfigBuilder() {
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1000,
-            positionZ: 9
+            maxParticles: 1500,
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddTrail: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 7000,
-            positionZ: 9
+            maxParticles: 6000,
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 3000,
-            positionZ: 9
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 500,
-            positionZ: 9
+            positionZ: 9,
+            resolutionCoefficient: config.resolutionCoefficient
         }
     };
 }
@@ -3444,7 +3091,7 @@ ParticleConfigBuilder.prototype.getAllConfigs = function () {
 
 module.exports = ParticleConfigBuilder;
 
-},{"renderer/particleSystem/ParticleShaders":52}],50:[function(require,module,exports){
+},{"renderer/particleSystem/ParticleShaders":46}],44:[function(require,module,exports){
 'use strict';
 
 function ParticleGenerator(config) {
@@ -3453,6 +3100,7 @@ function ParticleGenerator(config) {
     config = config || {};
     config.positionZ = config.positionZ || 10;
     config.maxParticles = config.maxParticles || 100;
+    config.resolutionCoefficient = config.resolutionCoefficient || 1;
 
     config.positionHiddenFromView = 100000;
 
@@ -3544,7 +3192,7 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;
-    this.scaleHandle[particleId] = config.scale;
+    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient;
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
     this.speedHandle[particleId * 2] = Math.sin(config.particleAngle) * -1 * config.particleVelocity;
@@ -3554,7 +3202,7 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
 
 module.exports = ParticleGenerator;
 
-},{}],51:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 var ParticleConfigBuilder = require("renderer/particleSystem/ParticleConfigBuilder");
@@ -3566,7 +3214,7 @@ function ParticleManager(config) {
 
     if (!this.scene) throw new Error('No scene specified for ParticleGenerator!');
 
-    this.configBuilder = new ParticleConfigBuilder();
+    this.configBuilder = new ParticleConfigBuilder(config);
     this.configs = this.configBuilder.getAllConfigs();
 
     this.generators = {};
@@ -3600,7 +3248,7 @@ ParticleManager.prototype.createParticle = function (typeName, config) {
 
 module.exports = ParticleManager;
 
-},{"renderer/particleSystem/ParticleConfigBuilder":49,"renderer/particleSystem/ParticleGenerator":50}],52:[function(require,module,exports){
+},{"renderer/particleSystem/ParticleConfigBuilder":43,"renderer/particleSystem/ParticleGenerator":44}],46:[function(require,module,exports){
 "use strict";
 
 var ParticleShaders = {
@@ -3630,7 +3278,7 @@ var ParticleShaders = {
 
 module.exports = ParticleShaders;
 
-},{}],53:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3643,6 +3291,7 @@ var GameScene = function () {
 
         Object.assign(this, config);
         this.lightCounter = 0;
+        this.shadows = config.shadows;
     }
 
     _createClass(GameScene, [{
@@ -3678,6 +3327,7 @@ var GameScene = function () {
     }, {
         key: "make",
         value: function make() {
+
             var combine = new THREE.Geometry();
             var planeTex = new THREE.TextureLoader().load("/models/floor.png");
             planeTex.wrapS = planeTex.wrapT = THREE.RepeatWrapping;
@@ -3699,13 +3349,17 @@ var GameScene = function () {
 
             this.scene.add(combinedObject);
 
-            var directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+            var lcolor = Utils.makeRandomColor();
+
+            console.log('color', lcolor);
+
+            var directionalLight = new THREE.DirectionalLight(lcolor, Utils.rand(0, 8) / 10);
             directionalLight.position.set(2, 2, 10);
             this.scene.add(directionalLight);
 
-            this.pointLight = new THREE.PointLight(0xffffff, 1);
+            this.pointLight = new THREE.PointLight(lcolor, 1);
             this.pointLight.distance = 200;
-            this.pointLight.castShadow = true;
+            this.pointLight.castShadow = this.shadows;
             this.pointLight.shadowCameraNear = 1;
             this.pointLight.shadowCameraFar = 200;
             this.pointLight.shadowMapWidth = 2048;
@@ -3730,7 +3384,7 @@ var GameScene = function () {
 
 module.exports = GameScene;
 
-},{}],54:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -3739,21 +3393,21 @@ var _classnames2 = _interopRequireDefault(_classnames);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Ui = require('renderer/ui/components/Ui');
+var InitialView = require('renderer/ui/components/InitialView');
 
 function ReactUi() {
     Utils.mixin(this, THREE.EventDispatcher);
-    this.Ui = React.createElement(Ui, null);
+    this.InitialView = React.createElement(InitialView, null);
     this.render();
 }
 
 ReactUi.prototype.render = function () {
-    ReactDOM.render(this.Ui, document.getElementById('react-content'));
+    ReactDOM.render(this.InitialView, document.getElementById('react-content'));
 };
 
 ReactUi.prototype.changeMode = function (newMode, context) {
     var additionalConfig = context || null;
-    this.Ui = React.createElement(Ui, { mode: newMode, context: context });
+    this.InitialView = React.createElement(InitialView, { mode: newMode, context: context });
     this.render();
 };
 
@@ -3764,7 +3418,7 @@ module.exports = ReactUi;
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/
 
-},{"classnames":1,"renderer/ui/components/Ui":59}],55:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/components/InitialView":52}],49:[function(require,module,exports){
 'use strict';
 
 var ReactUtils = {
@@ -3786,31 +3440,52 @@ var ReactUtils = {
 
 module.exports = ReactUtils;
 
-},{}],56:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
+(function (global){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
 var PubSub = require('pubsub-js');
+var Core = require('renderer/Core');
 
 function Ui(config) {
     var _this = this;
 
     Object.assign(this, config);
-    if (!this.logicBus) throw new Error('No logicBus object specified for Ui!');
-    if (!this.core) throw new Error('No core object specified for Ui!');
-
     this.reactUi = new ReactUi();
+
+    this.configState = {
+        shadows: false
+    };
+
     var listener = PubSub.subscribe('buttonClick', function (msg, data) {
-        switch (data) {
+        switch (data.buttonEvent) {
             case 'start':
                 _this.onStartButtonClick();
                 break;
             case 'stop':
                 _this.onStop();
                 break;
+            case 'shadowConfig':
+                _this.onShadowConfig(data);
+                break;
+            case 'lowResConfig':
+                _this.onLowResConfig(data);
+                break;
         }
     });
 }
+
+Ui.prototype.startGame = function () {
+    var logicWorker = new Worker('dist/LogicInit.js');
+    var core = new Core({
+        logicWorker: logicWorker,
+        ui: this,
+        shadows: this.configState.shadows,
+        lowRes: this.configState.lowRes
+    });
+    global.gameCore = core;
+};
 
 Ui.prototype.stopGame = function (info) {
     var scoreText = 'KILLED: ' + info.killed + '\nREMAINING: ' + info.remaining + '\n\n' + this.getOpinionOnResult(info.remaining);
@@ -3818,9 +3493,16 @@ Ui.prototype.stopGame = function (info) {
 };
 
 Ui.prototype.onStartButtonClick = function () {
-    this.logicBus.postMessage('start', {});
-    this.core.startGameRenderMode();
+    this.startGame();
     this.reactUi.changeMode('running');
+};
+
+Ui.prototype.onShadowConfig = function (data) {
+    this.configState.shadows = data.state;
+};
+
+Ui.prototype.onLowResConfig = function (data) {
+    this.configState.lowRes = data.state;
 };
 
 Ui.prototype.getOpinionOnResult = function (remainingMooks) {
@@ -3853,7 +3535,8 @@ Ui.prototype.getOpinionOnResult = function (remainingMooks) {
 
 module.exports = Ui;
 
-},{"pubsub-js":3,"renderer/ui/ReactUi":54}],57:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"pubsub-js":3,"renderer/Core":19,"renderer/ui/ReactUi":48}],51:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3894,7 +3577,7 @@ var EndScreen = function (_React$Component) {
                 ),
                 React.createElement(
                     StyledText,
-                    { style: 'scoreText' },
+                    { style: 'smallText' },
                     this.props.scoreText
                 )
             );
@@ -3906,66 +3589,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":1,"renderer/ui/components/base/StyledText":62}],58:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var StyledText = require('renderer/ui/components/base/StyledText');
-var Button = require('renderer/ui/components/base/Button');
-
-var StartScreen = function (_React$Component) {
-    _inherits(StartScreen, _React$Component);
-
-    function StartScreen() {
-        _classCallCheck(this, StartScreen);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StartScreen).apply(this, arguments));
-    }
-
-    _createClass(StartScreen, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical']) },
-                React.createElement(
-                    StyledText,
-                    { style: 'titleText' },
-                    React.createElement(
-                        'span',
-                        null,
-                        'WINGMOD'
-                    ),
-                    React.createElement(
-                        'span',
-                        { style: { color: 'red' } },
-                        '2'
-                    )
-                ),
-                React.createElement(Button, { text: 'START' })
-            );
-        }
-    }]);
-
-    return StartScreen;
-}(React.Component);
-
-module.exports = StartScreen;
-
-},{"classnames":1,"renderer/ui/components/base/Button":60,"renderer/ui/components/base/StyledText":62}],59:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/components/base/StyledText":56}],52:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -3981,8 +3605,8 @@ var Viewport = require('renderer/ui/components/base/Viewport');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
-var Ui = React.createClass({
-    displayName: 'Ui',
+var InitialView = React.createClass({
+    displayName: 'InitialView',
     render: function render() {
         var UIcontent = [];
         switch (this.props.mode || 'startScreen') {
@@ -4019,9 +3643,124 @@ var Ui = React.createClass({
     }
 });
 
-module.exports = Ui;
+module.exports = InitialView;
 
-},{"classnames":1,"renderer/ui/ReactUtils":55,"renderer/ui/components/EndScreen":57,"renderer/ui/components/StartScreen":58,"renderer/ui/components/base/FullScreenEffect":61,"renderer/ui/components/base/Viewport":63}],60:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/ReactUtils":49,"renderer/ui/components/EndScreen":51,"renderer/ui/components/StartScreen":53,"renderer/ui/components/base/FullScreenEffect":55,"renderer/ui/components/base/Viewport":58}],53:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StyledText = require('renderer/ui/components/base/StyledText');
+var Button = require('renderer/ui/components/base/Button');
+var ToggleButton = require('renderer/ui/components/base/ToggleButton');
+var ReactUtils = require('renderer/ui/ReactUtils');
+
+var BOTTOM_TEXT = ReactUtils.multilinize('Wingmod 2 is a little experimental project aimed at learning' + '\nand experimenting with various web technologies.\n' + '\n' + 'Please note that this project depends very heavily on WebGL, so it works best on a PC.\n' + 'No mobile support is planned as keyboard and mouse are essential, but for debug you can try it.\n' + '\n' + 'Some frameworks were surely and painfully harmed in the making of this... thing.\n');
+
+var StartScreen = function (_React$Component) {
+    _inherits(StartScreen, _React$Component);
+
+    function StartScreen() {
+        _classCallCheck(this, StartScreen);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(StartScreen).apply(this, arguments));
+    }
+
+    _createClass(StartScreen, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'div',
+                    {
+                        className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing'])
+                    },
+                    React.createElement(
+                        StyledText,
+                        { style: 'titleText' },
+                        React.createElement(
+                            'span',
+                            null,
+                            'WINGMOD'
+                        ),
+                        React.createElement(
+                            'span',
+                            { style: { color: 'red' } },
+                            '2'
+                        )
+                    ),
+                    React.createElement(Button, { text: 'START GAME', buttonEvent: 'start' }),
+                    React.createElement(SettingsMenu, null)
+                ),
+                React.createElement(
+                    StyledText,
+                    { style: (0, _classnames2.default)('class', ['smallText', 'centerHorizontal', 'bottomVertical']) },
+                    React.createElement(
+                        'span',
+                        { className: 'textDark' },
+                        BOTTOM_TEXT
+                    )
+                )
+            );
+        }
+    }]);
+
+    return StartScreen;
+}(React.Component);
+
+var SettingsMenu = function (_React$Component2) {
+    _inherits(SettingsMenu, _React$Component2);
+
+    function SettingsMenu() {
+        _classCallCheck(this, SettingsMenu);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsMenu).apply(this, arguments));
+    }
+
+    _createClass(SettingsMenu, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                {
+                    className: (0, _classnames2.default)('class', ['centerVertical']),
+                    style: { marginTop: '150px' }
+                },
+                React.createElement(
+                    StyledText,
+                    { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                    React.createElement(
+                        'span',
+                        { className: 'textDark' },
+                        'Performance settings'
+                    )
+                ),
+                React.createElement(ToggleButton, { text: 'SHADOWS', buttonEvent: 'shadowConfig' }),
+                React.createElement(ToggleButton, { text: 'LOW-RES', buttonEvent: 'lowResConfig' })
+            );
+        }
+    }]);
+
+    return SettingsMenu;
+}(React.Component);
+
+module.exports = StartScreen;
+
+},{"classnames":1,"renderer/ui/ReactUtils":49,"renderer/ui/components/base/Button":54,"renderer/ui/components/base/StyledText":56,"renderer/ui/components/base/ToggleButton":57}],54:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4052,12 +3791,13 @@ var Button = function (_React$Component) {
     _createClass(Button, [{
         key: 'render',
         value: function render() {
-            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'Oswald']);
+            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'textLight', 'verticalSpacing', 'Oswald']);
+            var buttonEvent = { buttonEvent: this.props.buttonEvent || 'noAction' };
             return React.createElement(
                 'div',
                 {
                     onClick: function onClick() {
-                        PubSub.publish('buttonClick', 'start');
+                        PubSub.publish('buttonClick', buttonEvent);
                     },
                     className: classes
                 },
@@ -4071,7 +3811,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":1,"pubsub-js":3}],61:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],55:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -4105,7 +3845,7 @@ var FullScreenEffect = React.createClass({
                         console.log('set to true');
                         this.setState({ noEffects: true });
                     }.bind(this), 2000);
-                    blur = 'blurEnd';
+                    blur = 'fadeout';
                     break;
                 case 'on':
                     blur = 'blur';
@@ -4125,7 +3865,7 @@ var FullScreenEffect = React.createClass({
 
 module.exports = FullScreenEffect;
 
-},{"classnames":1}],62:[function(require,module,exports){
+},{"classnames":1}],56:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -4168,7 +3908,54 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":1}],63:[function(require,module,exports){
+},{"classnames":1}],57:[function(require,module,exports){
+'use strict';
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PubSub = require('pubsub-js');
+
+var ToggleButton = React.createClass({
+    displayName: 'ToggleButton',
+    getInitialState: function getInitialState() {
+        return {
+            active: false
+        };
+    },
+    render: function render() {
+        var _this = this;
+
+        var classes = this.state.active ? (0, _classnames2.default)('button', ['button', 'buttonText', 'textLight', 'verticalSpacing', 'Oswald', 'noSelect']) : (0, _classnames2.default)('button', ['button', 'buttonText', 'textDark', 'verticalSpacing', 'Oswald', 'noSelect']);
+
+        var onOffText = this.state.active ? 'ON' : 'OFF';
+
+        var buttonEvent = {
+            buttonEvent: this.props.buttonEvent || 'noAction',
+            state: this.state.active
+        };
+
+        return React.createElement(
+            'div',
+            {
+                onClick: function onClick() {
+                    _this.setState({ active: !_this.state.active });
+                    buttonEvent.state = !buttonEvent.state;
+                    PubSub.publish('buttonClick', buttonEvent);
+                },
+                className: classes
+            },
+            this.props.text + ' ' + onOffText
+        );
+    }
+});
+
+module.exports = ToggleButton;
+
+},{"classnames":1,"pubsub-js":3}],58:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

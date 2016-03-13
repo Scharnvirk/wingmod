@@ -52,6 +52,16 @@
     }
 }
 
+@keyframes fadeout {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+}
+
+
 @keyframes textAppear {
     from {
       color: rgba(255, 255, 255, 0);;
@@ -114,6 +124,13 @@
   animation-fill-mode: forwards;
 }
 
+.fadeout{
+  animation-name: fadeout;
+  animation-duration: 1s;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+}
+
 .blur{
   filter: blur(20px);
   -webkit-filter: blur(20px);
@@ -126,19 +143,26 @@
   width: 200px;
   height: 40px;
   margin: auto;
-  background: rgba(255, 255, 255, .05);
-  animation-name: buttonHoverOut;
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   pointer-events: all;
+  animation-name: buttonHoverOut;
 }
 
 .button:hover{
-  animation-name: buttonHover;
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
   cursor: pointer; cursor: hand;
+  animation-name: buttonHover;
+}
+
+.textDark{
+  color: #666666;
+}
+
+.textLight{
+  color: #ffffff;
 }
 
 .buttonText{
@@ -146,8 +170,7 @@
   vertical-align: middle;
   line-height: 40px;
   font-size: 20px;
-  letter-spacing: 10px;
-  color: white;
+  letter-spacing: 3px;
 }
 
 .Ethnocentric{
@@ -167,9 +190,9 @@
   white-space: nowrap;
 }
 
-.scoreText{
+.smallText{
   text-align: center;
-  letter-spacing: 10px;
+  letter-spacing: 3px;
   font-size: 50;
   color: white;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
@@ -204,4 +227,12 @@
   height: 100%;
   z-index: 9999999;
   pointer-events: none;
+}
+
+.verticalSpacing{
+  margin-bottom: 20px;
+}
+
+.bottomVertical{
+  bottom: 50px;
 }
