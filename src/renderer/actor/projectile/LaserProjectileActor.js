@@ -10,8 +10,8 @@ function LaserProjectileActor(config){
 LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.customUpdate = function(){
-    for(let i = 0; i < 20; i++){
-        let offsetPosition = Utils.angleToVector(this.angle, -i*0.4);
+    for(let i = 0; i < 15; i++){
+        let offsetPosition = Utils.angleToVector(this.angle, -i*0.6);
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -128,8 +128,8 @@ LaserProjectileActor.prototype.onSpawn = function(){
         colorB: this.colorB*0.3+0.7,
         scale: 8,
         alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 2,
+        alphaMultiplier: 0.4,
+        particleVelocity: 1,
         particleAngle: this.angle,
         lifeTime: 3
     });

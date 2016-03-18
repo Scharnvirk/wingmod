@@ -1972,8 +1972,8 @@ function LaserProjectileActor(config) {
 LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.customUpdate = function () {
-    for (var i = 0; i < 20; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.4);
+    for (var i = 0; i < 15; i++) {
+        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.6);
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -2090,8 +2090,8 @@ LaserProjectileActor.prototype.onSpawn = function () {
         colorB: this.colorB * 0.3 + 0.7,
         scale: 8,
         alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 2,
+        alphaMultiplier: 0.4,
+        particleVelocity: 1,
         particleAngle: this.angle,
         lifeTime: 3
     });
@@ -2114,22 +2114,22 @@ function MoltenProjectileActor(config) {
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function () {
-    for (var i = 0; i < 3; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.3);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0] + offsetPosition[0],
-            positionY: this.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 2 - 0.3 * i,
-            alpha: 1 - 0.19 * i,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
+    // for(let i = 0; i < 2; i++){
+    //     var offsetPosition = Utils.angleToVector(this.angle, -i*0.3);
+    this.particleManager.createParticle('particleAddTrail', {
+        positionX: this.position[0],
+        positionY: this.position[1],
+        colorR: 1,
+        colorG: 1,
+        colorB: 1,
+        scale: 1.5,
+        alpha: 1,
+        alphaMultiplier: 0.8,
+        particleVelocity: 1,
+        particleAngle: this.angle,
+        lifeTime: 3
+    });
+    //}
 
     this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
@@ -2137,17 +2137,17 @@ MoltenProjectileActor.prototype.customUpdate = function () {
         colorR: this.colorR,
         colorG: this.colorG,
         colorB: this.colorB,
-        scale: 7,
-        alpha: 0.4,
+        scale: 6,
+        alpha: 0.6,
         alphaMultiplier: 0.6,
         particleVelocity: 1,
         particleAngle: this.angle,
-        lifeTime: 2
+        lifeTime: 1
     });
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 5; i++) {
         this.particleManager.createParticle('smokePuffAlpha', {
             positionX: this.position[0] + Utils.rand(-2, 2),
             positionY: this.position[1] + Utils.rand(-2, 2),
@@ -2282,8 +2282,8 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
     //     positionY: this.position[1] + offsetPosition[1]
     // });
 
-    for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.7);
+    for (var i = 0; i < 3; i++) {
+        var offsetPosition = Utils.angleToVector(this.angle, -i * 1.3);
         // this.particleManager.createParticle('particleAddTrail', {
         //     type: 'lightGreenTrail',
         //     positionX: this.position[0] + offsetPosition[0],
@@ -2295,7 +2295,7 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
             colorR: 1,
             colorG: 1,
             colorB: 1,
-            scale: 3 - 0.4 * i,
+            scale: 2.6 - 0.4 * i,
             alpha: 1 - 0.19 * i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
@@ -2310,7 +2310,7 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
         colorR: this.colorR,
         colorG: this.colorG,
         colorB: this.colorB,
-        scale: 10,
+        scale: 8,
         alpha: 0.5,
         alphaMultiplier: 0.4,
         particleVelocity: 1,

@@ -3,7 +3,7 @@ var ParticleGenerator = require("renderer/particleSystem/ParticleGenerator");
 
 function ParticleManager(config){
     config = config || {};
-    Object.assign(this, config);
+    Object.assign(this, config); 
 
     if(!this.scene) throw new Error('No scene specified for ParticleGenerator!');
 

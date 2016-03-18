@@ -39,8 +39,8 @@ PlasmaProjectileActor.prototype.customUpdate = function(){
     //     positionY: this.position[1] + offsetPosition[1]
     // });
 
-    for(let i = 0; i < 5; i++){
-        var offsetPosition = Utils.angleToVector(this.angle, -i*0.7);
+    for(let i = 0; i < 3; i++){
+        var offsetPosition = Utils.angleToVector(this.angle, -i*1.3);
         // this.particleManager.createParticle('particleAddTrail', {
         //     type: 'lightGreenTrail',
         //     positionX: this.position[0] + offsetPosition[0],
@@ -52,7 +52,7 @@ PlasmaProjectileActor.prototype.customUpdate = function(){
             colorR: 1,
             colorG: 1,
             colorB: 1,
-            scale: 3-0.4*i,
+            scale: 2.6-0.4*i,
             alpha: 1-0.19*i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
@@ -67,7 +67,7 @@ PlasmaProjectileActor.prototype.customUpdate = function(){
         colorR: this.colorR,
         colorG: this.colorG,
         colorB: this.colorB,
-        scale: 10,
+        scale: 8,
         alpha: 0.5,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
