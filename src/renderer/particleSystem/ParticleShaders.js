@@ -12,7 +12,6 @@ var ParticleShaders = {
         varying vec3 vColor; \
         \
         uniform float time; \
-        uniform float types[512]; \
         \
         attribute float type;\
         \
