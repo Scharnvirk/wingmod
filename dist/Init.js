@@ -335,6 +335,8 @@ var Constants = {
 
     LOGIC_REFRESH_RATE: 60,
 
+    MAX_SHADER_UNIFORM_SIZE: 512,
+
     COLLISION_GROUPS: {
         SHIP: Math.pow(2, 0),
         ENEMY: Math.pow(2, 1),
@@ -2614,7 +2616,7 @@ LaserProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2642,7 +2644,7 @@ LaserProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR,
@@ -2658,7 +2660,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2753,7 +2755,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2781,7 +2783,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2797,7 +2799,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2843,8 +2845,42 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
+
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0],
+    //     positionY: this.position[1]
+    // });
+
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'greenFlashBig',
+    //     positionX: this.position[0],
+    //     positionY: this.position[1]
+    // });
+
+    //var offsetPosition = Utils.angleToVector(this.angle, 1);
+    //
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0] + offsetPosition[0],
+    //     positionY: this.position[1] + offsetPosition[1]
+    // });
+    //
+    // offsetPosition = Utils.angleToVector(this.angle, 2);
+    //
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0] + offsetPosition[0],
+    //     positionY: this.position[1] + offsetPosition[1]
+    // });
+
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(this.angle, -i * 0.7);
+        // this.particleManager.createParticle('particleAddTrail', {
+        //     type: 'lightGreenTrail',
+        //     positionX: this.position[0] + offsetPosition[0],
+        //     positionY: this.position[1] + offsetPosition[1]
+        // });
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -2892,7 +2928,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2906,7 +2942,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         lifeTime: 10
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2920,7 +2956,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2936,7 +2972,8 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -3113,16 +3150,56 @@ module.exports = ModelStore;
 var ParticleShaders = require("renderer/particleSystem/ParticleShaders");
 
 function ParticleConfigBuilder(config) {
+
+    this.particleFamilyTypeConfigs = {
+        particleAdd: {
+            lightGreenTrail: {
+                colorR: 0.7,
+                colorG: 1,
+                colorB: 0.9,
+                scale: 2,
+                alpha: 1,
+                alphaMultiplier: 0.4,
+                lifetime: 5
+            },
+            whiteFlashSmall: {
+                colorR: 1,
+                colorG: 1,
+                colorB: 1,
+                scale: 3,
+                alpha: 1,
+                alphaMultiplier: 0.4,
+                lifetime: 2
+            },
+            greenFlashBig: {
+                colorR: 0.3,
+                colorG: 1,
+                colorB: 0.5,
+                scale: 10,
+                alpha: 0.3,
+                alphaMultiplier: 0.91,
+                lifetime: 2
+            }
+        }
+    };
+
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") } },
+            uniforms: {
+                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") },
+                time: { type: "f", value: 1.0 }
+            },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             transparent: true,
             depthWrite: false
         }),
         particleAdd: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
+            uniforms: {
+                map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") },
+                time: { type: "f", value: 1.0 }
+            },
+            // types: { type: 'fv1', value: this.buildTypeParameters('particleAdd')},
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
@@ -3130,7 +3207,10 @@ function ParticleConfigBuilder(config) {
             depthWrite: false
         }),
         mainExplosionAdd: new THREE.ShaderMaterial({
-            uniforms: { map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") } },
+            uniforms: {
+                map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") },
+                time: { type: "f", value: 1.0 }
+            },
             vertexShader: ParticleShaders.vertexShader,
             fragmentShader: ParticleShaders.fragmentShader,
             blending: THREE.AdditiveBlending,
@@ -3150,23 +3230,23 @@ function ParticleConfigBuilder(config) {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 6000,
             positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient
+            resolutionCoefficient: config.resolutionCoefficient,
+            types: this.buildTypeList('particleAdd')
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 3000 * config.particleLimitMultiplier,
             positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient
+            resolutionCoefficient: config.resolutionCoefficient,
+            types: this.buildTypeList('particleAdd')
         },
         mainExplosionAdd: {
-            material: this.particleMaterialConfig.particleAdd,
+            material: this.particleMaterialConfig.mainExplosionAdd,
             maxParticles: 500 * config.particleLimitMultiplier,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         }
     };
-
-    console.log(this.particleGeneratorConfig);
 }
 
 ParticleConfigBuilder.prototype.getConfig = function (configName) {
@@ -3175,6 +3255,39 @@ ParticleConfigBuilder.prototype.getConfig = function (configName) {
 
 ParticleConfigBuilder.prototype.getAllConfigs = function () {
     return this.particleGeneratorConfig;
+};
+
+ParticleConfigBuilder.prototype.buildTypeParameters = function (particleFamilyName) {
+    var particleFamilyConfig = this.particleFamilyTypeConfigs[particleFamilyName];
+    var i = 0;
+    var configArray = [];
+
+    for (var typeConfig in particleFamilyConfig) {
+        for (var particleProperty in particleFamilyConfig[typeConfig]) {
+            configArray[i] = particleFamilyConfig[typeConfig][particleProperty];
+            i++;
+        }
+    }
+
+    if (configArray.length > Constants.MAX_SHADER_UNIFORM_SIZE) {
+        throw 'ERROR: Exceeded max shader uniform size! Got ' + configArray.length + ' and max allowed is ' + Constants.MAX_SHADER_UNIFORM_SIZE;
+    }
+
+    console.log(configArray);
+
+    return configArray;
+};
+
+ParticleConfigBuilder.prototype.buildTypeList = function (particleFamilyName) {
+    var particleFamilyConfig = this.particleFamilyTypeConfigs[particleFamilyName];
+    var i = 0;
+    var configList = {};
+
+    for (var typeConfig in particleFamilyConfig) {
+        configList[typeConfig] = i;
+        i++;
+    }
+    return configList;
 };
 
 module.exports = ParticleConfigBuilder;
@@ -3198,7 +3311,9 @@ function ParticleGenerator(config) {
 
     this.usedPoints = new Float32Array(this.maxParticles);
     this.nextPointer = 0;
+
     this.geometry = this.createGeometry();
+    this.tick = 0;
 }
 
 ParticleGenerator.extend(THREE.Points);
@@ -3207,18 +3322,18 @@ ParticleGenerator.prototype.createGeometry = function () {
     var geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array(this.maxParticles * 3);
+    var types = new Float32Array(this.maxParticles * 1);
     var colors = new Float32Array(this.maxParticles * 3);
     var speeds = new Float32Array(this.maxParticles * 2);
     var alphas = new Float32Array(this.maxParticles * 2);
     var scales = new Float32Array(this.maxParticles * 1);
-    var lifeTime = new Float32Array(this.maxParticles * 1);
+    var startTimes = new Float32Array(this.maxParticles * 1);
+    var lifeTimes = new Float32Array(this.maxParticles * 1);
 
     for (var i = 0; i < this.maxParticles; i++) {
         vertices[i * 3 + 0] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
         vertices[i * 3 + 1] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
         vertices[i * 3 + 2] = this.positionZ;
-
-        lifeTime[i] = -1;
     }
 
     geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
@@ -3226,13 +3341,16 @@ ParticleGenerator.prototype.createGeometry = function () {
     geometry.addAttribute('speed', new THREE.BufferAttribute(speeds, 2));
     geometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 2));
     geometry.addAttribute('scale', new THREE.BufferAttribute(scales, 1));
-    geometry.lifeTime = lifeTime;
+    geometry.addAttribute('startTime', new THREE.BufferAttribute(startTimes, 1));
+    geometry.addAttribute('lifeTime', new THREE.BufferAttribute(lifeTimes, 1));
 
     this.positionHandle = geometry.attributes.position.array;
     this.alphaHandle = geometry.attributes.alpha.array;
     this.colorHandle = geometry.attributes.color.array;
     this.scaleHandle = geometry.attributes.scale.array;
     this.speedHandle = geometry.attributes.speed.array;
+    this.startTimeHandle = geometry.attributes.startTime.array;
+    this.lifeTimeHandle = geometry.attributes.lifeTime.array;
 
     return geometry;
 };
@@ -3253,28 +3371,22 @@ ParticleGenerator.prototype.deactivate = function (particleId) {
 };
 
 ParticleGenerator.prototype.update = function () {
-    for (var i = 0; i < this.maxParticles; i++) {
-        this.updateParticle(i);
-    }
-    this.geometry.attributes.alpha.needsUpdate = true;
+    this.tick += 1;
+
+    this.material.uniforms.time.value = this.tick;
+
     this.geometry.attributes.position.needsUpdate = true;
+    this.geometry.attributes.speed.needsUpdate = true;
+
+    this.geometry.attributes.alpha.needsUpdate = true;
     this.geometry.attributes.color.needsUpdate = true;
     this.geometry.attributes.scale.needsUpdate = true;
-};
-
-ParticleGenerator.prototype.updateParticle = function (particleId) {
-    var lifeTime = this.geometry.lifeTime;
-    if (lifeTime[particleId] === 0) {
-        this.deactivate(particleId);
-    } else {
-        lifeTime[particleId] -= 1;
-        this.alphaHandle[particleId * 2] *= this.alphaHandle[particleId * 2 + 1];
-        this.positionHandle[particleId * 3] += this.speedHandle[particleId * 2];
-        this.positionHandle[particleId * 3 + 1] += this.speedHandle[particleId * 2 + 1];
-    }
+    this.geometry.attributes.startTime.needsUpdate = true;
+    this.geometry.attributes.lifeTime.needsUpdate = true;
 };
 
 ParticleGenerator.prototype.initParticle = function (particleId, config) {
+    var offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
     this.positionHandle[particleId * 3] = config.positionX;
     this.positionHandle[particleId * 3 + 1] = config.positionY;
     this.colorHandle[particleId * 3] = config.colorR;
@@ -3283,9 +3395,10 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
     this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient;
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
-    this.speedHandle[particleId * 2] = Math.sin(config.particleAngle) * -1 * config.particleVelocity;
-    this.speedHandle[particleId * 2 + 1] = Math.cos(config.particleAngle) * config.particleVelocity;
-    this.geometry.lifeTime[particleId] = config.lifeTime;
+    this.speedHandle[particleId * 2] = offsetPosition[0];
+    this.speedHandle[particleId * 2 + 1] = offsetPosition[1];
+    this.startTimeHandle[particleId] = this.tick;
+    this.lifeTimeHandle[particleId] = config.lifeTime;
 };
 
 module.exports = ParticleGenerator;
@@ -3341,16 +3454,34 @@ module.exports = ParticleManager;
 
 var ParticleShaders = {
     vertexShader: " \
-        attribute float alpha; \
+        attribute float scale; \
+        attribute vec2 alpha; \
+        attribute vec2 speed; \
+        attribute float alphaMultiplier; \
+        attribute float startTime; \
+        attribute float lifeTime; \
         attribute vec3 color; \
+        \
         varying float vAlpha; \
         varying vec3 vColor; \
-        attribute float scale; \
+        \
+        uniform float time; \
+        uniform float types[512]; \
+        \
+        attribute float type;\
+        \
         void main() { \
-            vAlpha = alpha; \
-            vColor = color; \
-            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); \
-            gl_PointSize =  scale * (1000.0 / - mvPosition.z) ; \
+            vec4 mvPosition; \
+            vec3 vPosition; \
+            if ((time - startTime) <= lifeTime){ \
+                vAlpha = alpha.x * pow(alpha.y, (time - startTime)); \
+                vColor = color; \
+                vPosition = position; \
+                vPosition.x += speed.x * (time - startTime); \
+                vPosition.y += speed.y * (time - startTime); \
+                mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
+                gl_PointSize = scale * (1000.0 / - mvPosition.z) ;  \
+            } \
             gl_Position = projectionMatrix * mvPosition; \
         }",
 

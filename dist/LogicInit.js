@@ -6,6 +6,8 @@ var Constants = {
 
     LOGIC_REFRESH_RATE: 60,
 
+    MAX_SHADER_UNIFORM_SIZE: 512,
+
     COLLISION_GROUPS: {
         SHIP: Math.pow(2, 0),
         ENEMY: Math.pow(2, 1),
@@ -2022,7 +2024,7 @@ LaserProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2050,7 +2052,7 @@ LaserProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR,
@@ -2066,7 +2068,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2161,7 +2163,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2189,7 +2191,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2205,7 +2207,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2251,8 +2253,42 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
+
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0],
+    //     positionY: this.position[1]
+    // });
+
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'greenFlashBig',
+    //     positionX: this.position[0],
+    //     positionY: this.position[1]
+    // });
+
+    //var offsetPosition = Utils.angleToVector(this.angle, 1);
+    //
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0] + offsetPosition[0],
+    //     positionY: this.position[1] + offsetPosition[1]
+    // });
+    //
+    // offsetPosition = Utils.angleToVector(this.angle, 2);
+    //
+    // this.particleManager.createParticle('particleAddTrail', {
+    //     type: 'lightGreenTrail',
+    //     positionX: this.position[0] + offsetPosition[0],
+    //     positionY: this.position[1] + offsetPosition[1]
+    // });
+
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(this.angle, -i * 0.7);
+        // this.particleManager.createParticle('particleAddTrail', {
+        //     type: 'lightGreenTrail',
+        //     positionX: this.position[0] + offsetPosition[0],
+        //     positionY: this.position[1] + offsetPosition[1]
+        // });
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -2300,7 +2336,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2314,7 +2350,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         lifeTime: 10
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -2328,7 +2364,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -2344,7 +2380,8 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,

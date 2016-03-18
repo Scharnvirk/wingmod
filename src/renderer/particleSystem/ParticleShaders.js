@@ -1,15 +1,33 @@
 var ParticleShaders = {
     vertexShader: " \
-        attribute float alpha; \
+        attribute float scale; \
+        attribute vec2 alpha; \
+        attribute vec2 speed; \
+        attribute float alphaMultiplier; \
+        attribute float startTime; \
+        attribute float lifeTime; \
         attribute vec3 color; \
+        \
         varying float vAlpha; \
         varying vec3 vColor; \
-        attribute float scale; \
+        \
+        uniform float time; \
+        uniform float types[512]; \
+        \
+        attribute float type;\
+        \
         void main() { \
-            vAlpha = alpha; \
-            vColor = color; \
-            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); \
-            gl_PointSize =  scale * (1000.0 / - mvPosition.z) ; \
+            vec4 mvPosition; \
+            vec3 vPosition; \
+            if ((time - startTime) <= lifeTime){ \
+                vAlpha = alpha.x * pow(alpha.y, (time - startTime)); \
+                vColor = color; \
+                vPosition = position; \
+                vPosition.x += speed.x * (time - startTime); \
+                vPosition.y += speed.y * (time - startTime); \
+                mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
+                gl_PointSize = scale * (1000.0 / - mvPosition.z) ;  \
+            } \
             gl_Position = projectionMatrix * mvPosition; \
         }",
 

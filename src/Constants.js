@@ -3,6 +3,8 @@ var Constants = {
 
     LOGIC_REFRESH_RATE: 60,
 
+    MAX_SHADER_UNIFORM_SIZE: 512,
+
     COLLISION_GROUPS: {
             SHIP: Math.pow(2,0),
             ENEMY: Math.pow(2,1),

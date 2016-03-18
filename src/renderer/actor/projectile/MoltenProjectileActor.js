@@ -59,7 +59,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
         });
     }
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -87,7 +87,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
         lifeTime: 15
     });
 
-    this.particleManager.createParticle('particleAddSplash', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -104,7 +104,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
 
 
 MoltenProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
