@@ -756,6 +756,7 @@ function MookActor(config) {
 
     this.weaponTimer = 0;
     this.shotsFired = 0;
+    this.activationTime = Utils.rand(200, 600);
 }
 
 MookActor.extend(BaseActor);
@@ -842,7 +843,7 @@ MookActor.prototype.actorLogic = function () {
             this.horizontalThrust = horizontalThrustRand - 1;
         }
 
-        if (this.timer > 300) {
+        if (this.timer > this.activationTime) {
             this.requestShoot = true;
         }
     } else {
