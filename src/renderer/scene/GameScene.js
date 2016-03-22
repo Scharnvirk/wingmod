@@ -60,7 +60,7 @@ class GameScene {
         var lcolor = Utils.makeRandomColor();
         //var lcolor = 0xffffff;
 
-        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(0, 8)/10 );
+        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(5, 8)/10 );
         directionalLight.position.set( 2, 2, 10 );
         this.scene.add( directionalLight );
 

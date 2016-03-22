@@ -9,6 +9,16 @@ function GameScene(config){
 }
 
 GameScene.prototype.fillScene = function(){
+
+    var playerActor = this.actorManager.addNew({
+        classId: ActorFactory.SHIP,
+        positionX: 0,
+        positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.setPlayerActor(playerActor);
+
     for (let i = 0; i < 100; i++){
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
@@ -55,14 +65,7 @@ GameScene.prototype.fillScene = function(){
         angle: Math.PI/2
     });
 
-    var playerActor = this.actorManager.addNew({
-        classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
-        angle: 0
-    });
 
-    this.actorManager.setPlayerActor(playerActor);
 
     this.core.doTick();
 

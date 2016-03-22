@@ -19,7 +19,6 @@ function ShipActor(config){
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 
-    this.daze = 0;
     this.primaryWeaponTimer = 0;
     this.secondaryWeaponTimer = 0;
 
@@ -52,6 +51,20 @@ ShipActor.prototype.createBody = function(){
 ShipActor.prototype.customUpdate = function(){
     this.processMovement();
     this.processWeapon();
+    //
+    // if(this.manager.aiImage){
+    //     console.log(this.manager.aiImage);
+    // }
+
+//
+// //todo - zrobic cala ta translacje pozycji znowu tutaj...
+//     if(this.manager.imageData){
+//         let imgData = this.manager.imageData.data;
+//         let index = this.body.position[1] * imgData.width + this.body.position[0];
+//         let i = index*4, d = imgData.data;
+//         //console.log(i,d[i],d[i+1],d[i+2],d[i+3]);
+//     }
+
 };
 
 ShipActor.prototype.processMovement = function(){

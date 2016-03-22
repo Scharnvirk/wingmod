@@ -59,14 +59,12 @@ ParticleGenerator.prototype.createGeometry = function(){
     return geometry;
 };
 
-ParticleGenerator.prototype.create = function(config){
-    var particleId = this.nextPointer;
+ParticleGenerator.prototype.create = function(config){    
+    this.initParticle(this.nextPointer, config);
     this.nextPointer ++;
     if (this.nextPointer > this.maxParticles){
         this.nextPointer = 0;
     }
-
-    this.initParticle(particleId, config);
 };
 
 ParticleGenerator.prototype.deactivate = function(particleId){

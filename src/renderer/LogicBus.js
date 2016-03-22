@@ -19,12 +19,21 @@ LogicBus.prototype.handleMessage = function(message){
         case 'gameEnded':
             this.core.stopGame(message.data);
             break;
+        case 'getAiImage':
+            let imageObject = this.core.getAiImageObject(message.data);
+            this.postMessage('aiImageDone', imageObject);
+            break;
     }
 };
 
 LogicBus.prototype.postMessage = function(type, message){
     message.type = type;
     this.logicWorker.postMessage(message);
+};
+
+LogicBus.prototype.postMessageTransferrable = function(type, message, buffer){
+    message.type = type;
+    this.logicWorker.postMessage(message, [buffer]);
 };
 
 module.exports = LogicBus;

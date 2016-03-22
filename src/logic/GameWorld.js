@@ -47,6 +47,34 @@ GameWorld.prototype.makeUpdateData = function(){
     };
 };
 
+GameWorld.prototype.getWallActors = function(){
+    let wallActors = [];
+    for(let i = 0; i < this.bodies.length; i ++){
+        let body = this.bodies[i];
+        if(body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
+            switch(body.shape.constructor.name){
+                case 'Box':
+                    wallActors.push({
+                        class: body.shape.constructor.name,
+                        angle: body.angle,
+                        height: body.shape.height,
+                        width: body.shape.width,
+                        position: body.position
+                    });
+                    break;
+                case 'Convex':
+                    wallActors.push({
+                        class: body.shape.constructor.name,
+                        vertices: body.shape.vertices,
+                        position: body.position
+                    });
+                    break;
+            }
+        }
+    }
+    return wallActors;
+};
+
 GameWorld.prototype.onCollision = function(collisionEvent){
     collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);

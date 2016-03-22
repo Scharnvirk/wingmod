@@ -37,6 +37,7 @@ var Utils = {
         for(var prop in donor.prototype){
             receiver[prop] = donor.prototype[prop];
         }
+        return receiver;
     },
 
     uptrunc: function(x){
@@ -72,8 +73,24 @@ var Utils = {
 
     firstToUpper: function(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+    },
 
+    rotateOffsetPoint: function(centerX, centerY, pointX, pointY, radAngle){
+        let newX = centerX + ( Math.cos(radAngle) * (pointX-centerX) + Math.sin(radAngle) * (pointY -centerY));
+        let newY = centerY + ( -Math.sin(radAngle) * (pointX-centerX) + Math.cos(radAngle) * (pointY -centerY));
+        return [newX, newY];
+    },
+
+    distanceBetweenPoints: function(p1x, p2x, p1y, p2y){
+        return Math.sqrt( (p1x-p2x)*(p1x-p2x) + (p1y-p2y)*(p1y-p2y) );
+    },
+
+    pointDifference: function(p1x, p2x, p1y, p2y){
+        return [
+            p1x >= 0 && p2x >= 0 || p1x < 0 && p2x < 0 ? p1x - p2x : p1x + p2x * -1,
+            p1y >= 0 && p2y >= 0 || p1y < 0 && p2y < 0 ? p1y - p2y : p1y + p2y * -1
+        ];
+    }
 };
 
 if(!Function.prototype.extend){

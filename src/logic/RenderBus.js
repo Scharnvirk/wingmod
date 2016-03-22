@@ -17,14 +17,14 @@ RenderBus.prototype.handleMessage = function(message){
         case 'inputState':
             this.inputState = message.data;
             break;
-        case "debug":
-            console.log(event.data.message);
-            break;
         case "pause":
             this.core.pause();
             break;
         case "start":
             this.core.start();
+            break;
+        case "aiImageDone":
+            this.core.saveAiImage(message.data);
             break;
     }
 };

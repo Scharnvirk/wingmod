@@ -2,12 +2,16 @@ var RenderBus = require("logic/RenderBus");
 var GameWorld = require("logic/GameWorld");
 var ActorManager = require("logic/actorManagement/ActorManager");
 var GameScene = require("logic/GameScene");
+var AiImageRequester = require("logic/ai/AiImageRequester");
 
 function Core(worker){
     this.makeMainComponents(worker);
+
     this.startGameLoop();
     this.scene.fillScene();
     this.initFpsCounter();
+
+    this.aiImageRequester.requestImage();
 
     this.running = false;
 }
@@ -17,6 +21,7 @@ Core.prototype.makeMainComponents = function(worker){
     this.world = new GameWorld();
     this.actorManager = new ActorManager({world: this.world, core: this});
     this.scene = new GameScene({world: this.world, actorManager: this.actorManager, core: this});
+    this.aiImageRequester = new AiImageRequester({world: this.world, renderBus: this.renderBus});
 };
 
 Core.prototype.initFpsCounter = function(){
@@ -59,6 +64,10 @@ Core.prototype.pause = function(){
 
 Core.prototype.endGame = function(info){
     this.renderBus.postMessage('gameEnded', info);
+};
+
+Core.prototype.saveAiImage = function(imageData){
+    this.actorManager.aiImage = imageData;
 };
 
 module.exports = Core;

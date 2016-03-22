@@ -13,7 +13,7 @@ function ActorManager(config){
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 
-    //setInterval(this.checkEndGameCondition.bind(this), 3000);
+    setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function(config){
@@ -21,9 +21,14 @@ ActorManager.prototype.addNew = function(config){
         console.warn('Actor manager storage is full! Cannot create new Actor!');
         return;
     }
-    var actor = this.factory.create(config);
-    actor.manager = this;
-    actor.world = this.world;
+
+    var actor = this.factory.create(
+        Object.assign(config, {
+            manager: this,
+            world: this.world
+        })
+    );
+
     actor.body.actorId = this.currentId;
     actor.body.classId = config.classId;
     this.storage[this.currentId] = actor;
@@ -45,6 +50,7 @@ ActorManager.prototype.update = function(inputState){
     }
 };
 
+//todo: notify brains of this and also aiImage
 ActorManager.prototype.setPlayerActor = function(actor){
     this.playerActors.push(actor.body.actorId);
     this.core.renderBus.postMessage('attachPlayer', {actorId: actor.body.actorId});
@@ -75,6 +81,10 @@ ActorManager.prototype.checkEndGameCondition = function(){
     if (mookCount === 0 ){
         this.endGame();
     }
+};
+
+ActorManager.prototype.getFirstPlayerActor = function(){
+    return this.storage[this.playerActors[0]];
 };
 
 module.exports = ActorManager;

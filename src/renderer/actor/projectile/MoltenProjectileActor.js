@@ -10,8 +10,8 @@ function MoltenProjectileActor(config){
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function(){
-    // for(let i = 0; i < 2; i++){
-    //     var offsetPosition = Utils.angleToVector(this.angle, -i*0.3);
+    for(let i = 0; i < 3; i++){
+        var offsetPosition = Utils.angleToVector(this.angle, -i*0.5);
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -23,9 +23,9 @@ MoltenProjectileActor.prototype.customUpdate = function(){
             alphaMultiplier: 0.8,
             particleVelocity: 1,
             particleAngle: this.angle,
-            lifeTime: 3
+            lifeTime: 1
         });
-    //}
+    }
 
     this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],

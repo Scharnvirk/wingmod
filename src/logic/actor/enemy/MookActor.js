@@ -1,16 +1,28 @@
 var BaseBody = require("logic/actor/components/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var MookBrain = require("logic/actor/components/ai/MookBrain");
 
 function MookActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
+    this.brain = new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor()
+    });
+
     this.acceleration = 100;
-    this.turnSpeed = 0.8;
+    this.backwardAccelerationRatio = 1;
+    this.horizontalAccelerationRatio = 1;
+    this.turnSpeed = 2.5;
+
+    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.thrust = 0;
+    this.horizontalThrust = 0;
     this.rotationForce = 0;
 
     this.hp = 4;
@@ -55,7 +67,9 @@ MookActor.prototype.customUpdate = function(){
         this.body.angularVelocity = 0;
     }
 
+    this.brain.update();
     this.processWeapon();
+    this.processMovement();
 };
 
 MookActor.prototype.processWeapon = function(){
@@ -67,37 +81,94 @@ MookActor.prototype.processWeapon = function(){
         this.shotsFired ++;
     }
     if(this.shotsFired >= 3){
-        this.requestShoot = false;
+        this.shotsFired = 0;
+        this.weaponTimer += 120;
+    }
+};
+
+MookActor.prototype.processMovement = function(){
+    if(this.rotationForce !== 0){
+        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+    } else {
+        this.body.angularVelocity = 0;
+    }
+
+    if(this.thrust !== 0){
+        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+    }
+
+    if(this.horizontalThrust !== 0){
+        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
 };
 
 MookActor.prototype.actorLogic = function(){
-    if(Utils.rand(0,100) === 100) this.rotationForce = Utils.rand(-2,2);
-    if(Utils.rand(0,100) > 97){
-        var thrustRand = Utils.rand(0,100);
-        if (thrustRand > 20){
-            this.thrust = 1;
-        } else if (thrustRand <= 2) {
+    this.rotationForce = 0;
+
+    if(this.brain.orders.lookAtPlayer){
+        this.lookAtPlayer();
+
+        if (this.brain.orders.backward) {
             this.thrust = -1;
+        } else if (this.brain.orders.forward) {
+            this.thrust = 1;
         } else {
             this.thrust = 0;
         }
+
+        if(Utils.rand(0,100) > 99){
+            var horizontalThrustRand = Utils.rand(0,2);
+            this.horizontalThrust = horizontalThrustRand - 1;
+        }
+
+        if(this.timer > 300){
+            this.requestShoot = true;
+        }
+
+    } else {
+        if(Utils.rand(0,100) === 100) this.rotationForce = Utils.rand(-2,2);
+        if(Utils.rand(0,100) > 95){
+            var thrustRand = Utils.rand(0,100);
+            if (thrustRand > 60){
+                this.thrust = 1;
+            } else if (thrustRand <= 2) {
+                this.thrust = -1;
+            } else {
+                this.thrust = 0;
+            }
+        }
+        this.horizontalThrust = 0;
+
+        this.requestShoot = false;
     }
-    var weaponRand = Utils.rand(0,200);
-    if (weaponRand === 199){
-        this.shotsFired = 0;
-        this.requestShoot = true;
+
+
+};
+
+MookActor.prototype.lookAtPlayer = function(){
+    var playerPosition = this.brain.getPlayerPosition();
+    if (playerPosition){
+        var angleVector = Utils.angleToVector(this.body.angle, 1);
+        var angle = Utils.vectorAngleToPoint(angleVector[0], playerPosition[0] - this.body.position[0], angleVector[1], playerPosition[1] - this.body.position[1]);
+
+        if (angle < 180 && angle > 0) {
+            this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
+        }
     }
 };
 
 MookActor.prototype.shoot = function(){
-    this.weaponTimer += 3;
+    this.weaponTimer += 10;
     this.manager.addNew({
         classId: ActorFactory.MOLTENPROJECTILE,
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
-        velocity: 100
+        velocity: 150
     });
     this.body.applyForceLocal([0,-3000]);
 };

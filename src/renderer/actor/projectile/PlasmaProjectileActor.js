@@ -10,42 +10,8 @@ function PlasmaProjectileActor(config){
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function(){
-
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0],
-    //     positionY: this.position[1]
-    // });
-
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'greenFlashBig',
-    //     positionX: this.position[0],
-    //     positionY: this.position[1]
-    // });
-
-    //var offsetPosition = Utils.angleToVector(this.angle, 1);
-    //
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0] + offsetPosition[0],
-    //     positionY: this.position[1] + offsetPosition[1]
-    // });
-    //
-    // offsetPosition = Utils.angleToVector(this.angle, 2);
-    //
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0] + offsetPosition[0],
-    //     positionY: this.position[1] + offsetPosition[1]
-    // });
-
-    for(let i = 0; i < 3; i++){
-        var offsetPosition = Utils.angleToVector(this.angle, -i*1.3);
-        // this.particleManager.createParticle('particleAddTrail', {
-        //     type: 'lightGreenTrail',
-        //     positionX: this.position[0] + offsetPosition[0],
-        //     positionY: this.position[1] + offsetPosition[1]
-        // });
+    for(let i = 0; i < 5; i++){
+        var offsetPosition = Utils.angleToVector(this.angle, -i*0.7);
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],

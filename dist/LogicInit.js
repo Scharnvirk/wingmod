@@ -81,6 +81,7 @@ var Utils = {
         for (var prop in donor.prototype) {
             receiver[prop] = donor.prototype[prop];
         }
+        return receiver;
     },
 
     uptrunc: function uptrunc(x) {
@@ -116,8 +117,21 @@ var Utils = {
 
     firstToUpper: function firstToUpper(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+    },
 
+    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radAngle) {
+        var newX = centerX + (Math.cos(radAngle) * (pointX - centerX) + Math.sin(radAngle) * (pointY - centerY));
+        var newY = centerY + (-Math.sin(radAngle) * (pointX - centerX) + Math.cos(radAngle) * (pointY - centerY));
+        return [newX, newY];
+    },
+
+    distanceBetweenPoints: function distanceBetweenPoints(p1x, p2x, p1y, p2y) {
+        return Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
+    },
+
+    pointDifference: function pointDifference(p1x, p2x, p1y, p2y) {
+        return [p1x >= 0 && p2x >= 0 || p1x < 0 && p2x < 0 ? p1x - p2x : p1x + p2x * -1, p1y >= 0 && p2y >= 0 || p1y < 0 && p2y < 0 ? p1y - p2y : p1y + p2y * -1];
+    }
 };
 
 if (!Function.prototype.extend) {
@@ -136,12 +150,16 @@ var RenderBus = require("logic/RenderBus");
 var GameWorld = require("logic/GameWorld");
 var ActorManager = require("logic/actorManagement/ActorManager");
 var GameScene = require("logic/GameScene");
+var AiImageRequester = require("logic/ai/AiImageRequester");
 
 function Core(worker) {
     this.makeMainComponents(worker);
+
     this.startGameLoop();
     this.scene.fillScene();
     this.initFpsCounter();
+
+    this.aiImageRequester.requestImage();
 
     this.running = false;
 }
@@ -151,6 +169,7 @@ Core.prototype.makeMainComponents = function (worker) {
     this.world = new GameWorld();
     this.actorManager = new ActorManager({ world: this.world, core: this });
     this.scene = new GameScene({ world: this.world, actorManager: this.actorManager, core: this });
+    this.aiImageRequester = new AiImageRequester({ world: this.world, renderBus: this.renderBus });
 };
 
 Core.prototype.initFpsCounter = function () {
@@ -197,9 +216,13 @@ Core.prototype.endGame = function (info) {
     this.renderBus.postMessage('gameEnded', info);
 };
 
+Core.prototype.saveAiImage = function (imageData) {
+    this.actorManager.aiImage = imageData;
+};
+
 module.exports = Core;
 
-},{"logic/GameScene":5,"logic/GameWorld":6,"logic/RenderBus":7,"logic/actorManagement/ActorManager":8}],5:[function(require,module,exports){
+},{"logic/GameScene":5,"logic/GameWorld":6,"logic/RenderBus":7,"logic/actorManagement/ActorManager":8,"logic/ai/AiImageRequester":21}],5:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
@@ -213,6 +236,16 @@ function GameScene(config) {
 }
 
 GameScene.prototype.fillScene = function () {
+
+    var playerActor = this.actorManager.addNew({
+        classId: ActorFactory.SHIP,
+        positionX: 0,
+        positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.setPlayerActor(playerActor);
+
     for (var i = 0; i < 100; i++) {
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
@@ -259,15 +292,6 @@ GameScene.prototype.fillScene = function () {
         angle: Math.PI / 2
     });
 
-    var playerActor = this.actorManager.addNew({
-        classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
-        angle: 0
-    });
-
-    this.actorManager.setPlayerActor(playerActor);
-
     this.core.doTick();
 
     console.log("scene complete");
@@ -289,7 +313,7 @@ GameScene.prototype.update = function () {
 
 module.exports = GameScene;
 
-},{"renderer/actorManagement/ActorFactory":19}],6:[function(require,module,exports){
+},{"renderer/actorManagement/ActorFactory":22}],6:[function(require,module,exports){
 'use strict';
 
 function GameWorld(config) {
@@ -341,6 +365,34 @@ GameWorld.prototype.makeUpdateData = function () {
     };
 };
 
+GameWorld.prototype.getWallActors = function () {
+    var wallActors = [];
+    for (var i = 0; i < this.bodies.length; i++) {
+        var body = this.bodies[i];
+        if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN) {
+            switch (body.shape.constructor.name) {
+                case 'Box':
+                    wallActors.push({
+                        class: body.shape.constructor.name,
+                        angle: body.angle,
+                        height: body.shape.height,
+                        width: body.shape.width,
+                        position: body.position
+                    });
+                    break;
+                case 'Convex':
+                    wallActors.push({
+                        class: body.shape.constructor.name,
+                        vertices: body.shape.vertices,
+                        position: body.position
+                    });
+                    break;
+            }
+        }
+    }
+    return wallActors;
+};
+
 GameWorld.prototype.onCollision = function (collisionEvent) {
     collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
@@ -370,14 +422,14 @@ RenderBus.prototype.handleMessage = function (message) {
         case 'inputState':
             this.inputState = message.data;
             break;
-        case "debug":
-            console.log(event.data.message);
-            break;
         case "pause":
             this.core.pause();
             break;
         case "start":
             this.core.start();
+            break;
+        case "aiImageDone":
+            this.core.saveAiImage(message.data);
             break;
     }
 };
@@ -402,7 +454,7 @@ function ActorManager(config) {
 
     if (!this.world) throw new Error('No world for Logic ActorManager!');
 
-    //setInterval(this.checkEndGameCondition.bind(this), 3000);
+    setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function (config) {
@@ -410,9 +462,12 @@ ActorManager.prototype.addNew = function (config) {
         console.warn('Actor manager storage is full! Cannot create new Actor!');
         return;
     }
-    var actor = this.factory.create(config);
-    actor.manager = this;
-    actor.world = this.world;
+
+    var actor = this.factory.create(Object.assign(config, {
+        manager: this,
+        world: this.world
+    }));
+
     actor.body.actorId = this.currentId;
     actor.body.classId = config.classId;
     this.storage[this.currentId] = actor;
@@ -434,6 +489,7 @@ ActorManager.prototype.update = function (inputState) {
     }
 };
 
+//todo: notify brains of this and also aiImage
 ActorManager.prototype.setPlayerActor = function (actor) {
     this.playerActors.push(actor.body.actorId);
     this.core.renderBus.postMessage('attachPlayer', { actorId: actor.body.actorId });
@@ -466,9 +522,13 @@ ActorManager.prototype.checkEndGameCondition = function () {
     }
 };
 
+ActorManager.prototype.getFirstPlayerActor = function () {
+    return this.storage[this.playerActors[0]];
+};
+
 module.exports = ActorManager;
 
-},{"renderer/actorManagement/ActorFactory":19}],9:[function(require,module,exports){
+},{"renderer/actorManagement/ActorFactory":22}],9:[function(require,module,exports){
 'use strict';
 
 function BaseActor(config) {
@@ -537,6 +597,99 @@ module.exports = BaseActor;
 },{}],10:[function(require,module,exports){
 "use strict";
 
+function BaseBrain(config) {
+    config = config || [];
+
+    this.actor = config.actor;
+    this.manager = config.manager;
+    this.playerActor = config.playerActor;
+
+    this.orders = {
+        turnLeft: false,
+        turnRight: false,
+        forward: false,
+        backward: false,
+        strafeLeft: false,
+        strafeRight: false,
+        shoot: false,
+        lookAtPlayer: false
+    };
+}
+
+BaseBrain.prototype.update = function () {};
+
+BaseBrain.prototype.getPlayerPosition = function () {
+    return this.playerActor.body.position;
+};
+
+BaseBrain.prototype.isPositionInWall = function (position) {
+    if (this.manager.aiImage) {
+        var imageObject = this.manager.aiImage;
+        var aiPosition = this.castPosition(position, imageObject);
+        return imageObject.imageData.data[(aiPosition[1] * imageObject.imageData.width + aiPosition[0]) * 4] === 0;
+    } else {
+        return false;
+    }
+};
+
+BaseBrain.prototype.castPosition = function (position, imageObject) {
+    return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
+};
+
+BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.3 : arguments[2];
+
+    if (this.manager.aiImage) {
+        var imageObject = this.manager.aiImage;
+        var distance = Utils.distanceBetweenPoints(positionA[0], positionB[0], positionA[1], positionB[1]);
+        var detectionPointCount = distance * imageObject.lengthMultiplierX * densityMultiplier; //doesn't matter too much if X or Y
+        var diff = Utils.pointDifference(positionA[0], positionB[0], positionA[1], positionB[1]);
+        var point = [positionA[0], positionA[1]];
+
+        for (var i = 0; i < detectionPointCount; i++) {
+            point[0] -= diff[0] / detectionPointCount;
+            point[1] -= diff[1] / detectionPointCount;
+            if (this.isPositionInWall(point)) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+module.exports = BaseBrain;
+
+},{}],11:[function(require,module,exports){
+"use strict";
+
+var BaseBrain = require("logic/actor/components/ai/BaseBrain");
+
+function MookBrain(config) {
+    Object.assign(this, config);
+    BaseBrain.apply(this, arguments);
+
+    this.timer = 0;
+}
+
+MookBrain.extend(BaseBrain);
+
+MookBrain.prototype.update = function () {
+    this.timer++;
+
+    if (this.timer % 2 === 0) {
+        this.orders.lookAtPlayer = !this.isWallBetween(this.actor.body.position, this.playerActor.body.position);
+
+        var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
+        this.orders.forward = distance > 90;
+        this.orders.backward = distance < 40;
+    }
+};
+
+module.exports = MookBrain;
+
+},{"logic/actor/components/ai/BaseBrain":10}],12:[function(require,module,exports){
+"use strict";
+
 function BaseBody(config) {
     p2.Body.apply(this, arguments);
     this.actorId = null;
@@ -569,22 +722,34 @@ BaseBody.prototype.update = function () {};
 
 module.exports = BaseBody;
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var MookBrain = require("logic/actor/components/ai/MookBrain");
 
 function MookActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
+    this.brain = new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor()
+    });
+
     this.acceleration = 100;
-    this.turnSpeed = 0.8;
+    this.backwardAccelerationRatio = 1;
+    this.horizontalAccelerationRatio = 1;
+    this.turnSpeed = 2.5;
+
+    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.thrust = 0;
+    this.horizontalThrust = 0;
     this.rotationForce = 0;
 
     this.hp = 4;
@@ -623,7 +788,9 @@ MookActor.prototype.customUpdate = function () {
         this.body.angularVelocity = 0;
     }
 
+    this.brain.update();
     this.processWeapon();
+    this.processMovement();
 };
 
 MookActor.prototype.processWeapon = function () {
@@ -635,37 +802,91 @@ MookActor.prototype.processWeapon = function () {
         this.shotsFired++;
     }
     if (this.shotsFired >= 3) {
-        this.requestShoot = false;
+        this.shotsFired = 0;
+        this.weaponTimer += 120;
+    }
+};
+
+MookActor.prototype.processMovement = function () {
+    if (this.rotationForce !== 0) {
+        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+    } else {
+        this.body.angularVelocity = 0;
+    }
+
+    if (this.thrust !== 0) {
+        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+    }
+
+    if (this.horizontalThrust !== 0) {
+        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
 };
 
 MookActor.prototype.actorLogic = function () {
-    if (Utils.rand(0, 100) === 100) this.rotationForce = Utils.rand(-2, 2);
-    if (Utils.rand(0, 100) > 97) {
-        var thrustRand = Utils.rand(0, 100);
-        if (thrustRand > 20) {
-            this.thrust = 1;
-        } else if (thrustRand <= 2) {
+    this.rotationForce = 0;
+
+    if (this.brain.orders.lookAtPlayer) {
+        this.lookAtPlayer();
+
+        if (this.brain.orders.backward) {
             this.thrust = -1;
+        } else if (this.brain.orders.forward) {
+            this.thrust = 1;
         } else {
             this.thrust = 0;
         }
+
+        if (Utils.rand(0, 100) > 99) {
+            var horizontalThrustRand = Utils.rand(0, 2);
+            this.horizontalThrust = horizontalThrustRand - 1;
+        }
+
+        if (this.timer > 300) {
+            this.requestShoot = true;
+        }
+    } else {
+        if (Utils.rand(0, 100) === 100) this.rotationForce = Utils.rand(-2, 2);
+        if (Utils.rand(0, 100) > 95) {
+            var thrustRand = Utils.rand(0, 100);
+            if (thrustRand > 60) {
+                this.thrust = 1;
+            } else if (thrustRand <= 2) {
+                this.thrust = -1;
+            } else {
+                this.thrust = 0;
+            }
+        }
+        this.horizontalThrust = 0;
+
+        this.requestShoot = false;
     }
-    var weaponRand = Utils.rand(0, 200);
-    if (weaponRand === 199) {
-        this.shotsFired = 0;
-        this.requestShoot = true;
+};
+
+MookActor.prototype.lookAtPlayer = function () {
+    var playerPosition = this.brain.getPlayerPosition();
+    if (playerPosition) {
+        var angleVector = Utils.angleToVector(this.body.angle, 1);
+        var angle = Utils.vectorAngleToPoint(angleVector[0], playerPosition[0] - this.body.position[0], angleVector[1], playerPosition[1] - this.body.position[1]);
+
+        if (angle < 180 && angle > 0) {
+            this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        }
     }
 };
 
 MookActor.prototype.shoot = function () {
-    this.weaponTimer += 3;
+    this.weaponTimer += 10;
     this.manager.addNew({
         classId: ActorFactory.MOLTENPROJECTILE,
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
-        velocity: 100
+        velocity: 150
     });
     this.body.applyForceLocal([0, -3000]);
 };
@@ -687,7 +908,7 @@ MookActor.prototype.onSpawn = function () {};
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],12:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/ai/MookBrain":11,"logic/actor/components/body/BaseBody":12,"renderer/actorManagement/ActorFactory":22}],14:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -698,7 +919,7 @@ function PillarActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
-    this.hp = 50;
+    this.hp = 500;
 }
 
 PillarActor.extend(BaseActor);
@@ -730,7 +951,7 @@ PillarActor.prototype.onDeath = function () {
 
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],13:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12,"renderer/actorManagement/ActorFactory":22}],15:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -759,7 +980,7 @@ WallActor.prototype.createBody = function () {
 
 module.exports = WallActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],14:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12}],16:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -794,7 +1015,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],15:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12}],17:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -818,7 +1039,6 @@ function ShipActor(config) {
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 
-    this.daze = 0;
     this.primaryWeaponTimer = 0;
     this.secondaryWeaponTimer = 0;
 
@@ -847,6 +1067,19 @@ ShipActor.prototype.createBody = function () {
 ShipActor.prototype.customUpdate = function () {
     this.processMovement();
     this.processWeapon();
+    //
+    // if(this.manager.aiImage){
+    //     console.log(this.manager.aiImage);
+    // }
+
+    //
+    // //todo - zrobic cala ta translacje pozycji znowu tutaj...
+    //     if(this.manager.imageData){
+    //         let imgData = this.manager.imageData.data;
+    //         let index = this.body.position[1] * imgData.width + this.body.position[0];
+    //         let i = index*4, d = imgData.data;
+    //         //console.log(i,d[i],d[i+1],d[i+2],d[i+3]);
+    //     }
 };
 
 ShipActor.prototype.processMovement = function () {
@@ -1001,7 +1234,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10,"renderer/actorManagement/ActorFactory":19}],16:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12,"renderer/actorManagement/ActorFactory":22}],18:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1040,7 +1273,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],17:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12}],19:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1079,7 +1312,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],18:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12}],20:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
@@ -1128,7 +1361,23 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":10}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12}],21:[function(require,module,exports){
+'use strict';
+
+function AiImageRequester(config) {
+    Object.assign(this, config);
+    if (!this.world) throw new Error('No world specified for Logic AiImageRequester');
+    if (!this.renderBus) throw new Error('No render bus specified for Logic AiImageRequester');
+}
+
+AiImageRequester.prototype.requestImage = function () {
+    var wallActors = this.world.getWallActors();
+    this.renderBus.postMessage('getAiImage', wallActors);
+};
+
+module.exports = AiImageRequester;
+
+},{}],22:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1181,7 +1430,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/enemy/MookActor":11,"logic/actor/map/PillarActor":12,"logic/actor/map/WallActor":13,"logic/actor/object/ChunkActor":14,"logic/actor/player/ShipActor":15,"logic/actor/projectile/LaserProjectileActor":16,"logic/actor/projectile/MoltenProjectileActor":17,"logic/actor/projectile/PlasmaProjectileActor":18,"renderer/actor/enemy/MookActor":27,"renderer/actor/map/PillarActor":28,"renderer/actor/map/WallActor":29,"renderer/actor/object/ChunkActor":30,"renderer/actor/player/ShipActor":31,"renderer/actor/projectile/LaserProjectileActor":32,"renderer/actor/projectile/MoltenProjectileActor":33,"renderer/actor/projectile/PlasmaProjectileActor":34}],20:[function(require,module,exports){
+},{"logic/actor/enemy/MookActor":13,"logic/actor/map/PillarActor":14,"logic/actor/map/WallActor":15,"logic/actor/object/ChunkActor":16,"logic/actor/player/ShipActor":17,"logic/actor/projectile/LaserProjectileActor":18,"logic/actor/projectile/MoltenProjectileActor":19,"logic/actor/projectile/PlasmaProjectileActor":20,"renderer/actor/enemy/MookActor":30,"renderer/actor/map/PillarActor":31,"renderer/actor/map/WallActor":32,"renderer/actor/object/ChunkActor":33,"renderer/actor/player/ShipActor":34,"renderer/actor/projectile/LaserProjectileActor":35,"renderer/actor/projectile/MoltenProjectileActor":36,"renderer/actor/projectile/PlasmaProjectileActor":37}],23:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -1269,7 +1518,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 function BaseMesh(config) {
@@ -1301,7 +1550,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -1323,7 +1572,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],23:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":24,"renderer/modelRepo/ModelStore":38}],26:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -1345,7 +1594,7 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":21}],24:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":24}],27:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -1366,7 +1615,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],25:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":24,"renderer/modelRepo/ModelStore":38}],28:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -1389,7 +1638,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":21,"renderer/modelRepo/ModelStore":35}],26:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":24,"renderer/modelRepo/ModelStore":38}],29:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/components/mesh/BaseMesh");
@@ -1410,7 +1659,7 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"renderer/actor/components/mesh/BaseMesh":21}],27:[function(require,module,exports){
+},{"renderer/actor/components/mesh/BaseMesh":24}],30:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("renderer/actor/components/mesh/ShipMesh");
@@ -1502,7 +1751,7 @@ MookActor.prototype.onDeath = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/ShipMesh":25}],28:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23,"renderer/actor/components/mesh/ShipMesh":28}],31:[function(require,module,exports){
 "use strict";
 
 var PillarMesh = require("renderer/actor/components/mesh/PillarMesh");
@@ -1580,7 +1829,7 @@ PillarActor.prototype.onDeath = function () {
 
 module.exports = PillarActor;
 
-},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/PillarMesh":23}],29:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23,"renderer/actor/components/mesh/PillarMesh":26}],32:[function(require,module,exports){
 "use strict";
 
 var WallMesh = require("renderer/actor/components/mesh/WallMesh");
@@ -1598,7 +1847,7 @@ WallActor.prototype.createMesh = function () {
 
 module.exports = WallActor;
 
-},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/WallMesh":26}],30:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23,"renderer/actor/components/mesh/WallMesh":29}],33:[function(require,module,exports){
 "use strict";
 
 var ChunkMesh = require("renderer/actor/components/mesh/ChunkMesh");
@@ -1652,7 +1901,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/ChunkMesh":22}],31:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23,"renderer/actor/components/mesh/ChunkMesh":25}],34:[function(require,module,exports){
 "use strict";
 
 var RavierMesh = require("renderer/actor/components/mesh/RavierMesh");
@@ -1957,7 +2206,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":20,"renderer/actor/components/mesh/RavierMesh":24}],32:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23,"renderer/actor/components/mesh/RavierMesh":27}],35:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2099,7 +2348,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":20}],33:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23}],36:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2114,22 +2363,22 @@ function MoltenProjectileActor(config) {
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function () {
-    // for(let i = 0; i < 2; i++){
-    //     var offsetPosition = Utils.angleToVector(this.angle, -i*0.3);
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 1.5,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 1,
-        particleAngle: this.angle,
-        lifeTime: 3
-    });
-    //}
+    for (var i = 0; i < 3; i++) {
+        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.5);
+        this.particleManager.createParticle('particleAddTrail', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 1.5,
+            alpha: 1,
+            alphaMultiplier: 0.8,
+            particleVelocity: 1,
+            particleAngle: this.angle,
+            lifeTime: 1
+        });
+    }
 
     this.particleManager.createParticle('particleAddTrail', {
         positionX: this.position[0],
@@ -2238,7 +2487,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":20}],34:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23}],37:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2253,42 +2502,8 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
-
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0],
-    //     positionY: this.position[1]
-    // });
-
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'greenFlashBig',
-    //     positionX: this.position[0],
-    //     positionY: this.position[1]
-    // });
-
-    //var offsetPosition = Utils.angleToVector(this.angle, 1);
-    //
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0] + offsetPosition[0],
-    //     positionY: this.position[1] + offsetPosition[1]
-    // });
-    //
-    // offsetPosition = Utils.angleToVector(this.angle, 2);
-    //
-    // this.particleManager.createParticle('particleAddTrail', {
-    //     type: 'lightGreenTrail',
-    //     positionX: this.position[0] + offsetPosition[0],
-    //     positionY: this.position[1] + offsetPosition[1]
-    // });
-
-    for (var i = 0; i < 3; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 1.3);
-        // this.particleManager.createParticle('particleAddTrail', {
-        //     type: 'lightGreenTrail',
-        //     positionX: this.position[0] + offsetPosition[0],
-        //     positionY: this.position[1] + offsetPosition[1]
-        // });
+    for (var i = 0; i < 5; i++) {
+        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.7);
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -2412,7 +2627,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":20}],35:[function(require,module,exports){
+},{"renderer/actor/BaseActor":23}],38:[function(require,module,exports){
 'use strict';
 
 var ModelStore = {

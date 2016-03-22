@@ -9,6 +9,7 @@ var ModelLoader = require("renderer/modelRepo/ModelLoader");
 var ModelList = require("renderer/modelRepo/ModelList");
 var ModelStore = require("renderer/modelRepo/ModelStore");
 var CustomModelBuilder = require("renderer/modelRepo/CustomModelBuilder");
+var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -27,9 +28,6 @@ function Core(config){
     this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
     this.initRenderer(config);
     this.initAssets();
-
-
-    console.log(config);
 }
 
 Core.prototype.initRenderer = function(config){
@@ -50,6 +48,7 @@ Core.prototype.makeMainComponents = function(config){
     this.logicBus = new LogicBus({core: this, logicWorker: this.logicWorker, actorManager: this.actorManager});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
     this.gameScene = new GameScene({core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
+    this.aiImageRenderer = new AiImageRenderer();
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -187,6 +186,10 @@ Core.prototype.stopGame = function(info){
         this.ui.stopGame(info);
         this.renderLoop.stop();
     }.bind(this), 2000);
+};
+
+Core.prototype.getAiImageObject = function(wallsData){
+    return this.aiImageRenderer.getImageObject(wallsData);
 };
 
 module.exports = Core;
