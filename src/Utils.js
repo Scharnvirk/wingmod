@@ -49,10 +49,8 @@ var Utils = {
         return [(Math.sin(angle) * -1) * velocity, Math.cos(angle) * velocity];
     },
 
-    vectorAngleToPoint: function(p1x, p2x, p1y, p2y){
-        // var dotproduct = p1x*p2x + p1y*p2y;
-        // var determinant = p1x*p2y - p1y*p2x;
-        var angle = Math.atan2(p1y, p1x) - Math.atan2(p2y, p2x);
+    angleBetweenPointsFromCenter: function(p1, p2){
+        var angle = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
 
         angle = angle * 360 / (2*Math.PI);
 
@@ -61,14 +59,33 @@ var Utils = {
         }
         return angle;
     },
+    //
+    // angleBetweenPoints: function(cx, cy, ex, ey) {
+    //     var dy = ey - cy;
+    //     var dx = ex - cx;
+    //     var theta = Math.atan2(dx, dy);
+    //     theta *= 180 / Math.PI;
+    //     if (theta < 0) theta = 360 + theta;
+    //     return theta;
+    // },
 
-    angleBetweenPoints: function(cx, cy, ex, ey) {
-        var dy = ey - cy;
-        var dx = ex - cx;
-        var theta = Math.atan2(dx, dy);
-        theta *= 180 / Math.PI;
-        if (theta < 0) theta = 360 + theta;
-        return theta;
+    angleBetweenPoints: function(p1, p2){
+        var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+        angle -= Math.PI/2;
+        // if(angle < -Math.PI){
+        //     angle += 2 * Math.PI;
+        // }
+        // if(angle > Math.PI){
+        //     angle -= 2 * Math.PI;
+        // }
+        return angle % (Math.PI*2);
+    },
+
+    pointInArc: function(p1, p2, p1LookAngle, p1ArcAngle){
+        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var normalizedAngle = p1LookAngle % (Math.PI*2);
+        var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
+        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference - (Math.PI*2)) < this.degToRad(p1ArcAngle);
     },
 
     firstToUpper: function(string) {

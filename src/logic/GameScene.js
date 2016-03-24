@@ -12,8 +12,8 @@ GameScene.prototype.fillScene = function(){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
+        positionX: 100,
+        positionY: 100,
         angle: 0
     });
 

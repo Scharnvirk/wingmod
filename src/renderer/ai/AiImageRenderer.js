@@ -1,9 +1,9 @@
 function AiImageRenderer(){
-    this.AI_SCENE_SIZE_X = 128;
-    this.AI_SCENE_SIZE_Y = 128;
+    this.AI_SCENE_SIZE_X = 256;
+    this.AI_SCENE_SIZE_Y = 256;
 
-    this.LOGIC_SCENE_SIZE_X = 1000;
-    this.LOGIC_SCENE_SIZE_Y = 1000;
+    this.LOGIC_SCENE_SIZE_X = 1024;
+    this.LOGIC_SCENE_SIZE_Y = 1024;
 
     this.centerX = this.AI_SCENE_SIZE_X / 2;
     this.centerY = this.AI_SCENE_SIZE_Y / 2;

@@ -27,6 +27,8 @@ function MookActor(config){
 
     this.hp = 4;
 
+    this.shootingArc = 40;
+
     this.weaponTimer = 0;
     this.shotsFired = 0;
     this.activationTime = Utils.rand(200,600);
@@ -104,8 +106,6 @@ MookActor.prototype.processMovement = function(){
 };
 
 MookActor.prototype.actorLogic = function(){
-    this.rotationForce = 0;
-
     if(this.brain.orders.lookAtPlayer){
         this.lookAtPlayer();
 
@@ -122,15 +122,17 @@ MookActor.prototype.actorLogic = function(){
             this.horizontalThrust = horizontalThrustRand - 1;
         }
 
-        if(this.timer > this.activationTime){
+        if(this.timer > this.activationTime && Utils.pointInArc(this.body.position, this.brain.getPlayerPosition(), this.body.angle, Utils.degToRad(this.shootingArc))){
             this.requestShoot = true;
         }
 
     } else {
-        if(Utils.rand(0,100) === 100) this.rotationForce = Utils.rand(-2,2);
+        if(Utils.rand(0,100) > 97){
+            this.rotationForce = Utils.rand(-2,2);
+        }
         if(Utils.rand(0,100) > 95){
             var thrustRand = Utils.rand(0,100);
-            if (thrustRand > 60){
+            if (thrustRand > 30){
                 this.thrust = 1;
             } else if (thrustRand <= 2) {
                 this.thrust = -1;
@@ -147,10 +149,11 @@ MookActor.prototype.actorLogic = function(){
 };
 
 MookActor.prototype.lookAtPlayer = function(){
-    var playerPosition = this.brain.getPlayerPosition();
+    var playerPosition = this.brain.getPlayerPositionWithLead(210, 1.2);
+
     if (playerPosition){
         var angleVector = Utils.angleToVector(this.body.angle, 1);
-        var angle = Utils.vectorAngleToPoint(angleVector[0], playerPosition[0] - this.body.position[0], angleVector[1], playerPosition[1] - this.body.position[1]);
+        var angle =  Utils.angleBetweenPointsFromCenter(angleVector, [playerPosition[0] - this.body.position[0], playerPosition[1] - this.body.position[1]]);
 
         if (angle < 180 && angle > 0) {
             this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
@@ -160,6 +163,7 @@ MookActor.prototype.lookAtPlayer = function(){
             this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
         }
     }
+
 };
 
 MookActor.prototype.shoot = function(){
@@ -169,7 +173,7 @@ MookActor.prototype.shoot = function(){
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
-        velocity: 150
+        velocity: 210
     });
     this.body.applyForceLocal([0,-3000]);
 };

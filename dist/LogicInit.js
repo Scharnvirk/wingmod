@@ -93,10 +93,8 @@ var Utils = {
         return [Math.sin(angle) * -1 * velocity, Math.cos(angle) * velocity];
     },
 
-    vectorAngleToPoint: function vectorAngleToPoint(p1x, p2x, p1y, p2y) {
-        // var dotproduct = p1x*p2x + p1y*p2y;
-        // var determinant = p1x*p2y - p1y*p2x;
-        var angle = Math.atan2(p1y, p1x) - Math.atan2(p2y, p2x);
+    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {
+        var angle = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
 
         angle = angle * 360 / (2 * Math.PI);
 
@@ -105,14 +103,33 @@ var Utils = {
         }
         return angle;
     },
+    //
+    // angleBetweenPoints: function(cx, cy, ex, ey) {
+    //     var dy = ey - cy;
+    //     var dx = ex - cx;
+    //     var theta = Math.atan2(dx, dy);
+    //     theta *= 180 / Math.PI;
+    //     if (theta < 0) theta = 360 + theta;
+    //     return theta;
+    // },
 
-    angleBetweenPoints: function angleBetweenPoints(cx, cy, ex, ey) {
-        var dy = ey - cy;
-        var dx = ex - cx;
-        var theta = Math.atan2(dx, dy);
-        theta *= 180 / Math.PI;
-        if (theta < 0) theta = 360 + theta;
-        return theta;
+    angleBetweenPoints: function angleBetweenPoints(p1, p2) {
+        var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+        angle -= Math.PI / 2;
+        // if(angle < -Math.PI){
+        //     angle += 2 * Math.PI;
+        // }
+        // if(angle > Math.PI){
+        //     angle -= 2 * Math.PI;
+        // }
+        return angle % (Math.PI * 2);
+    },
+
+    pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {
+        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var normalizedAngle = p1LookAngle % (Math.PI * 2);
+        var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
+        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference - Math.PI * 2) < this.degToRad(p1ArcAngle);
     },
 
     firstToUpper: function firstToUpper(string) {
@@ -239,8 +256,8 @@ GameScene.prototype.fillScene = function () {
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
+        positionX: 100,
+        positionY: 100,
         angle: 0
     });
 
@@ -454,7 +471,7 @@ function ActorManager(config) {
 
     if (!this.world) throw new Error('No world for Logic ActorManager!');
 
-    setInterval(this.checkEndGameCondition.bind(this), 3000);
+    ///setInterval(this.checkEndGameCondition.bind(this), 3000);
 }
 
 ActorManager.prototype.addNew = function (config) {
@@ -622,6 +639,20 @@ BaseBrain.prototype.getPlayerPosition = function () {
     return this.playerActor.body.position;
 };
 
+BaseBrain.prototype.getPlayerPositionWithLead = function () {
+    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+    var p = this.actor.body.position;
+    var tp = this.playerActor.body.position;
+    var tv = this.playerActor.body.velocity;
+
+    var lv = Utils.angleToVector(this.actor.body.angle, leadSpeed);
+
+    var lead = Math.sqrt(leadSkill * (((tp[0] - p[0]) * (tp[0] - p[0]) + (tp[1] - p[1]) * (tp[1] - p[1])) / (lv[0] * lv[0] + lv[1] * lv[1])));
+    return [tp[0] + tv[0] * lead, tp[1] + tv[1] * lead];
+};
+
 BaseBrain.prototype.isPositionInWall = function (position) {
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -637,7 +668,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.3 : arguments[2];
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -646,7 +677,7 @@ BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
         var diff = Utils.pointDifference(positionA[0], positionB[0], positionA[1], positionB[1]);
         var point = [positionA[0], positionA[1]];
 
-        for (var i = 0; i < detectionPointCount; i++) {
+        for (var i = 1; i < detectionPointCount - 1; i++) {
             point[0] -= diff[0] / detectionPointCount;
             point[1] -= diff[1] / detectionPointCount;
             if (this.isPositionInWall(point)) {
@@ -754,6 +785,8 @@ function MookActor(config) {
 
     this.hp = 4;
 
+    this.shootingArc = 40;
+
     this.weaponTimer = 0;
     this.shotsFired = 0;
     this.activationTime = Utils.rand(200, 600);
@@ -825,8 +858,6 @@ MookActor.prototype.processMovement = function () {
 };
 
 MookActor.prototype.actorLogic = function () {
-    this.rotationForce = 0;
-
     if (this.brain.orders.lookAtPlayer) {
         this.lookAtPlayer();
 
@@ -843,14 +874,16 @@ MookActor.prototype.actorLogic = function () {
             this.horizontalThrust = horizontalThrustRand - 1;
         }
 
-        if (this.timer > this.activationTime) {
+        if (this.timer > this.activationTime && Utils.pointInArc(this.body.position, this.brain.getPlayerPosition(), this.body.angle, Utils.degToRad(this.shootingArc))) {
             this.requestShoot = true;
         }
     } else {
-        if (Utils.rand(0, 100) === 100) this.rotationForce = Utils.rand(-2, 2);
+        if (Utils.rand(0, 100) > 97) {
+            this.rotationForce = Utils.rand(-2, 2);
+        }
         if (Utils.rand(0, 100) > 95) {
             var thrustRand = Utils.rand(0, 100);
-            if (thrustRand > 60) {
+            if (thrustRand > 30) {
                 this.thrust = 1;
             } else if (thrustRand <= 2) {
                 this.thrust = -1;
@@ -865,10 +898,11 @@ MookActor.prototype.actorLogic = function () {
 };
 
 MookActor.prototype.lookAtPlayer = function () {
-    var playerPosition = this.brain.getPlayerPosition();
+    var playerPosition = this.brain.getPlayerPositionWithLead(210, 1.2);
+
     if (playerPosition) {
         var angleVector = Utils.angleToVector(this.body.angle, 1);
-        var angle = Utils.vectorAngleToPoint(angleVector[0], playerPosition[0] - this.body.position[0], angleVector[1], playerPosition[1] - this.body.position[1]);
+        var angle = Utils.angleBetweenPointsFromCenter(angleVector, [playerPosition[0] - this.body.position[0], playerPosition[1] - this.body.position[1]]);
 
         if (angle < 180 && angle > 0) {
             this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
@@ -887,7 +921,7 @@ MookActor.prototype.shoot = function () {
         positionX: this.body.position[0],
         positionY: this.body.position[1],
         angle: this.body.angle,
-        velocity: 150
+        velocity: 210
     });
     this.body.applyForceLocal([0, -3000]);
 };
@@ -1020,6 +1054,7 @@ module.exports = ChunkActor;
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseBrain = require("logic/actor/components/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
@@ -1028,7 +1063,7 @@ function ShipActor(config) {
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 700;
+    this.acceleration = 500;
     this.backwardAccelerationRatio = 1;
     this.horizontalAccelerationRatio = 1;
     this.turnSpeed = 6;
@@ -1043,7 +1078,7 @@ function ShipActor(config) {
     this.primaryWeaponTimer = 0;
     this.secondaryWeaponTimer = 0;
 
-    this.hp = 10;
+    this.hp = 20;
 }
 
 ShipActor.extend(BaseActor);
@@ -1068,19 +1103,6 @@ ShipActor.prototype.createBody = function () {
 ShipActor.prototype.customUpdate = function () {
     this.processMovement();
     this.processWeapon();
-    //
-    // if(this.manager.aiImage){
-    //     console.log(this.manager.aiImage);
-    // }
-
-    //
-    // //todo - zrobic cala ta translacje pozycji znowu tutaj...
-    //     if(this.manager.imageData){
-    //         let imgData = this.manager.imageData.data;
-    //         let index = this.body.position[1] * imgData.width + this.body.position[0];
-    //         let i = index*4, d = imgData.data;
-    //         //console.log(i,d[i],d[i+1],d[i+2],d[i+3]);
-    //     }
 };
 
 ShipActor.prototype.processMovement = function () {
@@ -1127,9 +1149,9 @@ ShipActor.prototype.applyDiffRotationInput = function (inputState) {
 ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
     this.rotationForce = 0;
 
-    var look = Utils.angleToVector(inputState.mouseAngle, 1);
+    var lookTarget = Utils.angleToVector(inputState.mouseAngle, 1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
-    var angle = Utils.vectorAngleToPoint(angleVector[0], look[0], angleVector[1], look[1]);
+    var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
@@ -1235,7 +1257,7 @@ ShipActor.prototype.onDeath = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":9,"logic/actor/components/body/BaseBody":12,"renderer/actorManagement/ActorFactory":22}],18:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/components/ai/BaseBrain":10,"logic/actor/components/body/BaseBody":12,"renderer/actorManagement/ActorFactory":22}],18:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/components/body/BaseBody");

@@ -1,4 +1,5 @@
 var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseBrain = require("logic/actor/components/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
 
@@ -7,7 +8,7 @@ function ShipActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 700;
+    this.acceleration = 500;
     this.backwardAccelerationRatio = 1;
     this.horizontalAccelerationRatio = 1;
     this.turnSpeed = 6;
@@ -22,7 +23,7 @@ function ShipActor(config){
     this.primaryWeaponTimer = 0;
     this.secondaryWeaponTimer = 0;
 
-    this.hp = 10;
+    this.hp = 20;
 }
 
 ShipActor.extend(BaseActor);
@@ -51,20 +52,6 @@ ShipActor.prototype.createBody = function(){
 ShipActor.prototype.customUpdate = function(){
     this.processMovement();
     this.processWeapon();
-    //
-    // if(this.manager.aiImage){
-    //     console.log(this.manager.aiImage);
-    // }
-
-//
-// //todo - zrobic cala ta translacje pozycji znowu tutaj...
-//     if(this.manager.imageData){
-//         let imgData = this.manager.imageData.data;
-//         let index = this.body.position[1] * imgData.width + this.body.position[0];
-//         let i = index*4, d = imgData.data;
-//         //console.log(i,d[i],d[i+1],d[i+2],d[i+3]);
-//     }
-
 };
 
 ShipActor.prototype.processMovement = function(){
@@ -111,9 +98,9 @@ ShipActor.prototype.applyDiffRotationInput = function(inputState){
 ShipActor.prototype.applyLookAtRotationInput = function(inputState){
     this.rotationForce = 0;
 
-    var look = Utils.angleToVector(inputState.mouseAngle,1);
+    var lookTarget = Utils.angleToVector(inputState.mouseAngle,1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
-    var angle = Utils.vectorAngleToPoint(angleVector[0], look[0], angleVector[1], look[1]);
+    var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
     if (angle < 180 && angle > 0) {
         this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
