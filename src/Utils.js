@@ -1,16 +1,4 @@
 var Utils = {
-    makeRandomColor: function(){
-        var colors = ['','',''];
-
-        colors.forEach(function(color, index){
-            var newColor = Math.floor(Math.random()* 256).toString(16);
-            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;
-        });
-
-        var color = '0x' + colors.join('');
-        return Number(color);
-    },
-
     degToRad: function(degrees){
         return degrees * (Math.PI / 180);
     },
@@ -31,6 +19,18 @@ var Utils = {
 
     rand: function(min, max){
         return this.getRandomInteger(min, max);
+    },
+
+    makeRandomColor: function(min = 0, max = 256){
+        var colors = ['','',''];
+
+        colors.forEach(function(color, index){
+            var newColor = this.rand(min, max).toString(16);
+            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;
+        }.bind(this));
+
+        var color = '0x' + colors.join('');
+        return Number(color);
     },
 
     mixin: function(receiver, donor){
@@ -59,25 +59,10 @@ var Utils = {
         }
         return angle;
     },
-    //
-    // angleBetweenPoints: function(cx, cy, ex, ey) {
-    //     var dy = ey - cy;
-    //     var dx = ex - cx;
-    //     var theta = Math.atan2(dx, dy);
-    //     theta *= 180 / Math.PI;
-    //     if (theta < 0) theta = 360 + theta;
-    //     return theta;
-    // },
 
     angleBetweenPoints: function(p1, p2){
         var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
         angle -= Math.PI/2;
-        // if(angle < -Math.PI){
-        //     angle += 2 * Math.PI;
-        // }
-        // if(angle > Math.PI){
-        //     angle -= 2 * Math.PI;
-        // }
         return angle % (Math.PI*2);
     },
 
@@ -85,7 +70,15 @@ var Utils = {
         var angleToP2 = this.angleBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI*2);
         var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
-        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference - (Math.PI*2)) < this.degToRad(p1ArcAngle);
+        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) ||
+            Math.abs(angleDifference - (Math.PI*2)) < this.degToRad(p1ArcAngle) ||
+            Math.abs(angleDifference + (Math.PI*2)) < this.degToRad(p1ArcAngle);
+    },
+
+    arcAngleDifference: function(p1, p2, p1LookAngle){
+        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var normalizedAngle = p1LookAngle % (Math.PI*2);
+        return normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
     },
 
     firstToUpper: function(string) {

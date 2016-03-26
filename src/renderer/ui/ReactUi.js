@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-var InitialView = require('renderer/ui/components/InitialView');
+var InitialView = require('renderer/ui/component/InitialView');
 
 function ReactUi(){
     Utils.mixin(this, THREE.EventDispatcher);
@@ -24,6 +24,6 @@ ReactUi.prototype.changeMode = function(newMode, context){
 module.exports = ReactUi;
 
 //https://blog.risingstack.com/the-react-way-getting-started-tutorial/
-//http://hugogiraudel.com/2015/06/18/styling-react-components-in-sass/
+//http://hugogiraudel.com/2015/06/18/styling-react-component-in-sass/
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/

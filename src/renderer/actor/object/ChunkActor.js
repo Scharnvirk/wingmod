@@ -1,4 +1,4 @@
-var ChunkMesh = require("renderer/actor/components/mesh/ChunkMesh");
+var ChunkMesh = require("renderer/actor/component/mesh/ChunkMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 
 function ChunkActor(){

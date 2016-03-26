@@ -57,7 +57,8 @@ class GameScene {
 
         this.scene.add(combinedObject);
 
-        var lcolor = Utils.makeRandomColor();
+        var lcolor = Utils.makeRandomColor(128, 256);
+        console.log(lcolor);
         //var lcolor = 0xffffff;
 
         var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(5, 8)/10 );
@@ -73,7 +74,7 @@ class GameScene {
         this.pointLight.shadowMapHeight = 2048;
         this.pointLight.shadowBias = 0;
         this.pointLight.shadowDarkness = 0.4;
-        this.pointLight.position.set(0,0,13);
+        this.pointLight.position.set(0,0,30);
         this.scene.add( this.pointLight );
 
      }
@@ -81,8 +82,8 @@ class GameScene {
     update(){
         if(this.actor){
             let shipPosition = Utils.angleToVector(this.actor.angle, 15);
-            this.pointLight.position.x = this.actor.position[0] + shipPosition[0];
-            this.pointLight.position.y = this.actor.position[1] + shipPosition[1];
+            this.pointLight.position.x = this.actor.position[0] + 20;//shipPosition[0];
+            this.pointLight.position.y = this.actor.position[1] + 20;//shipPosition[1];
         }
     }
 }

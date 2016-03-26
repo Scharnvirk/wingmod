@@ -1,4 +1,4 @@
-var WallMesh = require("renderer/actor/components/mesh/WallMesh");
+var WallMesh = require("renderer/actor/component/mesh/WallMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 
 function WallActor(){

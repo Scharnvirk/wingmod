@@ -12,18 +12,18 @@ GameScene.prototype.fillScene = function(){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 100,
-        positionY: 100,
+        positionX: 0,
+        positionY: 0,
         angle: 0
     });
 
     this.actorManager.setPlayerActor(playerActor);
 
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 50; i++){
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
-            positionX: Utils.rand(100,150),
-            positionY: Utils.rand(100,150),
+            positionX: Utils.rand(300,350),
+            positionY: Utils.rand(300,350),
             angle: Utils.rand(0,360)
         });
     }

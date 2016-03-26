@@ -1,4 +1,4 @@
-var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 
 function ChunkActor(config){

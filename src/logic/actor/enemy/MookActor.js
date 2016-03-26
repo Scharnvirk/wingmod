@@ -1,37 +1,21 @@
-var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
+var MookBrain = require("logic/actor/component/ai/MookBrain");
+var MoltenBallThrower = require("logic/actor/component/weapon/MoltenBallThrower");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
-var MookBrain = require("logic/actor/components/ai/MookBrain");
 
 function MookActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.brain = new MookBrain({
-        actor: this,
-        manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor()
-    });
+    this.ACCELERATION = 140;
+    this.TURN_SPEED = 2.5;
+    this.HP = 4;
 
-    this.acceleration = 100;
-    this.backwardAccelerationRatio = 1;
-    this.horizontalAccelerationRatio = 1;
-    this.turnSpeed = 2.5;
-
-    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
-
-    this.thrust = 0;
-    this.horizontalThrust = 0;
-    this.rotationForce = 0;
-
-    this.hp = 4;
-
-    this.shootingArc = 40;
-
-    this.weaponTimer = 0;
-    this.shotsFired = 0;
-    this.activationTime = Utils.rand(200,600);
+    this.brain = this.createBrain();
+    this.weapon = this.createWeapon();
+    this.stepAngle = Utils.radToDeg(this.TURN_SPEED / Constants.LOGIC_REFRESH_RATE);
 }
 
 MookActor.extend(BaseActor);
@@ -58,94 +42,31 @@ MookActor.prototype.createBody = function(){
 };
 
 MookActor.prototype.customUpdate = function(){
-    this.actorLogic();
 
-    if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
-    }
+    if(this.timer % 2 === 0) this.brain.update();
 
-    if(this.rotationForce !== 0){
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
-    } else {
-        this.body.angularVelocity = 0;
-    }
-
-    this.brain.update();
-    this.processWeapon();
-    this.processMovement();
+    this.doBrainOrders();
+    this.weapon.update();
 };
 
-MookActor.prototype.processWeapon = function(){
-    if(this.weaponTimer > 0){
-        this.weaponTimer --;
-    }
-    if(this.requestShoot && this.weaponTimer === 0){
-        this.shoot();
-        this.shotsFired ++;
-    }
-    if(this.shotsFired >= 3){
-        this.shotsFired = 0;
-        this.weaponTimer += 120;
-    }
-};
-
-MookActor.prototype.processMovement = function(){
-    if(this.rotationForce !== 0){
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
-    } else {
-        this.body.angularVelocity = 0;
-    }
-
-    if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
-    }
-
-    if(this.horizontalThrust !== 0){
-        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
-    }
-};
-
-MookActor.prototype.actorLogic = function(){
-    if(this.brain.orders.lookAtPlayer){
+MookActor.prototype.doBrainOrders = function(){
+    if (this.brain.orders.lookAtPlayer) {
         this.lookAtPlayer();
-
-        if (this.brain.orders.backward) {
-            this.thrust = -1;
-        } else if (this.brain.orders.forward) {
-            this.thrust = 1;
-        } else {
-            this.thrust = 0;
+        if (this.brain.orders.turn !== 0) {
+            this.rotationForce = this.brain.orders.turn;
         }
-
-        if(Utils.rand(0,100) > 99){
-            var horizontalThrustRand = Utils.rand(0,2);
-            this.horizontalThrust = horizontalThrustRand - 1;
-        }
-
-        if(this.timer > this.activationTime && Utils.pointInArc(this.body.position, this.brain.getPlayerPosition(), this.body.angle, Utils.degToRad(this.shootingArc))){
-            this.requestShoot = true;
-        }
-
     } else {
-        if(Utils.rand(0,100) > 97){
-            this.rotationForce = Utils.rand(-2,2);
-        }
-        if(Utils.rand(0,100) > 95){
-            var thrustRand = Utils.rand(0,100);
-            if (thrustRand > 30){
-                this.thrust = 1;
-            } else if (thrustRand <= 2) {
-                this.thrust = -1;
-            } else {
-                this.thrust = 0;
-            }
-        }
-        this.horizontalThrust = 0;
-
-        this.requestShoot = false;
+        this.rotationForce = this.brain.orders.turn;
     }
 
+    this.thrust = this.brain.orders.thrust;
+    this.horizontalThrust = this.brain.orders.horizontalThrust;
 
+    if (this.brain.orders.shoot) {
+        this.weapon.shoot();
+    } else {
+        this.weapon.stopShooting();
+    }
 };
 
 MookActor.prototype.lookAtPlayer = function(){
@@ -163,21 +84,26 @@ MookActor.prototype.lookAtPlayer = function(){
             this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
         }
     }
-
 };
 
-MookActor.prototype.shoot = function(){
-    this.weaponTimer += 10;
-    this.manager.addNew({
-        classId: ActorFactory.MOLTENPROJECTILE,
-        positionX: this.body.position[0],
-        positionY: this.body.position[1],
-        angle: this.body.angle,
-        velocity: 210
+MookActor.prototype.createBrain = function(){
+    return new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor()
     });
-    this.body.applyForceLocal([0,-3000]);
 };
 
+MookActor.prototype.createWeapon = function(){
+    return new MoltenBallThrower({
+        actor: this,
+        manager: this.manager,
+        firingPoints: [
+            {offsetAngle: -90, offsetDistance: 3, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 3 , fireAngle: 0}
+        ]
+    });
+};
 
 MookActor.prototype.onDeath = function(){
     for(let i = 0; i < 10; i++){
@@ -191,7 +117,5 @@ MookActor.prototype.onDeath = function(){
     }
     this.body.dead = true;
 };
-
-MookActor.prototype.onSpawn = function(){};
 
 module.exports = MookActor;

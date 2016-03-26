@@ -1,4 +1,4 @@
-var BaseBody = require("logic/actor/components/body/BaseBody");
+var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 
 function LaserProjectileActor(config){
@@ -6,8 +6,8 @@ function LaserProjectileActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.hp = 1;
-    this.damage = 2;
+    this.HP = 1;
+    this.DAMAGE = 2;
     this.removeOnHit = true;
     this.timeout = 60;
 }

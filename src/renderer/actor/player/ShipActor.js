@@ -1,4 +1,4 @@
-var RavierMesh = require("renderer/actor/components/mesh/RavierMesh");
+var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 
 function ShipActor(){

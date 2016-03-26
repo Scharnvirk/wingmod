@@ -1,29 +1,25 @@
-var BaseBody = require("logic/actor/components/body/BaseBody");
-var BaseBrain = require("logic/actor/components/ai/BaseBrain");
+var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseBrain = require("logic/actor/component/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var Blaster = require("logic/actor/component/weapon/Blaster");
+var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
 
 function ShipActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.acceleration = 500;
-    this.backwardAccelerationRatio = 1;
-    this.horizontalAccelerationRatio = 1;
-    this.turnSpeed = 6;
-    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
-
-    this.thrust = 0;
-    this.rotationForce = 0;
+    this.ACCELERATION = 500;
+    this.TURN_SPEED = 6;
+    this.HP = 20;
+    this.stepAngle = Utils.radToDeg(this.TURN_SPEED / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 
-    this.primaryWeaponTimer = 0;
-    this.secondaryWeaponTimer = 0;
-
-    this.hp = 20;
+    this.plasma = this.createPlasma();
+    this.blaster = this.createBlaster();
 }
 
 ShipActor.extend(BaseActor);
@@ -32,8 +28,6 @@ ShipActor.prototype.createBody = function(){
     return new BaseBody({
         shape: new p2.Circle({
             radius: 5,
-        //shape: new p2.Convex({
-        //    vertices: [[-4, 0], [-1.5, -4], [1.5, -4], [4, 0], [4, 2.5], [0, 5], [-4, 2.5] ],
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
             collisionMask:
                 Constants.COLLISION_GROUPS.ENEMY |
@@ -50,49 +44,14 @@ ShipActor.prototype.createBody = function(){
 };
 
 ShipActor.prototype.customUpdate = function(){
-    this.processMovement();
-    this.processWeapon();
-};
-
-ShipActor.prototype.processMovement = function(){
-    if(this.rotationForce !== 0){
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
-    } else {
-        this.body.angularVelocity = 0;
-    }
-
-    if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
-    }
-
-    if(this.horizontalThrust !== 0){
-        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
-    }
-};
-
-ShipActor.prototype.processWeapon = function(){
-    if(this.primaryWeaponTimer > 0){
-        this.primaryWeaponTimer --;
-    }
-    if(this.requestShootPrimary && this.primaryWeaponTimer === 0){
-        this.shootPrimary();
-    }
-    if(this.secondaryWeaponTimer > 0){
-        this.secondaryWeaponTimer --;
-    }
-    if(this.requestShootSecondary && this.secondaryWeaponTimer === 0){
-        this.shootSecondary();
-    }
+    this.blaster.update();
+    this.plasma.update();
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
     this.applyThrustInput(inputState);
     this.applyLookAtRotationInput(inputState);
     this.applyWeaponInput(inputState);
-};
-
-ShipActor.prototype.applyDiffRotationInput = function(inputState){
-    this.body.angle = inputState.mouseAngle;
 };
 
 ShipActor.prototype.applyLookAtRotationInput = function(inputState){
@@ -127,11 +86,11 @@ ShipActor.prototype.applyThrustInput = function(inputState){
     this.horizontalThrust = 0;
 
     if (inputState.a) {
-        this.horizontalThrust = -1 * this.horizontalAccelerationRatio;
+        this.horizontalThrust = -1;
     }
 
     if (inputState.d) {
-        this.horizontalThrust = 1 * this.horizontalAccelerationRatio;
+        this.horizontalThrust = 1;
     }
 
     if (inputState.w) {
@@ -139,55 +98,43 @@ ShipActor.prototype.applyThrustInput = function(inputState){
     }
 
     if (inputState.s) {
-        this.thrust = -1 * this.backwardAccelerationRatio;
+        this.thrust = -1;
     }
 };
 
-
 ShipActor.prototype.applyWeaponInput = function(inputState){
-    this.requestShootPrimary = !!inputState.mouseLeft;
-    this.requestShootSecondary = !!inputState.mouseRight;
+    if (inputState.mouseLeft){
+        this.plasma.shoot();
+    } else {
+        this.plasma.stopShooting();
+    }
+
+    if (inputState.mouseRight){
+        this.blaster.shoot();
+    } else {
+        this.blaster.stopShooting();
+    }
 };
 
-ShipActor.prototype.shootPrimary = function(){
-    this.primaryWeaponTimer += 10;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 5);
-    this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 200
-    });
-
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 5);
-    this.manager.addNew({
-        classId: ActorFactory.PLASMAPROJECTILE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 200
+ShipActor.prototype.createBlaster = function(){
+    return new Blaster({
+        actor: this,
+        manager: this.manager,
+        firingPoints: [
+            {offsetAngle: -90, offsetDistance: 3.2, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 3.2 , fireAngle: 0}
+        ]
     });
 };
 
-ShipActor.prototype.shootSecondary = function(){
-    this.secondaryWeaponTimer += 15;
-    var offsetPosition = Utils.angleToVector(this.body.angle + Utils.degToRad(90), 3.2);
-    this.manager.addNew({
-        classId: ActorFactory.LASERPROJECITLE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 400
-    });
-
-    offsetPosition = Utils.angleToVector(this.body.angle - Utils.degToRad(90), 3.2);
-    this.manager.addNew({
-        classId: ActorFactory.LASERPROJECITLE,
-        positionX: this.body.position[0] + offsetPosition[0],
-        positionY: this.body.position[1] + offsetPosition[1],
-        angle: this.body.angle,
-        velocity: 400
+ShipActor.prototype.createPlasma = function(){
+    return new PlasmaGun({
+        actor: this,
+        manager: this.manager,
+        firingPoints: [
+            {offsetAngle: -90, offsetDistance: 5, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 5 , fireAngle: 0}
+        ]
     });
 };
 

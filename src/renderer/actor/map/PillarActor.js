@@ -1,4 +1,4 @@
-var PillarMesh = require("renderer/actor/components/mesh/PillarMesh");
+var PillarMesh = require("renderer/actor/component/mesh/PillarMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 
 function PillarActor(){
