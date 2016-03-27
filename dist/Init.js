@@ -1080,7 +1080,7 @@ MookActor.prototype.createWeapon = function () {
     return new MoltenBallThrower({
         actor: this,
         manager: this.manager,
-        firingPoints: [{ offsetAngle: -90, offsetDistance: 3, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 3, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: 0, offsetDistance: 3, fireAngle: 0 }]
     });
 };
 

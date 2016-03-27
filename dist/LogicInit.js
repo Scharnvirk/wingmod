@@ -257,7 +257,7 @@ GameScene.prototype.fillScene = function () {
 
     this.actorManager.setPlayerActor(playerActor);
 
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 40; i++) {
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
             positionX: Utils.rand(300, 350),
@@ -511,7 +511,7 @@ ActorManager.prototype.removeActorAt = function (actorId) {
 };
 
 ActorManager.prototype.endGame = function () {
-    var startingMooks = 50; //todo: definitely not the place for that
+    var startingMooks = 40; //todo: definitely not the place for that
     var mookCount = 0;
     for (var actorId in this.storage) {
         if (this.storage[actorId].classId === ActorFactory.MOOK) {
@@ -1127,7 +1127,7 @@ MookActor.prototype.createWeapon = function () {
     return new MoltenBallThrower({
         actor: this,
         manager: this.manager,
-        firingPoints: [{ offsetAngle: -90, offsetDistance: 3, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 3, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: 0, offsetDistance: 3, fireAngle: 0 }]
     });
 };
 

@@ -19,7 +19,7 @@ GameScene.prototype.fillScene = function(){
 
     this.actorManager.setPlayerActor(playerActor);
 
-    for (let i = 0; i < 50; i++){
+    for (let i = 0; i < 40; i++){
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
             positionX: Utils.rand(300,350),

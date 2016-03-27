@@ -99,8 +99,7 @@ MookActor.prototype.createWeapon = function(){
         actor: this,
         manager: this.manager,
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 3, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 3 , fireAngle: 0}
+            {offsetAngle: 0, offsetDistance: 3, fireAngle: 0},
         ]
     });
 };

@@ -61,7 +61,7 @@ ActorManager.prototype.removeActorAt = function(actorId){
 };
 
 ActorManager.prototype.endGame = function(){
-    var startingMooks = 50; //todo: definitely not the place for that
+    var startingMooks = 40; //todo: definitely not the place for that
     var mookCount = 0;
     for (let actorId in this.storage) {
         if (this.storage[actorId].classId === ActorFactory.MOOK){
