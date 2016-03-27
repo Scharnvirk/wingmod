@@ -22,8 +22,9 @@ MookActor.extend(BaseActor);
 
 MookActor.prototype.createBody = function(){
     return new BaseBody({
-        shape: new p2.Convex({
-            vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
+        shape: new p2.Circle({
+            //vertices: [[-5, 3], [0, 0], [5, 3], [0, 4]],
+            radius: 3,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
             collisionMask:
                 Constants.COLLISION_GROUPS.SHIP |

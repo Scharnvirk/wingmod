@@ -1,5 +1,5 @@
 var Constants = {
-    SHOW_FPS: false,
+    SHOW_FPS: true,
 
     LOGIC_REFRESH_RATE: 60,
 

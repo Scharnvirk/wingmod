@@ -9,9 +9,24 @@ function MookBrain(config){
     this.timer = 0;
     this.activationTime = Utils.rand(100,150);
 
-    this.wallDetectionDistances = [20];
+    this.preferredTurn = 1;
+    this.createWallDetectionParameters();
+}
 
-    this.wallDetectionAngles = {
+MookBrain.extend(BaseBrain);
+
+MookBrain.prototype.createWallDetectionParameters = function(){
+    this.wallDetectionDistances = new Uint16Array([8, 20]);
+
+    this.wallDetectionAngles = new Uint16Array([0, 45, 90, 135, 180, 225, 270, 315]);
+    this.wallDetectionAngleIndexesFront = new Uint16Array([0, 1, 7]);
+    this.wallDetectionAngleIndexesRear = new Uint16Array([3, 4, 5]);
+    this.wallDetectionAngleIndexesLeft = new Uint16Array([5, 6, 7]);
+    this.wallDetectionAngleIndexesRight = new Uint16Array([1, 2, 3]);
+
+    this.detectionResults = new Uint8Array(this.wallDetectionAngles.length);
+
+    this.wallDetectionAngleObject = {
         0: ['front'],
         45: ['front', 'right'],
         90: ['right'],
@@ -22,10 +37,8 @@ function MookBrain(config){
         315: ['left', 'front']
     };
 
-    this.preferredTurn = 1;
-}
+};
 
-MookBrain.extend(BaseBrain);
 
 MookBrain.prototype.update = function(){
     this.timer ++;
@@ -34,7 +47,7 @@ MookBrain.prototype.update = function(){
         this.preferredTurn *= -1;
     }
 
-    var nearbyWalls = this.detectNearbyWalls();
+    var nearbyWalls = this.detectNearbyWallsFast();
 
     if (this.isWallBetween(this.actor.body.position, this.playerActor.body.position)){
         this.freeRoamActon(nearbyWalls);
@@ -43,15 +56,60 @@ MookBrain.prototype.update = function(){
     }
 
     this.avoidWalls(nearbyWalls);
-
-
 };
+
+//ugly as hell, but works way faster than iterating over object with for..in structure.
+MookBrain.prototype.detectNearbyWallsFast = function(){
+    for (let a = 0; a < this.wallDetectionAngles.length; a++){
+        for (let d = 0; d < this.wallDetectionDistances.length; d++){
+            this.detectionResults[a] = 0;
+            let positionOffset = Utils.angleToVector(this.actor.body.angle + Utils.degToRad(this.wallDetectionAngles[a]), this.wallDetectionDistances[d]);
+            let position = [
+                this.actor.body.position[0] + positionOffset[0],
+                this.actor.body.position[1] + positionOffset[1]
+            ];
+            this.detectionResults[a] = this.isPositionInWall(position);
+            if(this.detectionResults[a]){
+                break;
+            }
+        }
+    }
+
+    var directions = {};
+    for (let i = 0; i < this.wallDetectionAngleIndexesFront.length; i++){
+        if(this.detectionResults[this.wallDetectionAngleIndexesFront[i]] === 1){
+            directions.front = true;
+            break;
+        }
+    }
+    for (let i = 0; i < this.wallDetectionAngleIndexesRear.length; i++){
+        if(this.detectionResults[this.wallDetectionAngleIndexesRear[i]] === 1){
+            directions.rear = true;
+            break;
+        }
+    }
+    for (let i = 0; i < this.wallDetectionAngleIndexesLeft.length; i++){
+        if(this.detectionResults[this.wallDetectionAngleIndexesLeft[i]] === 1){
+            directions.left = true;
+            break;
+        }
+    }
+    for (let i = 0; i < this.wallDetectionAngleIndexesRight.length; i++){
+        if(this.detectionResults[this.wallDetectionAngleIndexesRight[i]] === 1){
+            directions.right = true;
+            break;
+        }
+    }
+
+    return directions;
+};
+
 
 MookBrain.prototype.detectNearbyWalls = function(){
     var directions = {};
 
     for (let detectionDistanceIndex in this.wallDetectionDistances){
-        for (let angle in this.wallDetectionAngles){
+        for (let angle in this.wallDetectionAngleObject){
             let positionOffset = Utils.angleToVector(this.actor.body.angle + Utils.degToRad(parseInt(angle)), this.wallDetectionDistances[detectionDistanceIndex]);
             let position = [
                 this.actor.body.position[0] + positionOffset[0],
@@ -59,8 +117,8 @@ MookBrain.prototype.detectNearbyWalls = function(){
             ];
 
             if(this.isPositionInWall(position)){
-                for (let direction in this.wallDetectionAngles[angle]){
-                    directions[this.wallDetectionAngles[angle][direction]] = true;
+                for (let direction in this.wallDetectionAngleObject[angle]){
+                    directions[this.wallDetectionAngleObject[angle][direction]] = true;
                 }
             }
         }
