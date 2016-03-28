@@ -86,8 +86,10 @@ Ui.prototype.getOpinionOnResult = function(remainingMooks){
         return 'So close.';
     } else if (remainingMooks > 0 && remainingMooks < 10){
         return 'Almost there. Got unlucky with a stray shot?';
-    } else {
+    } else if (remainingMooks === 0){
         return 'You got them all! Grats!';
+    } else {
+        return '';
     }
 };
 
