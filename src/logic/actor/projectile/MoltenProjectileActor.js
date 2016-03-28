@@ -6,7 +6,7 @@ function MoltenProjectileActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 1;
     this.removeOnHit = true;
     this.timeout = 1000;

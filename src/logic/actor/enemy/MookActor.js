@@ -11,7 +11,7 @@ function MookActor(config){
 
     this.ACCELERATION = 140;
     this.TURN_SPEED = 2.5;
-    this.HP = 4;
+    this.hp = 4;
 
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();

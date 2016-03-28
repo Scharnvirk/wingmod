@@ -3,6 +3,7 @@ var BaseActor = require("renderer/actor/BaseActor");
 
 function PillarActor(){
     BaseActor.apply(this, arguments);
+    this.positionZ = Utils.rand(5,9);
 }
 
 PillarActor.extend(BaseActor);
@@ -28,48 +29,6 @@ PillarActor.prototype.onDeath = function(){
             lifeTime: 120
         });
     }
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 1,
-    //     colorB: 1,
-    //     scale: 500,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.4,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 30
-    // });
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 1,
-    //     colorB: 1,
-    //     scale: 120,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.95,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 80
-    // });
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 0.6,
-    //     colorB: 0.2,
-    //     scale: 300,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.95,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 90
-    // });
 };
 
 module.exports = PillarActor;

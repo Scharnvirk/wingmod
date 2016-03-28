@@ -4,7 +4,7 @@ function Camera(config){
     this.VIEW_ANGLE = 45;
     this.ASPECT = this.WIDTH / this.HEIGHT;
     this.NEAR = 0.1;
-    this.FAR = 1000;
+    this.FAR = 400;
 
     this.ZOOM_THRESHOLD = 0.995;
     this.zoomSpeed = 5;
@@ -12,13 +12,15 @@ function Camera(config){
     config = config || {};
     Object.assign(this, config);
     THREE.PerspectiveCamera.call(this, this.VIEV_ANGLE, this.ASPECT, this.NEAR, this.FAR);
-    
+
     this.expectedPositionZ = this.position.z;
     this.rotation.reorder('ZXY');
 
     this.position.z = 800;
-    this.rotation.x = 0.9;
+    this.rotation.x = 1.0;
     this.rotation.y = 0;
+
+    this.zOffset = 60;
 }
 
 Camera.extend(THREE.PerspectiveCamera);
@@ -27,22 +29,12 @@ Camera.prototype.update = function(){
     let inputState = this.inputListener.inputState;
 
     if(this.actor){
-        let offsetPosition = Utils.angleToVector(this.actor.angle, -50);
+        let offsetPosition = Utils.angleToVector(this.actor.angle, -this.zOffset);
 
         this.rotation.z = this.actor.angle;
 
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];
-    }
-
-    if(this.inputListener && this.actor){
-        if (this.inputListener.inputState.scrollUp) {
-            this.position.z += inputState.scrollUp;
-        }
-
-        if (this.inputListener.inputState.scrollDown) {
-            this.position.z -= inputState.scrollDown;
-        }
     }
 
     if(this.expectedPositionZ != this.position.z && this.expectedPositionZ > -1){
@@ -56,6 +48,19 @@ Camera.prototype.update = function(){
         this.updateProjectionMatrix();
     }else{
         this.expectedPositionZ = -1;
+        if(this.inputListener && this.actor){
+            if (inputState.scrollUp && this.position.z < 150) {
+                this.position.z += inputState.scrollUp;
+                this.rotation.x -= inputState.scrollUp * 0.01;
+                this.zOffset -= inputState.scrollUp * 0.5;
+            }
+
+            if (inputState.scrollDown && this.position.z > 30) {
+                this.position.z -= inputState.scrollDown;
+                this.rotation.x += inputState.scrollDown * 0.01;
+                this.zOffset += inputState.scrollDown * 0.5;
+            }
+        }
     }
 };
 

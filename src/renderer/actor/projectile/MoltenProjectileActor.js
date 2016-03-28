@@ -47,6 +47,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
         this.particleManager.createParticle('smokePuffAlpha',{
             positionX: this.position[0] + Utils.rand(-2,2),
             positionY: this.position[1] + Utils.rand(-2,2),
+            positionZ: this.positionZ + Utils.rand(-2,2),
             colorR: this.colorR*0.3+0.7,
             colorG: this.colorG*0.3+0.7,
             colorB: this.colorB*0.3+0.7,
@@ -55,6 +56,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0,1) / 10,
             particleAngle: Utils.rand(0,360),
+            speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
     }

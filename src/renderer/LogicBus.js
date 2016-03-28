@@ -14,7 +14,7 @@ LogicBus.prototype.handleMessage = function(message){
             this.actorManager.updateFromLogic(message.data);
             break;
         case 'attachPlayer':
-            this.actorManager.attachPlayer(message.data.actorId);
+            this.actorManager.attachPlayer(message.data);
             break;
         case 'gameEnded':
             this.core.stopGame(message.data);
@@ -22,6 +22,9 @@ LogicBus.prototype.handleMessage = function(message){
         case 'getAiImage':
             let imageObject = this.core.getAiImageObject(message.data);
             this.postMessage('aiImageDone', imageObject);
+            break;
+        case 'secondaryActorUpdate':
+            this.actorManager.secondaryActorUpdate(message.data);
             break;
     }
 };

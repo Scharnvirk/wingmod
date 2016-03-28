@@ -3,6 +3,8 @@ var Constants = {
 
     LOGIC_REFRESH_RATE: 60,
 
+    DEFAULT_POSITION_Z: 10,
+
     MAX_SHADER_UNIFORM_SIZE: 512,
 
     COLLISION_GROUPS: {

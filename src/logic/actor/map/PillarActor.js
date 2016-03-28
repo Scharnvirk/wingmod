@@ -6,7 +6,6 @@ function PillarActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
-    this.hp = 500;
 }
 
 PillarActor.extend(BaseActor);

@@ -6,7 +6,7 @@ function PlasmaProjectileActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 0.5;
     this.removeOnHit = true;
     this.timeout = 120;

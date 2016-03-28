@@ -6,8 +6,9 @@ function BaseActor(config){
 
     this.ACCELERATION = 0;
     this.TURN_SPEED = 0;
-    this.HP = Infinity;
     this.DAMAGE = 0;
+
+    this.hp = Infinity;
 
     this.body.position = [this.positionX || 0, this.positionY || 0];
     this.body.angle = this.angle || 0;
@@ -37,13 +38,18 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.onCollision = function(otherActor){
-    if(otherActor){
-        this.HP -= otherActor.DAMAGE;
+    if(otherActor && this.hp != Infinity && otherActor.DAMAGE > 0){
+        this.hp -= otherActor.DAMAGE;
+        this.notifyManagerOfUpdate();
     }
 
-    if (this.HP <= 0 || this.removeOnHit){
+    if (this.hp <= 0 || this.removeOnHit){
         this.onDeath();
     }
+};
+
+BaseActor.prototype.notifyManagerOfUpdate = function(){
+    this.manager.requestUpdateActor(this.body.actorId);
 };
 
 BaseActor.prototype.remove = function(actorId){

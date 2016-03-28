@@ -58,32 +58,31 @@ class GameScene {
         this.scene.add(combinedObject);
 
         var lcolor = Utils.makeRandomColor(128, 256);
-        console.log(lcolor);
-        //var lcolor = 0xffffff;
 
-        var directionalLight = new THREE.DirectionalLight( lcolor, Utils.rand(5, 8)/10 );
-        directionalLight.position.set( 2, 2, 10 );
-        this.scene.add( directionalLight );
+        this.directionalLight = new THREE.DirectionalLight( lcolor, 1 );
+        this.directionalLight.position.set( 0, 0, 200 );
+        this.directionalLight.distance = 1000;
 
-        this.pointLight = new THREE.PointLight( lcolor, 2 );
-        this.pointLight.distance = 200;
-        this.pointLight.castShadow = this.shadows;
-        this.pointLight.shadowCameraNear = 1;
-        this.pointLight.shadowCameraFar = 200;
-        this.pointLight.shadowMapWidth = 2048;
-        this.pointLight.shadowMapHeight = 2048;
-        this.pointLight.shadowBias = 0;
-        this.pointLight.shadowDarkness = 0.4;
-        this.pointLight.position.set(0,0,30);
-        this.scene.add( this.pointLight );
+        this.directionalLight.castShadow = this.shadows;
+        this.directionalLight.shadowCameraNear = 1;
+        this.directionalLight.shadowCameraFar = 400;
+        this.directionalLight.shadowMapWidth = 2048;
+        this.directionalLight.shadowMapHeight = 2048;
+        this.directionalLight.shadowBias = 0;
+        this.directionalLight.shadowDarkness = 0.4;
 
+        this.scene.add( this.directionalLight );
+
+        this.scene.fog = new THREE.Fog( 0x000000, 200, 500 );
      }
 
     update(){
         if(this.actor){
-            let shipPosition = Utils.angleToVector(this.actor.angle, 15);
-            this.pointLight.position.x = this.actor.position[0] + 20;//shipPosition[0];
-            this.pointLight.position.y = this.actor.position[1] + 20;//shipPosition[1];
+            this.directionalLight.position.x = this.actor.position[0] + 100;
+            this.directionalLight.position.y = this.actor.position[1] + 100;
+            this.directionalLight.target.position.x = this.actor.position[0];
+            this.directionalLight.target.position.y = this.actor.position[1];
+            this.directionalLight.target.updateMatrixWorld();
         }
     }
 }

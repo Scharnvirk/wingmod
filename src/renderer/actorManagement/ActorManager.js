@@ -6,6 +6,8 @@ function ActorManager(config){
     this.scene = null;
     this.framerate = config.framerate || 60;
 
+    this.enemies = Object.create(null);
+
     this.DELTA_SMOOTHNESS = 0;
 
     Object.assign(this, config);
@@ -33,13 +35,13 @@ transferArray[i*5+2] = body.position[0];
 transferArray[i*5+3] = body.position[1];
 transferArray[i*5+4] = body.angle;
 */
-ActorManager.prototype.updateFromLogic = function(dataObject){
+ActorManager.prototype.updateFromLogic = function(messageObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
     this.currentPhysicsTime = Date.now();
-    var dataArray = dataObject.transferArray;
-    var deadActorIds = dataObject.deadActors;
+    var dataArray = messageObject.transferArray;
+    var deadActorIds = messageObject.deadActors;
 
-    for(let i = 0; i < dataObject.length; i++){
+    for(let i = 0; i < messageObject.length; i++){
         let actor = this.storage[dataArray[i*5]];
         if(!actor){
             if(dataArray[i*5+1] > 0){
@@ -63,11 +65,11 @@ ActorManager.prototype.updateFromLogic = function(dataObject){
 
 ActorManager.prototype.createActor = function(config){
     var actor = this.factory.create(config);
+    actor.actorId = config.actorId;
+    actor.manager = this;
 
     if(this.actorRequestingPlayer && this.actorRequestingPlayer === config.actorId){
-        this.core.camera.actor = actor;
-        this.core.gameScene.actor = actor;
-        actor.inputListener = this.core.inputListener;
+        this.core.playerActorAppeared(actor);
     }
 
     this.storage[config.actorId] = actor;
@@ -75,11 +77,11 @@ ActorManager.prototype.createActor = function(config){
     actor.onSpawn();
 };
 
-ActorManager.prototype.attachPlayer = function(actorId){
-    if (!this.storage[actorId]){
-        this.actorRequestingPlayer = actorId;
+ActorManager.prototype.attachPlayer = function(messageObject){
+    if (!this.storage[messageObject.actorId]){
+        this.actorRequestingPlayer = messageObject.actorId;
     } else {
-        this.core.camera.actor = this.storage[actorId];
+        this.core.camera.actor = this.storage[messageObject.actorId];
     }
 };
 
@@ -90,6 +92,25 @@ ActorManager.prototype.deleteActor = function(actorId){
         actor.removeFromScene(this.scene);
     }
     delete this.storage[actorId];
+};
+
+ActorManager.prototype.secondaryActorUpdate = function(messageObject){
+    var actorData = messageObject.actorData;
+
+    for (let actorId in actorData ){
+        let actor = this.storage[actorId];
+        if (actor){
+            Object.assign(actor, actorData[actorId]);
+        }
+    }
+};
+
+ActorManager.prototype.newEnemy = function(actorId){
+    this.enemies[actorId] = this.storage[actorId];
+};
+
+ActorManager.prototype.enemyDestroyed = function(actorId){
+    delete this.enemies[actorId];
 };
 
 module.exports = ActorManager;

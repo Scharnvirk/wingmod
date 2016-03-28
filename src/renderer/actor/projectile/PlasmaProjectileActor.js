@@ -45,8 +45,9 @@ PlasmaProjectileActor.prototype.customUpdate = function(){
 PlasmaProjectileActor.prototype.onDeath = function(){
     for (let i = 0; i < 20; i++){
         this.particleManager.createParticle('smokePuffAlpha',{
-            positionX: this.position[0] + Utils.rand(-3,3),
-            positionY: this.position[1] + Utils.rand(-3,3),
+            positionX: this.position[0] + Utils.rand(-1, 1),
+            positionY: this.position[1] + Utils.rand(-1, 1),
+            positionZ: this.positionZ + Utils.rand(-1, 1),
             colorR: this.colorR*0.3+0.7,
             colorG: this.colorG*0.3+0.7,
             colorB: this.colorB*0.3+0.7,
@@ -55,6 +56,7 @@ PlasmaProjectileActor.prototype.onDeath = function(){
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0,1) / 10,
             particleAngle: Utils.rand(0,360),
+            speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
     }

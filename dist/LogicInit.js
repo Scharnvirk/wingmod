@@ -6,6 +6,8 @@ var Constants = {
 
     LOGIC_REFRESH_RATE: 60,
 
+    DEFAULT_POSITION_Z: 10,
+
     MAX_SHADER_UNIFORM_SIZE: 512,
 
     COLLISION_GROUPS: {
@@ -460,6 +462,7 @@ function ActorManager(config) {
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
+    this.actorIdsToSendUpdateAbout = [];
 
     Object.assign(this, config);
 
@@ -489,14 +492,20 @@ ActorManager.prototype.addNew = function (config) {
 };
 
 ActorManager.prototype.update = function (inputState) {
-    this.playerActors.forEach(function (actorId) {
-        if (this.storage[actorId]) {
-            this.storage[actorId].playerUpdate(inputState);
+
+    for (var i = 0; i < this.playerActors.length; i++) {
+        if (this.storage[this.playerActors[i]]) {
+            this.storage[this.playerActors[i]].playerUpdate(inputState);
         }
-    }.bind(this));
+    }
 
     for (var actorId in this.storage) {
         this.storage[actorId].update();
+    }
+
+    if (this.actorIdsToSendUpdateAbout.length > 0) {
+        this.core.renderBus.postMessage('secondaryActorUpdate', { actorData: this.buildSecondaryUpdateTransferData() });
+        this.actorIdsToSendUpdateAbout = [];
     }
 };
 
@@ -537,6 +546,23 @@ ActorManager.prototype.getFirstPlayerActor = function () {
     return this.storage[this.playerActors[0]];
 };
 
+ActorManager.prototype.requestUpdateActor = function (actorId) {
+    this.actorIdsToSendUpdateAbout.push(actorId);
+};
+
+ActorManager.prototype.buildSecondaryUpdateTransferData = function () {
+    var transferData = {};
+    for (var i = 0; i < this.actorIdsToSendUpdateAbout.length; i++) {
+        var actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
+        if (actor) {
+            transferData[this.actorIdsToSendUpdateAbout[i]] = {
+                hp: actor.hp
+            };
+        }
+    }
+    return transferData;
+};
+
 module.exports = ActorManager;
 
 },{"renderer/actorManagement/ActorFactory":26}],9:[function(require,module,exports){
@@ -550,8 +576,9 @@ function BaseActor(config) {
 
     this.ACCELERATION = 0;
     this.TURN_SPEED = 0;
-    this.HP = Infinity;
     this.DAMAGE = 0;
+
+    this.hp = Infinity;
 
     this.body.position = [this.positionX || 0, this.positionY || 0];
     this.body.angle = this.angle || 0;
@@ -581,13 +608,18 @@ BaseActor.prototype.update = function () {
 };
 
 BaseActor.prototype.onCollision = function (otherActor) {
-    if (otherActor) {
-        this.HP -= otherActor.DAMAGE;
+    if (otherActor && this.hp != Infinity && otherActor.DAMAGE > 0) {
+        this.hp -= otherActor.DAMAGE;
+        this.notifyManagerOfUpdate();
     }
 
-    if (this.HP <= 0 || this.removeOnHit) {
+    if (this.hp <= 0 || this.removeOnHit) {
         this.onDeath();
     }
+};
+
+BaseActor.prototype.notifyManagerOfUpdate = function () {
+    this.manager.requestUpdateActor(this.body.actorId);
 };
 
 BaseActor.prototype.remove = function (actorId) {
@@ -803,25 +835,6 @@ MookBrain.prototype.detectNearbyWallsFast = function () {
     return directions;
 };
 
-MookBrain.prototype.detectNearbyWalls = function () {
-    var directions = {};
-
-    for (var detectionDistanceIndex in this.wallDetectionDistances) {
-        for (var angle in this.wallDetectionAngleObject) {
-            var positionOffset = Utils.angleToVector(this.actor.body.angle + Utils.degToRad(parseInt(angle)), this.wallDetectionDistances[detectionDistanceIndex]);
-            var position = [this.actor.body.position[0] + positionOffset[0], this.actor.body.position[1] + positionOffset[1]];
-
-            if (this.isPositionInWall(position)) {
-                for (var direction in this.wallDetectionAngleObject[angle]) {
-                    directions[this.wallDetectionAngleObject[angle][direction]] = true;
-                }
-            }
-        }
-    }
-
-    return directions;
-};
-
 MookBrain.prototype.avoidWalls = function (nearbyWalls) {
     if (nearbyWalls.rear && !nearbyWalls.front) {
         this.orders.thrust = 1;
@@ -850,8 +863,6 @@ MookBrain.prototype.avoidBeingInFront = function () {
     } else if (playerArcToActor < 180 && playerArcToActor > 180 - beingInFrontArc) {
         this.orders.horizontalThrust = 1;
     }
-
-    console.log(playerArcToActor);
 };
 
 MookBrain.prototype.seesPlayerAction = function () {
@@ -1032,7 +1043,7 @@ function Blaster(config) {
     BaseWeapon.apply(this, arguments);
 
     this.COOLDOWN = 15;
-    this.VELOCITY = 400;
+    this.VELOCITY = 600;
 }
 
 Blaster.extend(BaseWeapon);
@@ -1100,7 +1111,7 @@ function MookActor(config) {
 
     this.ACCELERATION = 140;
     this.TURN_SPEED = 2.5;
-    this.HP = 4;
+    this.hp = 4;
 
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
@@ -1212,7 +1223,6 @@ function PillarActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
-    this.hp = 500;
 }
 
 PillarActor.extend(BaseActor);
@@ -1283,7 +1293,10 @@ function ChunkActor(config) {
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
+
     this.hp = 1;
+    this.TURN_SPEED = 1;
+
     this.removeOnHit = true;
     this.timeout = Utils.rand(25, 100);
 }
@@ -1303,7 +1316,7 @@ ChunkActor.prototype.createBody = function () {
 };
 
 ChunkActor.prototype.onSpawn = function () {
-    this.body.angularVelocity = Utils.rand(-15, 15);
+    this.rotationForce = Utils.rand(-15, 15);
 };
 
 module.exports = ChunkActor;
@@ -1325,7 +1338,7 @@ function ShipActor(config) {
 
     this.ACCELERATION = 500;
     this.TURN_SPEED = 6;
-    this.HP = 20;
+    this.hp = 20;
     this.stepAngle = Utils.radToDeg(this.TURN_SPEED / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
@@ -1468,7 +1481,7 @@ function LaserProjectileActor(config) {
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 2;
     this.removeOnHit = true;
     this.timeout = 60;
@@ -1484,7 +1497,7 @@ LaserProjectileActor.prototype.createBody = function () {
             collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
-        mass: 1,
+        mass: 0.1,
         ccdSpeedThreshold: 1,
         ccdIterations: 4
     });
@@ -1507,7 +1520,7 @@ function MoltenProjectileActor(config) {
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 1;
     this.removeOnHit = true;
     this.timeout = 1000;
@@ -1546,7 +1559,7 @@ function PlasmaProjectileActor(config) {
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 0.5;
     this.removeOnHit = true;
     this.timeout = 120;
@@ -1674,6 +1687,9 @@ function BaseActor(config, actorDependencies) {
     this.mesh = this.createMesh();
     this.sprite = this.createSprite();
 
+    this.initialHp = Infinity;
+    this.hp = Infinity;
+
     this.timer = 0;
 }
 
@@ -1696,6 +1712,8 @@ BaseActor.prototype.update = function (delta) {
 };
 
 BaseActor.prototype.customUpdate = function () {};
+
+BaseActor.prototype.secondaryUpdateFromLogic = function () {};
 
 BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
@@ -1805,7 +1823,7 @@ function PillarMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = new THREE.BoxGeometry(20, 20, 15, 50);
+    config.geometry = new THREE.BoxGeometry(20, 20, 20, 50);
     config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
     Object.assign(this, config);
 
@@ -1831,6 +1849,7 @@ function RavierMesh(config) {
     config.material = ModelStore.get('ravier').material;
     Object.assign(this, config);
 
+    this.receiveShadow = true;
     this.castShadow = true;
 }
 
@@ -1871,11 +1890,12 @@ function WallMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = new THREE.BoxGeometry(800, 2, 50, 50);
+    config.geometry = new THREE.BoxGeometry(800, 2, 30, 30);
     config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
     Object.assign(this, config);
 
     this.receiveShadow = true;
+    this.castShadow = true;
 }
 
 WallMesh.extend(BaseMesh);
@@ -1892,6 +1912,9 @@ function MookActor() {
     BaseActor.apply(this, arguments);
     this.speedZ = Utils.rand(35, 45) / 1000;
     this.bobSpeed = Utils.rand(18, 22) / 10000;
+
+    this.initialHp = 4;
+    this.hp = 4;
 }
 
 MookActor.extend(BaseActor);
@@ -1903,6 +1926,7 @@ MookActor.prototype.createMesh = function () {
 MookActor.prototype.customUpdate = function () {
     this.positionZ += this.speedZ;
     this.doBob();
+    this.handleDamage();
 };
 
 MookActor.prototype.doBob = function () {
@@ -1913,7 +1937,13 @@ MookActor.prototype.doBob = function () {
     }
 };
 
+MookActor.prototype.onSpawn = function () {
+    this.manager.newEnemy(this.actorId);
+};
+
 MookActor.prototype.onDeath = function () {
+    this.manager.enemyDestroyed(this.actorId);
+
     for (var i = 0; i < 100; i++) {
         this.particleManager.createParticle('smokePuffAlpha', {
             positionX: this.position[0] + Utils.rand(-2, 2),
@@ -1973,6 +2003,101 @@ MookActor.prototype.onDeath = function () {
     });
 };
 
+MookActor.prototype.handleDamage = function () {
+    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
+    if (damageRandomValue > 20) {
+        this.particleManager.createParticle('smokePuffAlpha', {
+            positionX: this.position[0] + Utils.rand(-2, 2),
+            positionY: this.position[1] + Utils.rand(-2, 2),
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: Utils.rand(2, 5),
+            alpha: Utils.rand(0, 3) / 10 + 0.1,
+            alphaMultiplier: 0.95,
+            particleVelocity: Utils.rand(0, 10) / 100,
+            particleAngle: Utils.rand(0, 360),
+            speedZ: Utils.rand(0, 10) / 100,
+            lifeTime: 120
+        });
+    }
+
+    if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
+        for (var i = 0; i < 15; i++) {
+            this.particleManager.createParticle('particleAddSplash', {
+                positionX: this.position[0],
+                positionY: this.position[1],
+                colorR: 0.8,
+                colorG: 0.8,
+                colorB: 1,
+                scale: 0.75,
+                alpha: 1,
+                alphaMultiplier: 0.90,
+                particleVelocity: Utils.rand(5, 8) / 10,
+                particleAngle: Utils.rand(0, 360),
+                speedZ: Utils.rand(-50, 50) / 100,
+                lifeTime: Utils.rand(0, 20)
+            });
+        }
+
+        this.particleManager.createParticle('mainExplosionAdd', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 30,
+            alpha: 1,
+            alphaMultiplier: 0.2,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 10
+        });
+
+        this.particleManager.createParticle('particleAddSplash', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.8,
+            colorG: 0.9,
+            colorB: 1,
+            scale: 2,
+            alpha: 1,
+            alphaMultiplier: 0.9,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 60
+        });
+
+        this.particleManager.createParticle('particleAddSplash', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 5,
+            alpha: 1,
+            alphaMultiplier: 0.8,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 15
+        });
+
+        this.particleManager.createParticle('mainExplosionAdd', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.3,
+            colorG: 0.4,
+            colorB: 1,
+            scale: 8,
+            alpha: 1,
+            alphaMultiplier: 0.8,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 20
+        });
+    }
+};
+
 module.exports = MookActor;
 
 },{"renderer/actor/BaseActor":27,"renderer/actor/component/mesh/ShipMesh":32}],35:[function(require,module,exports){
@@ -1983,6 +2108,7 @@ var BaseActor = require("renderer/actor/BaseActor");
 
 function PillarActor() {
     BaseActor.apply(this, arguments);
+    this.positionZ = Utils.rand(5, 9);
 }
 
 PillarActor.extend(BaseActor);
@@ -2007,48 +2133,6 @@ PillarActor.prototype.onDeath = function () {
             lifeTime: 120
         });
     }
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 1,
-    //     colorB: 1,
-    //     scale: 500,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.4,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 30
-    // });
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 1,
-    //     colorB: 1,
-    //     scale: 120,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.95,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 80
-    // });
-    //
-    // this.particleManager.createParticle('mainExplosionAdd', {
-    //     positionX: this.position[0],
-    //     positionY: this.position[1],
-    //     colorR: 1,
-    //     colorG: 0.6,
-    //     colorB: 0.2,
-    //     scale: 300,
-    //     alpha: 1,
-    //     alphaMultiplier: 0.95,
-    //     particleVelocity: 0,
-    //     particleAngle: 0,
-    //     lifeTime: 90
-    // });
 };
 
 module.exports = PillarActor;
@@ -2135,6 +2219,10 @@ function ShipActor() {
     BaseActor.apply(this, arguments);
     this.count = 0;
     this.speedZ = 0.04;
+
+    //todo: generic config holder
+    this.initialHp = 20;
+    this.hp = 20;
 }
 
 ShipActor.extend(BaseActor);
@@ -2147,6 +2235,7 @@ ShipActor.prototype.customUpdate = function () {
     this.doEngineGlow();
     this.positionZ += this.speedZ;
     this.doBob();
+    this.handleDamage();
 };
 
 ShipActor.prototype.doBank = function () {
@@ -2166,6 +2255,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ + 1,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2180,6 +2270,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ + 1,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2194,6 +2285,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ + 1,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2208,6 +2300,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ + 1,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2224,6 +2317,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2238,6 +2332,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2252,6 +2347,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2266,6 +2362,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2282,6 +2379,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2296,6 +2394,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2310,6 +2409,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2324,6 +2424,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2341,6 +2442,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 0.5,
             colorG: 0.6,
             colorB: 1,
@@ -2355,6 +2457,7 @@ ShipActor.prototype.doEngineGlow = function () {
         this.particleManager.createParticle('particleAddTrail', {
             positionX: this.position[0],
             positionY: this.position[1],
+            positionZ: this.positionZ,
             colorR: 1,
             colorG: 1,
             colorB: 1,
@@ -2428,6 +2531,101 @@ ShipActor.prototype.onDeath = function () {
     });
 };
 
+ShipActor.prototype.handleDamage = function () {
+    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
+    if (damageRandomValue > 20) {
+        this.particleManager.createParticle('smokePuffAlpha', {
+            positionX: this.position[0] + Utils.rand(-2, 2),
+            positionY: this.position[1] + Utils.rand(-2, 2),
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: Utils.rand(2, 5),
+            alpha: Utils.rand(0, 3) / 10 + 0.1,
+            alphaMultiplier: 0.95,
+            particleVelocity: Utils.rand(0, 10) / 100,
+            particleAngle: Utils.rand(0, 360),
+            speedZ: Utils.rand(0, 10) / 100,
+            lifeTime: 120
+        });
+    }
+
+    if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
+        for (var i = 0; i < 15; i++) {
+            this.particleManager.createParticle('particleAddSplash', {
+                positionX: this.position[0],
+                positionY: this.position[1],
+                colorR: 0.8,
+                colorG: 0.8,
+                colorB: 1,
+                scale: 0.75,
+                alpha: 1,
+                alphaMultiplier: 0.90,
+                particleVelocity: Utils.rand(5, 8) / 10,
+                particleAngle: Utils.rand(0, 360),
+                speedZ: Utils.rand(-50, 50) / 100,
+                lifeTime: Utils.rand(0, 20)
+            });
+        }
+
+        this.particleManager.createParticle('mainExplosionAdd', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 30,
+            alpha: 1,
+            alphaMultiplier: 0.2,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 10
+        });
+
+        this.particleManager.createParticle('particleAddSplash', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.8,
+            colorG: 0.9,
+            colorB: 1,
+            scale: 2,
+            alpha: 1,
+            alphaMultiplier: 0.9,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 60
+        });
+
+        this.particleManager.createParticle('particleAddSplash', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 5,
+            alpha: 1,
+            alphaMultiplier: 0.8,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 15
+        });
+
+        this.particleManager.createParticle('mainExplosionAdd', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.3,
+            colorG: 0.4,
+            colorB: 1,
+            scale: 8,
+            alpha: 1,
+            alphaMultiplier: 0.8,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 20
+        });
+    }
+};
+
 module.exports = ShipActor;
 
 },{"renderer/actor/BaseActor":27,"renderer/actor/component/mesh/RavierMesh":31}],39:[function(require,module,exports){
@@ -2481,19 +2679,20 @@ LaserProjectileActor.prototype.customUpdate = function () {
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 30; i++) {
         this.particleManager.createParticle('particleAddSplash', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: this.colorR * 0.3 + 0.7,
             colorG: this.colorG * 0.3 + 0.7,
             colorB: this.colorB * 0.3 + 0.7,
-            scale: 1,
+            scale: 0.75,
             alpha: 1,
-            alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(1, 6) / 10,
+            alphaMultiplier: 0.94,
+            particleVelocity: Utils.rand(5, 8) / 10,
             particleAngle: Utils.rand(0, 360),
-            lifeTime: Utils.rand(20, 100)
+            speedZ: Utils.rand(-50, 50) / 100,
+            lifeTime: Utils.rand(10, 20)
         });
     }
 
@@ -2509,6 +2708,20 @@ LaserProjectileActor.prototype.onDeath = function () {
         particleVelocity: 0,
         particleAngle: 0,
         lifeTime: 10
+    });
+
+    this.particleManager.createParticle('particleAddSplash', {
+        positionX: this.position[0],
+        positionY: this.position[1],
+        colorR: this.colorR * 0.3 + 0.7,
+        colorG: this.colorG * 0.3 + 0.7,
+        colorB: this.colorB * 0.3 + 0.7,
+        scale: 2,
+        alpha: 1,
+        alphaMultiplier: 0.9,
+        particleVelocity: 0,
+        particleAngle: 0,
+        lifeTime: 60
     });
 
     this.particleManager.createParticle('particleAddSplash', {
@@ -2624,6 +2837,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
         this.particleManager.createParticle('smokePuffAlpha', {
             positionX: this.position[0] + Utils.rand(-2, 2),
             positionY: this.position[1] + Utils.rand(-2, 2),
+            positionZ: this.positionZ + Utils.rand(-2, 2),
             colorR: this.colorR * 0.3 + 0.7,
             colorG: this.colorG * 0.3 + 0.7,
             colorB: this.colorB * 0.3 + 0.7,
@@ -2632,6 +2846,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
             particleAngle: Utils.rand(0, 360),
+            speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
     }
@@ -2761,8 +2976,9 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
 PlasmaProjectileActor.prototype.onDeath = function () {
     for (var i = 0; i < 20; i++) {
         this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-3, 3),
-            positionY: this.position[1] + Utils.rand(-3, 3),
+            positionX: this.position[0] + Utils.rand(-1, 1),
+            positionY: this.position[1] + Utils.rand(-1, 1),
+            positionZ: this.positionZ + Utils.rand(-1, 1),
             colorR: this.colorR * 0.3 + 0.7,
             colorG: this.colorG * 0.3 + 0.7,
             colorB: this.colorB * 0.3 + 0.7,
@@ -2771,6 +2987,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
             particleAngle: Utils.rand(0, 360),
+            speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
     }

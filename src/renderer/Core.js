@@ -10,6 +10,7 @@ var ModelList = require("renderer/modelRepo/ModelList");
 var ModelStore = require("renderer/modelRepo/ModelStore");
 var CustomModelBuilder = require("renderer/modelRepo/CustomModelBuilder");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
+var Hud = require("renderer/gameUi/Hud");
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -49,6 +50,7 @@ Core.prototype.makeMainComponents = function(config){
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
     this.gameScene = new GameScene({core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
     this.aiImageRenderer = new AiImageRenderer();
+    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -91,7 +93,7 @@ Core.prototype.makeRenderer = function(config) {
     renderer.setPixelRatio(this.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadows;
-    renderer.shadowMap.type = !!config.shadows ? THREE.BasicShadowMap : null;
+    renderer.shadowMap.type = !!config.shadows ? THREE.PCFSoftShadowMap : null;
     return renderer;
 };
 
@@ -168,6 +170,7 @@ Core.prototype.controlsUpdate = function(){
 Core.prototype.render = function(){
     this.gameScene.update();
     this.actorManager.update();
+    this.hud.update();
     this.particleManager.update();
     this.camera.update();
     this.renderTicks++;
@@ -190,6 +193,14 @@ Core.prototype.stopGame = function(info){
 
 Core.prototype.getAiImageObject = function(wallsData){
     return this.aiImageRenderer.getImageObject(wallsData);
+};
+
+//todo: event for that?
+Core.prototype.playerActorAppeared = function(actor){
+    this.camera.actor = actor;
+    this.gameScene.actor = actor;
+    this.hud.actor = actor;
+    actor.inputListener = this.inputListener;
 };
 
 module.exports = Core;

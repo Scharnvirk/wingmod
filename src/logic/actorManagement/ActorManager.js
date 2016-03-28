@@ -8,6 +8,7 @@ function ActorManager(config){
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
+    this.actorIdsToSendUpdateAbout = [];
 
     Object.assign(this, config);
 
@@ -39,14 +40,20 @@ ActorManager.prototype.addNew = function(config){
 };
 
 ActorManager.prototype.update = function(inputState){
-    this.playerActors.forEach(function(actorId){
-        if(this.storage[actorId]){
-            this.storage[actorId].playerUpdate(inputState);
+
+    for(let i = 0; i < this.playerActors.length; i++){
+        if(this.storage[this.playerActors[i]]){
+            this.storage[this.playerActors[i]].playerUpdate(inputState);
         }
-    }.bind(this));
+    }
 
     for (let actorId in this.storage) {
         this.storage[actorId].update();
+    }
+
+    if (this.actorIdsToSendUpdateAbout.length > 0){
+        this.core.renderBus.postMessage('secondaryActorUpdate', {actorData: this.buildSecondaryUpdateTransferData()});
+        this.actorIdsToSendUpdateAbout = [];
     }
 };
 
@@ -85,6 +92,24 @@ ActorManager.prototype.checkEndGameCondition = function(){
 
 ActorManager.prototype.getFirstPlayerActor = function(){
     return this.storage[this.playerActors[0]];
+};
+
+ActorManager.prototype.requestUpdateActor = function(actorId){
+    this.actorIdsToSendUpdateAbout.push(actorId);
+};
+
+ActorManager.prototype.buildSecondaryUpdateTransferData = function(){
+    var transferData = {};
+    for (let i = 0; i < this.actorIdsToSendUpdateAbout.length; i++){
+        let actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
+        if (actor){
+            transferData[this.actorIdsToSendUpdateAbout[i]] = {
+                hp: actor.hp
+            };
+        }
+
+    }
+    return transferData;
 };
 
 module.exports = ActorManager;

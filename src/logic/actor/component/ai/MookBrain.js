@@ -104,29 +104,6 @@ MookBrain.prototype.detectNearbyWallsFast = function(){
     return directions;
 };
 
-
-MookBrain.prototype.detectNearbyWalls = function(){
-    var directions = {};
-
-    for (let detectionDistanceIndex in this.wallDetectionDistances){
-        for (let angle in this.wallDetectionAngleObject){
-            let positionOffset = Utils.angleToVector(this.actor.body.angle + Utils.degToRad(parseInt(angle)), this.wallDetectionDistances[detectionDistanceIndex]);
-            let position = [
-                this.actor.body.position[0] + positionOffset[0],
-                this.actor.body.position[1] + positionOffset[1]
-            ];
-
-            if(this.isPositionInWall(position)){
-                for (let direction in this.wallDetectionAngleObject[angle]){
-                    directions[this.wallDetectionAngleObject[angle][direction]] = true;
-                }
-            }
-        }
-    }
-
-    return directions;
-};
-
 MookBrain.prototype.avoidWalls = function (nearbyWalls){
     if (nearbyWalls.rear && !nearbyWalls.front){
         this.orders.thrust = 1;
@@ -155,8 +132,6 @@ MookBrain.prototype.avoidBeingInFront = function(){
     } else if (playerArcToActor < 180 && playerArcToActor > 180 - beingInFrontArc){
         this.orders.horizontalThrust = 1;
     }
-
-    console.log(playerArcToActor);
 };
 
 MookBrain.prototype.seesPlayerAction = function(){

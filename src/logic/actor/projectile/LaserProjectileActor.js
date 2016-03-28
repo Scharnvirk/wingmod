@@ -6,7 +6,7 @@ function LaserProjectileActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.HP = 1;
+    this.hp = 1;
     this.DAMAGE = 2;
     this.removeOnHit = true;
     this.timeout = 60;
@@ -25,7 +25,7 @@ LaserProjectileActor.prototype.createBody = function(){
                 Constants.COLLISION_GROUPS.TERRAIN
         }),
         actor: this,
-        mass: 1,
+        mass: 0.1,
         ccdSpeedThreshold: 1,
         ccdIterations: 4
     });

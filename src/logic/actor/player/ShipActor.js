@@ -12,7 +12,7 @@ function ShipActor(config){
 
     this.ACCELERATION = 500;
     this.TURN_SPEED = 6;
-    this.HP = 20;
+    this.hp = 20;
     this.stepAngle = Utils.radToDeg(this.TURN_SPEED / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;

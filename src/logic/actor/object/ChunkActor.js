@@ -5,7 +5,10 @@ function ChunkActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
+
     this.hp = 1;
+    this.TURN_SPEED = 1;
+
     this.removeOnHit = true;
     this.timeout = Utils.rand(25,100);
 }
@@ -25,7 +28,7 @@ ChunkActor.prototype.createBody = function(){
 };
 
 ChunkActor.prototype.onSpawn = function(){
-    this.body.angularVelocity = Utils.rand(-15,15);
+    this.rotationForce = Utils.rand(-15,15);
 };
 
 module.exports = ChunkActor;

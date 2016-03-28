@@ -46,19 +46,20 @@ LaserProjectileActor.prototype.customUpdate = function(){
 };
 
 LaserProjectileActor.prototype.onDeath = function(){
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 30; i++){
         this.particleManager.createParticle('particleAddSplash',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: this.colorR*0.3+0.7,
             colorG: this.colorG*0.3+0.7,
             colorB: this.colorB*0.3+0.7,
-            scale: 1,
+            scale: 0.75,
             alpha: 1,
-            alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(1,6) / 10,
+            alphaMultiplier: 0.94,
+            particleVelocity: Utils.rand(5, 8) / 10,
             particleAngle: Utils.rand(0,360),
-            lifeTime: Utils.rand(20,100)
+            speedZ: Utils.rand(-50, 50) / 100,
+            lifeTime: Utils.rand(10,20)
         });
     }
 
@@ -74,6 +75,20 @@ LaserProjectileActor.prototype.onDeath = function(){
         particleVelocity: 0,
         particleAngle: 0,
         lifeTime: 10
+    });
+
+    this.particleManager.createParticle('particleAddSplash', {
+        positionX: this.position[0],
+        positionY: this.position[1],
+        colorR: this.colorR*0.3+0.7,
+        colorG: this.colorG*0.3+0.7,
+        colorB: this.colorB*0.3+0.7,
+        scale: 2,
+        alpha: 1,
+        alphaMultiplier: 0.9,
+        particleVelocity: 0,
+        particleAngle: 0,
+        lifeTime: 60
     });
 
     this.particleManager.createParticle('particleAddSplash', {

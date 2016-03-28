@@ -13,8 +13,6 @@ class InputListener{
         this.inputState = Object.create(null);
         this.inputState.mouseAngle = 0;
 
-        this.PI_2 = Math.PI/2;
-
         this.keys = {
             81: 'q',
             69: 'e',
