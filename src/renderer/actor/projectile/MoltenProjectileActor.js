@@ -10,98 +10,11 @@ function MoltenProjectileActor(config){
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function(){
-    for(let i = 0; i < 3; i++){
-        var offsetPosition = Utils.angleToVector(this.angle, -i*0.6);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 1.5,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR,
-        colorG: this.colorG,
-        colorB: this.colorB,
-        scale: 8,
-        alpha: 0.8,
-        alphaMultiplier: 0.6,
-        particleVelocity: 1,
-        particleAngle: this.angle,
-        lifeTime: 1
-    });
+    this.particleManager.createPremade('OrangeTrail', {position: this.position, angle: this.angle});
 };
 
 MoltenProjectileActor.prototype.onDeath = function(){
-    for (let i = 0; i < 5; i++){
-        this.particleManager.createParticle('smokePuffAlpha',{
-            positionX: this.position[0] + Utils.rand(-2,2),
-            positionY: this.position[1] + Utils.rand(-2,2),
-            positionZ: this.positionZ + Utils.rand(-2,2),
-            colorR: this.colorR*0.3+0.7,
-            colorG: this.colorG*0.3+0.7,
-            colorB: this.colorB*0.3+0.7,
-            scale: Utils.rand(1,3),
-            alpha: 0.6,
-            alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(0,1) / 10,
-            particleAngle: Utils.rand(0,360),
-            speedZ: Utils.rand(-10, 10) / 100,
-            lifeTime: 60
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 35,
-        alpha: 1,
-        alphaMultiplier: 0.2,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 10
-    });
-
-    this.particleManager.createParticle('particleAddSplash', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 15
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
-        scale: 10,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
+    this.particleManager.createPremade('OrangeBoomTiny', {position: this.position, angle: this.angle});
 };
 
 

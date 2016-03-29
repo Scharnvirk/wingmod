@@ -122,18 +122,6 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls){
     }
 };
 
-//not working yet
-MookBrain.prototype.avoidBeingInFront = function(){
-    let beingInFrontArc = 90;
-    let playerArcToActor = Math.abs(Utils.radToDeg(Utils.arcAngleDifference(this.actor.body.position, this.playerActor.body.position, this.playerActor.body.angle))) % 360;
-
-    if (playerArcToActor > 180 && playerArcToActor < 180 + beingInFrontArc){
-        this.orders.horizontalThrust = -1;
-    } else if (playerArcToActor < 180 && playerArcToActor > 180 - beingInFrontArc){
-        this.orders.horizontalThrust = 1;
-    }
-};
-
 MookBrain.prototype.seesPlayerAction = function(){
     this.orders.lookAtPlayer = true;
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);

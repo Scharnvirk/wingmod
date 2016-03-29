@@ -33,16 +33,6 @@ PlasmaProjectileActor.prototype.createBody = function(){
 
 PlasmaProjectileActor.prototype.onDeath = function(){
     this.body.dead = true;
-    //
-    // var explosionBody = new ExplosionBody({
-    //     position: this.body.position,
-    //     radius: 20,
-    //     lifetime: 1,
-    //     mass: 2,
-    //     damage: 1
-    // });
-
-    //this.world.addBody(explosionBody);
 };
 
 

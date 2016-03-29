@@ -13,8 +13,6 @@ function AiImageRenderer(){
 
     this.canvas = this.createCanvas();
     this.drawContext = this.canvas.getContext('2d');
-
-
 }
 
 AiImageRenderer.prototype.createCanvas = function(){
@@ -41,9 +39,6 @@ AiImageRenderer.prototype.getImageObject = function(wallsData){
 };
 
 AiImageRenderer.prototype.drawImage = function(wallsData){
-    // document.body.appendChild(this.canvas);
-    // this.canvas.className = 'reactContent';
-
     this.drawContext.fillStyle = 'white';
     this.drawContext.fillRect(0, 0, this.AI_SCENE_SIZE_X, this.AI_SCENE_SIZE_Y);
 

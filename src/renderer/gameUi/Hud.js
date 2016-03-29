@@ -7,7 +7,7 @@ function Hud(config){
 }
 
 Hud.prototype.update = function(){
-    if(this.actor){
+    if(this.actor && !this.actor.dead){
         for (let enemyId in this.actorManager.enemies ){
             let enemyActor = this.actorManager.enemies[enemyId];
             let angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);

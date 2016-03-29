@@ -853,18 +853,6 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls) {
     }
 };
 
-//not working yet
-MookBrain.prototype.avoidBeingInFront = function () {
-    var beingInFrontArc = 90;
-    var playerArcToActor = Math.abs(Utils.radToDeg(Utils.arcAngleDifference(this.actor.body.position, this.playerActor.body.position, this.playerActor.body.angle))) % 360;
-
-    if (playerArcToActor > 180 && playerArcToActor < 180 + beingInFrontArc) {
-        this.orders.horizontalThrust = -1;
-    } else if (playerArcToActor < 180 && playerArcToActor > 180 - beingInFrontArc) {
-        this.orders.horizontalThrust = 1;
-    }
-};
-
 MookBrain.prototype.seesPlayerAction = function () {
     this.orders.lookAtPlayer = true;
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
@@ -1583,16 +1571,6 @@ PlasmaProjectileActor.prototype.createBody = function () {
 
 PlasmaProjectileActor.prototype.onDeath = function () {
     this.body.dead = true;
-    //
-    // var explosionBody = new ExplosionBody({
-    //     position: this.body.position,
-    //     radius: 20,
-    //     lifetime: 1,
-    //     mass: 2,
-    //     damage: 1
-    // });
-
-    //this.world.addBody(explosionBody);
 };
 
 module.exports = PlasmaProjectileActor;
@@ -1943,158 +1921,17 @@ MookActor.prototype.onSpawn = function () {
 
 MookActor.prototype.onDeath = function () {
     this.manager.enemyDestroyed(this.actorId);
-
-    for (var i = 0; i < 100; i++) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-2, 2),
-            positionY: this.position[1] + Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 15),
-            alpha: Utils.rand(0, 3) / 10 + 0.3,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0, 4) / 10,
-            particleAngle: Utils.rand(0, 360),
-            lifeTime: 120
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 200,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 40,
-        alpha: 1,
-        alphaMultiplier: 0.95,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 80
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0.6,
-        colorB: 0.2,
-        scale: 60,
-        alpha: 1,
-        alphaMultiplier: 0.95,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 80
-    });
+    this.particleManager.createPremade('OrangeBoomMedium', { position: this.position });
 };
 
 MookActor.prototype.handleDamage = function () {
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-2, 2),
-            positionY: this.position[1] + Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 5),
-            alpha: Utils.rand(0, 3) / 10 + 0.1,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0, 10) / 100,
-            particleAngle: Utils.rand(0, 360),
-            speedZ: Utils.rand(0, 10) / 100,
-            lifeTime: 120
-        });
+        this.particleManager.createPremade('SmokePuffSmall', { position: this.position });
     }
 
     if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
-        for (var i = 0; i < 15; i++) {
-            this.particleManager.createParticle('particleAddSplash', {
-                positionX: this.position[0],
-                positionY: this.position[1],
-                colorR: 0.8,
-                colorG: 0.8,
-                colorB: 1,
-                scale: 0.75,
-                alpha: 1,
-                alphaMultiplier: 0.90,
-                particleVelocity: Utils.rand(5, 8) / 10,
-                particleAngle: Utils.rand(0, 360),
-                speedZ: Utils.rand(-50, 50) / 100,
-                lifeTime: Utils.rand(0, 20)
-            });
-        }
-
-        this.particleManager.createParticle('mainExplosionAdd', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 30,
-            alpha: 1,
-            alphaMultiplier: 0.2,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 10
-        });
-
-        this.particleManager.createParticle('particleAddSplash', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 0.8,
-            colorG: 0.9,
-            colorB: 1,
-            scale: 2,
-            alpha: 1,
-            alphaMultiplier: 0.9,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 60
-        });
-
-        this.particleManager.createParticle('particleAddSplash', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 5,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 15
-        });
-
-        this.particleManager.createParticle('mainExplosionAdd', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 0.3,
-            colorG: 0.4,
-            colorB: 1,
-            scale: 8,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 20
-        });
+        this.particleManager.createPremade('BlueSparks', { position: this.position });
     }
 };
 
@@ -2252,377 +2089,80 @@ ShipActor.prototype.doBob = function () {
 
 ShipActor.prototype.doEngineGlow = function () {
     if (this.inputListener.inputState.w && !this.inputListener.inputState.s) {
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ + 1,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(10, 15),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -5,
-            particleAngle: this.angle + Utils.degToRad(15),
-            lifeTime: 1
+        this.particleManager.createPremade('EngineGlowMedium', {
+            position: this.position,
+            positionZ: this.positionZ,
+            angle: this.angle,
+            angleOffset: 15,
+            distance: -5.2
         });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ + 1,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(10, 15),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -5,
-            particleAngle: this.angle - Utils.degToRad(15),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ + 1,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(3, 4),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -5,
-            particleAngle: this.angle + Utils.degToRad(15),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ + 1,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(3, 4),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -5,
-            particleAngle: this.angle - Utils.degToRad(15),
-            lifeTime: 1
+        this.particleManager.createPremade('EngineGlowMedium', {
+            position: this.position,
+            positionZ: this.positionZ,
+            angle: this.angle,
+            angleOffset: 345,
+            distance: -5.2
         });
     }
 
     if (this.inputListener.inputState.a && !this.inputListener.inputState.d) {
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.particleManager.createPremade('EngineGlowSmall', {
+            position: this.position,
             positionZ: this.positionZ,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(6, 11),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -4,
-            particleAngle: this.angle + Utils.degToRad(40),
-            lifeTime: 1
+            angle: this.angle,
+            angleOffset: 40,
+            distance: -4
         });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.particleManager.createPremade('EngineGlowSmall', {
+            position: this.position,
             positionZ: this.positionZ,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 3),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -4,
-            particleAngle: this.angle + Utils.degToRad(40),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(6, 11),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -6,
-            particleAngle: this.angle + Utils.degToRad(170),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 3),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -6,
-            particleAngle: this.angle + Utils.degToRad(170),
-            lifeTime: 1
+            angle: this.angle,
+            angleOffset: 170,
+            distance: -6
         });
     }
 
     if (this.inputListener.inputState.d) {
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.particleManager.createPremade('EngineGlowSmall', {
+            position: this.position,
             positionZ: this.positionZ,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(6, 11),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -4,
-            particleAngle: this.angle - Utils.degToRad(40),
-            lifeTime: 1
+            angle: this.angle,
+            angleOffset: 320,
+            distance: -4
         });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.particleManager.createPremade('EngineGlowSmall', {
+            position: this.position,
             positionZ: this.positionZ,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 3),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -4,
-            particleAngle: this.angle - Utils.degToRad(40),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(6, 11),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -6,
-            particleAngle: this.angle - Utils.degToRad(170),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 3),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -6,
-            particleAngle: this.angle - Utils.degToRad(170),
-            lifeTime: 1
+            angle: this.angle,
+            angleOffset: 190,
+            distance: -6
         });
     }
 
     if (this.inputListener.inputState.s) {
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.particleManager.createPremade('EngineGlowMedium', {
+            position: this.position,
             positionZ: this.positionZ,
-            colorR: 0.5,
-            colorG: 0.6,
-            colorB: 1,
-            scale: Utils.rand(10, 15),
-            alpha: 0.4,
-            alphaMultiplier: 1,
-            particleVelocity: -7,
-            particleAngle: this.angle + Utils.degToRad(180),
-            lifeTime: 1
-        });
-
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            positionZ: this.positionZ,
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(3, 4),
-            alpha: 1,
-            alphaMultiplier: 1,
-            particleVelocity: -7,
-            particleAngle: this.angle + Utils.degToRad(180),
-            lifeTime: 1
+            angle: this.angle,
+            angleOffset: 180,
+            distance: -7
         });
     }
 };
 
 ShipActor.prototype.onDeath = function () {
-    for (var i = 0; i < 100; i++) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-2, 2),
-            positionY: this.position[1] + Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 15),
-            alpha: Utils.rand(0, 3) / 10 + 0.3,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0, 4) / 10,
-            particleAngle: Utils.rand(0, 360),
-            lifeTime: 120
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 200,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 40,
-        alpha: 1,
-        alphaMultiplier: 0.95,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 80
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0.6,
-        colorB: 0.2,
-        scale: 60,
-        alpha: 1,
-        alphaMultiplier: 0.95,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 80
-    });
+    this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
+    this.dead = true;
 };
 
 ShipActor.prototype.handleDamage = function () {
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-2, 2),
-            positionY: this.position[1] + Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2, 5),
-            alpha: Utils.rand(0, 3) / 10 + 0.1,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0, 10) / 100,
-            particleAngle: Utils.rand(0, 360),
-            speedZ: Utils.rand(0, 10) / 100,
-            lifeTime: 120
-        });
+        this.particleManager.createPremade('SmokePuffSmall', { position: this.position });
     }
 
     if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
-        for (var i = 0; i < 15; i++) {
-            this.particleManager.createParticle('particleAddSplash', {
-                positionX: this.position[0],
-                positionY: this.position[1],
-                colorR: 0.8,
-                colorG: 0.8,
-                colorB: 1,
-                scale: 0.75,
-                alpha: 1,
-                alphaMultiplier: 0.90,
-                particleVelocity: Utils.rand(5, 8) / 10,
-                particleAngle: Utils.rand(0, 360),
-                speedZ: Utils.rand(-50, 50) / 100,
-                lifeTime: Utils.rand(0, 20)
-            });
-        }
-
-        this.particleManager.createParticle('mainExplosionAdd', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 30,
-            alpha: 1,
-            alphaMultiplier: 0.2,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 10
-        });
-
-        this.particleManager.createParticle('particleAddSplash', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 0.8,
-            colorG: 0.9,
-            colorB: 1,
-            scale: 2,
-            alpha: 1,
-            alphaMultiplier: 0.9,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 60
-        });
-
-        this.particleManager.createParticle('particleAddSplash', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 5,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 15
-        });
-
-        this.particleManager.createParticle('mainExplosionAdd', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 0.3,
-            colorG: 0.4,
-            colorB: 1,
-            scale: 8,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 0,
-            particleAngle: 0,
-            lifeTime: 20
-        });
+        this.particleManager.createPremade('BlueSparks', { position: this.position });
     }
 };
 
@@ -2643,114 +2183,11 @@ function LaserProjectileActor(config) {
 LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.customUpdate = function () {
-    for (var i = 0; i < 15; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.6);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0] + offsetPosition[0],
-            positionY: this.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 1,
-            alpha: 1 - 0.05 * i,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
-
-    for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 1.8);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0] + offsetPosition[0],
-            positionY: this.position[1] + offsetPosition[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
-            scale: 5,
-            alpha: 0.7 - 0.1 * i,
-            alphaMultiplier: 0.6,
-            particleVelocity: 2,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
+    this.particleManager.createPremade('BlueLaserTrail', { position: this.position, angle: this.angle });
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    for (var i = 0; i < 30; i++) {
-        this.particleManager.createParticle('particleAddSplash', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: this.colorR * 0.3 + 0.7,
-            colorG: this.colorG * 0.3 + 0.7,
-            colorB: this.colorB * 0.3 + 0.7,
-            scale: 0.75,
-            alpha: 1,
-            alphaMultiplier: 0.94,
-            particleVelocity: Utils.rand(5, 8) / 10,
-            particleAngle: Utils.rand(0, 360),
-            speedZ: Utils.rand(-50, 50) / 100,
-            lifeTime: Utils.rand(10, 20)
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 30,
-        alpha: 1,
-        alphaMultiplier: 0.2,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 10
-    });
-
-    this.particleManager.createParticle('particleAddSplash', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
-        scale: 2,
-        alpha: 1,
-        alphaMultiplier: 0.9,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 60
-    });
-
-    this.particleManager.createParticle('particleAddSplash', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 5,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 15
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR,
-        colorG: this.colorG,
-        colorB: this.colorB,
-        scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
+    this.particleManager.createPremade('BlueSparks', { position: this.position });
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
@@ -2800,98 +2237,11 @@ function MoltenProjectileActor(config) {
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function () {
-    for (var i = 0; i < 3; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.6);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 1.5,
-            alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR,
-        colorG: this.colorG,
-        colorB: this.colorB,
-        scale: 8,
-        alpha: 0.8,
-        alphaMultiplier: 0.6,
-        particleVelocity: 1,
-        particleAngle: this.angle,
-        lifeTime: 1
-    });
+    this.particleManager.createPremade('OrangeTrail', { position: this.position, angle: this.angle });
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    for (var i = 0; i < 5; i++) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-2, 2),
-            positionY: this.position[1] + Utils.rand(-2, 2),
-            positionZ: this.positionZ + Utils.rand(-2, 2),
-            colorR: this.colorR * 0.3 + 0.7,
-            colorG: this.colorG * 0.3 + 0.7,
-            colorB: this.colorB * 0.3 + 0.7,
-            scale: Utils.rand(1, 3),
-            alpha: 0.6,
-            alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
-            speedZ: Utils.rand(-10, 10) / 100,
-            lifeTime: 60
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 35,
-        alpha: 1,
-        alphaMultiplier: 0.2,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 10
-    });
-
-    this.particleManager.createParticle('particleAddSplash', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 15
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
-        scale: 10,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
+    this.particleManager.createPremade('OrangeBoomTiny', { position: this.position, angle: this.angle });
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
@@ -2941,102 +2291,14 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
-    for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(this.angle, -i * 0.7);
-        this.particleManager.createParticle('particleAddTrail', {
-            positionX: this.position[0] + offsetPosition[0],
-            positionY: this.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: 2.6 - 0.4 * i,
-            alpha: 1 - 0.19 * i,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
-            particleAngle: this.angle,
-            lifeTime: 1
-        });
-    }
-
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR,
-        colorG: this.colorG,
-        colorB: this.colorB,
-        scale: 8,
-        alpha: 0.5,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        particleAngle: this.angle,
-        lifeTime: 2
-    });
+    this.particleManager.createPremade('GreenTrail', { position: this.position, angle: this.angle });
 };
 
 PlasmaProjectileActor.prototype.onDeath = function () {
-    for (var i = 0; i < 20; i++) {
-        this.particleManager.createParticle('smokePuffAlpha', {
-            positionX: this.position[0] + Utils.rand(-1, 1),
-            positionY: this.position[1] + Utils.rand(-1, 1),
-            positionZ: this.positionZ + Utils.rand(-1, 1),
-            colorR: this.colorR * 0.3 + 0.7,
-            colorG: this.colorG * 0.3 + 0.7,
-            colorB: this.colorB * 0.3 + 0.7,
-            scale: Utils.rand(1, 3),
-            alpha: 0.6,
-            alphaMultiplier: 0.9,
-            particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
-            speedZ: Utils.rand(-10, 10) / 100,
-            lifeTime: 60
-        });
-    }
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 40,
-        alpha: 1,
-        alphaMultiplier: 0.2,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 10
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 10,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 15
-    });
-
-    this.particleManager.createParticle('mainExplosionAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
-        scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 20
-    });
+    this.particleManager.createPremade('GreenBoomTiny', { position: this.position, angle: this.angle });
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
-
     this.particleManager.createParticle('mainExplosionAdd', {
         positionX: this.position[0],
         positionY: this.position[1],

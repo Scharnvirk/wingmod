@@ -89,4 +89,20 @@ ParticleConfigBuilder.prototype.getAllConfigs = function(){
     return this.particleGeneratorConfig;
 };
 
+ParticleConfigBuilder.prototype.buildPremades = function(){
+    return {
+        BlueSparks: require("renderer/particleSystem/premade/BlueSparks"),
+        BlueLaserTrail: require("renderer/particleSystem/premade/BlueLaserTrail"),
+        OrangeTrail: require("renderer/particleSystem/premade/OrangeTrail"),
+        OrangeBoomTiny: require("renderer/particleSystem/premade/OrangeBoomTiny"),
+        GreenTrail: require("renderer/particleSystem/premade/GreenTrail"),
+        GreenBoomTiny: require("renderer/particleSystem/premade/GreenBoomTiny"),
+        EngineGlowMedium: require("renderer/particleSystem/premade/EngineGlowMedium"),
+        EngineGlowSmall: require("renderer/particleSystem/premade/EngineGlowSmall"),
+        OrangeBoomLarge: require("renderer/particleSystem/premade/OrangeBoomLarge"),
+        SmokePuffSmall: require("renderer/particleSystem/premade/SmokePuffSmall"),
+        OrangeBoomMedium: require("renderer/particleSystem/premade/OrangeBoomMedium"),
+    };
+};
+
 module.exports = ParticleConfigBuilder;
