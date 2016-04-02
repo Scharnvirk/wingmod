@@ -37,6 +37,8 @@ MookActor.prototype.onSpawn = function(){
 MookActor.prototype.onDeath = function(){
     this.manager.enemyDestroyed(this.actorId);
     this.particleManager.createPremade('OrangeBoomMedium', {position: this.position});
+    //techtest only!
+    this.manager.core.gameScene.flashWhite();
 };
 
 MookActor.prototype.handleDamage = function(){

@@ -9,6 +9,7 @@ function ShipActor(){
     //todo: generic config holder
     this.initialHp = 20;
     this.hp = 20;
+    this.lastHp = this.hp;
 }
 
 ShipActor.extend(BaseActor);
@@ -102,10 +103,17 @@ ShipActor.prototype.doEngineGlow = function(){
 ShipActor.prototype.onDeath = function(){
     this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
     this.dead = true;
+    //techtest only!
+    this.manager.core.gameScene.flashWhite();
 };
 
 
 ShipActor.prototype.handleDamage = function(){
+    if(this.hp < this.lastHp){
+        //techtest only!
+        this.manager.core.gameScene.flashRed();
+    }
+
     let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20){
         this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
@@ -114,6 +122,8 @@ ShipActor.prototype.handleDamage = function(){
     if (damageRandomValue > 50 && Utils.rand(0,100) > 95){
         this.particleManager.createPremade('BlueSparks', {position: this.position});
     }
+
+    this.lastHp = this.hp;
 };
 
 module.exports = ShipActor;

@@ -2532,6 +2532,8 @@ MookActor.prototype.onSpawn = function () {
 MookActor.prototype.onDeath = function () {
     this.manager.enemyDestroyed(this.actorId);
     this.particleManager.createPremade('OrangeBoomMedium', { position: this.position });
+    //techtest only!
+    this.manager.core.gameScene.flashWhite();
 };
 
 MookActor.prototype.handleDamage = function () {
@@ -2638,6 +2640,8 @@ BoomChunkActor.extend(ChunkActor);
 
 BoomChunkActor.prototype.onDeath = function () {
     this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
+    //techtest only!
+    this.manager.core.gameScene.flashWhite();
 };
 
 module.exports = BoomChunkActor;
@@ -2710,6 +2714,7 @@ function ShipActor() {
     //todo: generic config holder
     this.initialHp = 20;
     this.hp = 20;
+    this.lastHp = this.hp;
 }
 
 ShipActor.extend(BaseActor);
@@ -2803,9 +2808,16 @@ ShipActor.prototype.doEngineGlow = function () {
 ShipActor.prototype.onDeath = function () {
     this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
     this.dead = true;
+    //techtest only!
+    this.manager.core.gameScene.flashWhite();
 };
 
 ShipActor.prototype.handleDamage = function () {
+    if (this.hp < this.lastHp) {
+        //techtest only!
+        this.manager.core.gameScene.flashRed();
+    }
+
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20) {
         this.particleManager.createPremade('SmokePuffSmall', { position: this.position });
@@ -2814,6 +2826,8 @@ ShipActor.prototype.handleDamage = function () {
     if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
         this.particleManager.createPremade('BlueSparks', { position: this.position });
     }
+
+    this.lastHp = this.hp;
 };
 
 module.exports = ShipActor;
@@ -4365,11 +4379,23 @@ var GameScene = function () {
 
             this.scene.add(combinedObject);
 
-            var lcolor = Utils.makeRandomColor(128, 256);
+            this.initialColor = {
+                r: Utils.rand(50, 100) / 100,
+                g: Utils.rand(50, 100) / 100,
+                b: Utils.rand(50, 100) / 100
+            };
 
-            this.directionalLight = new THREE.DirectionalLight(lcolor, 1);
+            this.currentColor = {
+                r: Utils.rand(50, 100) / 100,
+                g: Utils.rand(50, 100) / 100,
+                b: Utils.rand(50, 100) / 100
+            };
+
+            this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             this.directionalLight.position.set(0, 0, 200);
             this.directionalLight.distance = 1000;
+
+            this.directionalLight.color = this.initialColor;
 
             this.directionalLight.castShadow = this.shadows;
             this.directionalLight.shadowCameraNear = 1;
@@ -4393,6 +4419,38 @@ var GameScene = function () {
                 this.directionalLight.target.position.y = this.actor.position[1];
                 this.directionalLight.target.updateMatrixWorld();
             }
+            this.handleFlash();
+
+            this.directionalLight.color = this.currentColor;
+        }
+    }, {
+        key: "flashRed",
+        value: function flashRed() {
+            this.currentColor = {
+                r: this.initialColor.r + 2,
+                g: this.initialColor.g,
+                b: this.initialColor.b
+            };
+        }
+    }, {
+        key: "flashWhite",
+        value: function flashWhite() {
+            this.currentColor = {
+                r: this.initialColor.r + 1,
+                g: this.initialColor.g + 1,
+                b: this.initialColor.b + 1
+            };
+        }
+    }, {
+        key: "handleFlash",
+        value: function handleFlash() {
+            if (this.currentColor.r > this.initialColor.r) this.currentColor.r -= 0.3;
+            if (this.currentColor.g > this.initialColor.g) this.currentColor.g -= 0.3;
+            if (this.currentColor.b > this.initialColor.b) this.currentColor.b -= 0.3;
+
+            if (this.currentColor.r < this.initialColor.r) this.currentColor.r = this.initialColor.r;
+            if (this.currentColor.g < this.initialColor.g) this.currentColor.g = this.initialColor.g;
+            if (this.currentColor.b < this.initialColor.b) this.currentColor.b = this.initialColor.b;
         }
     }]);
 

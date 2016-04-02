@@ -61,11 +61,23 @@ class GameScene {
 
         this.scene.add(combinedObject);
 
-        var lcolor = Utils.makeRandomColor(128, 256);
+        this.initialColor = {
+            r: Utils.rand(50,100)/100,
+            g: Utils.rand(50,100)/100,
+            b: Utils.rand(50,100)/100
+        };
 
-        this.directionalLight = new THREE.DirectionalLight( lcolor, 1 );
+        this.currentColor = {
+            r: Utils.rand(50,100)/100,
+            g: Utils.rand(50,100)/100,
+            b: Utils.rand(50,100)/100
+        };
+
+        this.directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
         this.directionalLight.position.set( 0, 0, 200 );
         this.directionalLight.distance = 1000;
+
+        this.directionalLight.color = this.initialColor;
 
         this.directionalLight.castShadow = this.shadows;
         this.directionalLight.shadowCameraNear = 1;
@@ -88,6 +100,35 @@ class GameScene {
             this.directionalLight.target.position.y = this.actor.position[1];
             this.directionalLight.target.updateMatrixWorld();
         }
+        this.handleFlash();
+
+        this.directionalLight.color = this.currentColor;
+    }
+
+    flashRed(){
+        this.currentColor = {
+            r: this.initialColor.r + 2,
+            g: this.initialColor.g,
+            b: this.initialColor.b
+        };
+    }
+
+    flashWhite(){
+        this.currentColor = {
+            r: this.initialColor.r + 1,
+            g: this.initialColor.g + 1,
+            b: this.initialColor.b + 1
+        };
+    }
+
+    handleFlash(){
+        if (this.currentColor.r > this.initialColor.r) this.currentColor.r -= 0.3;
+        if (this.currentColor.g > this.initialColor.g) this.currentColor.g -= 0.3;
+        if (this.currentColor.b > this.initialColor.b) this.currentColor.b -= 0.3;
+
+        if (this.currentColor.r < this.initialColor.r) this.currentColor.r = this.initialColor.r;
+        if (this.currentColor.g < this.initialColor.g) this.currentColor.g = this.initialColor.g;
+        if (this.currentColor.b < this.initialColor.b) this.currentColor.b = this.initialColor.b;
     }
 }
 
