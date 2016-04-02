@@ -1,4 +1,4 @@
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 
 function ActorManager(config){
     config = config || {};

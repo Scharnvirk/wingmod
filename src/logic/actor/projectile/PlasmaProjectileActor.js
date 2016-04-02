@@ -6,17 +6,18 @@ function PlasmaProjectileActor(config){
 
     Object.assign(this, config);
 
-    this.hp = 1;
-    this.damage = 0.5;
-    this.removeOnHit = true;
-    this.timeout = 300;
-
-    this.bodyConfig = {
-        radius: 2,
-        mass: 1,
-        collisionType: 'playerProjectile',
-        actor: this
-    };
+    this.applyConfig({
+        hp: 1,
+        damage: 1.5,
+        removeOnHit: true,
+        timeout: 300,
+        bodyConfig: {
+            radius: 2,
+            mass: 1,
+            collisionType: 'playerProjectile',
+            actor: this
+        }
+    });
 
     BaseActor.apply(this, arguments);
 }

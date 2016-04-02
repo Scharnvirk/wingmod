@@ -6,19 +6,20 @@ function RedLaserProjectileActor(config){
 
     Object.assign(this, config);
 
-    this.hp = 1;
-    this.damage = 2;
-    this.removeOnHit = true;
-    this.timeout = 60;
-
-    this.bodyConfig = {
-        radius: 1,
-        mass: 0.1,
-        ccdSpeedThreshold: 1,
-        ccdIterations: 4,
-        collisionType: 'enemyProjectile',
-        actor: this
-    };
+    this.applyConfig({
+        hp: 1,
+        damage: 2,
+        removeOnHit: true,
+        timeout: 120,
+        bodyConfig: {
+            radius: 1,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4,
+            collisionType: 'enemyProjectile',
+            actor: this
+        }
+    });
 
     BaseActor.apply(this, arguments);
 }

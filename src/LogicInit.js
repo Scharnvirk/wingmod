@@ -1,5 +1,5 @@
-global.Utils = require("Utils");
-global.Constants = require("Constants");
+global.Utils = require("shared/Utils");
+global.Constants = require("shared/Constants");
 
 if('function'===typeof importScripts){
     importScripts('../../lib/p2.js');

@@ -1,4 +1,4 @@
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('renderer');
+var ActorFactory = require("shared/ActorFactory")('renderer');
 
 function ActorManager(config){
     config = config || {};

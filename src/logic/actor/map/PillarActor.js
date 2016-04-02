@@ -1,6 +1,6 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 
 function PillarActor(config){
     config = config || [];

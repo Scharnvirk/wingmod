@@ -6,11 +6,12 @@ function ChunkActor(config){
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
 
-    this.hp = 1;
-    this.turnSpeed = 1;
-
-    this.removeOnHit = true;
-    this.timeout = Utils.rand(25,100);
+    this.applyConfig({
+        hp: 1,
+        turnSpeed: 1,
+        removeOnHit: false,
+        timeout: Utils.rand(25, 100)
+    });
 }
 
 ChunkActor.extend(BaseActor);

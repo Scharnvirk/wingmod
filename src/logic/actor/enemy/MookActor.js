@@ -3,30 +3,31 @@ var BaseActor = require("logic/actor/BaseActor");
 var MookBrain = require("logic/actor/component/ai/MookBrain");
 var MoltenBallThrower = require("logic/actor/component/weapon/MoltenBallThrower");
 var RedBlaster = require("logic/actor/component/weapon/RedBlaster");
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 
 function MookActor(config){
     config = config || [];
 
     Object.assign(this, config);
 
-    this.acceleration = 140;
-    this.turnSpeed = 2.5;
-    this.hp = 4;
+    this.applyConfig({
+        acceleration: 140,
+        turnSpeed: 2.5,
+        hp: 4,
+        bodyConfig: {
+            actor: this,
+            mass: 2,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5,
+            collisionType: 'enemyShip'
+        }
+    });
 
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
-
-    this.bodyConfig = {
-        actor: this,
-        mass: 2,
-        damping: 0.75,
-        angularDamping: 0,
-        inertia: 10,
-        radius: 5,
-        collisionType: 'enemyShip'
-    };
 
     BaseActor.apply(this, arguments);
 }
@@ -64,7 +65,7 @@ MookActor.prototype.doBrainOrders = function(){
 };
 
 MookActor.prototype.lookAtPlayer = function(){
-    var playerPosition = this.brain.getPlayerPositionWithLead(this.weapon.VELOCITY, 1);
+    var playerPosition = this.brain.getPlayerPositionWithLead(this.weapon.velocity, 1);
 
     if (playerPosition){
         var angleVector = Utils.angleToVector(this.body.angle, 1);
@@ -129,6 +130,18 @@ MookActor.prototype.onDeath = function(){
         });
     }
     this.body.dead = true;
+};
+
+MookActor.prototype.onHit = function(){
+    if(Utils.rand(0,10) == 10){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
 };
 
 module.exports = MookActor;

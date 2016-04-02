@@ -1,17 +1,17 @@
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 
 function Blaster(config){
     Object.assign(this, config);
 
-    this.PROJECTILE_CLASS = ActorFactory.REDLASERPROJECITLE;
+    this.projectileClass = ActorFactory.REDLASERPROJECITLE;
 
     BaseWeapon.apply(this, arguments);
 
-    this.BURST_COUNT = 5;
-    this.BURST_COOLDOWN = 12;
-    this.COOLDOWN = 40;
-    this.VELOCITY = 700;
+    this.burstCount = 5;
+    this.burstCooldown = 12;
+    this.cooldown = 100;
+    this.velocity = 700;
 }
 
 Blaster.extend(BaseWeapon);

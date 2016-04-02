@@ -1,5 +1,5 @@
-global.Utils = require("Utils");
-global.Constants = require("Constants");
+global.Utils = require("shared/Utils");
+global.Constants = require("shared/Constants");
 
 var domready = require("domready");
 var Ui = require("renderer/ui/Ui");

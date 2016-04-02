@@ -31,9 +31,17 @@ var customOptions = {
     ]
 };
 
+function pad(value) {
+    if(value < 10) {
+        return '0' + value;
+    } else {
+        return value;
+    }
+}
+
 function buildCurrentTimeString(){
     var time = new Date();
-    return '[' + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds() + ']';
+    return '[' + pad(time.getHours()) + ":" + pad(time.getMinutes()) + ":" + pad(time.getSeconds()) + ']';
 }
 
 function onError(buildInfo, message){

@@ -1,9 +1,9 @@
 function BaseWeapon(config){
-    this.BURST_COUNT = 1;
-    this.BURST_COOLDOWN = 0;
-    this.COOLDOWN = 100;
-    this.RECOIL = 0;
-    this.VELOCITY = 10;
+    this.burstCount = 1;
+    this.burstCooldown = 0;
+    this.cooldown = 100;
+    this.recoil = 0;
+    this.velocity = 10;
 
     /*example:
         this.FIRING_POINTS = [
@@ -22,7 +22,7 @@ function BaseWeapon(config){
     this.shooting = false;
     this.shotsFired = 0;
 
-    if(!this.PROJECTILE_CLASS) throw new Error('No projectile class for a Weapon!');
+    if(!this.projectileClass) throw new Error('No projectile class for a Weapon!');
     if(!this.manager) throw new Error('No actor manager for a Weapon!');
     if(!this.actor) throw new Error('No actor for a Weapon!');
 }
@@ -48,9 +48,9 @@ BaseWeapon.prototype.stopShooting = function(){
 BaseWeapon.prototype.processActiveWeapon = function(){
     this.handleFiring();
     this.shotsFired ++;
-    if (this.shotsFired >= this.BURST_COUNT){
+    if (this.shotsFired >= this.burstCount){
         this.shotsFired = 0;
-        this.timer += this.COOLDOWN;
+        this.timer += this.cooldown;
     }
 };
 
@@ -61,18 +61,18 @@ BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
         firingPointConfig.offsetDistance
     );
     this.manager.addNew({
-        classId: this.PROJECTILE_CLASS,
+        classId: this.projectileClass,
         positionX: body.position[0] + offsetPosition[0],
         positionY: body.position[1] + offsetPosition[1],
         angle: body.angle + firingPointConfig.fireAngle,
-        velocity: this.VELOCITY
+        velocity: this.velocity
     });
 };
 
 BaseWeapon.prototype.handleFiring = function(){
     this.firingPoints.forEach(this.fireProjectile.bind(this));
-    this.timer += this.BURST_COOLDOWN;
-    this.actor.body.applyForceLocal([0, -this.RECOIL]);
+    this.timer += this.burstCooldown;
+    this.actor.body.applyForceLocal([0, -this.recoil]);
 };
 
 module.exports = BaseWeapon;

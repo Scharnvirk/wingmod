@@ -6,19 +6,20 @@ function LaserProjectileActor(config){
 
     Object.assign(this, config);
 
-    this.hp = 1;
-    this.damage = 2;
-    this.removeOnHit = true;
-    this.timeout = 60;
-
-    this.bodyConfig = {
-        radius: 1,
-        mass: 0.1,
-        ccdSpeedThreshold: 1,
-        ccdIterations: 4,
-        collisionType: 'playerProjectile',
-        actor: this
-    };
+    this.applyConfig({
+        hp: 1,
+        damage: 2,
+        removeOnHit: true,
+        timeout: 60,
+        bodyConfig: {
+            radius: 1,
+            mass: 0.1,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4,
+            collisionType: 'playerProjectile',
+            actor: this
+        }
+    });
 
     BaseActor.apply(this, arguments);
 }

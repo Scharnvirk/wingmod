@@ -16,6 +16,12 @@ function BaseActor(config){
     this.timer = 0;
 }
 
+BaseActor.prototype.applyConfig = function(config){
+    for (let property in config){
+        this[property] = this[property] || config[property];
+    }
+};
+
 BaseActor.prototype.createBody = function(){
     return null;
 };
@@ -33,6 +39,7 @@ BaseActor.prototype.onCollision = function(otherActor){
     if(otherActor && this.hp != Infinity && otherActor.damage > 0){
         this.hp -= otherActor.damage;
         this.notifyManagerOfUpdate();
+        this.onHit();
     }
 
     if (this.hp <= 0 || this.removeOnHit){
@@ -52,11 +59,13 @@ BaseActor.prototype.customUpdate = function(){};
 
 BaseActor.prototype.playerUpdate = function(){};
 
+BaseActor.prototype.onHit = function(){};
+
+BaseActor.prototype.onSpawn = function(){};
+
 BaseActor.prototype.onDeath = function(){
     this.body.dead = true;
 };
-
-BaseActor.prototype.onSpawn = function(){};
 
 BaseActor.prototype.processMovement = function(){
     if(this.rotationForce !== 0){

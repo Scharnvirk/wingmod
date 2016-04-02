@@ -1,20 +1,18 @@
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 
 function MoltenBallThrower(config){
     Object.assign(this, config);
 
-    this.PROJECTILE_CLASS = ActorFactory.MOLTENPROJECTILE;
+    this.projectileClass = ActorFactory.MOLTENPROJECTILE;
 
     BaseWeapon.apply(this, arguments);
 
-    this.BURST_COUNT = 3;
-    this.BURST_COOLDOWN = 5;
-    this.COOLDOWN = 60;
-    this.RECOIL = 100;
-    this.VELOCITY = 210;
-
-
+    this.burstCount = 3;
+    this.burstCooldown = 5;
+    this.cooldown = 60;
+    this.recoil = 100;
+    this.velocity = 210;
 }
 
 MoltenBallThrower.extend(BaseWeapon);

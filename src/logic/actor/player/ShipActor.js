@@ -1,7 +1,7 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseBrain = require("logic/actor/component/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
-var ActorFactory = require("renderer/actorManagement/ActorFactory")('logic');
+var ActorFactory = require("shared/ActorFactory")('logic');
 var Blaster = require("logic/actor/component/weapon/Blaster");
 var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
 
@@ -10,9 +10,21 @@ function ShipActor(config){
 
     Object.assign(this, config);
 
-    this.acceleration = 500;
-    this.turnSpeed = 6;
-    this.hp = 20;
+    this.applyConfig({
+        acceleration: 500,
+        turnSpeed: 6,
+        hp: 20,
+        bodyConfig: {
+            actor: this,
+            mass: 4,
+            damping: 0.8,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7,
+            collisionType: 'playerShip'
+        }
+    });
+
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
@@ -21,18 +33,7 @@ function ShipActor(config){
     this.plasma = this.createPlasma();
     this.blaster = this.createBlaster();
 
-    this.bodyConfig = {
-        actor: this,
-        mass: 4,
-        damping: 0.8,
-        angularDamping: 0,
-        inertia: 10,
-        radius: 7,
-        collisionType: 'playerShip'
-    };
-
     BaseActor.apply(this, arguments);
-
 }
 
 ShipActor.extend(BaseActor);
@@ -146,8 +147,29 @@ ShipActor.prototype.onDeath = function(){
             velocity: Utils.rand(0,100)
         });
     }
+    for(let i = 0; i < 5; i++){
+        this.manager.addNew({
+            classId: ActorFactory.BOOMCHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(0,50)
+        });
+    }
     this.body.dead = true;
     this.manager.endGame();
+};
+
+ShipActor.prototype.onHit = function(){
+    if(Utils.rand(0, 10) == 10){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
 };
 
 module.exports = ShipActor;
