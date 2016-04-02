@@ -16,6 +16,12 @@ CustomModelBuilder.prototype.configure = function(){
                 color: 0x885522,
                 map: new THREE.TextureLoader().load("/models/chunk.png")
             })
+        },
+        'wall': {
+            material: new THREE.MeshPhongMaterial({
+                color: 0x888888,
+                map: new THREE.TextureLoader().load("/models/floor.png")
+            })
         }
     };
 };

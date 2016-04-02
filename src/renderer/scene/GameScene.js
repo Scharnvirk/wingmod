@@ -1,3 +1,5 @@
+var ModelStore = require("renderer/modelRepo/ModelStore");
+
 class GameScene {
     constructor(config) {
         Object.assign(this, config);
@@ -9,18 +11,20 @@ class GameScene {
         var walls = [];
         var wall;
 
-        var material = new THREE.MeshLambertMaterial({
-            color: 0xffffff
-        });
+        var material = ModelStore.get('wall').material;
+        var wallGeometry = new THREE.BoxGeometry(Utils.rand(5,50),Utils.rand(5,50),Utils.rand(5,50)/10,1,1,1);
 
-        var wallGeometry = new THREE.BoxGeometry(5,50,5,1,1,1);
-
-        for(var i = 0; i < 100; i++){
+        for(var i = 0; i < 500; i++){
             wall = new THREE.Mesh(wallGeometry,material);
-            wall.position.x = Utils.rand(-200,200);
-            wall.position.y = Utils.rand(-200,200);
+            wall.position.x = Utils.rand(-400,400);
+            wall.position.y = Utils.rand(-400,400);
             wall.position.z = Utils.rand(0,2);
+            wall.scale.x = 1;
+            wall.scale.y = 1;
+            wall.scale.z = 1;
             wall.rotateZ(Utils.degToRad(Utils.rand(0,360)));
+            wall.rotateX(Utils.degToRad(Utils.rand(-5,5)));
+            wall.rotateY(Utils.degToRad(Utils.rand(-5,5)));
             walls.push(wall);
         }
 

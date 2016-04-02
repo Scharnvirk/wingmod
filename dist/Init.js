@@ -2403,6 +2403,7 @@ module.exports = ChunkMesh;
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/modelRepo/ModelStore");
 
 function PillarMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -2410,7 +2411,7 @@ function PillarMesh(config) {
 
     config = config || {};
     config.geometry = new THREE.BoxGeometry(20, 20, 20, 50);
-    config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
+    config.material = Utils.rand(0, 1) === 0 ? ModelStore.get('wall').material : ModelStore.get('chunk').material;
     Object.assign(this, config);
 
     this.castShadow = true;
@@ -2421,7 +2422,7 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":33}],36:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":33,"renderer/modelRepo/ModelStore":55}],36:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2470,6 +2471,7 @@ module.exports = ShipMesh;
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/modelRepo/ModelStore");
 
 function WallMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -2477,7 +2479,7 @@ function WallMesh(config) {
 
     config = config || {};
     config.geometry = new THREE.BoxGeometry(800, 2, 30, 30);
-    config.material = new THREE.MeshLambertMaterial({ color: 0x505050 });
+    config.material = ModelStore.get('wall').material;
     Object.assign(this, config);
 
     this.receiveShadow = true;
@@ -2488,7 +2490,7 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":33}],39:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":33,"renderer/modelRepo/ModelStore":55}],39:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
@@ -3183,6 +3185,12 @@ CustomModelBuilder.prototype.configure = function () {
             material: new THREE.MeshPhongMaterial({
                 color: 0x885522,
                 map: new THREE.TextureLoader().load("/models/chunk.png")
+            })
+        },
+        'wall': {
+            material: new THREE.MeshPhongMaterial({
+                color: 0x888888,
+                map: new THREE.TextureLoader().load("/models/floor.png")
             })
         }
     };
@@ -4289,6 +4297,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ModelStore = require("renderer/modelRepo/ModelStore");
+
 var GameScene = function () {
     function GameScene(config) {
         _classCallCheck(this, GameScene);
@@ -4304,18 +4314,20 @@ var GameScene = function () {
             var walls = [];
             var wall;
 
-            var material = new THREE.MeshLambertMaterial({
-                color: 0xffffff
-            });
+            var material = ModelStore.get('wall').material;
+            var wallGeometry = new THREE.BoxGeometry(Utils.rand(5, 50), Utils.rand(5, 50), Utils.rand(5, 50) / 10, 1, 1, 1);
 
-            var wallGeometry = new THREE.BoxGeometry(5, 50, 5, 1, 1, 1);
-
-            for (var i = 0; i < 100; i++) {
+            for (var i = 0; i < 500; i++) {
                 wall = new THREE.Mesh(wallGeometry, material);
-                wall.position.x = Utils.rand(-200, 200);
-                wall.position.y = Utils.rand(-200, 200);
+                wall.position.x = Utils.rand(-400, 400);
+                wall.position.y = Utils.rand(-400, 400);
                 wall.position.z = Utils.rand(0, 2);
+                wall.scale.x = 1;
+                wall.scale.y = 1;
+                wall.scale.z = 1;
                 wall.rotateZ(Utils.degToRad(Utils.rand(0, 360)));
+                wall.rotateX(Utils.degToRad(Utils.rand(-5, 5)));
+                wall.rotateY(Utils.degToRad(Utils.rand(-5, 5)));
                 walls.push(wall);
             }
 
@@ -4389,7 +4401,7 @@ var GameScene = function () {
 
 module.exports = GameScene;
 
-},{}],74:[function(require,module,exports){
+},{"renderer/modelRepo/ModelStore":55}],74:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
