@@ -7,40 +7,38 @@ var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
 
 function ShipActor(config){
     config = config || [];
-    BaseActor.apply(this, arguments);
+
     Object.assign(this, config);
 
-    this.ACCELERATION = 500;
-    this.TURN_SPEED = 6;
+    this.acceleration = 500;
+    this.turnSpeed = 6;
     this.hp = 20;
-    this.stepAngle = Utils.radToDeg(this.TURN_SPEED / Constants.LOGIC_REFRESH_RATE);
+    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 
     this.plasma = this.createPlasma();
     this.blaster = this.createBlaster();
+
+    this.bodyConfig = {
+        actor: this,
+        mass: 4,
+        damping: 0.8,
+        angularDamping: 0,
+        inertia: 10,
+        radius: 7,
+        collisionType: 'playerShip'
+    };
+
+    BaseActor.apply(this, arguments);
+
 }
 
 ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createBody = function(){
-    return new BaseBody({
-        shape: new p2.Circle({
-            radius: 5,
-            collisionGroup: Constants.COLLISION_GROUPS.SHIP,
-            collisionMask:
-                Constants.COLLISION_GROUPS.ENEMY |
-                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                Constants.COLLISION_GROUPS.TERRAIN |
-                Constants.COLLISION_GROUPS.ENEMYEXPLOSION
-        }),
-        actor: this,
-        mass: 4,
-        damping: 0.8,
-        angularDamping: 0,
-        inertia: 10
-    });
+    return new BaseBody(this.bodyConfig);
 };
 
 ShipActor.prototype.customUpdate = function(){

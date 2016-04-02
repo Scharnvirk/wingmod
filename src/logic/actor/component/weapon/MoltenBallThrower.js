@@ -10,8 +10,8 @@ function MoltenBallThrower(config){
 
     this.BURST_COUNT = 3;
     this.BURST_COOLDOWN = 5;
-    this.COOLDOWN = 100;
-    this.RECOIL = 300;
+    this.COOLDOWN = 60;
+    this.RECOIL = 100;
     this.VELOCITY = 210;
 
 

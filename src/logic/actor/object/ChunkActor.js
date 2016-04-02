@@ -7,7 +7,7 @@ function ChunkActor(config){
     Object.assign(this, config);
 
     this.hp = 1;
-    this.TURN_SPEED = 1;
+    this.turnSpeed = 1;
 
     this.removeOnHit = true;
     this.timeout = Utils.rand(25,100);

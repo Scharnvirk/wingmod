@@ -1,7 +1,7 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 
-function LaserProjectileActor(config){
+function RedLaserProjectileActor(config){
     config = config || [];
 
     Object.assign(this, config);
@@ -16,17 +16,17 @@ function LaserProjectileActor(config){
         mass: 0.1,
         ccdSpeedThreshold: 1,
         ccdIterations: 4,
-        collisionType: 'playerProjectile',
+        collisionType: 'enemyProjectile',
         actor: this
     };
 
     BaseActor.apply(this, arguments);
 }
 
-LaserProjectileActor.extend(BaseActor);
+RedLaserProjectileActor.extend(BaseActor);
 
-LaserProjectileActor.prototype.createBody = function(){
+RedLaserProjectileActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-module.exports = LaserProjectileActor;
+module.exports = RedLaserProjectileActor;

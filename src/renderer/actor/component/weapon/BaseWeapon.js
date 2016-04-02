@@ -1,3 +1,0 @@
-function BaseWeapon(config){
-
-}

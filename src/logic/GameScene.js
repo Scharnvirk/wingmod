@@ -28,6 +28,13 @@ GameScene.prototype.fillScene = function(){
         });
     }
 
+    this.actorManager.addNew({
+        classId: ActorFactory.MOOKBOSS,
+        positionX: Utils.rand(300,350),
+        positionY: Utils.rand(300,350),
+        angle: Utils.rand(0,360)
+    });
+
     for(let i = 0; i < 100; i++){
         this.actorManager.addNew({
             classId: ActorFactory.PILLAR,

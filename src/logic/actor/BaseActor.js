@@ -4,12 +4,6 @@ function BaseActor(config){
     this.body = this.createBody();
     if(!this.body) throw new Error('No body defined for Logic Actor!');
 
-    this.ACCELERATION = 0;
-    this.TURN_SPEED = 0;
-    this.DAMAGE = 0;
-
-    this.hp = Infinity;
-
     this.body.position = [this.positionX || 0, this.positionY || 0];
     this.body.angle = this.angle || 0;
     this.body.actor = this;
@@ -18,10 +12,8 @@ function BaseActor(config){
     this.thrust = 0;
     this.horizontalThrust = 0;
     this.rotationForce = 0;
-    this.timeout = Infinity;
-    this.timer = 0;
 
-    this.removeOnHit = false;
+    this.timer = 0;
 }
 
 BaseActor.prototype.createBody = function(){
@@ -38,8 +30,8 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.onCollision = function(otherActor){
-    if(otherActor && this.hp != Infinity && otherActor.DAMAGE > 0){
-        this.hp -= otherActor.DAMAGE;
+    if(otherActor && this.hp != Infinity && otherActor.damage > 0){
+        this.hp -= otherActor.damage;
         this.notifyManagerOfUpdate();
     }
 
@@ -68,17 +60,17 @@ BaseActor.prototype.onSpawn = function(){};
 
 BaseActor.prototype.processMovement = function(){
     if(this.rotationForce !== 0){
-        this.body.angularVelocity = this.rotationForce * this.TURN_SPEED;
+        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }
 
     if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.ACCELERATION]);
+        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
     }
 
     if(this.horizontalThrust !== 0){
-        this.body.applyForceLocal([this.horizontalThrust * this.ACCELERATION, 0]);
+        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
 };
 

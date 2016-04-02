@@ -8,8 +8,10 @@ function Blaster(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.COOLDOWN = 60;
-    this.VELOCITY = 400;
+    this.BURST_COUNT = 5;
+    this.BURST_COOLDOWN = 12;
+    this.COOLDOWN = 40;
+    this.VELOCITY = 700;
 }
 
 Blaster.extend(BaseWeapon);
