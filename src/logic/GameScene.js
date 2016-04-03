@@ -27,12 +27,7 @@ GameScene.prototype.fillScene = function(){
         data: playerActor
     });
 
-    // this.actorManager.setPlayerActor(playerActor);
     var mapBodies = this.mapManager.getAllMapBodies();
-
-    //this.addMapBodies(mapBodies);
-
-
 
     for (let i = 0; i < 40; i++){
         this.actorManager.addNew({
@@ -42,7 +37,7 @@ GameScene.prototype.fillScene = function(){
             angle: Utils.rand(0,360)
         });
     }
-    //
+
     this.actorManager.addNew({
         classId: ActorFactory.MOOKBOSS,
         positionX: Utils.rand(300,350),

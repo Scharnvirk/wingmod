@@ -459,7 +459,7 @@ function BaseBrain(config) {
         horizontalThrust: 0, //left < 0; right > 0
         turn: 0, //left < 0; right > 0
         shoot: false,
-        lookAtPlayer: false
+        lookAtPosition: null
     };
 }
 
@@ -535,12 +535,14 @@ function MookBrain(config) {
 
     this.preferredTurn = 1;
     this.createWallDetectionParameters();
+
+    this.gotoPoint = null;
 }
 
 MookBrain.extend(BaseBrain);
 
 MookBrain.prototype.createWallDetectionParameters = function () {
-    this.wallDetectionDistances = new Uint16Array([8, 20]);
+    this.wallDetectionDistances = new Uint16Array([8, 15]);
 
     this.wallDetectionAngles = new Uint16Array([0, 45, 90, 135, 180, 225, 270, 315]);
     this.wallDetectionAngleIndexesFront = new Uint16Array([0, 1, 7]);
@@ -572,7 +574,15 @@ MookBrain.prototype.update = function () {
     var nearbyWalls = this.detectNearbyWallsFast();
 
     if (this.isWallBetween(this.actor.body.position, this.playerActor.body.position)) {
-        this.freeRoamActon(nearbyWalls);
+        if (this.gotoPoint) {
+            if (!this.isWallBetween(this.actor.body.position, this.gotoPoint)) {
+                this.seesGotoPointAction(nearbyWalls);
+            } else {
+                this.freeRoamActon(nearbyWalls);
+            }
+        } else {
+            this.freeRoamActon(nearbyWalls);
+        }
     } else {
         this.seesPlayerAction();
     }
@@ -642,7 +652,8 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls) {
 };
 
 MookBrain.prototype.seesPlayerAction = function () {
-    this.orders.lookAtPlayer = true;
+    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, 1);
+    this.gotoPoint = [this.playerActor.body.position[0], this.playerActor.body.position[1]];
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
 
     this.orders.thrust = 0;
@@ -656,11 +667,37 @@ MookBrain.prototype.seesPlayerAction = function () {
 };
 
 MookBrain.prototype.freeRoamActon = function (nearbyWalls) {
-    this.orders.lookAtPlayer = false;
+    this.orders.lookAtPosition = this.gotoPoint;
     this.orders.thrust = 1;
     this.orders.horizontalThrust = 0;
     this.orders.turn = 0;
     this.orders.shoot = false;
+
+    if (nearbyWalls.left && !nearbyWalls.right) {
+        this.orders.turn = 1;
+    }
+
+    if (nearbyWalls.right && !nearbyWalls.left) {
+        this.orders.turn = -1;
+    }
+
+    if (nearbyWalls.front && !nearbyWalls.left && !nearbyWalls.right) {
+        this.orders.turn = this.preferredTurn;
+    }
+};
+
+MookBrain.prototype.seesGotoPointAction = function (nearbyWalls) {
+    this.orders.lookAtPosition = this.gotoPoint;
+    this.orders.horizontalThrust = 0;
+    this.orders.thrust = 1;
+    this.orders.turn = 0;
+    this.orders.shoot = false;
+
+    var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.gotoPoint[0], this.actor.body.position[1], this.gotoPoint[1]);
+
+    if (distance < 30) {
+        this.gotoPoint = null;
+    }
 
     if (nearbyWalls.left && !nearbyWalls.right) {
         this.orders.turn = 1;
@@ -1005,8 +1042,8 @@ MookActor.prototype.customUpdate = function () {
 };
 
 MookActor.prototype.doBrainOrders = function () {
-    if (this.brain.orders.lookAtPlayer) {
-        this.lookAtPlayer();
+    if (this.brain.orders.lookAtPosition) {
+        this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
             this.rotationForce = this.brain.orders.turn;
         }
@@ -1024,20 +1061,16 @@ MookActor.prototype.doBrainOrders = function () {
     }
 };
 
-MookActor.prototype.lookAtPlayer = function () {
-    var playerPosition = this.brain.getPlayerPositionWithLead(this.weapon.velocity, 1);
+MookActor.prototype.lookAtPosition = function (position) {
+    var angleVector = Utils.angleToVector(this.body.angle, 1);
+    var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
-    if (playerPosition) {
-        var angleVector = Utils.angleToVector(this.body.angle, 1);
-        var angle = Utils.angleBetweenPointsFromCenter(angleVector, [playerPosition[0] - this.body.position[0], playerPosition[1] - this.body.position[1]]);
+    if (angle < 180 && angle > 0) {
+        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+    }
 
-        if (angle < 180 && angle > 0) {
-            this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
-        }
-
-        if (angle >= 180 && angle < 360) {
-            this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
-        }
+    if (angle >= 180 && angle < 360) {
+        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 

@@ -45,8 +45,8 @@ MookActor.prototype.customUpdate = function(){
 };
 
 MookActor.prototype.doBrainOrders = function(){
-    if (this.brain.orders.lookAtPlayer) {
-        this.lookAtPlayer();
+    if (this.brain.orders.lookAtPosition) {
+        this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
             this.rotationForce = this.brain.orders.turn;
         }
@@ -64,20 +64,16 @@ MookActor.prototype.doBrainOrders = function(){
     }
 };
 
-MookActor.prototype.lookAtPlayer = function(){
-    var playerPosition = this.brain.getPlayerPositionWithLead(this.weapon.velocity, 1);
+MookActor.prototype.lookAtPosition = function(position){
+    var angleVector = Utils.angleToVector(this.body.angle, 1);
+    var angle =  Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
-    if (playerPosition){
-        var angleVector = Utils.angleToVector(this.body.angle, 1);
-        var angle =  Utils.angleBetweenPointsFromCenter(angleVector, [playerPosition[0] - this.body.position[0], playerPosition[1] - this.body.position[1]]);
+    if (angle < 180 && angle > 0) {
+        this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+    }
 
-        if (angle < 180 && angle > 0) {
-            this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
-        }
-
-        if (angle >= 180 && angle < 360) {
-            this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
-        }
+    if (angle >= 180 && angle < 360) {
+        this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
     }
 };
 

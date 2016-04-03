@@ -12,7 +12,7 @@ function BaseBrain(config){
         horizontalThrust: 0, //left < 0; right > 0
         turn: 0, //left < 0; right > 0
         shoot: false,
-        lookAtPlayer: false,
+        lookAtPosition: null,
     };
 }
 
