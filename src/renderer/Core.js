@@ -33,6 +33,7 @@ function Core(config){
 
 Core.prototype.initRenderer = function(config){
     this.makeMainComponents(config);
+    this.initEventHandlers();
     this.renderStats = this.makeRenderStatsWatcher();
     this.stats = this.makeStatsWatcher();
     this.startTime = Date.now();
@@ -45,12 +46,23 @@ Core.prototype.makeMainComponents = function(config){
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
     this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
-    this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager, core: this});
-    this.logicBus = new LogicBus({core: this, logicWorker: this.logicWorker, actorManager: this.actorManager});
+    this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager});
+    this.logicBus = new LogicBus({logicWorker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.gameScene = new GameScene({core: this, scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
+    this.gameScene = new GameScene({scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
+};
+
+Core.prototype.initEventHandlers = function(){
+    this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
+    this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
+    this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
+    this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
+    this.logicBus.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+
+    this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
+    this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -184,23 +196,44 @@ Core.prototype.startGameRenderMode = function(){
     this.renderLoop.start();
 };
 
-Core.prototype.stopGame = function(info){
-    setTimeout(function(){
-        this.ui.stopGame(info);
-        this.renderLoop.stop();
-    }.bind(this), 2000);
-};
-
 Core.prototype.getAiImageObject = function(wallsData){
     return this.aiImageRenderer.getImageObject(wallsData);
 };
 
-//todo: event for that?
-Core.prototype.playerActorAppeared = function(actor){
+//todo: something better for injecting that actor?
+Core.prototype.onPlayerActorAppeared = function(event){
+    var actor = event.data;
     this.camera.actor = actor;
     this.gameScene.actor = actor;
     this.hud.actor = actor;
     actor.inputListener = this.inputListener;
+};
+
+Core.prototype.onUpdateActors = function(event){
+    this.actorManager.updateFromLogic(event.data);
+};
+
+Core.prototype.onAttachPlayer = function(event){
+    this.actorManager.attachPlayer(event.data);
+};
+
+Core.prototype.onGameEnded = function(event){
+    setTimeout(function(){
+        this.ui.stopGame();
+        this.renderLoop.stop();
+    }.bind(this), 2000);
+};
+
+Core.prototype.onGetAiImage = function(event){
+    this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
+};
+
+Core.prototype.onSecondaryActorUpdate = function(event){
+    this.actorManager.secondaryActorUpdate(event.data);
+};
+
+Core.prototype.onRequestUiFlash = function(event){
+    this.gameScene.doUiFlash(event.data);
 };
 
 module.exports = Core;

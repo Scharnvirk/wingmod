@@ -1,11 +1,14 @@
 function RenderBus(config){
     if(!config.worker) throw new Error('No worker object specified for Logic Render Bus');
     this.worker = config.worker;
-    this.core = config.core;
     this.inputState = {};
 
     this.worker.onmessage = this.handleMessage.bind(this);
+
+    EventEmitter.apply(this, arguments);
 }
+
+RenderBus.extend(EventEmitter);
 
 RenderBus.prototype.postMessage = function(type, message){
     message.type = type;
@@ -13,20 +16,10 @@ RenderBus.prototype.postMessage = function(type, message){
 };
 
 RenderBus.prototype.handleMessage = function(message){
-    switch(message.data.type){
-        case 'inputState':
-            this.inputState = message.data;
-            break;
-        case "pause":
-            this.core.pause();
-            break;
-        case "start":
-            this.core.start();
-            break;
-        case "aiImageDone":
-            this.core.saveAiImage(message.data);
-            break;
-    }
+    this.emit({
+        type: message.data.type,
+        data: message.data
+    });
 };
 
 module.exports = RenderBus;

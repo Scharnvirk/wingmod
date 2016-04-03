@@ -22,39 +22,42 @@ GameWorld.extend(p2.World);
 GameWorld.prototype.makeUpdateData = function(){
     var deadActors = [];
     var transferArray = this.transferArray;
+    var transferrableBodyId = 0;
 
     for(let i = 0; i < this.bodies.length; i ++){
         let body = this.bodies[i];
-        transferArray[i*5] = body.actorId;
-        transferArray[i*5+1] = body.dead ? -1 : body.classId;
-        transferArray[i*5+2] = body.position[0];
-        transferArray[i*5+3] = body.position[1];
-        transferArray[i*5+4] = body.angle;
+        if(body.actor){
+            transferArray[transferrableBodyId*5] = body.actorId;
+            transferArray[transferrableBodyId*5+1] = body.dead ? -1 : body.classId;
+            transferArray[transferrableBodyId*5+2] = body.position[0];
+            transferArray[transferrableBodyId*5+3] = body.position[1];
+            transferArray[transferrableBodyId*5+4] = body.angle;
+            transferrableBodyId ++;
 
-        if(body.dead){
-            deadActors.push(body.actorId);
-            body.onDeath();
-            this.removeBody(body);
+            if(body.dead){
+                deadActors.push(body.actorId);
+                body.onDeath();
+                this.removeBody(body);
+            }
+            body.update();
         }
-
-        body.update();
     }
 
     return {
-        length: this.bodies.length,
+        length: transferrableBodyId,
         transferArray: this.transferArray,
         deadActors: deadActors
     };
 };
 
-GameWorld.prototype.getWallActors = function(){
-    let wallActors = [];
+GameWorld.prototype.getTerrainBodies = function(){
+    let wallBodies = [];
     for(let i = 0; i < this.bodies.length; i ++){
         let body = this.bodies[i];
-        if(body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
+        if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
             switch(body.shape.constructor.name){
                 case 'Box':
-                    wallActors.push({
+                    wallBodies.push({
                         class: body.shape.constructor.name,
                         angle: body.angle,
                         height: body.shape.height,
@@ -63,7 +66,7 @@ GameWorld.prototype.getWallActors = function(){
                     });
                     break;
                 case 'Convex':
-                    wallActors.push({
+                    wallBodies.push({
                         class: body.shape.constructor.name,
                         vertices: body.shape.vertices,
                         position: body.position
@@ -72,7 +75,7 @@ GameWorld.prototype.getWallActors = function(){
             }
         }
     }
-    return wallActors;
+    return wallBodies;
 };
 
 GameWorld.prototype.onCollision = function(collisionEvent){

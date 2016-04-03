@@ -18,7 +18,11 @@ function ActorManager(config){
     this.factory = config.factory || ActorFactory.getInstance({particleManager: this.particleManager});
     this.currentPhysicsTime = Date.now();
     this.lastPhysicsTime = Date.now()-1;
+
+    EventEmitter.apply(this, arguments);
 }
+
+ActorManager.extend(EventEmitter);
 
 ActorManager.prototype.update = function(){
     var delta = ((Date.now() - this.currentPhysicsTime) / (this.currentPhysicsTime - this.lastPhysicsTime));
@@ -69,7 +73,10 @@ ActorManager.prototype.createActor = function(config){
     actor.manager = this;
 
     if(this.actorRequestingPlayer && this.actorRequestingPlayer === config.actorId){
-        this.core.playerActorAppeared(actor);
+        this.emit({
+            type: 'playerActorAppeared',
+            data: actor
+        });
     }
 
     this.storage[config.actorId] = actor;
@@ -80,8 +87,6 @@ ActorManager.prototype.createActor = function(config){
 ActorManager.prototype.attachPlayer = function(messageObject){
     if (!this.storage[messageObject.actorId]){
         this.actorRequestingPlayer = messageObject.actorId;
-    } else {
-        this.core.camera.actor = this.storage[messageObject.actorId];
     }
 };
 
@@ -111,6 +116,13 @@ ActorManager.prototype.newEnemy = function(actorId){
 
 ActorManager.prototype.enemyDestroyed = function(actorId){
     delete this.enemies[actorId];
+};
+
+ActorManager.prototype.requestUiFlash = function(flashType){
+    this.emit({
+        type:'requestUiFlash',
+        data: flashType
+    });
 };
 
 module.exports = ActorManager;

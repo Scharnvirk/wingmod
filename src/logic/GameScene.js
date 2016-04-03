@@ -1,12 +1,17 @@
 var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseBody = require("logic/actor/component/body/BaseBody");
 
 function GameScene(config){
     Object.assign(this, config);
     if(!this.world) throw new Error('No world specified for Logic GameScene');
     if(!this.actorManager) throw new Error('No actorManager specified for Logic GameScene');
-    if(!this.core) throw new Error('No core specified for Logic GameScene');
+    if(!this.mapManager) throw new Error('No mapManager specified for Logic GameScene');
     this.timer = 0;
+
+    EventEmitter.apply(this, arguments);
 }
+
+GameScene.extend(EventEmitter);
 
 GameScene.prototype.fillScene = function(){
 
@@ -17,7 +22,17 @@ GameScene.prototype.fillScene = function(){
         angle: 0
     });
 
-    this.actorManager.setPlayerActor(playerActor);
+    this.emit({
+        type: 'newPlayerActor',
+        data: playerActor
+    });
+
+    // this.actorManager.setPlayerActor(playerActor);
+    var mapBodies = this.mapManager.getAllMapBodies();
+
+    //this.addMapBodies(mapBodies);
+
+
 
     for (let i = 0; i < 40; i++){
         this.actorManager.addNew({
@@ -27,7 +42,7 @@ GameScene.prototype.fillScene = function(){
             angle: Utils.rand(0,360)
         });
     }
-
+    //
     this.actorManager.addNew({
         classId: ActorFactory.MOOKBOSS,
         positionX: Utils.rand(300,350),
@@ -72,25 +87,20 @@ GameScene.prototype.fillScene = function(){
         angle: Math.PI/2
     });
 
-
-
-    this.core.doTick();
-
     console.log("scene complete");
+    this.emit({type: 'newMapBodies'});
 };
 
- GameScene.prototype.update = function(){
+GameScene.prototype.update = function(){
     this.timer++;
+};
 
-    for(let i = 0; i < 0; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.PROJECTILE,
-            positionX: 0,
-            positionY: 0,
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(220,280)
-        });
+
+GameScene.prototype.addMapBodies = function(mapBodies){
+    for (let i = 0; i < mapBodies.length; i++){
+        this.world.addBody(mapBodies[i]);
     }
- };
+    this.emit({type: 'newMapBodies'});
+};
 
 module.exports = GameScene;

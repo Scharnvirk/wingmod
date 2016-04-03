@@ -103,15 +103,13 @@ ShipActor.prototype.doEngineGlow = function(){
 ShipActor.prototype.onDeath = function(){
     this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
     this.dead = true;
-    //techtest only!
-    this.manager.core.gameScene.flashWhite();
+    this.manager.requestUiFlash('white');
 };
 
 
 ShipActor.prototype.handleDamage = function(){
     if(this.hp < this.lastHp){
-        //techtest only!
-        this.manager.core.gameScene.flashRed();
+        this.manager.requestUiFlash('red');
     }
 
     let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);

@@ -2,7 +2,6 @@ var ActorFactory = require("shared/ActorFactory")('logic');
 
 function ActorManager(config){
     config = config || {};
-    this.core = null;
     this.storage = Object.create(null);
     this.world = null;
     this.factory = config.factory || ActorFactory.getInstance();
@@ -14,8 +13,10 @@ function ActorManager(config){
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 
-    //setInterval(this.checkEndGameCondition.bind(this), 3000);
+    EventEmitter.apply(this, arguments);
 }
+
+ActorManager.extend(EventEmitter);
 
 ActorManager.prototype.addNew = function(config){
     if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
@@ -40,7 +41,6 @@ ActorManager.prototype.addNew = function(config){
 };
 
 ActorManager.prototype.update = function(inputState){
-
     for(let i = 0; i < this.playerActors.length; i++){
         if(this.storage[this.playerActors[i]]){
             this.storage[this.playerActors[i]].playerUpdate(inputState);
@@ -52,15 +52,16 @@ ActorManager.prototype.update = function(inputState){
     }
 
     if (this.actorIdsToSendUpdateAbout.length > 0){
-        this.core.renderBus.postMessage('secondaryActorUpdate', {actorData: this.buildSecondaryUpdateTransferData()});
+        this.emit({
+            type: 'secondaryActorUpdate',
+            data: this.buildSecondaryUpdateTransferData()
+        });
         this.actorIdsToSendUpdateAbout = [];
     }
 };
 
-//todo: notify brains of this and also aiImage
 ActorManager.prototype.setPlayerActor = function(actor){
     this.playerActors.push(actor.body.actorId);
-    this.core.renderBus.postMessage('attachPlayer', {actorId: actor.body.actorId});
 };
 
 ActorManager.prototype.removeActorAt = function(actorId){
@@ -68,26 +69,9 @@ ActorManager.prototype.removeActorAt = function(actorId){
 };
 
 ActorManager.prototype.endGame = function(){
-    var startingMooks = 40; //todo: definitely not the place for that
-    var mookCount = 0;
-    for (let actorId in this.storage) {
-        if (this.storage[actorId].classId === ActorFactory.MOOK){
-            mookCount ++;
-        }
-    }
-    this.core.endGame({remaining: mookCount, killed: startingMooks - mookCount});
-};
-
-ActorManager.prototype.checkEndGameCondition = function(){
-    var mookCount = 0;
-    for (let actorId in this.storage) {
-        if (this.storage[actorId].classId === ActorFactory.MOOK){
-            mookCount ++;
-        }
-    }
-    if (mookCount === 0 ){
-        this.endGame();
-    }
+    this.emit({
+        type: 'playerDied'
+    });
 };
 
 ActorManager.prototype.getFirstPlayerActor = function(){

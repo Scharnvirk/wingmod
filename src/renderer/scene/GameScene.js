@@ -130,6 +130,16 @@ class GameScene {
         if (this.currentColor.g < this.initialColor.g) this.currentColor.g = this.initialColor.g;
         if (this.currentColor.b < this.initialColor.b) this.currentColor.b = this.initialColor.b;
     }
+
+    doUiFlash(type){
+        switch(type) {
+            case 'red':
+                this.flashRed();
+                break;
+            default:
+                this.flashWhite();
+        }
+    }
 }
 
 module.exports = GameScene;

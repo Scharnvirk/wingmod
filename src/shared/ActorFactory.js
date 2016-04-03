@@ -10,6 +10,7 @@ var idMap = {
     MOLTENPROJECTILE: 101,
     LASERPROJECITLE: 102,
     REDLASERPROJECITLE: 103,
+    MAP: 1000
 };
 
 function ActorFactory(context, actorDependencies){
@@ -24,6 +25,7 @@ function ActorFactory(context, actorDependencies){
     ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
     ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
     ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
+    ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
 
     this.actorDependencies = actorDependencies;
     this.actorMap = {
@@ -37,7 +39,8 @@ function ActorFactory(context, actorDependencies){
         [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
         [idMap.MOLTENPROJECTILE]: ActorFactory.MoltenProjectileActor,
         [idMap.LASERPROJECITLE]: ActorFactory.LaserProjectileActor,
-        [idMap.REDLASERPROJECITLE]: ActorFactory.RedLaserProjectileActor
+        [idMap.REDLASERPROJECITLE]: ActorFactory.RedLaserProjectileActor,
+        [idMap.MAP]: ActorFactory.MapActor
     };
 }
 

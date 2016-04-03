@@ -8,8 +8,7 @@ BoomChunkActor.extend(ChunkActor);
 
 BoomChunkActor.prototype.onDeath = function(){
     this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
-    //techtest only!
-    this.manager.core.gameScene.flashWhite();
+    this.manager.requestUiFlash('white');
 };
 
 module.exports = BoomChunkActor;

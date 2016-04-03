@@ -1,17 +1,13 @@
-//var BaseBody = require("logic/actor/component/body/BaseBody");
-
 function BaseBody(config){
-
     this.actorId = null;
     config.position = config.position || [0,0];
     config.angle = Utils.degToRad(config.angle || 0);
     config.radius = config.radius || 0;
     Object.assign(this, config);
 
-    this.shape = config.shape || this.createShape();
-
     p2.Body.call(this, config);
 
+    this.shape = config.shape || this.createShape();
     this.initShape();
 }
 
@@ -65,15 +61,27 @@ BaseBody.prototype.createShape = function(){
 };
 
 BaseBody.prototype.initShape = function(){
-    this.addShape(this.shape);
+    if (this.shape.length > 0){
+        for (let i = 0; i < this.shape.length; i++){
+            this.addShape(this.shape[i], this.shape[i].position);
+        }
+    } else {
+        this.addShape(this.shape, this.shape.position);
+    }
 };
 
 BaseBody.prototype.onDeath = function(){
-    this.actor.remove(this.actorId);
+    if (this.actor){
+        this.actor.remove(this.actorId);
+    }
+
 };
 
 BaseBody.prototype.onCollision = function(otherBody){
-    this.actor.onCollision(otherBody.actor);
+    if (this.actor){
+        this.actor.onCollision(otherBody.actor);
+    }
+
 };
 
 BaseBody.prototype.update = function(){};
