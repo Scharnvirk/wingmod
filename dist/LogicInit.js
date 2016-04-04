@@ -160,61 +160,23 @@ GameScene.prototype.fillScene = function () {
 
     var mapBodies = this.mapManager.getAllMapBodies();
 
+    this.addMapBodies(mapBodies);
+
     for (var i = 0; i < 40; i++) {
         this.actorManager.addNew({
             classId: ActorFactory.MOOK,
-            positionX: Utils.rand(300, 350),
-            positionY: Utils.rand(300, 350),
+            positionX: Utils.rand(200, 300),
+            positionY: Utils.rand(-100, 100),
             angle: Utils.rand(0, 360)
         });
     }
 
     this.actorManager.addNew({
         classId: ActorFactory.MOOKBOSS,
-        positionX: Utils.rand(300, 350),
-        positionY: Utils.rand(300, 350),
+        positionX: Utils.rand(200, 300),
+        positionY: Utils.rand(-100, 100),
         angle: Utils.rand(0, 360)
     });
-
-    for (var i = 0; i < 100; i++) {
-        this.actorManager.addNew({
-            classId: ActorFactory.PILLAR,
-            positionX: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            positionY: Utils.rand(0, 1) === 1 ? Utils.rand(-390, -20) : Utils.rand(20, 390),
-            angle: Utils.rand(0, 360)
-        });
-    }
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: -400,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 0,
-        positionY: 400,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: 400,
-        positionY: 0,
-        angle: Math.PI / 2
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.WALL,
-        positionX: -400,
-        positionY: 0,
-        angle: Math.PI / 2
-    });
-
-    console.log("scene complete");
-    this.emit({ type: 'newMapBodies' });
 };
 
 GameScene.prototype.update = function () {
@@ -833,6 +795,8 @@ function BaseBody(config) {
     config.position = config.position || [0, 0];
     config.angle = Utils.degToRad(config.angle || 0);
     config.radius = config.radius || 0;
+    config.height = config.height || 1;
+    config.width = config.width || 1;
     Object.assign(this, config);
 
     p2.Body.call(this, config);
@@ -869,6 +833,14 @@ BaseBody.prototype.createShape = function () {
                 collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
                 collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.SHIPEXPLOSION
             });
+        case 'terrain':
+            return new p2.Box({
+                height: this.height,
+                width: this.width,
+                collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
+                collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+            });
+
         default:
             throw new Error('No collisionType defined for default createShape in BaseBody!');
     }
@@ -1813,6 +1785,8 @@ function BaseMapChunk(config) {
         chunkSizeY: 200
     });
 
+    this.chunkLayout = [[-400, 0, 10, 400], [400, 0, 10, 400], [0, 200, 800, 10], [0, -200, 800, 10], [-310, 150, 100, 10], [-190, 150, 100, 10], [-250, -150, 200, 10], [-100, -160, 10, 80], [-100, 160, 10, 80], [-100, 0, 150, 40], [150, -20, 10, 200], [200, -20, 10, 200], [150, 175, 10, 50], [200, 175, 10, 50]];
+
     this.bodies = this.createMapBodies();
 }
 
@@ -1836,16 +1810,14 @@ BaseMapChunk.prototype.getBodies = function () {
 BaseMapChunk.prototype.createMapBodies = function () {
     var mapBodies = [];
 
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0, length = this.chunkLayout.length; i < length; i++) {
+        var chunkObjectConfig = this.chunkLayout[i];
         mapBodies.push(new BaseBody({
-            position: [0, 100], //[Utils.rand(-50,50), Utils.rand(-50,50)],
-            shape: new p2.Box({
-                height: Utils.rand(0, 100),
-                width: Utils.rand(0, 100),
-                collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
-                collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
-            }),
-            mass: 0
+            position: [chunkObjectConfig[0], chunkObjectConfig[1]],
+            height: chunkObjectConfig[3],
+            width: chunkObjectConfig[2],
+            mass: 0,
+            collisionType: 'terrain'
         }));
     }
 

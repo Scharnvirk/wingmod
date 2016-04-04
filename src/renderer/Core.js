@@ -60,6 +60,7 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+    this.logicBus.on('newMapBodies', this.onNewMapBodies.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -234,6 +235,10 @@ Core.prototype.onSecondaryActorUpdate = function(event){
 
 Core.prototype.onRequestUiFlash = function(event){
     this.gameScene.doUiFlash(event.data);
+};
+
+Core.prototype.onNewMapBodies = function(event){
+    this.gameScene.createMapBodies(event.data);
 };
 
 module.exports = Core;

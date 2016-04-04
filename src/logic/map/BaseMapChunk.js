@@ -8,6 +8,23 @@ function BaseMapChunk(config) {
         chunkSizeY: 200
     });
 
+    this.chunkLayout = [
+        [-400, 0, 10, 400],
+        [400, 0, 10, 400],
+        [0, 200, 800, 10],
+        [0, -200, 800, 10],
+        [-310, 150, 100, 10],
+        [-190, 150, 100, 10],
+        [-250, -150, 200, 10],
+        [-100, -160, 10, 80],
+        [-100, 160, 10, 80],
+        [-100, 0, 150, 40],
+        [150, -20, 10, 200],
+        [200, -20, 10, 200],
+        [150, 175, 10, 50],
+        [200, 175, 10, 50],
+    ];
+
     this.bodies = this.createMapBodies();
 }
 
@@ -31,17 +48,15 @@ BaseMapChunk.prototype.getBodies = function(){
 BaseMapChunk.prototype.createMapBodies = function(){
     var mapBodies = [];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0, length = this.chunkLayout.length; i < length; i++) {
+        let chunkObjectConfig = this.chunkLayout[i];
         mapBodies.push(
             new BaseBody({
-                position: [0, 100],//[Utils.rand(-50,50), Utils.rand(-50,50)],
-                shape: new p2.Box({
-                    height: Utils.rand(0,100),
-                    width: Utils.rand(0,100),
-                    collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
-                    collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
-                }),
-                mass: 0
+                position: [chunkObjectConfig[0], chunkObjectConfig[1]],
+                height: chunkObjectConfig[3],
+                width: chunkObjectConfig[2],
+                mass: 0,
+                collisionType: 'terrain'
             })
         );
      }
