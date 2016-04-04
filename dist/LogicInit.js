@@ -148,8 +148,8 @@ GameScene.prototype.fillScene = function () {
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
+        positionX: -325,
+        positionY: -175,
         angle: 0
     });
 
@@ -626,7 +626,7 @@ MookBrain.prototype.createWallDetectionParameters = function () {
 MookBrain.prototype.update = function () {
     this.timer++;
 
-    if (this.timer % 30 === 0) {
+    if (this.timer % 120 === 0) {
         this.preferredTurn *= -1;
     }
 
@@ -1457,7 +1457,7 @@ function ShipActor(config) {
     this.applyConfig({
         acceleration: 500,
         turnSpeed: 6,
-        hp: 20,
+        hp: 30,
         bodyConfig: {
             actor: this,
             mass: 4,

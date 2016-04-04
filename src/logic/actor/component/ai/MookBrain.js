@@ -45,7 +45,7 @@ MookBrain.prototype.createWallDetectionParameters = function(){
 MookBrain.prototype.update = function(){
     this.timer ++;
 
-    if (this.timer % 30 === 0){
+    if (this.timer % 120 === 0){
         this.preferredTurn *= -1;
     }
 

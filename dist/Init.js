@@ -567,7 +567,7 @@ MookBrain.prototype.createWallDetectionParameters = function () {
 MookBrain.prototype.update = function () {
     this.timer++;
 
-    if (this.timer % 30 === 0) {
+    if (this.timer % 120 === 0) {
         this.preferredTurn *= -1;
     }
 
@@ -1398,7 +1398,7 @@ function ShipActor(config) {
     this.applyConfig({
         acceleration: 500,
         turnSpeed: 6,
-        hp: 20,
+        hp: 30,
         bodyConfig: {
             actor: this,
             mass: 4,

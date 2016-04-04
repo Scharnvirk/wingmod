@@ -17,8 +17,8 @@ GameScene.prototype.fillScene = function(){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
-        positionY: 0,
+        positionX: -325,
+        positionY: -175,
         angle: 0
     });
 
@@ -45,7 +45,7 @@ GameScene.prototype.fillScene = function(){
         positionX: Utils.rand(200, 300),
         positionY: Utils.rand(-100, 100),
         angle: Utils.rand(0,360)
-    });    
+    });
 };
 
 GameScene.prototype.update = function(){
