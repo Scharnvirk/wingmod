@@ -61,6 +61,7 @@ MookBossActor.prototype.onDeath = function(){
         });
     }
     this.body.dead = true;
+    this.manager.enemiesKilled ++;
 };
 
 module.exports = MookBossActor;

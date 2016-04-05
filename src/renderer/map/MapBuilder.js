@@ -16,7 +16,6 @@ MapBuilder.extend(EventEmitter);
 MapBuilder.prototype.createMapMesh = function(){
 
     var combinedGeometry = new THREE.Geometry();
-    //var texture = new THREE.TextureLoader().load("/models/floor.png");
     var material = ModelStore.get('wall').material;
 
     for (let i = 0, length = this.bodies.length; i < length; i++){
@@ -28,7 +27,13 @@ MapBuilder.prototype.createMapMesh = function(){
         combinedGeometry.merge(geometry);
     }
 
-    return new THREE.Mesh(combinedGeometry, material);
+    var mesh = new THREE.Mesh(combinedGeometry, material);
+
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    mesh.matrixAutoUpdate = false;
+
+    return mesh;
 };
 
 module.exports = MapBuilder;

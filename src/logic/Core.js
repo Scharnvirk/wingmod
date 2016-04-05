@@ -99,8 +99,8 @@ Core.prototype.onNewMapBodies = function(){
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };
 
-Core.prototype.onPlayerDied = function(){
-    this.renderBus.postMessage('gameEnded', {});
+Core.prototype.onPlayerDied = function(event){
+    this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
 };
 
 module.exports = Core;

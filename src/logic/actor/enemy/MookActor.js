@@ -126,6 +126,7 @@ MookActor.prototype.onDeath = function(){
         });
     }
     this.body.dead = true;
+    this.manager.enemiesKilled ++;
 };
 
 MookActor.prototype.onHit = function(){

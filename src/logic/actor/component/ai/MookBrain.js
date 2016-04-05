@@ -18,7 +18,7 @@ function MookBrain(config){
 MookBrain.extend(BaseBrain);
 
 MookBrain.prototype.createWallDetectionParameters = function(){
-    this.wallDetectionDistances = new Uint16Array([8, 15]);
+    this.wallDetectionDistances = new Uint16Array([10]);
 
     this.wallDetectionAngles = new Uint16Array([0, 45, 90, 135, 180, 225, 270, 315]);
     this.wallDetectionAngleIndexesFront = new Uint16Array([0, 1, 7]);
@@ -45,7 +45,7 @@ MookBrain.prototype.createWallDetectionParameters = function(){
 MookBrain.prototype.update = function(){
     this.timer ++;
 
-    if (this.timer % 120 === 0){
+    if (this.timer % 30 === 0){
         this.preferredTurn *= -1;
     }
 
@@ -193,11 +193,8 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
     }
 };
 
-MookBrain.prototype.shootAction = function(distance = 0){
-    var shouldShoot = this.timer > this.activationTime &&
-        Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.SHOOTING_ARC);
-
-    this.orders.shoot = shouldShoot;
+MookBrain.prototype.shootAction = function(distance = 0){        
+    this.orders.shoot = Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.SHOOTING_ARC);
 };
 
 MookBrain.prototype.randomStrafeAction = function(){

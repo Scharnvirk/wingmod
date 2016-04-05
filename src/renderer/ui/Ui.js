@@ -42,7 +42,7 @@ Ui.prototype.startGame = function(){
 };
 
 Ui.prototype.stopGame = function(info){
-    var scoreText = info ? 'KILLED: ' + info.killed + '\nREMAINING: ' + info.remaining + '\n\n' + this.getOpinionOnResult(info.remaining) : '';
+    var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
     this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText});
 };
 

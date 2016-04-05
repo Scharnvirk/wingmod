@@ -220,7 +220,7 @@ Core.prototype.onAttachPlayer = function(event){
 
 Core.prototype.onGameEnded = function(event){
     setTimeout(function(){
-        this.ui.stopGame();
+        this.ui.stopGame(event.data);
         this.renderLoop.stop();
     }.bind(this), 2000);
 };

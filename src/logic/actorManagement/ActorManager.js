@@ -9,7 +9,11 @@ function ActorManager(config){
     this.playerActors = [];
     this.actorIdsToSendUpdateAbout = [];
 
+    this.enemiesKilled = 0;
+
     Object.assign(this, config);
+
+    this.timer = 0;
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
 
@@ -41,7 +45,9 @@ ActorManager.prototype.addNew = function(config){
 };
 
 ActorManager.prototype.update = function(inputState){
-    for(let i = 0; i < this.playerActors.length; i++){
+    this.timer ++;
+
+    for (let i = 0; i < this.playerActors.length; i++){
         if(this.storage[this.playerActors[i]]){
             this.storage[this.playerActors[i]].playerUpdate(inputState);
         }
@@ -70,7 +76,8 @@ ActorManager.prototype.removeActorAt = function(actorId){
 
 ActorManager.prototype.endGame = function(){
     this.emit({
-        type: 'playerDied'
+        type: 'playerDied',
+        data: this.enemiesKilled
     });
 };
 
