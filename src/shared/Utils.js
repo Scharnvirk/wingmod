@@ -21,7 +21,7 @@ var Utils = {
         return this.getRandomInteger(min, max);
     },
 
-    makeRandomColor: function(min = 0, max = 256){
+    makeRandomColor: function(min = 0, max = 255){
         var colors = ['','',''];
 
         colors.forEach(function(color, index){

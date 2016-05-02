@@ -10,6 +10,8 @@ function ParticleGenerator(config){
 
     Object.assign(this, config);
 
+    this.position.z = config.positionZ;
+
     if(!this.material) throw new Error('No material defined for ParticleGenerator!');
 
     this.usedPoints = new Float32Array( this.maxParticles );
@@ -37,7 +39,7 @@ ParticleGenerator.prototype.createGeometry = function(){
     {
     	vertices[ i*3 + 0 ] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
     	vertices[ i*3 + 1 ] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
-    	vertices[ i*3 + 2 ] = this.positionZ;
+    	vertices[ i*3 + 2 ] = 0;
     }
 
     geometry.addAttribute('position', new THREE.BufferAttribute( vertices, 3 ));
@@ -93,7 +95,7 @@ ParticleGenerator.prototype.initParticle = function(particleId, config){
     var offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
     this.positionHandle[particleId * 3] = config.positionX;
     this.positionHandle[particleId * 3 + 1] = config.positionY;
-    this.positionHandle[particleId * 3 + 2] = config.positionZ || Constants.DEFAULT_POSITION_Z;
+    this.positionHandle[particleId * 3 + 2] = 0;
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;

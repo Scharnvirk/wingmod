@@ -16,9 +16,9 @@
 "materials": [{
      "colorEmissive": [0,0,0],
      "transparent": false,
-     "colorDiffuse": [1,1,1],
+     "colorDiffuse": [0.5,0.5,0.5],
      "blending": "NormalBlending",
-     "colorSpecular": [1,1,1],
+     "colorSpecular": [0.5,0.5,0.5],
      "opacity": 1,
      "shading": "phong",
      "depthWrite": true,
@@ -30,6 +30,7 @@
      "DbgIndex": 0,
      "depthTest": true,
      "DbgName": "Material.001",
-     "mapDiffuse": "ravier.png"
+     "mapDiffuse": "ravier.png",
+     "mapBump": "ravier_bump.png"
   }]
 }

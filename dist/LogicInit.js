@@ -148,8 +148,8 @@ GameScene.prototype.fillScene = function () {
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: -325,
-        positionY: -175,
+        positionX: 0,
+        positionY: 0,
         angle: 0
     });
 
@@ -158,39 +158,39 @@ GameScene.prototype.fillScene = function () {
         data: playerActor
     });
 
-    var mapBodies = this.mapManager.getAllMapBodies();
-
-    this.addMapBodies(mapBodies);
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -375,
-        positionY: -175,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -375,
-        positionY: 175,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 175,
-        positionY: 150,
-        angle: 0
-    });
-
-    for (var i = 0; i < 10; i++) {
-        this.actorManager.addNew({
-            classId: ActorFactory.MOOK,
-            positionX: Utils.rand(200, 300),
-            positionY: Utils.rand(-100, 100),
-            angle: Utils.rand(0, 360)
-        });
-    }
+    // var mapBodies = this.mapManager.getAllMapBodies();
+    //
+    // this.addMapBodies(mapBodies);
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -375,
+    //     positionY: -175,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -375,
+    //     positionY: 175,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 175,
+    //     positionY: 150,
+    //     angle: 0
+    // });
+    //
+    // for (let i = 0; i < 10; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.MOOK,
+    //         positionX: Utils.rand(200, 300),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: Utils.rand(0,360)
+    //     });
+    // }
 };
 
 GameScene.prototype.update = function () {
@@ -2079,14 +2079,16 @@ module.exports = BaseActor;
 "use strict";
 
 function BaseMesh(config) {
-    THREE.Mesh.apply(this, arguments);
-    this.angleOffset = 0;
 
     config.scaleX = config.scaleX || 1;
     config.scaleY = config.scaleY || 1;
     config.scaleZ = config.scaleZ || 1;
 
     config = config || {};
+
+    THREE.Mesh.apply(this, [config.geometry, config.material]);
+    this.angleOffset = 0;
+
     Object.assign(this, config);
 
     this.scale.x = config.scaleX;
@@ -3183,7 +3185,7 @@ var Utils = {
 
     makeRandomColor: function makeRandomColor() {
         var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-        var max = arguments.length <= 1 || arguments[1] === undefined ? 256 : arguments[1];
+        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
 
         var colors = ['', '', ''];
 

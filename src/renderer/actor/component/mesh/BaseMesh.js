@@ -1,12 +1,15 @@
 function BaseMesh(config){
-    THREE.Mesh.apply(this, arguments);
-    this.angleOffset = 0;
+
 
     config.scaleX = config.scaleX || 1;
     config.scaleY = config.scaleY || 1;
     config.scaleZ = config.scaleZ || 1;
 
     config = config || {};
+
+    THREE.Mesh.apply(this, [config.geometry, config.material]);
+    this.angleOffset = 0;
+
     Object.assign(this, config);
 
     this.scale.x = config.scaleX;

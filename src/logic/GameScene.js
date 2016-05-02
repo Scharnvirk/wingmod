@@ -17,8 +17,8 @@ GameScene.prototype.fillScene = function(){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: -325,
-        positionY: -175,
+        positionX: 0,
+        positionY: 0,
         angle: 0
     });
 
@@ -27,39 +27,39 @@ GameScene.prototype.fillScene = function(){
         data: playerActor
     });
 
-    var mapBodies = this.mapManager.getAllMapBodies();
-
-    this.addMapBodies(mapBodies);
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -375,
-        positionY: -175,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -375,
-        positionY: 175,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 175,
-        positionY: 150,
-        angle: 0
-    });
-
-    for (let i = 0; i < 10; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.MOOK,
-            positionX: Utils.rand(200, 300),
-            positionY: Utils.rand(-100, 100),
-            angle: Utils.rand(0,360)
-        });
-    }
+    // var mapBodies = this.mapManager.getAllMapBodies();
+    //
+    // this.addMapBodies(mapBodies);
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -375,
+    //     positionY: -175,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -375,
+    //     positionY: 175,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 175,
+    //     positionY: 150,
+    //     angle: 0
+    // });
+    //
+    // for (let i = 0; i < 10; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.MOOK,
+    //         positionX: Utils.rand(200, 300),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: Utils.rand(0,360)
+    //     });
+    // }
 };
 
 GameScene.prototype.update = function(){

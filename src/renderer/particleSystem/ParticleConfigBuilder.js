@@ -22,6 +22,7 @@ function ParticleConfigBuilder(config){
              blending: THREE.AdditiveBlending,
              transparent: true,
              depthWrite: false,
+             shading: THREE.FlatShading
         }),
         particleAddHUD: new THREE.ShaderMaterial( {
              uniforms: {
