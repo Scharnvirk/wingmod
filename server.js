@@ -49,7 +49,7 @@ var SampleApp = function() {
 
         self.zcache['/fonts/Oswald-Regular.ttf'] = fs.readFileSync('./fonts/Oswald-Regular.ttf');
 
-		self.zcache['/lib/three.js'] = fs.readFileSync('./lib/three.js');
+		self.zcache['/lib/three73.js'] = fs.readFileSync('./lib/three73.js');
         self.zcache['/lib/react.js'] = fs.readFileSync('./lib/react.js');
         self.zcache['/lib/react-dom.js'] = fs.readFileSync('./lib/react-dom.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
@@ -65,8 +65,12 @@ var SampleApp = function() {
         self.zcache['/models/chunk.json'] = fs.readFileSync('./models/chunk.json');
         self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
         self.zcache['/models/ravier.png'] = fs.readFileSync('./models/ravier.png');
-        self.zcache['/models/floor.png'] = fs.readFileSync('./models/floor.png');
         self.zcache['/models/chunk.png'] = fs.readFileSync('./models/chunk.png');
+
+        self.zcache['/models/levels/chunkThree.json'] = fs.readFileSync('./models/levels/chunkThree.json');
+        self.zcache['/models/levels/chunkthree_endcap.json'] = fs.readFileSync('./models/levels/chunkthree_endcap.json');
+        self.zcache['/models/levels/map_256_B.png'] = fs.readFileSync('./models/levels/map_256_B.png');
+        self.zcache['/models/levels/map_256.png'] = fs.readFileSync('./models/levels/map_256.png');
 
         self.zcache['/dist/Init.js'] = fs.readFileSync('./dist/Init.js');
         self.zcache['/dist/LogicInit.js'] = fs.readFileSync('./dist/LogicInit.js');
@@ -137,7 +141,7 @@ var SampleApp = function() {
 
         self.routes['/fonts/Oswald-Regular.ttf'] = function(req, res) {res.send(self.cache_get('/fonts/Oswald-Regular.ttf') );};
 
-		self.routes['/lib/three.js'] = function(req, res) {res.send(self.cache_get('/lib/three.js') );};
+		self.routes['/lib/three73.js'] = function(req, res) {res.send(self.cache_get('/lib/three73.js') );};
         self.routes['/lib/react.js'] = function(req, res) {res.send(self.cache_get('/lib/react.js') );};
         self.routes['/lib/react-dom.js'] = function(req, res) {res.send(self.cache_get('/lib/react-dom.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
@@ -152,10 +156,14 @@ var SampleApp = function() {
         self.routes['/gfx/smokePuffAlpha.png'] = function(req, res) {res.send(self.cache_get('/gfx/smokePuffAlpha.png') );};
         self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
         self.routes['/models/ravier.json'] = function(req, res) {res.send(self.cache_get('/models/ravier.json') );};
-        self.routes['/models/floor.png'] = function(req, res) {res.send(self.cache_get('/models/floor.png') );};
         self.routes['/models/ravier.png'] = function(req, res) {res.send(self.cache_get('/models/ravier.png') );};
         self.routes['/models/chunk.json'] = function(req, res) {res.send(self.cache_get('/models/chunk.json') );};
         self.routes['/models/chunk.png'] = function(req, res) {res.send(self.cache_get('/models/chunk.png') );};
+
+        self.routes['/models/levels/chunkThree.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunkThree.json') );};
+        self.routes['/models/levels/chunkthree_endcap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunkthree_endcap.json') );};
+        self.routes['/models/levels/map_256.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256.png') );};
+        self.routes['/models/levels/map_256_B.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_B.png') );};
 
 		self.routes['/dist/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/Init.js') );};
         self.routes['/dist/LogicInit.js'] = function(req, res) {res.send(self.cache_get('/dist/LogicInit.js') );};
