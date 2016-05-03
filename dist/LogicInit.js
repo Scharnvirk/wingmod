@@ -158,30 +158,37 @@ GameScene.prototype.fillScene = function () {
         data: playerActor
     });
 
-    // var mapBodies = this.mapManager.getAllMapBodies();
+    var mapBodies = this.mapManager.getAllMapBodies();
     //
-    // this.addMapBodies(mapBodies);
+    this.addMapBodies(mapBodies);
     //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -375,
-    //     positionY: -175,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -375,
-    //     positionY: 175,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 175,
-    //     positionY: 150,
-    //     angle: 0
-    // });
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -124,
+        positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -124,
+        positionY: 352,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 104,
+        positionY: -128,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 104,
+        positionY: 480,
+        angle: 0
+    });
     //
     // for (let i = 0; i < 10; i++){
     //     this.actorManager.addNew({
@@ -1912,7 +1919,18 @@ function BaseMapChunk(config) {
         chunkSizeY: 200
     });
 
-    this.chunkLayout = [[-400, 0, 14, 400], [400, 0, 14, 400], [0, 200, 800, 14], [0, -200, 800, 14], [-310, 150, 100, 14], [-190, 150, 100, 14], [-250, -150, 200, 14], [-100, -160, 14, 80], [-100, 160, 14, 80], [-100, 0, 150, 40], [150, -20, 14, 200], [200, -20, 14, 200], [150, 175, 14, 50], [200, 175, 14, 50]];
+    this.chunkLayout = [
+    //first endcap (-352Y)
+    [-112, 160 - 352, 32, 32], [-112, 160 - 352, 32, 32], [-96, 112 - 352, 64, 64], [96, 112 - 352, 64, 64], [0, 96 - 352, 128, 32],
+
+    //second endcap (+704Y)
+    [112, -160 + 704, 32, 32], [-112, -160 + 704, 32, 32], [96, -112 + 704, 64, 64], [-96, -112 + 704, 64, 64], [0, -96 + 704, 128, 32],
+
+    //first chunk (no transition)
+    [-136, 160 - 0, 80, 32], [-160, 80 - 0, 32, 128], [-160, -80 - 0, 32, 128], [-136, -160 - 0, 80, 32], [-172, 0 - 0, 8, 32], [-104, 64 - 0, 16, 96], [-104, -64 - 0, 16, 96], [136, 160 - 0, 80, 32], [136, -160 - 0, 80, 32], [160, 0 - 0, 32, 288], [104, 0 - 0, 16, 224],
+
+    //second chunk (+352Y)
+    [-136, 160 + 352, 80, 32], [-160, 80 + 352, 32, 128], [-160, -80 + 352, 32, 128], [-136, -160 + 352, 80, 32], [-172, 0 + 352, 8, 32], [-104, 64 + 352, 16, 96], [-104, -64 + 352, 16, 96], [136, 160 + 352, 80, 32], [136, -160 + 352, 80, 32], [160, 0 + 352, 32, 288], [104, 0 + 352, 16, 224]];
 
     this.bodies = this.createMapBodies();
 }

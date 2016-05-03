@@ -3,8 +3,8 @@ var ModelList = {
         '/models/ship.json',
         '/models/ravier.json',
         '/models/chunk.json',
-        '/models/levels/chunkTwo.json',
-        '/models/levels/chunkThree.json'
+        '/models/levels/chunkThree.json',
+        '/models/levels/chunkThree_endcap.json'
     ]
 };
 

@@ -27,30 +27,37 @@ GameScene.prototype.fillScene = function(){
         data: playerActor
     });
 
-    // var mapBodies = this.mapManager.getAllMapBodies();
+    var mapBodies = this.mapManager.getAllMapBodies();
     //
-    // this.addMapBodies(mapBodies);
+    this.addMapBodies(mapBodies);
     //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -375,
-    //     positionY: -175,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -375,
-    //     positionY: 175,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 175,
-    //     positionY: 150,
-    //     angle: 0
-    // });
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -124,
+        positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -124,
+        positionY: 352,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 104,
+        positionY: -128,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 104,
+        positionY: 480,
+        angle: 0
+    });
     //
     // for (let i = 0; i < 10; i++){
     //     this.actorManager.addNew({

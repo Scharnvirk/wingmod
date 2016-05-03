@@ -238,7 +238,7 @@ Core.prototype.onRequestUiFlash = function(event){
 };
 
 Core.prototype.onNewMapBodies = function(event){
-    this.gameScene.createMapBodies(event.data);
+    //this.gameScene.createMapBodies(event.data);
 };
 
 module.exports = Core;
