@@ -1,4 +1,5 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
+var ChunkStore = require("logic/map/ChunkStore");
 
 function BaseMapChunk(config) {
     Object.assign(this, config);
@@ -59,6 +60,8 @@ function BaseMapChunk(config) {
     ];
 
     this.bodies = this.createMapBodies();
+
+    this.readChunkData();
 }
 
 BaseMapChunk.prototype.applyConfig = function(config){
@@ -97,7 +100,9 @@ BaseMapChunk.prototype.createMapBodies = function(){
      return mapBodies;
 };
 
-
+BaseMapChunk.prototype.readChunkData = function(){
+    //var chunkStore = new ChunkStore();
+};
 
 
 module.exports = BaseMapChunk;

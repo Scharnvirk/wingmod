@@ -5,10 +5,7 @@ var ActorManager = require("renderer/actorManagement/ActorManager");
 var LogicBus = require("renderer/LogicBus");
 var ControlsHandler = require("renderer/ControlsHandler");
 var GameScene = require("renderer/scene/GameScene");
-var ModelLoader = require("renderer/modelRepo/ModelLoader");
-var ModelList = require("renderer/modelRepo/ModelList");
-var ModelStore = require("renderer/modelRepo/ModelStore");
-var CustomModelBuilder = require("renderer/modelRepo/CustomModelBuilder");
+var AssetManager = require("renderer/assetManagement/assetManager.js");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 var Hud = require("renderer/gameUi/Hud");
 
@@ -28,7 +25,6 @@ function Core(config){
     this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
     this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
     this.initRenderer(config);
-    this.initAssets();
 }
 
 Core.prototype.initRenderer = function(config){
@@ -38,6 +34,7 @@ Core.prototype.initRenderer = function(config){
     this.stats = this.makeStatsWatcher();
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
+    this.assetManager.loadAll();
 };
 
 Core.prototype.makeMainComponents = function(config){
@@ -52,6 +49,7 @@ Core.prototype.makeMainComponents = function(config){
     this.gameScene = new GameScene({scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
+    this.assetManager = new AssetManager();
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -64,6 +62,8 @@ Core.prototype.initEventHandlers = function(){
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
+
+    this.assetManager.on('assetsLoaded', this.continueInit.bind(this));
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -138,22 +138,6 @@ Core.prototype.resetCamera = function(){
     this.camera.updateProjectionMatrix();
 };
 
-Core.prototype.initAssets = function() {
-    this.modelLoader = new ModelLoader();
-    this.modelLoader.addEventListener('loaded', this.onLoaded.bind(this));
-    this.modelLoader.loadModels(ModelList.models);
-
-    this.customModelBuilder = new CustomModelBuilder();
-    this.customModelBuilder.loadModels();
-    ModelStore.loadBatch(this.customModelBuilder.getBatch());
-};
-
-Core.prototype.onLoaded = function(event) {
-    ModelStore.loadBatch(this.modelLoader.getBatch());
-    this.modelLoader.clearBatch();
-    this.continueInit();
-};
-
 Core.prototype.continueInit = function(){
     this.gameScene.make(false);
 
@@ -167,7 +151,7 @@ Core.prototype.continueInit = function(){
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
     controlsLoop.start();
-
+    
     setTimeout(this.startGameRenderMode.bind(this), 1000);
 };
 

@@ -1,10 +1,7 @@
-var ModelStore = require("renderer/modelRepo/ModelStore");
-
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
 var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
-
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-
 var MapBuilder = require("renderer/map/MapBuilder");
 
 function GameScene(config) {
@@ -31,6 +28,10 @@ GameScene.prototype.makeMapChunk = function(){
         mesh.position.y = 352;
         this.scene.add( mesh );
     }.bind(this) );
+
+    loader.load( "models/levels/chunkThree_hitmap.json", function( geometry ) {
+        console.log(geometry);
+    });
 };
 
 GameScene.prototype.makeMapChunkEndcap = function(){

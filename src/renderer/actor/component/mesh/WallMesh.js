@@ -1,5 +1,5 @@
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/modelRepo/ModelStore");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function WallMesh(config){
     BaseMesh.apply(this, arguments);
