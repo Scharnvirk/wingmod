@@ -62,9 +62,24 @@ BaseBody.prototype.createShape = function(){
                 height: this.height,
                 width: this.width,
                 collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
-                collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                collisionMask:
+                    Constants.COLLISION_GROUPS.OBJECT |
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE
             });
-
+            case 'terrain-convex':
+                return new p2.Convex({
+                    vertices: this.vertices,
+                    collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
+                    collisionMask:
+                        Constants.COLLISION_GROUPS.OBJECT |
+                        Constants.COLLISION_GROUPS.ENEMY |
+                        Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                        Constants.COLLISION_GROUPS.SHIP |
+                        Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                });
         default:
             throw new Error('No collisionType defined for default createShape in BaseBody!');
     }

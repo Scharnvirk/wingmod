@@ -18,7 +18,9 @@ var Constants = {
             TERRAIN: Math.pow(2,10),
     },
 
-    STORAGE_SIZE: 1000
+    STORAGE_SIZE: 1000,
+
+    CHUNK_SIZE: 352
 };
 
 module.exports = Constants;

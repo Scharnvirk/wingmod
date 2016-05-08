@@ -38,65 +38,67 @@ ShipActor.prototype.doBob = function(){
 };
 
 ShipActor.prototype.doEngineGlow = function(){
-    if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
-        this.particleManager.createPremade('EngineGlowMedium', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 15,
-            distance: -5.2
-        });
-        this.particleManager.createPremade('EngineGlowMedium', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 345,
-            distance: -5.2
-        });
-    }
+    if(this.inputListener){
+        if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
+            this.particleManager.createPremade('EngineGlowMedium', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 15,
+                distance: -5.2
+            });
+            this.particleManager.createPremade('EngineGlowMedium', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 345,
+                distance: -5.2
+            });
+        }
 
-    if(this.inputListener.inputState.a && !this.inputListener.inputState.d){
-        this.particleManager.createPremade('EngineGlowSmall', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 40,
-            distance: -4
-        });
-        this.particleManager.createPremade('EngineGlowSmall', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 170,
-            distance: -6
-        });
-    }
+        if(this.inputListener.inputState.a && !this.inputListener.inputState.d){
+            this.particleManager.createPremade('EngineGlowSmall', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 40,
+                distance: -4
+            });
+            this.particleManager.createPremade('EngineGlowSmall', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 170,
+                distance: -6
+            });
+        }
 
-    if(this.inputListener.inputState.d){
-        this.particleManager.createPremade('EngineGlowSmall', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 320,
-            distance: -4
-        });
-        this.particleManager.createPremade('EngineGlowSmall', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 190,
-            distance: -6
-        });
-    }
+        if(this.inputListener.inputState.d){
+            this.particleManager.createPremade('EngineGlowSmall', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 320,
+                distance: -4
+            });
+            this.particleManager.createPremade('EngineGlowSmall', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 190,
+                distance: -6
+            });
+        }
 
-    if(this.inputListener.inputState.s){
-        this.particleManager.createPremade('EngineGlowMedium', {
-            position: this.position,
-            positionZ: this.positionZ,
-            angle: this.angle,
-            angleOffset: 180,
-            distance: -7
-        });
+        if(this.inputListener.inputState.s){
+            this.particleManager.createPremade('EngineGlowMedium', {
+                position: this.position,
+                positionZ: this.positionZ,
+                angle: this.angle,
+                angleOffset: 180,
+                distance: -7
+            });
+        }
     }
 };
 

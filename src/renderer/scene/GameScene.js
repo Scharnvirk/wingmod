@@ -1,65 +1,16 @@
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
 var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var MapBuilder = require("renderer/map/MapBuilder");
+var ChunkMesh = require("renderer/map/ChunkMesh");
 
 function GameScene(config) {
     Object.assign(this, config);
     this.lightCounter = 0;
     this.shadows = config.shadows;
-    this.mapBuilder = new MapBuilder();
 }
 
-GameScene.prototype.makeMapChunk = function(){
-    var loader = new THREE.JSONLoader();
-    loader.load( "models/levels/chunkThree.json", function( geometry, materials ) {
-        geometry.sortFacesByMaterialIndex();
-        var mesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
-        mesh.rotation.x = Utils.degToRad(90);
-        mesh.receiveShadow = true;
-        mesh.castShadow = true;
-        this.scene.add( mesh );
-
-        mesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
-        mesh.rotation.x = Utils.degToRad(90);
-        mesh.receiveShadow = true;
-        mesh.castShadow = true;
-        mesh.position.y = 352;
-        this.scene.add( mesh );
-    }.bind(this) );
-
-    loader.load( "models/levels/chunkThree_hitmap.json", function( geometry ) {
-        console.log(geometry);
-    });
-};
-
-GameScene.prototype.makeMapChunkEndcap = function(){
-    var loader = new THREE.JSONLoader();
-    loader.load( "models/levels/chunkThree_endcap.json", function( geometry, materials ) {
-        geometry.sortFacesByMaterialIndex();
-        var mesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
-        mesh.rotation.x = Utils.degToRad(90);
-        mesh.receiveShadow = true;
-        mesh.castShadow = true;
-        mesh.position.y = -352;
-        mesh.rotation.y = Utils.degToRad(180);
-        this.scene.add( mesh );
-
-        mesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
-        mesh.rotation.x = Utils.degToRad(90);
-        mesh.receiveShadow = true;
-        mesh.castShadow = true;
-        mesh.position.y = 704;
-        this.scene.add( mesh );
-    }.bind(this) );
-};
-
 GameScene.prototype.make = function() {
-
-    this.makeMapChunk();
-    this.makeMapChunkEndcap();
-
     this.initialColor = {
         r: Utils.rand(100,100)/100,
         g: Utils.rand(100,100)/100,
@@ -140,9 +91,18 @@ GameScene.prototype.doUiFlash = function(type){
     }
 };
 
-GameScene.prototype.createMapBodies = function(bodies){
-    this.mapBuilder.bodies = bodies;
-    this.scene.add( this.mapBuilder.createMapMesh() );
+GameScene.prototype.buildMap = function(layoutData){
+    for (let i = 0, l = layoutData.length; i < l; i++) {
+        var config = layoutData[i];
+        var chunk = new ChunkMesh({
+            geometry: ChunkStore.get(config.name).geometry,
+            material: ChunkStore.get(config.name).material
+        });
+        chunk.setPosition(config.position);
+        chunk.setRotation(config.rotation);
+        this.scene.add(chunk);
+    }
 };
+
 
 module.exports = GameScene;

@@ -65,10 +65,13 @@ var SampleApp = function() {
         self.zcache['/models/chunk.json'] = fs.readFileSync('./models/chunk.json');
         self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
         self.zcache['/models/ravier.png'] = fs.readFileSync('./models/ravier.png');
+        self.zcache['/models/ravier_bump.png'] = fs.readFileSync('./models/ravier_bump.png');
         self.zcache['/models/chunk.png'] = fs.readFileSync('./models/chunk.png');
 
-        self.zcache['/models/levels/chunkThree.json'] = fs.readFileSync('./models/levels/chunkThree.json');
-        self.zcache['/models/levels/chunkthree_endcap.json'] = fs.readFileSync('./models/levels/chunkthree_endcap.json');
+        self.zcache['/models/levels/chunk_NbExSbWs.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs.json');
+        self.zcache['/models/levels/chunk_NbExSbWs_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs_hitmap.json');
+        self.zcache['/models/levels/chunk_NxExSbWx.json'] = fs.readFileSync('./models/levels/chunk_NxExSbWx.json');
+        self.zcache['/models/levels/chunk_NxExSbWx_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NxExSbWx_hitmap.json');
         self.zcache['/models/levels/map_256_B.png'] = fs.readFileSync('./models/levels/map_256_B.png');
         self.zcache['/models/levels/map_256.png'] = fs.readFileSync('./models/levels/map_256.png');
 
@@ -157,11 +160,14 @@ var SampleApp = function() {
         self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
         self.routes['/models/ravier.json'] = function(req, res) {res.send(self.cache_get('/models/ravier.json') );};
         self.routes['/models/ravier.png'] = function(req, res) {res.send(self.cache_get('/models/ravier.png') );};
+        self.routes['/models/ravier_bump.png'] = function(req, res) {res.send(self.cache_get('/models/ravier_bump.png') );};
         self.routes['/models/chunk.json'] = function(req, res) {res.send(self.cache_get('/models/chunk.json') );};
         self.routes['/models/chunk.png'] = function(req, res) {res.send(self.cache_get('/models/chunk.png') );};
 
-        self.routes['/models/levels/chunkThree.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunkThree.json') );};
-        self.routes['/models/levels/chunkthree_endcap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunkthree_endcap.json') );};
+        self.routes['/models/levels/chunk_NbExSbWs.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs.json') );};
+        self.routes['/models/levels/chunk_NbExSbWs_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs_hitmap.json') );};
+        self.routes['/models/levels/chunk_NxExSbWx.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NxExSbWx.json') );};
+        self.routes['/models/levels/chunk_NxExSbWx_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NxExSbWx_hitmap.json') );};
         self.routes['/models/levels/map_256.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256.png') );};
         self.routes['/models/levels/map_256_B.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_B.png') );};
 

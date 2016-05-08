@@ -30,15 +30,15 @@ function Ui(config){
 }
 
 Ui.prototype.startGame = function(){
-    var logicWorker = new Worker('dist/LogicInit.js');
-    var core = new Core({
-        logicWorker: logicWorker,
-        ui: this,
+    if(!this.gameCore){
+        console.error("no GameCore set in UI!");
+    }
+
+    gameCore.init({
         shadows: !this.configState.shadows,
         lowRes: this.configState.lowRes,
         lowParticles: this.configState.lowParticles
     });
-    global.gameCore = core;
 };
 
 Ui.prototype.stopGame = function(info){

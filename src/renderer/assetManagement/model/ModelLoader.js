@@ -1,14 +1,16 @@
 function ModelLoader(){
     this.batch = {};
-    Utils.mixin(this, THREE.EventDispatcher);
+    EventEmitter.apply(this, arguments);
 }
+
+ModelLoader.extend(EventEmitter);
 
 ModelLoader.prototype.loadModels = function(modelPaths){
     if(!modelPaths) throw "ERROR: No model paths have been specified for the loader!";
     var loader = new THREE.JSONLoader();
 
     Promise.all(modelPaths.map(modelPath => {
-        var willLoadModels = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             loader.load(modelPath, (geometry, material) => {
                 this.batch[this.getModelName(modelPath)] = {
                     geometry: geometry,
@@ -17,7 +19,6 @@ ModelLoader.prototype.loadModels = function(modelPaths){
                 resolve();
             }, this.getDefaultTexturePath(modelPath));
         });
-        return willLoadModels;
     })).then(this.doneAction.bind(this));
 };
 
@@ -30,7 +31,7 @@ ModelLoader.prototype.clearBatch = function(){
 };
 
 ModelLoader.prototype.doneAction = function(){
-    this.dispatchEvent({type:'loaded'});
+    this.emit({type:'loaded'});
 };
 
 ModelLoader.prototype.getModelName = function(path){

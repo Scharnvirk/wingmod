@@ -1,14 +1,17 @@
-function ChunkStore(){
-    var loader = new THREE.XHRLoader();
-    loader.load('/models/levels/chunkThree_hitmap.json', result => {
+function HitmapLoader(){
+    this.loader = new THREE.XHRLoader();
+}
+
+HitmapLoader.prototype.load = function(path, callback){
+    this.loader.load(path, result => {
         var jsonObject = JSON.parse(result);
         var faces = this.jsonToFaces(jsonObject);
         this.addVerticesToFaces(jsonObject.vertices, faces);
-        console.log(faces);
+        callback(faces);
     });
-}
+};
 
-ChunkStore.prototype.jsonToFaces = function(json){
+HitmapLoader.prototype.jsonToFaces = function(json){
     function isBitSet( value, position ) {
         return value & ( 1 << position );
     }
@@ -103,7 +106,7 @@ ChunkStore.prototype.jsonToFaces = function(json){
     return doneFaces;
 };
 
-ChunkStore.prototype.addVerticesToFaces = function(vertices, faces){
+HitmapLoader.prototype.addVerticesToFaces = function(vertices, faces){
     for (let i = 0, l = faces.length; i < l; i++){
         var face = faces[i];
         for (let j = 0, fl = face.length; j < fl; j++){
@@ -112,4 +115,4 @@ ChunkStore.prototype.addVerticesToFaces = function(vertices, faces){
     }
 };
 
-module.exports = ChunkStore;
+module.exports = HitmapLoader;

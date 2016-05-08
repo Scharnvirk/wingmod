@@ -1,9 +1,9 @@
 function AiImageRenderer(){
-    this.AI_SCENE_SIZE_X = 256;
-    this.AI_SCENE_SIZE_Y = 256;
+    this.AI_SCENE_SIZE_X = 512;
+    this.AI_SCENE_SIZE_Y = 512;
 
-    this.LOGIC_SCENE_SIZE_X = 1024;
-    this.LOGIC_SCENE_SIZE_Y = 1024;
+    this.LOGIC_SCENE_SIZE_X = 2048;
+    this.LOGIC_SCENE_SIZE_Y = 2048;
 
     this.centerX = this.AI_SCENE_SIZE_X / 2;
     this.centerY = this.AI_SCENE_SIZE_Y / 2;
@@ -13,6 +13,8 @@ function AiImageRenderer(){
 
     this.canvas = this.createCanvas();
     this.drawContext = this.canvas.getContext('2d');
+
+    //document.body.appendChild(this.canvas);
 }
 
 AiImageRenderer.prototype.createCanvas = function(){
@@ -48,8 +50,13 @@ AiImageRenderer.prototype.drawImage = function(wallsData){
 
 
 AiImageRenderer.prototype.drawObject = function(object){
-    if(object.class === 'Box'){
-        this.drawBox(object);
+    switch(object.class){
+        case "Box":
+            this.drawBox(object);
+            break;
+        case "Convex":
+            this.drawConvex(object);
+            break;
     }
 };
 
@@ -77,13 +84,21 @@ AiImageRenderer.prototype.drawBox = function(boxDataObject){
 
 AiImageRenderer.prototype.drawConvex = function(convexDataObject){
     let pos = convexDataObject.position;
+    pos[0] *= this.lengthMultiplierX;
+    pos[1] *= this.lengthMultiplierX;
     pos[0] += this.centerX;
     pos[1] += this.centerY;
     let dc = this.drawContext;
 
-    dc.moveTo(pos[0] - convexDataObject.vertices[0][0], pos[1] - convexDataObject.vertices[0][1]);
+    dc.moveTo(
+        pos[0] - convexDataObject.vertices[0][0] * this.lengthMultiplierX,
+        pos[1] - convexDataObject.vertices[0][1] * this.lengthMultiplierX
+    );
     for(let i = 1; i < convexDataObject.vertices.length; i++){
-        dc.lineTo(pos[0] - convexDataObject.vertices[i][0], pos[1] - convexDataObject.vertices[i][1]);
+        dc.lineTo(
+            pos[0] - convexDataObject.vertices[i][0] * this.lengthMultiplierX,
+            pos[1] - convexDataObject.vertices[i][1] * this.lengthMultiplierX
+        );
     }
 
     dc.closePath();

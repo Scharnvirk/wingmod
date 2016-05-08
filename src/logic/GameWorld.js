@@ -54,22 +54,60 @@ GameWorld.prototype.getTerrainBodies = function(){
     let wallBodies = [];
     for(let i = 0; i < this.bodies.length; i ++){
         let body = this.bodies[i];
-        if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
-            switch(body.shape.constructor.name){
+        if (Array.isArray(body.shape)){
+            wallBodies = wallBodies.concat(this.extractShapes(body));
+        } else {
+            wallBodies.push(this.extractSingleShape(body));
+        }
+    }
+    return wallBodies;
+};
+
+GameWorld.prototype.extractSingleShape = function(body){
+    if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
+        switch(body.shape.constructor.name){
+            case 'Box':
+                return {
+                    class: body.shape.constructor.name,
+                    angle: body.angle,
+                    height: body.shape.height,
+                    width: body.shape.width,
+                    position: body.position
+                };
+            case 'Convex':
+                return {
+                    class: body.shape.constructor.name,
+                    vertices: body.shape.vertices,
+                    position: body.position
+                };
+        }
+    }
+};
+
+GameWorld.prototype.extractShapes = function(body){
+    let wallBodies = [];
+    for(let i = 0, l = body.shape.length; i < l; i++){
+        let shape = body.shape[i];
+        if (shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN){
+            var position = [
+                body.position[0] + shape.position[0],
+                body.position[1] + shape.position[1]
+            ];
+            switch(shape.constructor.name){
                 case 'Box':
-                    wallBodies.push({
-                        class: body.shape.constructor.name,
-                        angle: body.angle,
-                        height: body.shape.height,
-                        width: body.shape.width,
-                        position: body.position
+                    wallBodies.push ({
+                        class: shape.constructor.name,
+                        angle: angle,
+                        height: shape.height,
+                        width: shape.width,
+                        position: position
                     });
                     break;
                 case 'Convex':
-                    wallBodies.push({
-                        class: body.shape.constructor.name,
-                        vertices: body.shape.vertices,
-                        position: body.position
+                    wallBodies.push ({
+                        class: shape.constructor.name,
+                        vertices: shape.vertices,
+                        position: position
                     });
                     break;
             }

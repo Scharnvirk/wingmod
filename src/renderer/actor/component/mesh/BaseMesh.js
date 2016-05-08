@@ -1,6 +1,4 @@
 function BaseMesh(config){
-
-
     config.scaleX = config.scaleX || 1;
     config.scaleY = config.scaleY || 1;
     config.scaleZ = config.scaleZ || 1;

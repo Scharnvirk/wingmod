@@ -48,9 +48,11 @@ ShipActor.prototype.customUpdate = function(){
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
-    this.applyThrustInput(inputState);
-    this.applyLookAtRotationInput(inputState);
-    this.applyWeaponInput(inputState);
+    if(inputState){
+        this.applyThrustInput(inputState);
+        this.applyLookAtRotationInput(inputState);
+        this.applyWeaponInput(inputState);
+    }    
 };
 
 ShipActor.prototype.applyLookAtRotationInput = function(inputState){

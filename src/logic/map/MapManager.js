@@ -1,30 +1,57 @@
-var BaseMapChunk = require("logic/map/BaseMapChunk");
+var MapChunk = require("logic/map/MapChunk");
+var MapBuilder = require("logic/map/MapBuilder");
+var cloner = require("cloner");
 
 function MapManager(config){
     Object.assign(this, config);
-    // if(!this.world) throw new Error('No world specified for Logic GameScene');
-    // if(!this.actorManager) throw new Error('No actorManager specified for Logic GameScene');
 
-    this.chunks = this.createChunks();
+    this.chunkPrototypes = {};
+    this.mapBodies = [];
+    this.mapBuilder = new MapBuilder();
+
+    EventEmitter.bind(this, arguments);
 }
 
-MapManager.prototype.createChunks = function(){
-    return [new BaseMapChunk()];
+MapManager.extend(EventEmitter);
+
+MapManager.prototype.fixFaceVerticesOrder = function(hitmap){
+    return hitmap.map(face => face.reverse());
 };
 
-MapManager.prototype.getAllMapBodies = function(){
-    var bodies = [];
-    for (let i = 0; i < this.chunks.length; i++){
-        var chunk = this.chunks[i];
-        chunk.translateBodies([0, 0]); //temporary, will be important later for multiple chunks
-        bodies = bodies.concat(chunk.getBodies());
+MapManager.prototype.extractXZFromHitmap = function(hitmap){
+    return hitmap.map(face => face.map(vertex => {
+            return [vertex[0], vertex[2]];
+        })
+    );
+};
+
+MapManager.prototype.loadChunkHitmaps = function(hitmaps){
+    for (var hitmapName in hitmaps){
+        this.chunkPrototypes[hitmapName] = new MapChunk({
+            hitmap: this.fixFaceVerticesOrder(this.extractXZFromHitmap(hitmaps[hitmapName]))
+        });
     }
+    this.mapBuilder.setPrototypeChunks(this.chunkPrototypes);
+};
+
+MapManager.prototype.buildMap = function(){
+    var mapLayout = this.mapBuilder.buildMap();
+    var bodies = this.buildBodiesFromLayout(mapLayout);
+    this.emit({type: 'mapDone', data: {bodies: bodies, layout: mapLayout}});
+};
+
+MapManager.prototype.buildBodiesFromLayout = function(layout){
+    var bodies = [];
+
+    layout.forEach(chunkConfig => {
+        var newChunk = cloner.deep.copy(this.chunkPrototypes[chunkConfig.name]);
+        newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
+        newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
+        newChunk.body.angle = Utils.degToRad(chunkConfig.rotation);
+        bodies.push(newChunk.body);
+    });
+
     return bodies;
 };
-
-
-
-
-
 
 module.exports = MapManager;

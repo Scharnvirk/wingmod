@@ -8,6 +8,7 @@ var GameScene = require("renderer/scene/GameScene");
 var AssetManager = require("renderer/assetManagement/assetManager.js");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 var Hud = require("renderer/gameUi/Hud");
+var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -22,13 +23,15 @@ function Core(config){
     this.viewportElement = document.getElementById('viewport');
 
     this.renderTicks = 0;
-    this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
-    this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
-    this.initRenderer(config);
 }
 
-Core.prototype.initRenderer = function(config){
-    this.makeMainComponents(config);
+Core.prototype.init = function(config){
+    this.renderer = this.makeRenderer(config);
+    this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
+    this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
+    this.renderShadows = config.shadows;
+
+    this.makeMainComponents();
     this.initEventHandlers();
     this.renderStats = this.makeRenderStatsWatcher();
     this.stats = this.makeStatsWatcher();
@@ -37,16 +40,15 @@ Core.prototype.initRenderer = function(config){
     this.assetManager.loadAll();
 };
 
-Core.prototype.makeMainComponents = function(config){
-    this.renderer = this.makeRenderer(config);
+Core.prototype.makeMainComponents = function(){
     this.inputListener = new InputListener({domElement: this.renderer.domElement});
     this.camera = this.makeCamera(this.inputListener);
     this.scene = this.makeScene(this.camera);
     this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager});
-    this.logicBus = new LogicBus({logicWorker: this.logicWorker});
+    this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.gameScene = new GameScene({scene: this.scene, logicBus: this.logicBus, actorManager: this.actorManager, shadows: config.shadows});
+    this.gameScene = new GameScene({scene: this.scene, actorManager: this.actorManager, shadows: this.renderShadows});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.assetManager = new AssetManager();
@@ -58,12 +60,12 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
-    this.logicBus.on('newMapBodies', this.onNewMapBodies.bind(this));
+    this.logicBus.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
 
-    this.assetManager.on('assetsLoaded', this.continueInit.bind(this));
+    this.assetManager.on('assetsLoaded', this.assetsLoaded.bind(this));
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -138,20 +140,21 @@ Core.prototype.resetCamera = function(){
     this.camera.updateProjectionMatrix();
 };
 
-Core.prototype.continueInit = function(){
-    this.gameScene.make(false);
+Core.prototype.assetsLoaded = function(){
+    console.log("assets loaded");
+    this.gameScene.make();
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
     this.renderLoop = new THREEx.RenderingLoop();
     this.renderLoop.add(this.render.bind(this));
 
-    this.logicBus.postMessage('start',{});
+    this.logicBus.postMessage('mapHitmapsLoaded', {hitmaps: ChunkStore.serializeHitmaps()});
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
     controlsLoop.start();
-    
+
     setTimeout(this.startGameRenderMode.bind(this), 1000);
 };
 
@@ -221,8 +224,8 @@ Core.prototype.onRequestUiFlash = function(event){
     this.gameScene.doUiFlash(event.data);
 };
 
-Core.prototype.onNewMapBodies = function(event){
-    //this.gameScene.createMapBodies(event.data);
+Core.prototype.onMapDone = function(event){
+    this.gameScene.buildMap(event.data);
 };
 
 module.exports = Core;

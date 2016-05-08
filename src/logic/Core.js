@@ -3,14 +3,11 @@ var GameWorld = require("logic/GameWorld");
 var ActorManager = require("logic/actorManagement/ActorManager");
 var MapManager = require("logic/map/MapManager");
 var GameScene = require("logic/GameScene");
-var AiImageRequester = require("logic/ai/AiImageRequester");
 
 function Core(worker){
     this.makeMainComponents(worker);
     this.initializeEventHandlers();
 
-    this.startGameLoop();
-    this.scene.fillScene();
     this.initFpsCounter();
 
     this.running = false;
@@ -32,6 +29,9 @@ Core.prototype.initializeEventHandlers = function(){
     this.renderBus.on('start', this.onStart.bind(this));
     this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
     this.renderBus.on('inputState', this.onInputState.bind(this));
+    this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
+
+    this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
@@ -72,6 +72,7 @@ Core.prototype.onInputState = function(event){
 };
 
 Core.prototype.onStart = function(){
+    this.startGameLoop();
     this.running = true;
 };
 
@@ -101,6 +102,19 @@ Core.prototype.onNewMapBodies = function(){
 
 Core.prototype.onPlayerDied = function(event){
     this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
+};
+
+Core.prototype.onMapHitmapsLoaded = function(event){
+    if(!event.data.hitmaps) throw new Error('No hitmap data received on onMapHitmapsLoaded event!');
+    var hitmaps = JSON.parse(event.data.hitmaps);
+    this.mapManager.loadChunkHitmaps(hitmaps);
+    this.mapManager.buildMap();
+};
+
+Core.prototype.onMapDone = function(event){
+    this.scene.fillScene(event.data.bodies);
+    this.renderBus.postMessage('mapDone', event.data.layout);
+    this.onStart();
 };
 
 module.exports = Core;
