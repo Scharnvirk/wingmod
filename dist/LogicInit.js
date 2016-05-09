@@ -214,7 +214,7 @@ if ('function' === typeof importScripts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"logic/Core":3,"shared/Constants":58,"shared/EventEmitter":59,"shared/Utils":60}],3:[function(require,module,exports){
+},{"logic/Core":3,"shared/Constants":59,"shared/EventEmitter":60,"shared/Utils":61}],3:[function(require,module,exports){
 "use strict";
 
 var RenderBus = require("logic/RenderBus");
@@ -222,6 +222,7 @@ var GameWorld = require("logic/GameWorld");
 var ActorManager = require("logic/actorManagement/ActorManager");
 var MapManager = require("logic/map/MapManager");
 var GameScene = require("logic/GameScene");
+var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
 
 function Core(worker) {
     this.makeMainComponents(worker);
@@ -238,6 +239,7 @@ Core.prototype.makeMainComponents = function (worker) {
     this.actorManager = new ActorManager({ world: this.world });
     this.mapManager = new MapManager();
     this.scene = new GameScene({ world: this.world, actorManager: this.actorManager, mapManager: this.mapManager });
+    this.worldAiMapXtractor = new WorldAiMapExtractor({ world: this.world });
 };
 
 Core.prototype.initializeEventHandlers = function () {
@@ -316,7 +318,7 @@ Core.prototype.onSecondaryActorUpdate = function (event) {
 };
 
 Core.prototype.onNewMapBodies = function () {
-    var mapBodies = this.world.getTerrainBodies();
+    var mapBodies = this.worldAiMapXtractor.getTerrainBodies();
     this.renderBus.postMessage('getAiImage', mapBodies);
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };
@@ -340,7 +342,7 @@ Core.prototype.onMapDone = function (event) {
 
 module.exports = Core;
 
-},{"logic/GameScene":4,"logic/GameWorld":5,"logic/RenderBus":6,"logic/actorManagement/ActorManager":7,"logic/map/MapManager":34}],4:[function(require,module,exports){
+},{"logic/GameScene":4,"logic/GameWorld":5,"logic/RenderBus":6,"logic/WorldAiMapExtractor":7,"logic/actorManagement/ActorManager":8,"logic/map/MapManager":35}],4:[function(require,module,exports){
 "use strict";
 
 var ActorFactory = require("shared/ActorFactory")('logic');
@@ -430,7 +432,7 @@ GameScene.prototype.addMapBodies = function (mapBodies) {
 
 module.exports = GameScene;
 
-},{"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":57}],5:[function(require,module,exports){
+},{"logic/actor/component/body/BaseBody":12,"shared/ActorFactory":58}],5:[function(require,module,exports){
 'use strict';
 
 function GameWorld(config) {
@@ -485,69 +487,6 @@ GameWorld.prototype.makeUpdateData = function () {
     };
 };
 
-GameWorld.prototype.getTerrainBodies = function () {
-    var wallBodies = [];
-    for (var i = 0; i < this.bodies.length; i++) {
-        var body = this.bodies[i];
-        if (Array.isArray(body.shape)) {
-            wallBodies = wallBodies.concat(this.extractShapes(body));
-        } else {
-            wallBodies.push(this.extractSingleShape(body));
-        }
-    }
-    return wallBodies;
-};
-
-GameWorld.prototype.extractSingleShape = function (body) {
-    if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN) {
-        switch (body.shape.constructor.name) {
-            case 'Box':
-                return {
-                    class: body.shape.constructor.name,
-                    angle: body.angle,
-                    height: body.shape.height,
-                    width: body.shape.width,
-                    position: body.position
-                };
-            case 'Convex':
-                return {
-                    class: body.shape.constructor.name,
-                    vertices: body.shape.vertices,
-                    position: body.position
-                };
-        }
-    }
-};
-
-GameWorld.prototype.extractShapes = function (body) {
-    var wallBodies = [];
-    for (var i = 0, l = body.shape.length; i < l; i++) {
-        var shape = body.shape[i];
-        if (shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN) {
-            var position = [body.position[0] + shape.position[0], body.position[1] + shape.position[1]];
-            switch (shape.constructor.name) {
-                case 'Box':
-                    wallBodies.push({
-                        class: shape.constructor.name,
-                        angle: angle,
-                        height: shape.height,
-                        width: shape.width,
-                        position: position
-                    });
-                    break;
-                case 'Convex':
-                    wallBodies.push({
-                        class: shape.constructor.name,
-                        vertices: shape.vertices,
-                        position: position
-                    });
-                    break;
-            }
-        }
-    }
-    return wallBodies;
-};
-
 GameWorld.prototype.onCollision = function (collisionEvent) {
     collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
@@ -568,7 +507,83 @@ RenderBus.extend(WorkerBus);
 
 module.exports = WorkerBus;
 
-},{"shared/WorkerBus":61}],7:[function(require,module,exports){
+},{"shared/WorkerBus":62}],7:[function(require,module,exports){
+'use strict';
+
+function WorldAiMapExtractor(config) {
+    config = config || {};
+    if (!config.world) throw new Error('No world specified for WorldAiMapExtractor');
+
+    Object.assign(this, config);
+}
+
+WorldAiMapExtractor.prototype.getTerrainBodies = function () {
+    var wallBodies = [];
+    for (var i = 0; i < this.world.bodies.length; i++) {
+        var body = this.world.bodies[i];
+        if (Array.isArray(body.shape)) {
+            wallBodies = wallBodies.concat(this.extractShapes(body));
+        } else {
+            wallBodies.push(this.extractSingleShape(body));
+        }
+    }
+    return wallBodies;
+};
+
+WorldAiMapExtractor.prototype.extractSingleShape = function (body) {
+    if (body.shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN) {
+        switch (body.shape.constructor.name) {
+            case 'Box':
+                return {
+                    class: body.shape.constructor.name,
+                    angle: body.angle,
+                    height: body.shape.height,
+                    width: body.shape.width,
+                    position: body.position
+                };
+            case 'Convex':
+                return {
+                    class: body.shape.constructor.name,
+                    vertices: body.shape.vertices,
+                    position: body.position
+                };
+        }
+    }
+};
+
+WorldAiMapExtractor.prototype.extractShapes = function (body) {
+    var wallBodies = [];
+    for (var i = 0, l = body.shape.length; i < l; i++) {
+        var shape = body.shape[i];
+        if (shape.collisionGroup === Constants.COLLISION_GROUPS.TERRAIN) {
+            var position = [body.position[0] + shape.position[0], body.position[1] + shape.position[1]];
+            switch (shape.constructor.name) {
+                case 'Box':
+                    wallBodies.push({
+                        class: shape.constructor.name,
+                        angle: body.angle,
+                        height: shape.height,
+                        width: shape.width,
+                        position: position
+                    });
+                    break;
+                case 'Convex':
+                    wallBodies.push({
+                        class: shape.constructor.name,
+                        angle: body.angle,
+                        vertices: shape.vertices,
+                        position: position
+                    });
+                    break;
+            }
+        }
+    }
+    return wallBodies;
+};
+
+module.exports = WorldAiMapExtractor;
+
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("shared/ActorFactory")('logic');
@@ -676,7 +691,7 @@ ActorManager.prototype.buildSecondaryUpdateTransferData = function () {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":57}],8:[function(require,module,exports){
+},{"shared/ActorFactory":58}],9:[function(require,module,exports){
 'use strict';
 
 function BaseActor(config) {
@@ -766,7 +781,7 @@ BaseActor.prototype.processMovement = function () {
 
 module.exports = BaseActor;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 function BaseBrain(config) {
@@ -843,7 +858,7 @@ BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
 
 module.exports = BaseBrain;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var BaseBrain = require("logic/actor/component/ai/BaseBrain");
@@ -1050,7 +1065,7 @@ MookBrain.prototype.randomStrafeAction = function () {
 
 module.exports = MookBrain;
 
-},{"logic/actor/component/ai/BaseBrain":9}],11:[function(require,module,exports){
+},{"logic/actor/component/ai/BaseBrain":10}],12:[function(require,module,exports){
 'use strict';
 
 function BaseBody(config) {
@@ -1140,7 +1155,7 @@ BaseBody.prototype.update = function () {};
 
 module.exports = BaseBody;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 function BaseWeapon(config) {
@@ -1219,7 +1234,7 @@ BaseWeapon.prototype.handleFiring = function () {
 
 module.exports = BaseWeapon;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1240,7 +1255,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":57}],14:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":13,"shared/ActorFactory":58}],15:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1264,7 +1279,7 @@ MoltenBallThrower.extend(BaseWeapon);
 
 module.exports = MoltenBallThrower;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":57}],15:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":13,"shared/ActorFactory":58}],16:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1285,7 +1300,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":57}],16:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":13,"shared/ActorFactory":58}],17:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1306,7 +1321,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":57}],17:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":13,"shared/ActorFactory":58}],18:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1329,7 +1344,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":57}],18:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":13,"shared/ActorFactory":58}],19:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1473,7 +1488,7 @@ MookActor.prototype.onHit = function () {
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/MoltenBallThrower":14,"logic/actor/component/weapon/RedBlaster":16,"shared/ActorFactory":57}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/ai/MookBrain":11,"logic/actor/component/body/BaseBody":12,"logic/actor/component/weapon/MoltenBallThrower":15,"logic/actor/component/weapon/RedBlaster":17,"shared/ActorFactory":58}],20:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1541,7 +1556,7 @@ MookBossActor.prototype.onDeath = function () {
 
 module.exports = MookBossActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RedSuperBlaster":17,"logic/actor/enemy/MookActor":18,"shared/ActorFactory":57}],20:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/ai/MookBrain":11,"logic/actor/component/body/BaseBody":12,"logic/actor/component/weapon/RedSuperBlaster":18,"logic/actor/enemy/MookActor":19,"shared/ActorFactory":58}],21:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1596,7 +1611,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":57}],21:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12,"shared/ActorFactory":58}],22:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1647,7 +1662,7 @@ EnemySpawnerActor.prototype.createBody = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":57}],22:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12,"shared/ActorFactory":58}],23:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1686,7 +1701,7 @@ MapActor.prototype.generateShapes = function () {
 
 module.exports = MapActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],23:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],24:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1728,7 +1743,7 @@ PillarActor.prototype.onDeath = function () {
 
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":57}],24:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12,"shared/ActorFactory":58}],25:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1757,7 +1772,7 @@ WallActor.prototype.createBody = function () {
 
 module.exports = WallActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],25:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],26:[function(require,module,exports){
 "use strict";
 
 var ChunkActor = require("logic/actor/object/ChunkActor");
@@ -1776,7 +1791,7 @@ BoomChunkActor.extend(ChunkActor);
 
 module.exports = BoomChunkActor;
 
-},{"logic/actor/object/ChunkActor":26}],26:[function(require,module,exports){
+},{"logic/actor/object/ChunkActor":27}],27:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1815,7 +1830,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],27:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],28:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1990,7 +2005,7 @@ ShipActor.prototype.onHit = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/ai/BaseBrain":9,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/Blaster":13,"logic/actor/component/weapon/PlasmaGun":15,"shared/ActorFactory":57}],28:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/ai/BaseBrain":10,"logic/actor/component/body/BaseBody":12,"logic/actor/component/weapon/Blaster":14,"logic/actor/component/weapon/PlasmaGun":16,"shared/ActorFactory":58}],29:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2027,7 +2042,7 @@ LaserProjectileActor.prototype.createBody = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],29:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],30:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2062,7 +2077,7 @@ MoltenProjectileActor.prototype.createBody = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],30:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],31:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2097,7 +2112,7 @@ PlasmaProjectileActor.prototype.createBody = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],31:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],32:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2134,7 +2149,7 @@ RedLaserProjectileActor.prototype.createBody = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"logic/actor/BaseActor":8,"logic/actor/component/body/BaseBody":11}],32:[function(require,module,exports){
+},{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":12}],33:[function(require,module,exports){
 'use strict';
 
 function MapBuilder(config) {
@@ -2192,7 +2207,7 @@ MapBuilder.prototype.setPrototypeChunks = function (chunks) {
 
 module.exports = MapBuilder;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2242,7 +2257,7 @@ return new p2.Convex({
 });
 */
 
-},{"logic/actor/component/body/BaseBody":11}],34:[function(require,module,exports){
+},{"logic/actor/component/body/BaseBody":12}],35:[function(require,module,exports){
 "use strict";
 
 var MapChunk = require("logic/map/MapChunk");
@@ -2308,7 +2323,7 @@ MapManager.prototype.buildBodiesFromLayout = function (layout) {
 
 module.exports = MapManager;
 
-},{"cloner":1,"logic/map/MapBuilder":32,"logic/map/MapChunk":33}],35:[function(require,module,exports){
+},{"cloner":1,"logic/map/MapBuilder":33,"logic/map/MapChunk":34}],36:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -2401,7 +2416,7 @@ BaseActor.prototype.onSpawn = function () {};
 
 module.exports = BaseActor;
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 function BaseMesh(config) {
@@ -2434,7 +2449,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2456,7 +2471,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":36,"renderer/assetManagement/model/ModelStore":56}],38:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":37,"renderer/assetManagement/model/ModelStore":57}],39:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2479,7 +2494,7 @@ PillarMesh.extend(BaseMesh);
 
 module.exports = PillarMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":36,"renderer/assetManagement/model/ModelStore":56}],39:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":37,"renderer/assetManagement/model/ModelStore":57}],40:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2501,7 +2516,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":36,"renderer/assetManagement/model/ModelStore":56}],40:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":37,"renderer/assetManagement/model/ModelStore":57}],41:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2524,7 +2539,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":36,"renderer/assetManagement/model/ModelStore":56}],41:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":37,"renderer/assetManagement/model/ModelStore":57}],42:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -2547,7 +2562,7 @@ WallMesh.extend(BaseMesh);
 
 module.exports = WallMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":36,"renderer/assetManagement/model/ModelStore":56}],42:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":37,"renderer/assetManagement/model/ModelStore":57}],43:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
@@ -2605,7 +2620,7 @@ MookActor.prototype.handleDamage = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":35,"renderer/actor/component/mesh/ShipMesh":40}],43:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36,"renderer/actor/component/mesh/ShipMesh":41}],44:[function(require,module,exports){
 "use strict";
 
 var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
@@ -2628,7 +2643,7 @@ MookBossActor.prototype.createMesh = function () {
 
 module.exports = MookBossActor;
 
-},{"renderer/actor/component/mesh/ShipMesh":40,"renderer/actor/enemy/MookActor":42}],44:[function(require,module,exports){
+},{"renderer/actor/component/mesh/ShipMesh":41,"renderer/actor/enemy/MookActor":43}],45:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2721,7 +2736,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"renderer/actor/BaseActor":35}],45:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],46:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2765,7 +2780,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":35}],46:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],47:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -2778,7 +2793,7 @@ MapActor.extend(BaseActor);
 
 module.exports = MapActor;
 
-},{"renderer/actor/BaseActor":35}],47:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],48:[function(require,module,exports){
 "use strict";
 
 var PillarMesh = require("renderer/actor/component/mesh/PillarMesh");
@@ -2815,7 +2830,7 @@ PillarActor.prototype.onDeath = function () {
 
 module.exports = PillarActor;
 
-},{"renderer/actor/BaseActor":35,"renderer/actor/component/mesh/PillarMesh":38}],48:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36,"renderer/actor/component/mesh/PillarMesh":39}],49:[function(require,module,exports){
 "use strict";
 
 var WallMesh = require("renderer/actor/component/mesh/WallMesh");
@@ -2833,7 +2848,7 @@ WallActor.prototype.createMesh = function () {
 
 module.exports = WallActor;
 
-},{"renderer/actor/BaseActor":35,"renderer/actor/component/mesh/WallMesh":41}],49:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36,"renderer/actor/component/mesh/WallMesh":42}],50:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require("renderer/actor/object/ChunkActor");
@@ -2851,7 +2866,7 @@ BoomChunkActor.prototype.onDeath = function () {
 
 module.exports = BoomChunkActor;
 
-},{"renderer/actor/object/ChunkActor":50}],50:[function(require,module,exports){
+},{"renderer/actor/object/ChunkActor":51}],51:[function(require,module,exports){
 "use strict";
 
 var ChunkMesh = require("renderer/actor/component/mesh/ChunkMesh");
@@ -2905,7 +2920,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":35,"renderer/actor/component/mesh/ChunkMesh":37}],51:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36,"renderer/actor/component/mesh/ChunkMesh":38}],52:[function(require,module,exports){
 "use strict";
 
 var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
@@ -3037,7 +3052,7 @@ ShipActor.prototype.handleDamage = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":35,"renderer/actor/component/mesh/RavierMesh":39}],52:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36,"renderer/actor/component/mesh/RavierMesh":40}],53:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3091,7 +3106,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":35}],53:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],54:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3145,7 +3160,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":35}],54:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],55:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3199,7 +3214,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":35}],55:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],56:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3253,7 +3268,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":35}],56:[function(require,module,exports){
+},{"renderer/actor/BaseActor":36}],57:[function(require,module,exports){
 'use strict';
 
 var ModelStore = {
@@ -3286,7 +3301,7 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3351,7 +3366,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/enemy/MookActor":18,"logic/actor/enemy/MookBossActor":19,"logic/actor/map/EnemySpawnMarkerActor":20,"logic/actor/map/EnemySpawnerActor":21,"logic/actor/map/MapActor":22,"logic/actor/map/PillarActor":23,"logic/actor/map/WallActor":24,"logic/actor/object/BoomChunkActor":25,"logic/actor/object/ChunkActor":26,"logic/actor/player/ShipActor":27,"logic/actor/projectile/LaserProjectileActor":28,"logic/actor/projectile/MoltenProjectileActor":29,"logic/actor/projectile/PlasmaProjectileActor":30,"logic/actor/projectile/RedLaserProjectileActor":31,"renderer/actor/enemy/MookActor":42,"renderer/actor/enemy/MookBossActor":43,"renderer/actor/map/EnemySpawnMarkerActor":44,"renderer/actor/map/EnemySpawnerActor":45,"renderer/actor/map/MapActor":46,"renderer/actor/map/PillarActor":47,"renderer/actor/map/WallActor":48,"renderer/actor/object/BoomChunkActor":49,"renderer/actor/object/ChunkActor":50,"renderer/actor/player/ShipActor":51,"renderer/actor/projectile/LaserProjectileActor":52,"renderer/actor/projectile/MoltenProjectileActor":53,"renderer/actor/projectile/PlasmaProjectileActor":54,"renderer/actor/projectile/RedLaserProjectileActor":55}],58:[function(require,module,exports){
+},{"logic/actor/enemy/MookActor":19,"logic/actor/enemy/MookBossActor":20,"logic/actor/map/EnemySpawnMarkerActor":21,"logic/actor/map/EnemySpawnerActor":22,"logic/actor/map/MapActor":23,"logic/actor/map/PillarActor":24,"logic/actor/map/WallActor":25,"logic/actor/object/BoomChunkActor":26,"logic/actor/object/ChunkActor":27,"logic/actor/player/ShipActor":28,"logic/actor/projectile/LaserProjectileActor":29,"logic/actor/projectile/MoltenProjectileActor":30,"logic/actor/projectile/PlasmaProjectileActor":31,"logic/actor/projectile/RedLaserProjectileActor":32,"renderer/actor/enemy/MookActor":43,"renderer/actor/enemy/MookBossActor":44,"renderer/actor/map/EnemySpawnMarkerActor":45,"renderer/actor/map/EnemySpawnerActor":46,"renderer/actor/map/MapActor":47,"renderer/actor/map/PillarActor":48,"renderer/actor/map/WallActor":49,"renderer/actor/object/BoomChunkActor":50,"renderer/actor/object/ChunkActor":51,"renderer/actor/player/ShipActor":52,"renderer/actor/projectile/LaserProjectileActor":53,"renderer/actor/projectile/MoltenProjectileActor":54,"renderer/actor/projectile/PlasmaProjectileActor":55,"renderer/actor/projectile/RedLaserProjectileActor":56}],59:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -3381,7 +3396,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 "use strict";
 
 /**
@@ -3486,7 +3501,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -3601,7 +3616,7 @@ if (!Function.prototype.extend) {
 
 module.exports = Utils;
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {

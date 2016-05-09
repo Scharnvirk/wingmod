@@ -3,6 +3,7 @@ var GameWorld = require("logic/GameWorld");
 var ActorManager = require("logic/actorManagement/ActorManager");
 var MapManager = require("logic/map/MapManager");
 var GameScene = require("logic/GameScene");
+var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
 
 function Core(worker){
     this.makeMainComponents(worker);
@@ -19,6 +20,7 @@ Core.prototype.makeMainComponents = function(worker){
     this.actorManager = new ActorManager({world: this.world});
     this.mapManager = new MapManager();
     this.scene = new GameScene({world: this.world, actorManager: this.actorManager, mapManager: this.mapManager});
+    this.worldAiMapXtractor = new WorldAiMapExtractor({world: this.world});
 };
 
 Core.prototype.initializeEventHandlers = function(){
@@ -95,7 +97,7 @@ Core.prototype.onSecondaryActorUpdate = function(event){
 };
 
 Core.prototype.onNewMapBodies = function(){
-    var mapBodies = this.world.getTerrainBodies();
+    var mapBodies = this.worldAiMapXtractor.getTerrainBodies();
     this.renderBus.postMessage('getAiImage', mapBodies);
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };

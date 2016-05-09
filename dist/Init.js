@@ -3421,11 +3421,11 @@ module.exports = RedLaserProjectileActor;
 'use strict';
 
 function AiImageRenderer() {
-    this.AI_SCENE_SIZE_X = 512;
-    this.AI_SCENE_SIZE_Y = 512;
+    this.AI_SCENE_SIZE_X = Constants.CHUNK_SIZE;
+    this.AI_SCENE_SIZE_Y = Constants.CHUNK_SIZE;
 
-    this.LOGIC_SCENE_SIZE_X = 2048;
-    this.LOGIC_SCENE_SIZE_Y = 2048;
+    this.LOGIC_SCENE_SIZE_X = Constants.CHUNK_SIZE * 5;
+    this.LOGIC_SCENE_SIZE_Y = Constants.CHUNK_SIZE * 5;
 
     this.centerX = this.AI_SCENE_SIZE_X / 2;
     this.centerY = this.AI_SCENE_SIZE_Y / 2;
@@ -3435,9 +3435,12 @@ function AiImageRenderer() {
 
     this.canvas = this.createCanvas();
     this.drawContext = this.canvas.getContext('2d');
-
-    //document.body.appendChild(this.canvas);
+    this.drawContext.translate(this.AI_SCENE_SIZE_X / 2, this.AI_SCENE_SIZE_Y / 2);
 }
+
+AiImageRenderer.prototype.debugDraw = function () {
+    document.body.insertBefore(this.canvas, document.getElementById('react-content'));
+};
 
 AiImageRenderer.prototype.createCanvas = function () {
     var canvas = document.createElement('canvas', {
@@ -3464,7 +3467,7 @@ AiImageRenderer.prototype.getImageObject = function (wallsData) {
 
 AiImageRenderer.prototype.drawImage = function (wallsData) {
     this.drawContext.fillStyle = 'white';
-    this.drawContext.fillRect(0, 0, this.AI_SCENE_SIZE_X, this.AI_SCENE_SIZE_Y);
+    this.drawContext.fillRect(-this.AI_SCENE_SIZE_X / 2, -this.AI_SCENE_SIZE_Y / 2, this.AI_SCENE_SIZE_X, this.AI_SCENE_SIZE_Y);
 
     this.drawContext.fillStyle = 'black';
     wallsData.forEach(this.drawObject.bind(this));
@@ -3504,20 +3507,25 @@ AiImageRenderer.prototype.drawBox = function (boxDataObject) {
 };
 
 AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
+    var dc = this.drawContext;
+
     var pos = convexDataObject.position;
     pos[0] *= this.lengthMultiplierX;
     pos[1] *= this.lengthMultiplierX;
-    pos[0] += this.centerX;
-    pos[1] += this.centerY;
-    var dc = this.drawContext;
 
-    dc.moveTo(pos[0] - convexDataObject.vertices[0][0] * this.lengthMultiplierX, pos[1] - convexDataObject.vertices[0][1] * this.lengthMultiplierX);
+    dc.translate(pos[0], pos[1]);
+    dc.rotate(convexDataObject.angle);
+
+    dc.moveTo(convexDataObject.vertices[0][0] * this.lengthMultiplierX, convexDataObject.vertices[0][1] * this.lengthMultiplierX);
     for (var i = 1; i < convexDataObject.vertices.length; i++) {
-        dc.lineTo(pos[0] - convexDataObject.vertices[i][0] * this.lengthMultiplierX, pos[1] - convexDataObject.vertices[i][1] * this.lengthMultiplierX);
+        dc.lineTo(convexDataObject.vertices[i][0] * this.lengthMultiplierX, convexDataObject.vertices[i][1] * this.lengthMultiplierX);
     }
 
     dc.closePath();
     dc.fill();
+
+    dc.rotate(convexDataObject.angle);
+    dc.translate(-pos[0], -pos[1]);
 };
 
 module.exports = AiImageRenderer;
