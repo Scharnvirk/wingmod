@@ -3081,8 +3081,8 @@ function ShipActor() {
     this.speedZ = 0.04;
 
     //todo: generic config holder
-    this.initialHp = 20;
-    this.hp = 20;
+    this.initialHp = 30;
+    this.hp = 30;
     this.lastHp = this.hp;
 }
 
@@ -3116,14 +3116,14 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.w && !this.inputListener.inputState.s) {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 15,
                 distance: -5.2
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 345,
                 distance: -5.2
@@ -3133,14 +3133,14 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.a && !this.inputListener.inputState.d) {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 40,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 170,
                 distance: -6
@@ -3150,14 +3150,14 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.d) {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 320,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 190,
                 distance: -6
@@ -3167,7 +3167,7 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.s) {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 180,
                 distance: -7
@@ -4015,15 +4015,17 @@ Hud.prototype.update = function () {
     if (this.actor && !this.actor.dead) {
         for (var enemyId in this.actorManager.enemies) {
             var enemyActor = this.actorManager.enemies[enemyId];
+            this.drawHealthBar(enemyActor);
             var angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);
             var offsetPosition = Utils.angleToVector(angle + Math.PI, 12);
             this.particleManager.createParticle('particleAddHUD', {
                 positionX: this.actor.position[0] + offsetPosition[0],
                 positionY: this.actor.position[1] + offsetPosition[1],
+                positionZ: -Constants.DEFAULT_POSITION_Z,
                 colorR: 1,
                 colorG: 0,
                 colorB: 0,
-                scale: 1,
+                scale: 1.5,
                 alpha: 1,
                 alphaMultiplier: 1,
                 particleVelocity: 0,
@@ -4031,6 +4033,28 @@ Hud.prototype.update = function () {
                 lifeTime: 1
             });
         }
+        this.drawHealthBar(this.actor);
+    }
+};
+
+Hud.prototype.drawHealthBar = function (otherActor) {
+    for (var i = 0; i < otherActor.initialHp; i++) {
+        var angle = otherActor !== this.actor ? Utils.angleBetweenPoints(otherActor.position, this.actor.position) : this.actor.angle;
+        var offsetPosition = Utils.angleToVector(angle + Utils.degToRad(otherActor.initialHp / 2 * 3) - Utils.degToRad(i * 3) + Math.PI, 8);
+        this.particleManager.createParticle('particleAddHUDSquare', {
+            positionX: otherActor.position[0] + offsetPosition[0],
+            positionY: otherActor.position[1] + offsetPosition[1],
+            positionZ: otherActor !== this.actor ? -5 : -Constants.DEFAULT_POSITION_Z,
+            colorR: i >= otherActor.hp ? 1 : 0,
+            colorG: i < otherActor.hp ? 1 : 0,
+            colorB: 0,
+            scale: 1,
+            alpha: 1,
+            alphaMultiplier: 1,
+            particleVelocity: 0,
+            particleAngle: angle,
+            lifeTime: 1
+        });
     }
 };
 
@@ -4111,6 +4135,17 @@ function ParticleConfigBuilder(config) {
             transparent: true,
             depthTest: false
         }),
+        particleAddHUDSquare: new THREE.ShaderMaterial({
+            uniforms: {
+                map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleSquareAdd.png") },
+                time: { type: "f", value: 1.0 }
+            },
+            vertexShader: ParticleShaders.vertexShader,
+            fragmentShader: ParticleShaders.fragmentShader,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthTest: false
+        }),
         mainExplosionAdd: new THREE.ShaderMaterial({
             uniforms: {
                 map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") },
@@ -4146,6 +4181,12 @@ function ParticleConfigBuilder(config) {
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
             maxParticles: 200,
+            positionZ: 20,
+            resolutionCoefficient: config.resolutionCoefficient
+        },
+        particleAddHUDSquare: {
+            material: this.particleMaterialConfig.particleAddHUDSquare,
+            maxParticles: 1000,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient
         },
@@ -4283,7 +4324,7 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
     var offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
     this.positionHandle[particleId * 3] = config.positionX;
     this.positionHandle[particleId * 3 + 1] = config.positionY;
-    this.positionHandle[particleId * 3 + 2] = 0;
+    this.positionHandle[particleId * 3 + 2] = config.positionZ || 0;
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;

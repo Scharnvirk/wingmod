@@ -35,6 +35,17 @@ function ParticleConfigBuilder(config){
              transparent: true,
              depthTest: false,
         }),
+        particleAddHUDSquare: new THREE.ShaderMaterial( {
+             uniforms: {
+                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleSquareAdd.png" )},
+                 time: { type: "f", value: 1.0 },
+             },
+             vertexShader: ParticleShaders.vertexShader,
+             fragmentShader: ParticleShaders.fragmentShader,
+             blending: THREE.AdditiveBlending,
+             transparent: true,
+             depthTest: false,
+        }),
         mainExplosionAdd: new THREE.ShaderMaterial( {
              uniforms: {
                  map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleAdd.png" )},
@@ -70,6 +81,12 @@ function ParticleConfigBuilder(config){
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
             maxParticles: 200,
+            positionZ: 20,
+            resolutionCoefficient: config.resolutionCoefficient,
+        },
+        particleAddHUDSquare: {
+            material: this.particleMaterialConfig.particleAddHUDSquare,
+            maxParticles: 1000,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient,
         },

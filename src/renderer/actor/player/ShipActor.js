@@ -7,8 +7,8 @@ function ShipActor(){
     this.speedZ = 0.04;
 
     //todo: generic config holder
-    this.initialHp = 20;
-    this.hp = 20;
+    this.initialHp = 30;
+    this.hp = 30;
     this.lastHp = this.hp;
 }
 
@@ -42,14 +42,14 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 15,
                 distance: -5.2
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 345,
                 distance: -5.2
@@ -59,14 +59,14 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.a && !this.inputListener.inputState.d){
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 40,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 170,
                 distance: -6
@@ -76,14 +76,14 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.d){
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 320,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 190,
                 distance: -6
@@ -93,7 +93,7 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.s){
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
-                positionZ: this.positionZ,
+                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 180,
                 distance: -7
