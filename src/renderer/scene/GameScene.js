@@ -57,7 +57,7 @@ GameScene.prototype.update = function(){
 
 GameScene.prototype.flashRed = function(){
     this.currentColor = {
-        r: this.initialColor.r + 2,
+        r: this.initialColor.r + 3,
         g: this.initialColor.g,
         b: this.initialColor.b
     };
@@ -65,9 +65,9 @@ GameScene.prototype.flashRed = function(){
 
 GameScene.prototype.flashWhite = function(){
     this.currentColor = {
-        r: this.initialColor.r + 1,
-        g: this.initialColor.g + 1,
-        b: this.initialColor.b + 1
+        r: this.initialColor.r + 1.5,
+        g: this.initialColor.g + 1.5,
+        b: this.initialColor.b + 1.5
     };
 };
 

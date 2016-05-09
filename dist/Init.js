@@ -3230,7 +3230,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 20,
+        scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -3244,7 +3244,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 8,
+        scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
@@ -3284,7 +3284,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 30,
+        scale: 40,
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -3298,7 +3298,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 15,
+        scale: 20,
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
@@ -3338,7 +3338,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 30,
+        scale: 40,
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -3352,7 +3352,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 15,
+        scale: 20,
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
@@ -3392,7 +3392,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 20,
+        scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -3406,7 +3406,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 8,
+        scale: 15,
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
@@ -4756,7 +4756,7 @@ module.exports = function (config) {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 200,
+        scale: 250,
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 0,
@@ -4770,7 +4770,7 @@ module.exports = function (config) {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 40,
+        scale: 50,
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
@@ -4819,7 +4819,7 @@ module.exports = function (config) {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 200,
+        scale: 220,
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 0,
@@ -4833,7 +4833,7 @@ module.exports = function (config) {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: 40,
+        scale: 50,
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
@@ -5156,7 +5156,7 @@ GameScene.prototype.update = function () {
 
 GameScene.prototype.flashRed = function () {
     this.currentColor = {
-        r: this.initialColor.r + 2,
+        r: this.initialColor.r + 3,
         g: this.initialColor.g,
         b: this.initialColor.b
     };
@@ -5164,9 +5164,9 @@ GameScene.prototype.flashRed = function () {
 
 GameScene.prototype.flashWhite = function () {
     this.currentColor = {
-        r: this.initialColor.r + 1,
-        g: this.initialColor.g + 1,
-        b: this.initialColor.b + 1
+        r: this.initialColor.r + 1.5,
+        g: this.initialColor.g + 1.5,
+        b: this.initialColor.b + 1.5
     };
 };
 
