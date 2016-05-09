@@ -60,6 +60,7 @@ var SampleApp = function() {
 
         self.zcache['/gfx/particle.png'] = fs.readFileSync('./gfx/particle.png');
         self.zcache['/gfx/particleAdd.png'] = fs.readFileSync('./gfx/particleAdd.png');
+        self.zcache['/gfx/particleSquareAdd.png'] = fs.readFileSync('./gfx/particleSquareAdd.png');
         self.zcache['/gfx/smokePuffAlpha.png'] = fs.readFileSync('./gfx/smokePuffAlpha.png');
         self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
         self.zcache['/models/chunk.json'] = fs.readFileSync('./models/chunk.json');
@@ -156,6 +157,7 @@ var SampleApp = function() {
 
         self.routes['/gfx/particle.png'] = function(req, res) {res.send(self.cache_get('/gfx/particle.png') );};
         self.routes['/gfx/particleAdd.png'] = function(req, res) {res.send(self.cache_get('/gfx/particleAdd.png') );};
+        self.routes['/gfx/particleSquareAdd.png'] = function(req, res) {res.send(self.cache_get('/gfx/particleSquareAdd.png') );};
         self.routes['/gfx/smokePuffAlpha.png'] = function(req, res) {res.send(self.cache_get('/gfx/smokePuffAlpha.png') );};
         self.routes['/models/ship.json'] = function(req, res) {res.send(self.cache_get('/models/ship.json') );};
         self.routes['/models/ravier.json'] = function(req, res) {res.send(self.cache_get('/models/ravier.json') );};
