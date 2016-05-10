@@ -10,6 +10,7 @@ function ShipActor(){
     this.initialHp = 30;
     this.hp = 30;
     this.lastHp = this.hp;
+    this.hpBarCount = 20;
 }
 
 ShipActor.extend(BaseActor);

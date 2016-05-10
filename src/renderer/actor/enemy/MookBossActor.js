@@ -8,6 +8,7 @@ function MookBossActor(){
 
     this.initialHp = 100;
     this.hp = 100;
+    this.hpBarCount = 30;
 }
 
 MookBossActor.extend(MookActor);

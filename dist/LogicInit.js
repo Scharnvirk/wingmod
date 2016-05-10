@@ -2633,6 +2633,7 @@ function MookBossActor() {
 
     this.initialHp = 100;
     this.hp = 100;
+    this.hpBarCount = 30;
 }
 
 MookBossActor.extend(MookActor);
@@ -2935,6 +2936,7 @@ function ShipActor() {
     this.initialHp = 30;
     this.hp = 30;
     this.lastHp = this.hp;
+    this.hpBarCount = 20;
 }
 
 ShipActor.extend(BaseActor);
