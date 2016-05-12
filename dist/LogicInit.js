@@ -392,20 +392,6 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 104,
-        positionY: -128,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 104,
-        positionY: 480,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
         positionY: -220,
         angle: 0
@@ -414,6 +400,20 @@ GameScene.prototype.fillScene = function (mapBodies) {
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
+        positionY: 570,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -220,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
         positionY: 570,
         angle: 0
     });
@@ -1166,15 +1166,18 @@ function BaseWeapon(config) {
     this.velocity = 10;
 
     /*example:
-        this.FIRING_POINTS = [
+        this.firingPoints = [
             {offsetAngle: 90, offsetDistance:20, fireAngle: 0}
             {offsetAngle: +90, offsetDistance:20, fireAngle: 0}
         ]
+        this.firingMode = 'alternate' | 'simultaneous'
         all properties are relative to actor's body; this example will create
         a weapon firing two shots forward from side mounts.
     */
 
     this.firingPoints = [];
+    this.firingMode = 'simultaneous';
+    this.currentFiringPoint = 0;
 
     Object.assign(this, config);
 
@@ -1206,7 +1209,13 @@ BaseWeapon.prototype.stopShooting = function () {
 };
 
 BaseWeapon.prototype.processActiveWeapon = function () {
-    this.handleFiring();
+    switch (this.firingMode) {
+        case 'alternate':
+            this.handleFiringAlternate();
+            break;
+        default:
+            this.handleFiringSimultaneous();
+    }
     this.shotsFired++;
     if (this.shotsFired >= this.burstCount) {
         this.shotsFired = 0;
@@ -1226,8 +1235,19 @@ BaseWeapon.prototype.fireProjectile = function (firingPointConfig) {
     });
 };
 
-BaseWeapon.prototype.handleFiring = function () {
+BaseWeapon.prototype.handleFiringSimultaneous = function () {
     this.firingPoints.forEach(this.fireProjectile.bind(this));
+    this.timer += this.burstCooldown;
+    this.actor.body.applyForceLocal([0, -this.recoil]);
+};
+
+BaseWeapon.prototype.handleFiringAlternate = function () {
+    this.currentFiringPoint++;
+    if (this.currentFiringPoint >= this.firingPoints.length) {
+        this.currentFiringPoint = 0;
+    }
+
+    this.fireProjectile(this.firingPoints[this.currentFiringPoint]);
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
 };
@@ -1268,7 +1288,7 @@ function MoltenBallThrower(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.burstCount = 3;
+    this.burstCount = 4;
     this.burstCooldown = 5;
     this.cooldown = 60;
     this.recoil = 100;
@@ -1361,15 +1381,15 @@ function MookActor(config) {
 
     this.applyConfig({
         acceleration: 140,
-        turnSpeed: 2.5,
-        hp: 4,
+        turnSpeed: 2,
+        hp: 6,
         bodyConfig: {
             actor: this,
             mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
+            radius: 5.5,
             collisionType: 'enemyShip'
         }
     });
@@ -1438,26 +1458,13 @@ MookActor.prototype.createMoltenGun = function () {
     return new MoltenBallThrower({
         actor: this,
         manager: this.manager,
-        firingPoints: [{ offsetAngle: 0, offsetDistance: 3, fireAngle: 0 }]
-    });
-};
-
-MookActor.prototype.createRedBlaster = function () {
-    return new RedBlaster({
-        actor: this,
-        manager: this.manager,
-        firingPoints: [{ offsetAngle: 0, offsetDistance: 3, fireAngle: 0 }]
+        firingMode: 'alternate',
+        firingPoints: [{ offsetAngle: -90, offsetDistance: 4, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 4, fireAngle: 0 }]
     });
 };
 
 MookActor.prototype.createWeapon = function () {
-    var randomWeaponId = Utils.rand(0, 2);
-
-    if (randomWeaponId === 2) {
-        return this.createRedBlaster();
-    } else {
-        return this.createMoltenGun();
-    }
+    return this.createMoltenGun();
 };
 
 MookActor.prototype.onDeath = function () {
@@ -1592,7 +1599,7 @@ EnemySpawnMarkerActor.prototype.createBody = function () {
 EnemySpawnMarkerActor.prototype.createEnemy = function () {
     var enemyType;
     if (Utils.rand(Math.min(this.manager.timer / 60, this.bossSpawnRate), this.bossSpawnRate) === this.bossSpawnRate) {
-        enemyType = ActorFactory.MOOKBOSS;
+        enemyType = ActorFactory.MOOK;
     } else {
         enemyType = ActorFactory.MOOK;
     }
@@ -2527,9 +2534,13 @@ function ShipMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = ModelStore.get('ship').geometry;
-    config.material = ModelStore.get('ship').material;
+    config.geometry = ModelStore.get('drone').geometry;
+    config.material = ModelStore.get('drone').material;
     Object.assign(this, config);
+
+    this.scale.x = 1.2;
+    this.scale.y = 1.2;
+    this.scale.z = 1.2;
 
     this.castShadow = true;
     this.receiveShadow = true;
@@ -2573,8 +2584,8 @@ function MookActor() {
     this.speedZ = Utils.rand(35, 45) / 1000;
     this.bobSpeed = Utils.rand(18, 22) / 10000;
 
-    this.initialHp = 4;
-    this.hp = 4;
+    this.initialHp = 6;
+    this.hp = 6;
 }
 
 MookActor.extend(BaseActor);
@@ -2587,6 +2598,7 @@ MookActor.prototype.customUpdate = function () {
     this.positionZ += this.speedZ;
     this.doBob();
     this.handleDamage();
+    this.drawEyes();
 };
 
 MookActor.prototype.doBob = function () {
@@ -2616,6 +2628,23 @@ MookActor.prototype.handleDamage = function () {
     if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
         this.particleManager.createPremade('BlueSparks', { position: this.position });
     }
+};
+
+MookActor.prototype.drawEyes = function () {
+    this.particleManager.createPremade('RedEye', {
+        position: this.position,
+        positionZ: this.positionZ - 8.1,
+        angle: this.angle,
+        angleOffset: 25,
+        distance: 2.1
+    });
+    this.particleManager.createPremade('RedEye', {
+        position: this.position,
+        positionZ: this.positionZ - 8.1,
+        angle: this.angle,
+        angleOffset: 335,
+        distance: 2.1
+    });
 };
 
 module.exports = MookActor;
@@ -3137,7 +3166,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 40,
+        scale: 60,
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
@@ -3151,8 +3180,8 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         colorR: this.colorR * 0.3 + 0.7,
         colorG: this.colorG * 0.3 + 0.7,
         colorB: this.colorB * 0.3 + 0.7,
-        scale: 20,
-        alpha: 0.4,
+        scale: 30,
+        alpha: 0.6,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
         particleAngle: this.angle,

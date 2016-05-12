@@ -6,9 +6,13 @@ function ShipMesh(config){
     this.angleOffset = Math.PI;
 
     config = config || {};
-    config.geometry = ModelStore.get('ship').geometry;
-    config.material = ModelStore.get('ship').material;
+    config.geometry = ModelStore.get('drone').geometry;
+    config.material = ModelStore.get('drone').material;
     Object.assign(this, config);
+
+    this.scale.x = 1.2;
+    this.scale.y = 1.2;
+    this.scale.z = 1.2;
 
     this.castShadow = true;
     this.receiveShadow = true;

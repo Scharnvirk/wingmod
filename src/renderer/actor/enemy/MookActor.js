@@ -6,8 +6,8 @@ function MookActor(){
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 4;
-    this.hp = 4;
+    this.initialHp = 6;
+    this.hp = 6;
 }
 
 MookActor.extend(BaseActor);
@@ -20,6 +20,7 @@ MookActor.prototype.customUpdate = function(){
     this.positionZ += this.speedZ;
     this.doBob();
     this.handleDamage();
+    this.drawEyes();
 };
 
 MookActor.prototype.doBob = function(){
@@ -50,5 +51,24 @@ MookActor.prototype.handleDamage = function(){
         this.particleManager.createPremade('BlueSparks', {position: this.position});
     }
 };
+
+
+MookActor.prototype.drawEyes = function(){
+    this.particleManager.createPremade('RedEye', {
+        position: this.position,
+        positionZ: this.positionZ - 8.1,
+        angle: this.angle,
+        angleOffset: 25,
+        distance: 2.1
+    });
+    this.particleManager.createPremade('RedEye', {
+        position: this.position,
+        positionZ: this.positionZ - 8.1,
+        angle: this.angle,
+        angleOffset: 335,
+        distance: 2.1
+    });
+};
+
 
 module.exports = MookActor;

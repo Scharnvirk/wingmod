@@ -31,7 +31,7 @@ EnemySpawnMarkerActor.prototype.createBody = function(){
 EnemySpawnMarkerActor.prototype.createEnemy = function(){
     var enemyType;
     if ( Utils.rand( Math.min(this.manager.timer/60, this.bossSpawnRate), this.bossSpawnRate) === this.bossSpawnRate ){
-        enemyType = ActorFactory.MOOKBOSS;
+        enemyType = ActorFactory.MOOK;
     } else {
         enemyType = ActorFactory.MOOK;
     }

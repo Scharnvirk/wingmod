@@ -65,9 +65,12 @@ var SampleApp = function() {
         self.zcache['/models/ship.json'] = fs.readFileSync('./models/ship.json');
         self.zcache['/models/chunk.json'] = fs.readFileSync('./models/chunk.json');
         self.zcache['/models/ravier.json'] = fs.readFileSync('./models/ravier.json');
+        self.zcache['/models/drone.json'] = fs.readFileSync('./models/drone.json');
         self.zcache['/models/ravier.png'] = fs.readFileSync('./models/ravier.png');
         self.zcache['/models/ravier_bump.png'] = fs.readFileSync('./models/ravier_bump.png');
         self.zcache['/models/chunk.png'] = fs.readFileSync('./models/chunk.png');
+        self.zcache['/models/drone.png'] = fs.readFileSync('./models/drone.png');
+        self.zcache['/models/drone_B.png'] = fs.readFileSync('./models/drone_B.png');
 
         self.zcache['/models/levels/chunk_NbExSbWs.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs.json');
         self.zcache['/models/levels/chunk_NbExSbWs_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs_hitmap.json');
@@ -165,6 +168,9 @@ var SampleApp = function() {
         self.routes['/models/ravier_bump.png'] = function(req, res) {res.send(self.cache_get('/models/ravier_bump.png') );};
         self.routes['/models/chunk.json'] = function(req, res) {res.send(self.cache_get('/models/chunk.json') );};
         self.routes['/models/chunk.png'] = function(req, res) {res.send(self.cache_get('/models/chunk.png') );};
+        self.routes['/models/drone.json'] = function(req, res) {res.send(self.cache_get('/models/drone.json') );};
+        self.routes['/models/drone.png'] = function(req, res) {res.send(self.cache_get('/models/drone.png') );};
+        self.routes['/models/drone_B.png'] = function(req, res) {res.send(self.cache_get('/models/drone_B.png') );};
 
         self.routes['/models/levels/chunk_NbExSbWs.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs.json') );};
         self.routes['/models/levels/chunk_NbExSbWs_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs_hitmap.json') );};

@@ -42,21 +42,7 @@ GameScene.prototype.fillScene = function(mapBodies){
         positionY: 352,
         angle: 0
     });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 104,
-        positionY: -128,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 104,
-        positionY: 480,
-        angle: 0
-    });
-
+    
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
@@ -67,6 +53,20 @@ GameScene.prototype.fillScene = function(mapBodies){
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
+        positionY: 570,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -220,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
         positionY: 570,
         angle: 0
     });

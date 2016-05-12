@@ -193,7 +193,7 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
     }
 };
 
-MookBrain.prototype.shootAction = function(distance = 0){        
+MookBrain.prototype.shootAction = function(distance = 0){
     this.orders.shoot = Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.SHOOTING_ARC);
 };
 

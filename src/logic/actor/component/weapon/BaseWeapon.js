@@ -6,15 +6,18 @@ function BaseWeapon(config){
     this.velocity = 10;
 
     /*example:
-        this.FIRING_POINTS = [
+        this.firingPoints = [
             {offsetAngle: 90, offsetDistance:20, fireAngle: 0}
             {offsetAngle: +90, offsetDistance:20, fireAngle: 0}
         ]
+        this.firingMode = 'alternate' | 'simultaneous'
         all properties are relative to actor's body; this example will create
         a weapon firing two shots forward from side mounts.
     */
 
     this.firingPoints = [];
+    this.firingMode = 'simultaneous';
+    this.currentFiringPoint = 0;
 
     Object.assign(this, config);
 
@@ -46,7 +49,13 @@ BaseWeapon.prototype.stopShooting = function(){
 };
 
 BaseWeapon.prototype.processActiveWeapon = function(){
-    this.handleFiring();
+    switch (this.firingMode){
+        case 'alternate':
+            this.handleFiringAlternate();
+            break;
+        default:
+            this.handleFiringSimultaneous();
+    }
     this.shotsFired ++;
     if (this.shotsFired >= this.burstCount){
         this.shotsFired = 0;
@@ -69,8 +78,19 @@ BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
     });
 };
 
-BaseWeapon.prototype.handleFiring = function(){
+BaseWeapon.prototype.handleFiringSimultaneous = function(){
     this.firingPoints.forEach(this.fireProjectile.bind(this));
+    this.timer += this.burstCooldown;
+    this.actor.body.applyForceLocal([0, -this.recoil]);
+};
+
+BaseWeapon.prototype.handleFiringAlternate = function(){
+    this.currentFiringPoint ++;
+    if (this.currentFiringPoint >= this.firingPoints.length){
+        this.currentFiringPoint = 0;
+    }
+
+    this.fireProjectile(this.firingPoints[this.currentFiringPoint]);
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
 };

@@ -1,8 +1,7 @@
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
-var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
-var ShipMesh = require("renderer/actor/component/mesh/ShipMesh");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var ChunkMesh = require("renderer/map/ChunkMesh");
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
 
 function GameScene(config) {
     Object.assign(this, config);
@@ -40,6 +39,8 @@ GameScene.prototype.make = function() {
     this.scene.add( this.directionalLight );
 
     this.scene.fog = new THREE.Fog( 0x000000, 200, 400 );
+
+    //this.testMesh('drone', 1);
 };
 
 GameScene.prototype.update = function(){
@@ -102,6 +103,25 @@ GameScene.prototype.buildMap = function(layoutData){
         chunk.setRotation(config.rotation);
         this.scene.add(chunk);
     }
+};
+
+GameScene.prototype.testMesh = function(meshClass, scale){
+    scale = scale || 1;
+    var mesh = new BaseMesh({
+        geometry: ModelStore.get(meshClass).geometry,
+        material: ModelStore.get(meshClass).material
+    });
+    mesh.scale.x = scale;
+    mesh.scale.y = scale;
+    mesh.scale.z = scale;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    setInterval(() => {
+        mesh.rotation.z += 0.001;
+    }, 5);
+
+    this.scene.add(mesh);
 };
 
 

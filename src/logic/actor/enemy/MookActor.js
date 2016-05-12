@@ -12,15 +12,15 @@ function MookActor(config){
 
     this.applyConfig({
         acceleration: 140,
-        turnSpeed: 2.5,
-        hp: 4,
+        turnSpeed: 2,
+        hp: 6,
         bodyConfig: {
             actor: this,
             mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
+            radius: 5.5,
             collisionType: 'enemyShip'
         }
     });
@@ -89,30 +89,16 @@ MookActor.prototype.createMoltenGun = function(){
     return new MoltenBallThrower({
         actor: this,
         manager: this.manager,
+        firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: 0, offsetDistance: 3, fireAngle: 0},
-        ]
-    });
-};
-
-MookActor.prototype.createRedBlaster = function(){
-    return new RedBlaster({
-        actor: this,
-        manager: this.manager,
-        firingPoints: [
-            {offsetAngle: 0, offsetDistance: 3, fireAngle: 0},
+            {offsetAngle: -90, offsetDistance: 4, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 4 , fireAngle: 0}
         ]
     });
 };
 
 MookActor.prototype.createWeapon = function(){
-    var randomWeaponId = Utils.rand(0,2);
-
-    if (randomWeaponId === 2){
-        return this.createRedBlaster();
-    } else {
-        return this.createMoltenGun();
-    }
+    return this.createMoltenGun();
 };
 
 MookActor.prototype.onDeath = function(){

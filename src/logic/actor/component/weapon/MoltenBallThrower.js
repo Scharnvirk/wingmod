@@ -8,7 +8,7 @@ function MoltenBallThrower(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.burstCount = 3;
+    this.burstCount = 4;
     this.burstCooldown = 5;
     this.cooldown = 60;
     this.recoil = 100;
