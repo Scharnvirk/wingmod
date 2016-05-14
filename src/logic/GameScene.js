@@ -5,7 +5,6 @@ function GameScene(config){
     Object.assign(this, config);
     if(!this.world) throw new Error('No world specified for Logic GameScene');
     if(!this.actorManager) throw new Error('No actorManager specified for Logic GameScene');
-    //if(!this.mapManager) throw new Error('No mapManager specified for Logic GameScene');
     this.timer = 0;
 
     EventEmitter.apply(this, arguments);
@@ -28,21 +27,28 @@ GameScene.prototype.fillScene = function(mapBodies){
     });
 
     this.addMapBodies(mapBodies);
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.MOOK,
+    //     positionX: -50,
+    //     positionY: 0,
+    //     angle: 0
+    // });
 
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -174,
-        positionY: 0,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -174,
-        positionY: 352,
-        angle: 0
-    });
-    
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -174,
+    //     positionY: 0,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -174,
+    //     positionY: 352,
+    //     angle: 0
+    // });
+    //
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,

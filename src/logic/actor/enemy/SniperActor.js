@@ -1,26 +1,25 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 var MookBrain = require("logic/actor/component/ai/MookBrain");
-var MoltenBallThrower = require("logic/actor/component/weapon/MoltenBallThrower");
 var RedBlaster = require("logic/actor/component/weapon/RedBlaster");
 var ActorFactory = require("shared/ActorFactory")('logic');
 
-function MookActor(config){
+function SniperActor(config){
     config = config || [];
 
     Object.assign(this, config);
 
     this.applyConfig({
-        acceleration: 140,
-        turnSpeed: 2,
-        hp: 6,
+        acceleration: 90,
+        turnSpeed: 0.8,
+        hp: 8,
         bodyConfig: {
             actor: this,
             mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
+            radius: 4,
             collisionType: 'enemyShip'
         }
     });
@@ -32,19 +31,19 @@ function MookActor(config){
     BaseActor.apply(this, arguments);
 }
 
-MookActor.extend(BaseActor);
+SniperActor.extend(BaseActor);
 
-MookActor.prototype.createBody = function(){
+SniperActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-MookActor.prototype.customUpdate = function(){
+SniperActor.prototype.customUpdate = function(){
     if(this.timer % 2 === 0) this.brain.update();
     this.doBrainOrders();
     this.weapon.update();
 };
 
-MookActor.prototype.doBrainOrders = function(){
+SniperActor.prototype.doBrainOrders = function(){
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
@@ -64,7 +63,7 @@ MookActor.prototype.doBrainOrders = function(){
     }
 };
 
-MookActor.prototype.lookAtPosition = function(position){
+SniperActor.prototype.lookAtPosition = function(position){
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle =  Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
@@ -77,7 +76,7 @@ MookActor.prototype.lookAtPosition = function(position){
     }
 };
 
-MookActor.prototype.createBrain = function(){
+SniperActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
@@ -85,19 +84,17 @@ MookActor.prototype.createBrain = function(){
     });
 };
 
-MookActor.prototype.createWeapon = function(){
-    return new MoltenBallThrower({
+SniperActor.prototype.createWeapon = function(){
+    return new RedBlaster({
         actor: this,
         manager: this.manager,
-        firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 3.5 , fireAngle: 0}
+            {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
         ]
     });
 };
 
-MookActor.prototype.onDeath = function(){
+SniperActor.prototype.onDeath = function(){
     for(let i = 0; i < 10; i++){
         this.manager.addNew({
             classId: ActorFactory.CHUNK,
@@ -111,7 +108,7 @@ MookActor.prototype.onDeath = function(){
     this.manager.enemiesKilled ++;
 };
 
-MookActor.prototype.onHit = function(){
+SniperActor.prototype.onHit = function(){
     if(Utils.rand(0,10) == 10){
         this.manager.addNew({
             classId: ActorFactory.CHUNK,
@@ -123,4 +120,4 @@ MookActor.prototype.onHit = function(){
     }
 };
 
-module.exports = MookActor;
+module.exports = SniperActor;

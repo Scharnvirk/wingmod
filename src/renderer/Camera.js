@@ -4,7 +4,7 @@ function Camera(config){
     this.VIEW_ANGLE = 45;
     this.ASPECT = this.WIDTH / this.HEIGHT;
     this.NEAR = 0.1;
-    this.FAR = 400;
+    this.FAR = Constants.RENDER_DISTANCE;
 
     this.ZOOM_THRESHOLD = 0.995;
     this.zoomSpeed = 5;

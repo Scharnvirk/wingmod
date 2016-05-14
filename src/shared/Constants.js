@@ -7,6 +7,8 @@ var Constants = {
 
     MAX_SHADER_UNIFORM_SIZE: 512,
 
+    RENDER_DISTANCE: 500,
+
     COLLISION_GROUPS: {
             SHIP: Math.pow(2,0),
             ENEMY: Math.pow(2,1),

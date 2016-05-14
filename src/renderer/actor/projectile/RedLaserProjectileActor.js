@@ -5,17 +5,17 @@ function RedLaserProjectileActor(config){
     BaseActor.apply(this, arguments);
     this.colorR = 1;
     this.colorG = 0.3;
-    this.colorB = 0.3;
+    this.colorB = 1;
 }
 
 RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.customUpdate = function(){
-    this.particleManager.createPremade('RedLaserTrail', {position: this.position, angle: this.angle});
+    this.particleManager.createPremade('PurpleLaserTrail', {position: this.position, angle: this.angle});
 };
 
 RedLaserProjectileActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('RedSparks', {position: this.position});
+    this.particleManager.createPremade('PurpleSparks', {position: this.position});
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function(){

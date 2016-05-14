@@ -6,6 +6,7 @@ var idMap = {
     CHUNK: 5,
     MOOKBOSS: 6,
     BOOMCHUNK: 7,
+    SNIPER: 8,
     PLASMAPROJECTILE: 100,
     MOLTENPROJECTILE: 101,
     LASERPROJECITLE: 102,
@@ -18,6 +19,7 @@ var idMap = {
 function ActorFactory(context, actorDependencies){
     ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
     ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
+    ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
     ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
     ActorFactory.WallActor = context === 'renderer' ? require("renderer/actor/map/WallActor") : require("logic/actor/map/WallActor");
     ActorFactory.PillarActor = context === 'renderer' ? require("renderer/actor/map/PillarActor") : require("logic/actor/map/PillarActor");
@@ -36,6 +38,7 @@ function ActorFactory(context, actorDependencies){
         [idMap.SHIP]: ActorFactory.ShipActor,
         [idMap.MOOK]: ActorFactory.MookActor,
         [idMap.MOOKBOSS]: ActorFactory.MookBossActor,
+        [idMap.SNIPER]: ActorFactory.SniperActor,
         [idMap.WALL]: ActorFactory.WallActor,
         [idMap.PILLAR]: ActorFactory.PillarActor,
         [idMap.CHUNK]: ActorFactory.ChunkActor,

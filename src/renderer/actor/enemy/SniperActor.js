@@ -2,36 +2,43 @@ var BaseMesh = require("renderer/actor/component/mesh/ShipMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
-function MookActor(){
+function SniperActor(){
     BaseActor.apply(this, arguments);
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 6;
-    this.hp = 6;
+    this.initialHp = 8;
+    this.hp = 8;
+
+    this.eyeAngle = 0;
+    this.eyeSpeed = 3;
+    this.eyeEdge = 50;
+    this.eyeGoingRight = true;
 }
 
-MookActor.extend(BaseActor);
+SniperActor.extend(BaseActor);
 
-MookActor.prototype.createMesh = function(){
+SniperActor.prototype.createMesh = function(){
+    var g = ModelStore.get('sniper').geometry;
+    console.log(g);
     return new BaseMesh({
         actor: this,
-        scaleX: 1.2,
-        scaleY: 1.2,
-        scaleZ: 1.2,
-        geometry: ModelStore.get('drone').geometry,
-        material: ModelStore.get('drone').material
+        scaleX: 1.9,
+        scaleY: 1.9,
+        scaleZ: 1.9,
+        geometry: ModelStore.get('sniper').geometry,
+        material: ModelStore.get('sniper').material
     });
 };
 
-MookActor.prototype.customUpdate = function(){
+SniperActor.prototype.customUpdate = function(){
     this.positionZ += this.speedZ;
     this.doBob();
     this.handleDamage();
     this.drawEyes();
 };
 
-MookActor.prototype.doBob = function(){
+SniperActor.prototype.doBob = function(){
     if (this.positionZ > 10){
         this.speedZ -= this.bobSpeed;
     } else {
@@ -39,17 +46,17 @@ MookActor.prototype.doBob = function(){
     }
 };
 
-MookActor.prototype.onSpawn = function(){
+SniperActor.prototype.onSpawn = function(){
     this.manager.newEnemy(this.actorId);
 };
 
-MookActor.prototype.onDeath = function(){
+SniperActor.prototype.onDeath = function(){
     this.manager.enemyDestroyed(this.actorId);
     this.particleManager.createPremade('OrangeBoomMedium', {position: this.position});
     this.manager.requestUiFlash('white');
 };
 
-MookActor.prototype.handleDamage = function(){
+SniperActor.prototype.handleDamage = function(){
     let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20){
         this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
@@ -61,22 +68,25 @@ MookActor.prototype.handleDamage = function(){
 };
 
 
-MookActor.prototype.drawEyes = function(){
-    this.particleManager.createPremade('RedEye', {
+SniperActor.prototype.drawEyes = function(){
+    if (this.eyeAngle > this.eyeEdge){
+        this.eyeGoingRight = false;
+    }
+
+    if (this.eyeAngle < -this.eyeEdge){
+        this.eyeGoingRight = true;
+    }
+
+    this.eyeAngle += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
+
+    this.particleManager.createPremade('PurpleEye', {
         position: this.position,
-        positionZ: this.positionZ - 8.7,
+        positionZ: this.positionZ - 7.4,
         angle: this.angle,
-        angleOffset: 15,
-        distance: 3.5
-    });
-    this.particleManager.createPremade('RedEye', {
-        position: this.position,
-        positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 345,
-        distance: 3.5
+        angleOffset: this.eyeAngle,
+        distance: 2.3
     });
 };
 
 
-module.exports = MookActor;
+module.exports = SniperActor;

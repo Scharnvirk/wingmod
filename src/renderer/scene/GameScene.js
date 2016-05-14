@@ -38,9 +38,9 @@ GameScene.prototype.make = function() {
 
     this.scene.add( this.directionalLight );
 
-    this.scene.fog = new THREE.Fog( 0x000000, 200, 400 );
+    this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
 
-    //this.testMesh('drone', 1);
+    //this.testMesh('ravier', 8);
 };
 
 GameScene.prototype.update = function(){

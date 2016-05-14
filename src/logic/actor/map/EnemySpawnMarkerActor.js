@@ -30,12 +30,12 @@ EnemySpawnMarkerActor.prototype.createBody = function(){
 
 EnemySpawnMarkerActor.prototype.createEnemy = function(){
     var enemyType;
-    if ( Utils.rand( Math.min(this.manager.timer/60, this.bossSpawnRate), this.bossSpawnRate) === this.bossSpawnRate ){
-        enemyType = ActorFactory.MOOK;
+
+    if ( Utils.rand(1,3) === 3){
+        enemyType = ActorFactory.SNIPER;
     } else {
         enemyType = ActorFactory.MOOK;
     }
-
 
     if(!this.created){
         this.created = true;

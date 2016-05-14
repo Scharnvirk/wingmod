@@ -123,6 +123,9 @@ ParticleConfigBuilder.prototype.buildPremades = function(){
         RedLaserTrail: require("renderer/particleSystem/premade/RedLaserTrail"),
         RedSparks: require("renderer/particleSystem/premade/RedSparks"),
         RedEye: require("renderer/particleSystem/premade/RedEye"),
+        PurpleEye: require("renderer/particleSystem/premade/PurpleEye"),
+        PurpleLaserTrail: require("renderer/particleSystem/premade/PurpleLaserTrail"),
+        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks")
     };
 };
 

@@ -3,6 +3,7 @@ var ModelList = {
         '/models/ship.json',
         '/models/ravier.json',
         '/models/drone.json',
+        '/models/sniper.json',
         '/models/chunk.json'
     ]
 };
