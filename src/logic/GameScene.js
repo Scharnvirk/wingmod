@@ -35,45 +35,45 @@ GameScene.prototype.fillScene = function(mapBodies){
     //     angle: 0
     // });
 
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -174,
+    //     positionY: 0,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -174,
+    //     positionY: 352,
+    //     angle: 0
+    // });
+
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -704,
-        positionY: -132,
+        positionX: -352,
+        positionY: -220,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
-        positionY: 220,
+        positionY: 570,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 352,
-        positionY: 132,
+        positionX: 0,
+        positionY: -220,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 704,
-        positionY: -132,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 132,
-        positionY: -704,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 572,
-        positionY: -704,
+        positionX: 0,
+        positionY: 570,
         angle: 0
     });
 
