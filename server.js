@@ -78,10 +78,14 @@ var SampleApp = function() {
         self.zcache['/models/orbot.png'] = fs.readFileSync('./models/orbot.png');
         self.zcache['/models/orbot_B.png'] = fs.readFileSync('./models/orbot_B.png');
 
-        self.zcache['/models/levels/chunk_NbExSbWs.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs.json');
-        self.zcache['/models/levels/chunk_NbExSbWs_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs_hitmap.json');
-        self.zcache['/models/levels/chunk_NxExSbWx.json'] = fs.readFileSync('./models/levels/chunk_NxExSbWx.json');
-        self.zcache['/models/levels/chunk_NxExSbWx_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NxExSbWx_hitmap.json');
+        self.zcache['/models/levels/chunk_HangarStraight_SideSmall_1.json'] = fs.readFileSync('./models/levels/chunk_HangarStraight_SideSmall_1.json');
+        self.zcache['/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json');
+        self.zcache['/models/levels/chunk_HangarCorner_1.json'] = fs.readFileSync('./models/levels/chunk_HangarCorner_1.json');
+        self.zcache['/models/levels/chunk_HangarCorner_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_HangarCorner_1_hitmap.json');
+        self.zcache['/models/levels/chunk_HangarEndcap_1.json'] = fs.readFileSync('./models/levels/chunk_HangarEndcap_1.json');
+        self.zcache['/models/levels/chunk_HangarEndcap_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_HangarEndcap_1_hitmap.json');
+        self.zcache['/models/levels/chunk_Hangar_SmallCross_1.json'] = fs.readFileSync('./models/levels/chunk_Hangar_SmallCross_1.json');
+        self.zcache['/models/levels/chunk_Hangar_SmallCross_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_Hangar_SmallCross_1_hitmap.json');
         self.zcache['/models/levels/map_256_B.png'] = fs.readFileSync('./models/levels/map_256_B.png');
         self.zcache['/models/levels/map_256.png'] = fs.readFileSync('./models/levels/map_256.png');
 
@@ -184,10 +188,14 @@ var SampleApp = function() {
         self.routes['/models/orbot.png'] = function(req, res) {res.send(self.cache_get('/models/orbot.png') );};
         self.routes['/models/orbot_B.png'] = function(req, res) {res.send(self.cache_get('/models/orbot_B.png') );};
 
-        self.routes['/models/levels/chunk_NbExSbWs.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs.json') );};
-        self.routes['/models/levels/chunk_NbExSbWs_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs_hitmap.json') );};
-        self.routes['/models/levels/chunk_NxExSbWx.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NxExSbWx.json') );};
-        self.routes['/models/levels/chunk_NxExSbWx_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NxExSbWx_hitmap.json') );};
+        self.routes['/models/levels/chunk_HangarStraight_SideSmall_1.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarStraight_SideSmall_1.json') );};
+        self.routes['/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json') );};
+        self.routes['/models/levels/chunk_HangarEndcap_1.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarEndcap_1.json') );};
+        self.routes['/models/levels/chunk_HangarEndcap_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarEndcap_1_hitmap.json') );};
+        self.routes['/models/levels/chunk_HangarCorner_1.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarCorner_1.json') );};
+        self.routes['/models/levels/chunk_HangarCorner_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarCorner_1_hitmap.json') );};
+        self.routes['/models/levels/chunk_Hangar_SmallCross_1.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_Hangar_SmallCross_1.json') );};
+        self.routes['/models/levels/chunk_Hangar_SmallCross_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_Hangar_SmallCross_1.json') );};
         self.routes['/models/levels/map_256.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256.png') );};
         self.routes['/models/levels/map_256_B.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_B.png') );};
 

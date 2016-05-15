@@ -382,45 +382,45 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //     angle: 0
     // });
 
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -174,
-    //     positionY: 0,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -174,
-    //     positionY: 352,
-    //     angle: 0
-    // });
-
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: -220,
+        positionX: -704,
+        positionY: -132,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
-        positionY: 570,
+        positionY: 220,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: -220,
+        positionX: 352,
+        positionY: 132,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: 570,
+        positionX: 704,
+        positionY: -132,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 132,
+        positionY: -704,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 572,
+        positionY: -704,
         angle: 0
     });
 };
@@ -2499,38 +2499,121 @@ MapBuilder.prototype.buildMap = function () {
     if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map builder has no chunks yet and is not ready!');
 
     this.mapLayout = [{
-        name: 'chunk_NbExSbWs',
-        position: [0, 0],
+        name: 'chunk_HangarCorner_1',
+        position: [0, 2],
+        rotation: 90
+    }, {
+        name: 'chunk_HangarCorner_1',
+        position: [1, 2],
         rotation: 0
     }, {
-        name: 'chunk_NbExSbWs',
+        name: 'chunk_HangarEndcap_1',
+        position: [-1, 1],
+        rotation: 0
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_1',
         position: [0, 1],
+        rotation: 180
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_1',
+        position: [1, 1],
         rotation: 0
     }, {
-        name: 'chunk_NbExSbWs',
+        name: 'chunk_HangarEndcap_1',
+        position: [-2, 0],
+        rotation: 0
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_1',
         position: [-1, 0],
         rotation: 180
     }, {
-        name: 'chunk_NbExSbWs',
-        position: [-1, 1],
-        rotation: 180
-    }, {
-        name: 'chunk_NxExSbWx',
-        position: [0, 2],
+        name: 'chunk_HangarStraight_SideSmall_1',
+        position: [0, 0],
         rotation: 0
     }, {
-        name: 'chunk_NxExSbWx',
+        name: 'chunk_HangarEndcap_1',
+        position: [1, 0],
+        rotation: 180
+    }, {
+        name: 'chunk_HangarEndcap_1',
+        position: [2, 0],
+        rotation: 0
+    }, {
+        name: 'chunk_HangarCorner_1',
+        position: [-2, -1],
+        rotation: 180
+    }, {
+        name: 'chunk_HangarCorner_1',
+        position: [-1, -1],
+        rotation: 270
+    }, {
+        name: 'chunk_HangarCorner_1',
         position: [0, -1],
         rotation: 180
     }, {
-        name: 'chunk_NxExSbWx',
-        position: [-1, 2],
-        rotation: 0
+        name: 'chunk_HangarStraight_SideSmall_1',
+        position: [1, -1],
+        rotation: 90
     }, {
-        name: 'chunk_NxExSbWx',
-        position: [-1, -1],
-        rotation: 180
+        name: 'chunk_HangarCorner_1',
+        position: [2, -1],
+        rotation: 270
+    }, {
+        name: 'chunk_HangarEndcap_1',
+        position: [0, -2],
+        rotation: 90
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_1',
+        position: [1, -2],
+        rotation: 270
+    }, {
+        name: 'chunk_HangarEndcap_1',
+        position: [2, -2],
+        rotation: 270
     }];
+
+    // this.mapLayout = [
+    //     {
+    //         name: 'chunk_HangarStraight_SideSmall_1',
+    //         position: [0,0],
+    //         rotation: 0
+    //     },
+    //     {
+    //         name: 'chunk_HangarStraight_SideSmall_1',
+    //         position: [0,1],
+    //         rotation: 0
+    //     },
+    //     {
+    //         name: 'chunk_HangarStraight_SideSmall_1',
+    //         position: [-1,0],
+    //         rotation: 180
+    //     },
+    //     {
+    //         name: 'chunk_HangarStraight_SideSmall_1',
+    //         position: [-1,1],
+    //         rotation: 180
+    //     },
+    //     {
+    //         name: 'chunk_HangarEndcap_1',
+    //         position: [0, 2],
+    //         rotation: 0
+    //     },
+    //     {
+    //         name: 'chunk_HangarEndcap_1',
+    //         position: [0, -1],
+    //         rotation: 180
+    //     },
+    //     {
+    //         name: 'chunk_HangarEndcap_1',
+    //         position: [-1, 2],
+    //         rotation: 0
+    //     },
+    //     {
+    //         name: 'chunk_HangarEndcap_1',
+    //         position: [-1, -1],
+    //         rotation: 180
+    //     }
+    // ];
 
     return this.mapLayout;
 };

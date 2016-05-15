@@ -4072,6 +4072,8 @@ function AiImageRenderer() {
     this.canvas = this.createCanvas();
     this.drawContext = this.canvas.getContext('2d');
     this.drawContext.translate(this.AI_SCENE_SIZE_X / 2, this.AI_SCENE_SIZE_Y / 2);
+
+    //this.debugDraw();
 }
 
 AiImageRenderer.prototype.debugDraw = function () {
@@ -4250,11 +4252,17 @@ var levelPath = '/models/levels';
 
 var ChunkList = {
     chunks: [{
-        model: levelPath + '/chunk_NbExSbWs.json',
-        hitmap: levelPath + '/chunk_NbExSbWs_hitmap.json'
+        model: levelPath + '/chunk_HangarStraight_SideSmall_1.json',
+        hitmap: levelPath + '/chunk_HangarStraight_SideSmall_1_hitmap.json'
     }, {
-        model: levelPath + '/chunk_NxExSbWx.json',
-        hitmap: levelPath + '/chunk_NxExSbWx_hitmap.json'
+        model: levelPath + '/chunk_HangarEndcap_1.json',
+        hitmap: levelPath + '/chunk_HangarEndcap_1_hitmap.json'
+    }, {
+        model: levelPath + '/chunk_HangarCorner_1.json',
+        hitmap: levelPath + '/chunk_HangarCorner_1_hitmap.json'
+    }, {
+        model: levelPath + '/chunk_Hangar_SmallCross_1.json',
+        hitmap: levelPath + '/chunk_Hangar_SmallCross_1_hitmap.json'
     }]
 };
 

@@ -14,6 +14,8 @@ function AiImageRenderer(){
     this.canvas = this.createCanvas();
     this.drawContext = this.canvas.getContext('2d');
     this.drawContext.translate(this.AI_SCENE_SIZE_X/2, this.AI_SCENE_SIZE_Y/2);
+
+    //this.debugDraw();
 }
 
 AiImageRenderer.prototype.debugDraw = function(){
@@ -62,7 +64,7 @@ AiImageRenderer.prototype.drawObject = function(object){
                 this.drawConvex(object);
                 break;
         }
-    }    
+    }
 };
 
 AiImageRenderer.prototype.drawBox = function(boxDataObject){
