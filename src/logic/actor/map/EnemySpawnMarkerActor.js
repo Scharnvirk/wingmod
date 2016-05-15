@@ -29,23 +29,30 @@ EnemySpawnMarkerActor.prototype.createBody = function(){
 };
 
 EnemySpawnMarkerActor.prototype.createEnemy = function(){
-    var enemyType;
+    var enemyType, mobsToSpawn = 1;
 
-    if ( Utils.rand(1,3) === 3){
-        enemyType = ActorFactory.SNIPER;
-    } else {
+    var rand = Utils.rand(0,10);
+
+    if (rand < 6) {
         enemyType = ActorFactory.MOOK;
+    } else if (rand >= 6 && rand < 10){
+        enemyType = ActorFactory.SNIPER;
+    } else if (rand == 10){
+        enemyType = ActorFactory.ORBOT;
+        mobsToSpawn = 3;
     }
 
     if(!this.created){
+        for (let i = 0; i < mobsToSpawn; i ++ ){
+            this.manager.addNew({
+                classId: enemyType,
+                positionX: this.body.position[0] + Utils.rand(-1,1) * mobsToSpawn - 1,
+                positionY: this.body.position[1] + Utils.rand(-1,1) * mobsToSpawn - 1,
+                angle: Utils.rand(0,360),
+                velocity: Utils.rand(50, 100)
+            });
+        }
         this.created = true;
-        this.manager.addNew({
-            classId: enemyType,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(50, 100)
-        });
     }
 };
 

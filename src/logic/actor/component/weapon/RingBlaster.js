@@ -1,17 +1,17 @@
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
 var ActorFactory = require("shared/ActorFactory")('logic');
 
-function PlasmaGun(config){
+function RingBlaster(config){
     Object.assign(this, config);
 
-    this.projectileClass = ActorFactory.PLASMAPROJECTILE;
+    this.projectileClass = ActorFactory.RINGPROJECTILE;
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 10;
-    this.velocity = 250;
+    this.cooldown = 80;
+    this.velocity = 150;
 }
 
-PlasmaGun.extend(BaseWeapon);
+RingBlaster.extend(BaseWeapon);
 
-module.exports = PlasmaGun;
+module.exports = RingBlaster;

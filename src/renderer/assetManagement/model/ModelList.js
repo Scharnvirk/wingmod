@@ -4,6 +4,7 @@ var ModelList = {
         '/models/ravier.json',
         '/models/drone.json',
         '/models/sniper.json',
+        '/models/orbot.json',
         '/models/chunk.json'
     ]
 };

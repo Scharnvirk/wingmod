@@ -74,6 +74,9 @@ var SampleApp = function() {
         self.zcache['/models/sniper.json'] = fs.readFileSync('./models/sniper.json');
         self.zcache['/models/sniper.png'] = fs.readFileSync('./models/sniper.png');
         self.zcache['/models/sniper_B.png'] = fs.readFileSync('./models/sniper_B.png');
+        self.zcache['/models/orbot.json'] = fs.readFileSync('./models/orbot.json');
+        self.zcache['/models/orbot.png'] = fs.readFileSync('./models/orbot.png');
+        self.zcache['/models/orbot_B.png'] = fs.readFileSync('./models/orbot_B.png');
 
         self.zcache['/models/levels/chunk_NbExSbWs.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs.json');
         self.zcache['/models/levels/chunk_NbExSbWs_hitmap.json'] = fs.readFileSync('./models/levels/chunk_NbExSbWs_hitmap.json');
@@ -177,6 +180,9 @@ var SampleApp = function() {
         self.routes['/models/sniper.json'] = function(req, res) {res.send(self.cache_get('/models/sniper.json') );};
         self.routes['/models/sniper.png'] = function(req, res) {res.send(self.cache_get('/models/sniper.png') );};
         self.routes['/models/sniper_B.png'] = function(req, res) {res.send(self.cache_get('/models/sniper_B.png') );};
+        self.routes['/models/orbot.json'] = function(req, res) {res.send(self.cache_get('/models/orbot.json') );};
+        self.routes['/models/orbot.png'] = function(req, res) {res.send(self.cache_get('/models/orbot.png') );};
+        self.routes['/models/orbot_B.png'] = function(req, res) {res.send(self.cache_get('/models/orbot_B.png') );};
 
         self.routes['/models/levels/chunk_NbExSbWs.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs.json') );};
         self.routes['/models/levels/chunk_NbExSbWs_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_NbExSbWs_hitmap.json') );};

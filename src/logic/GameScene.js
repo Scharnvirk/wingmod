@@ -29,7 +29,7 @@ GameScene.prototype.fillScene = function(mapBodies){
     this.addMapBodies(mapBodies);
     //
     // this.actorManager.addNew({
-    //     classId: ActorFactory.MOOK,
+    //     classId: ActorFactory.ORBOT,
     //     positionX: -50,
     //     positionY: 0,
     //     angle: 0
@@ -48,7 +48,7 @@ GameScene.prototype.fillScene = function(mapBodies){
     //     positionY: 352,
     //     angle: 0
     // });
-    //
+    
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,

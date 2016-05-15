@@ -1,4 +1,4 @@
-
+ 
 var BaseActor = require("renderer/actor/BaseActor");
 
 function RedLaserProjectileActor(config){

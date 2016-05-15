@@ -40,7 +40,7 @@ GameScene.prototype.make = function() {
 
     this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
 
-    //this.testMesh('ravier', 8);
+    // this.testMesh('orbot', 1.5);
 };
 
 GameScene.prototype.update = function(){

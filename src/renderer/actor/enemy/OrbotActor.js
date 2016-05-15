@@ -2,41 +2,36 @@ var BaseMesh = require("renderer/actor/component/mesh/ShipMesh");
 var BaseActor = require("renderer/actor/BaseActor");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
-function SniperActor(){
+function OrbotActor(){
     BaseActor.apply(this, arguments);
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 8;
-    this.hp = 8;
-
-    this.eyeAngle = 0;
-    this.eyeSpeed = 3;
-    this.eyeEdge = 50;
-    this.eyeGoingRight = true;
+    this.initialHp = 4;
+    this.hp = 4;
 }
 
-SniperActor.extend(BaseActor);
+OrbotActor.extend(BaseActor);
 
-SniperActor.prototype.createMesh = function(){
+OrbotActor.prototype.createMesh = function(){
     return new BaseMesh({
         actor: this,
-        scaleX: 1.9,
-        scaleY: 1.9,
-        scaleZ: 1.9,
-        geometry: ModelStore.get('sniper').geometry,
-        material: ModelStore.get('sniper').material
+        scaleX: 1.3,
+        scaleY: 1.3,
+        scaleZ: 1.3,
+        geometry: ModelStore.get('orbot').geometry,
+        material: ModelStore.get('orbot').material
     });
 };
 
-SniperActor.prototype.customUpdate = function(){
+OrbotActor.prototype.customUpdate = function(){
     this.positionZ += this.speedZ;
     this.doBob();
     this.handleDamage();
     this.drawEyes();
 };
 
-SniperActor.prototype.doBob = function(){
+OrbotActor.prototype.doBob = function(){
     if (this.positionZ > 10){
         this.speedZ -= this.bobSpeed;
     } else {
@@ -44,17 +39,17 @@ SniperActor.prototype.doBob = function(){
     }
 };
 
-SniperActor.prototype.onSpawn = function(){
+OrbotActor.prototype.onSpawn = function(){
     this.manager.newEnemy(this.actorId);
 };
 
-SniperActor.prototype.onDeath = function(){
+OrbotActor.prototype.onDeath = function(){
     this.manager.enemyDestroyed(this.actorId);
     this.particleManager.createPremade('OrangeBoomMedium', {position: this.position});
     this.manager.requestUiFlash('white');
 };
 
-SniperActor.prototype.handleDamage = function(){
+OrbotActor.prototype.handleDamage = function(){
     let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     if (damageRandomValue > 20){
         this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
@@ -65,26 +60,17 @@ SniperActor.prototype.handleDamage = function(){
     }
 };
 
-
-SniperActor.prototype.drawEyes = function(){
-    if (this.eyeAngle > this.eyeEdge){
-        this.eyeGoingRight = false;
+OrbotActor.prototype.drawEyes = function(){
+    if (this.timer % 20 === 0){
+        this.particleManager.createPremade('RedEyeBig', {
+            position: this.position,
+            positionZ: this.positionZ - 8.2,
+            angle: this.angle,
+            angleOffset: 0,
+            distance: 1.65
+        });
     }
-
-    if (this.eyeAngle < -this.eyeEdge){
-        this.eyeGoingRight = true;
-    }
-
-    this.eyeAngle += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
-
-    this.particleManager.createPremade('PurpleEye', {
-        position: this.position,
-        positionZ: this.positionZ - 7.4,
-        angle: this.angle,
-        angleOffset: this.eyeAngle,
-        distance: 2.3
-    });
 };
 
 
-module.exports = SniperActor;
+module.exports = OrbotActor;
