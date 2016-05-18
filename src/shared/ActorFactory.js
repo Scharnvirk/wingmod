@@ -15,7 +15,8 @@ var idMap = {
     RINGPROJECTILE: 104,
     MAP: 1000,
     ENEMYSPAWNER: 1001,
-    ENEMYSPAWNMARKER: 1002
+    ENEMYSPAWNMARKER: 1002,
+    DEBUG: 99999
 };
 
 function ActorFactory(context, actorDependencies){
@@ -36,6 +37,7 @@ function ActorFactory(context, actorDependencies){
     ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
     ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
     ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
+    ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
 
     this.actorDependencies = actorDependencies;
     this.actorMap = {
@@ -56,6 +58,7 @@ function ActorFactory(context, actorDependencies){
         [idMap.MAP]: ActorFactory.MapActor,
         [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
         [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
+        [idMap.DEBUG]: ActorFactory.DebugActor,
     };
 }
 

@@ -27,53 +27,46 @@ GameScene.prototype.fillScene = function(mapBodies){
     });
 
     this.addMapBodies(mapBodies);
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ORBOT,
-    //     positionX: -50,
-    //     positionY: 0,
-    //     angle: 0
-    // });
 
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -174,
-    //     positionY: 0,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -174,
-    //     positionY: 352,
-    //     angle: 0
-    // });
-    
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: -220,
+        positionX: -704,
+        positionY: -132,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
-        positionY: 570,
+        positionY: 220,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: -220,
+        positionX: 352,
+        positionY: 132,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: 570,
+        positionX: 704,
+        positionY: -132,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 132,
+        positionY: -704,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 572,
+        positionY: -704,
         angle: 0
     });
 

@@ -18,6 +18,8 @@ function AiImageRenderer(){
 
 AiImageRenderer.prototype.debugDraw = function(){
     document.body.insertBefore(this.canvas, document.getElementById('react-content'));
+    this.canvas.style.position = 'absolute';
+    this.canvas.style.zIndex = 9999;
 };
 
 AiImageRenderer.prototype.createCanvas = function(){
@@ -62,10 +64,12 @@ AiImageRenderer.prototype.drawObject = function(object){
                 this.drawConvex(object);
                 break;
         }
-    }    
+    }
 };
 
 AiImageRenderer.prototype.drawBox = function(boxDataObject){
+    console.log(boxDataObject);
+
     let objectsPosition = boxDataObject.position;
     let halfWidth = (boxDataObject.width / 2) * this.lengthMultiplierX;
     let halfHeight = (boxDataObject.height / 2) * this.lengthMultiplierY;
@@ -92,26 +96,26 @@ AiImageRenderer.prototype.drawConvex = function(convexDataObject){
 
     let pos = convexDataObject.position;
     pos[0] *= this.lengthMultiplierX;
-    pos[1] *= this.lengthMultiplierX;
+    pos[1] *= this.lengthMultiplierY;
 
     dc.translate(pos[0], pos[1]);
     dc.rotate(convexDataObject.angle);
 
     dc.moveTo(
         convexDataObject.vertices[0][0] * this.lengthMultiplierX,
-        convexDataObject.vertices[0][1] * this.lengthMultiplierX
+        convexDataObject.vertices[0][1] * this.lengthMultiplierY
     );
     for(let i = 1; i < convexDataObject.vertices.length; i++){
         dc.lineTo(
             convexDataObject.vertices[i][0] * this.lengthMultiplierX,
-            convexDataObject.vertices[i][1] * this.lengthMultiplierX
+            convexDataObject.vertices[i][1] * this.lengthMultiplierY
         );
     }
 
     dc.closePath();
     dc.fill();
 
-    dc.rotate(convexDataObject.angle);
+    dc.rotate(-convexDataObject.angle);
     dc.translate(-pos[0], -pos[1]);
 };
 
