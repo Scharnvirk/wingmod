@@ -1,3 +1,5 @@
+var ActorFactory = require("shared/ActorFactory")('logic');
+
 function BaseActor(config){
     Object.assign(this, config);
 
@@ -81,6 +83,16 @@ BaseActor.prototype.processMovement = function(){
     if(this.horizontalThrust !== 0){
         this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
     }
+};
+
+BaseActor.prototype.drawDebug = function(position){
+    this.manager.addNew({
+        classId: ActorFactory.DEBUG,
+        positionX: position[0],
+        positionY: position[1],
+        angle: 0,
+        velocity: 0
+    });
 };
 
 module.exports = BaseActor;

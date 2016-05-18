@@ -5,7 +5,6 @@ function BaseBrain(config){
 
     if(!this.actor) throw new Error('No actor for a Brain!');
     if(!this.manager) throw new Error('No manager for a Brain!');
-    if(!this.playerActor) throw new Error('No playerActor for a Brain!');
 
     this.orders = {
         thrust: 0, //backward < 0; forward > 0

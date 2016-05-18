@@ -76,11 +76,14 @@ OrbotActor.prototype.lookAtPosition = function(position){
     }
 };
 
-OrbotActor.prototype.createBrain = function(){
+OrbotActor.prototype.createBrain = function(config){
     return new MookBrain({
         actor: this,
         manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor()
+        playerActor: this.manager.getFirstPlayerActor(),
+        shootingArc: 30,
+        nearDistance: 10,
+        farDistance: 30
     });
 };
 

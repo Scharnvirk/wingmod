@@ -1,10 +1,13 @@
 var BaseBrain = require("logic/actor/component/ai/BaseBrain");
 
 function MookBrain(config){
+
+    config.shootingArc = config.shootingArc || 15;
+    config.nearDistance = config.nearDistance || 40;
+    config.farDistance = config.farDistance || 90;
+
     Object.assign(this, config);
     BaseBrain.apply(this, arguments);
-
-    this.SHOOTING_ARC = 15;
 
     this.timer = 0;
     this.activationTime = Utils.rand(100,150);
@@ -43,29 +46,32 @@ MookBrain.prototype.createWallDetectionParameters = function(){
 
 
 MookBrain.prototype.update = function(){
-    this.timer ++;
+    if(this.playerActor && this.playerActor.body){
+        this.timer ++;
 
-    if (this.timer % 30 === 0){
-        this.preferredTurn *= -1;
-    }
+        if (this.timer % 30 === 0){
+            this.preferredTurn *= -1;
+        }
 
-    var nearbyWalls = this.detectNearbyWallsFast();
+        var nearbyWalls = this.detectNearbyWallsFast();
 
-    if (this.isWallBetween(this.actor.body.position, this.playerActor.body.position)){
-        if (this.gotoPoint){
-            if (!this.isWallBetween(this.actor.body.position, this.gotoPoint)) {
-                this.seesGotoPointAction(nearbyWalls);
+        if (this.isWallBetween(this.actor.body.position, this.playerActor.body.position)){
+            if (this.gotoPoint){
+                if (!this.isWallBetween(this.actor.body.position, this.gotoPoint)) {
+                    this.seesGotoPointAction(nearbyWalls);
+                } else {
+                    this.gotoPoint = null;
+                    this.freeRoamActon(nearbyWalls);
+                }
             } else {
                 this.freeRoamActon(nearbyWalls);
             }
         } else {
-            this.freeRoamActon(nearbyWalls);
+            this.seesPlayerAction();
         }
-    } else {
-        this.seesPlayerAction();
-    }
 
-    this.avoidWalls(nearbyWalls);
+        this.avoidWalls(nearbyWalls);
+    }
 };
 
 //ugly as hell, but works way faster than iterating over object with for..in structure.
@@ -138,8 +144,8 @@ MookBrain.prototype.seesPlayerAction = function(){
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
 
     this.orders.thrust = 0;
-    if (distance > 90) this.orders.thrust = 1;
-    if (distance < 40) this.orders.thrust = -1;
+    if (distance > this.farDistance) this.orders.thrust = 1;
+    if (distance < this.nearDistance) this.orders.thrust = -1;
 
     this.orders.turn = 0;
 
@@ -176,7 +182,7 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
 
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.gotoPoint[0], this.actor.body.position[1], this.gotoPoint[1]);
 
-    if (distance < 30){
+    if (distance < 20){
         this.gotoPoint = null;
     }
 
@@ -194,7 +200,7 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
 };
 
 MookBrain.prototype.shootAction = function(distance = 0){
-    this.orders.shoot = Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.SHOOTING_ARC);
+    this.orders.shoot = Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.shootingArc);
 };
 
 MookBrain.prototype.randomStrafeAction = function(){

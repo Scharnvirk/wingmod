@@ -38,17 +38,3 @@ MapChunk.prototype.createShapes = function(){
 };
 
 module.exports = MapChunk;
-
-
-/*
-return new p2.Convex({
-    vertices: this.vertices,
-    collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
-    collisionMask:
-        Constants.COLLISION_GROUPS.OBJECT |
-        Constants.COLLISION_GROUPS.ENEMY |
-        Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-        Constants.COLLISION_GROUPS.SHIP |
-        Constants.COLLISION_GROUPS.ENEMYPROJECTILE
-});
-*/

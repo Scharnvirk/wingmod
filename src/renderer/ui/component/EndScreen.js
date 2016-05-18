@@ -11,6 +11,9 @@ class EndScreen extends React.Component {
             <StyledText style={'smallText'}>
                 {this.props.scoreText}
             </StyledText>
+            <StyledText style={'smallText'}>
+                {'Press F5 to restart'}
+            </StyledText>
         </div>;
     }
 }
