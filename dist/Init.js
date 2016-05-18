@@ -4348,12 +4348,13 @@ var ChunkList = {
     }, {
         model: levelPath + '/chunk_HangarCorner_1.json',
         hitmap: levelPath + '/chunk_HangarCorner_1_hitmap.json'
-    }, {
-        model: levelPath + '/chunk_Hangar_SmallCross_1.json',
-        hitmap: levelPath + '/chunk_Hangar_SmallCross_1_hitmap.json'
     }]
 };
 
+// {
+//     model: levelPath + '/chunk_Hangar_SmallCross_1.json',
+//     hitmap: levelPath + '/chunk_Hangar_SmallCross_1_hitmap.json'
+// }
 module.exports = ChunkList;
 
 },{}],68:[function(require,module,exports){
