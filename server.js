@@ -49,7 +49,7 @@ var SampleApp = function() {
 
         self.zcache['/fonts/Oswald-Regular.ttf'] = fs.readFileSync('./fonts/Oswald-Regular.ttf');
 
-		self.zcache['/lib/three73.js'] = fs.readFileSync('./lib/three73.js');
+		self.zcache['/lib/three75.js'] = fs.readFileSync('./lib/three75.js');
         self.zcache['/lib/react.js'] = fs.readFileSync('./lib/react.js');
         self.zcache['/lib/react-dom.js'] = fs.readFileSync('./lib/react-dom.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
@@ -87,6 +87,8 @@ var SampleApp = function() {
         self.zcache['/models/levels/chunk_Hangar_SmallCross_1.json'] = fs.readFileSync('./models/levels/chunk_Hangar_SmallCross_1.json');
         self.zcache['/models/levels/chunk_Hangar_SmallCross_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_Hangar_SmallCross_1_hitmap.json');
         self.zcache['/models/levels/map_256_B.png'] = fs.readFileSync('./models/levels/map_256_B.png');
+        self.zcache['/models/levels/map_256_I.png'] = fs.readFileSync('./models/levels/map_256_I.png');
+        self.zcache['/models/levels/map_256_S.png'] = fs.readFileSync('./models/levels/map_256_S.png');
         self.zcache['/models/levels/map_256.png'] = fs.readFileSync('./models/levels/map_256.png');
 
         self.zcache['/dist/Init.js'] = fs.readFileSync('./dist/Init.js');
@@ -158,7 +160,7 @@ var SampleApp = function() {
 
         self.routes['/fonts/Oswald-Regular.ttf'] = function(req, res) {res.send(self.cache_get('/fonts/Oswald-Regular.ttf') );};
 
-		self.routes['/lib/three73.js'] = function(req, res) {res.send(self.cache_get('/lib/three73.js') );};
+		self.routes['/lib/three75.js'] = function(req, res) {res.send(self.cache_get('/lib/three75.js') );};
         self.routes['/lib/react.js'] = function(req, res) {res.send(self.cache_get('/lib/react.js') );};
         self.routes['/lib/react-dom.js'] = function(req, res) {res.send(self.cache_get('/lib/react-dom.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
@@ -198,6 +200,8 @@ var SampleApp = function() {
         self.routes['/models/levels/chunk_Hangar_SmallCross_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_Hangar_SmallCross_1.json') );};
         self.routes['/models/levels/map_256.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256.png') );};
         self.routes['/models/levels/map_256_B.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_B.png') );};
+        self.routes['/models/levels/map_256_I.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_I.png') );};
+        self.routes['/models/levels/map_256_S.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_S.png') );};
 
 		self.routes['/dist/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/Init.js') );};
         self.routes['/dist/LogicInit.js'] = function(req, res) {res.send(self.cache_get('/dist/LogicInit.js') );};

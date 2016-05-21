@@ -16,9 +16,9 @@
     "materials": [{
          "colorEmissive": [0,0,0],
          "transparent": false,
-         "colorDiffuse": [0.5,0.5,0.5],
+         "colorDiffuse": [0.52,0.52,0.52],
          "blending": "NormalBlending",
-         "colorSpecular": [0.2,0.2,0.2],
+         "colorSpecular": [0.4,0.4,0.4],
          "opacity": 1,
          "shading": "phong",
          "depthWrite": true,

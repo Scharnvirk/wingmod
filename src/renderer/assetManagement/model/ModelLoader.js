@@ -17,7 +17,7 @@ ModelLoader.prototype.loadModels = function(modelPaths){
                     material: material
                 };
                 resolve();
-            }, this.getDefaultTexturePath(modelPath));
+            }, function(){}, function(){});
         });
     })).then(this.doneAction.bind(this));
 };

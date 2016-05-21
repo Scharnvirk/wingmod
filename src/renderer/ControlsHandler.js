@@ -1,3 +1,5 @@
+var PubSub = require('pubsub-js');
+
 function ControlsHandler(config){
     if(!config.inputListener) throw new Error('No inputListener specified for the handler!');
     if(!config.logicBus) throw new Error('No logic bus specified for the handler!');
@@ -9,6 +11,8 @@ function ControlsHandler(config){
     this.oldInputState = {};
     this.inputState =  {};
 
+    this.hudKeys = ['shift'];
+
     this.camera = config.camera;
 }
 
@@ -16,18 +20,42 @@ ControlsHandler.prototype.update = function(){
     Object.assign(this.oldInputState, this.inputState);
     Object.assign(this.inputState, this.inputListener.inputState);
 
-    var changed = false;
-    for (let key in this.inputState){
-        if(this.inputState[key] != this.oldInputState[key]){
-            changed = true;
-        }
+    var changed = this.hasInputStateChanged();
+
+    var hudKeys = this.getChangedHudKeys();
+    if (hudKeys) {
+        PubSub.publish('hud', hudKeys);
     }
 
     if(changed) this.sendUpdate();
 };
 
+ControlsHandler.prototype.hasInputStateChanged = function(){
+    var changed = false;
+    for (let key in this.inputState){
+        if(this.inputState[key] != this.oldInputState[key]){
+            changed = true;
+            break;
+        }
+    }
+    return changed;
+};
+
+ControlsHandler.prototype.getChangedHudKeys = function(){
+    var hudKeys = {};
+    for (let key in this.hudKeys){
+        let value = this.hudKeys[key];
+        if(this.inputState[value] != this.oldInputState[value]){
+            hudKeys[value] = this.inputState[value];
+        }
+    }
+    return Object.keys(hudKeys).length > 0 ? hudKeys : null;
+};
+
 ControlsHandler.prototype.sendUpdate = function(){
     this.logicBus.postMessage('inputState', this.inputState);
 };
+
+
 
 module.exports = ControlsHandler;

@@ -2,13 +2,34 @@ var fs = require('fs');
 
 BlenderExportFinisher = function(){
     this.propertiesToAlter = {
-        transparent: false,
-        DbgColor: null,
-        DbgName: null,
-        mapBumpScale: null,
-        colorSpecular: [0.1, 0.1, 0.1],
-        specularCoef: 50,
-        mapBump:"map_256_B.png"
+        mapSpecularWrap:["RepeatWrapping","RepeatWrapping"],
+        mapDiffuseRepeat:[1,1],
+        transparent:false,
+        mapDiffuse:"map_256.png",
+        DbgIndex:0,
+        mapBump:"map_256_B.png",
+        wireframe:false,
+        opacity:1,
+        depthWrite:true,
+        mapSpecularAnisotropy:0,
+        mapBumpWrap:["RepeatWrapping","RepeatWrapping"],
+        colorEmissive:[1,1,1],
+        mapDiffuseAnisotropy:1,
+        blending:"NormalBlending",
+        colorDiffuse:[0.4,0.4,0.4],
+        mapSpecularRepeat:[1,1],
+        mapBumpAnisotropy:0,
+        mapSpecular:"map_256_S.png",
+        mapEmissive:"map_256_I.png",
+        mapLightAnisotropy:0,
+        mapLightWrap:["RepeatWrapping","RepeatWrapping"],
+        visible:true,
+        colorSpecular:[0.3,0.3,0.3],
+        shading:"phong",
+        specularCoef:50,
+        mapDiffuseWrap:["RepeatWrapping","RepeatWrapping"],
+        depthTest:true,
+        mapEmissiveAnisotropy:0
     };
 
     this.fileName = process.argv[2];

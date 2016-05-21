@@ -24,6 +24,7 @@ class InputListener{
             38: 'up',
             39: 'right',
             40: 'down',
+            16: 'shift',
             1001: 'scrollUp',
             1002: 'scrollDown',
             1003: 'mouseLeft',

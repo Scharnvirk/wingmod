@@ -48,7 +48,7 @@ Hud.prototype.drawHealthBar = function(otherActor){
             colorR: i >= hpPercentage * hpBarCount ? 1 : 0,
             colorG: i < hpPercentage * hpBarCount ? 1 : 0,
             colorB: 0,
-            scale: 1,
+            scale: 0.75,
             alpha: 1,
             alphaMultiplier: 1,
             particleVelocity: 0,

@@ -4,6 +4,7 @@ var StartScreen = require('renderer/ui/component/StartScreen');
 var EndScreen = require('renderer/ui/component/EndScreen');
 var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
+var Hud = require('renderer/ui/component/hud/Hud');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
@@ -34,6 +35,7 @@ var InitialView = React.createClass({
         return <div>
             <FullScreenEffect blur={blurState}>
                 <Viewport/>
+                <Hud/>
             </FullScreenEffect>
             {UIcontent}
         </div>;

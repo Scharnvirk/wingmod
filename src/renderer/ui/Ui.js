@@ -8,7 +8,11 @@ function Ui(config){
 
     this.configState = {};
 
-    var listener = PubSub.subscribe( 'buttonClick', (msg, data) => {
+    this.setupButtonListener();
+}
+
+Ui.prototype.setupButtonListener = function(){
+    PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
             case 'start':
                 this.onStartButtonClick();
@@ -27,7 +31,7 @@ function Ui(config){
                 break;
         }
     } );
-}
+};
 
 Ui.prototype.startGame = function(){
     if(!this.gameCore){

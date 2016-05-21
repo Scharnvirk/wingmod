@@ -29,14 +29,31 @@ GameScene.prototype.make = function() {
     this.directionalLight.color = this.initialColor;
 
     this.directionalLight.castShadow = this.shadows;
-    this.directionalLight.shadowCameraNear = 1;
-    this.directionalLight.shadowCameraFar = 400;
-    this.directionalLight.shadowMapWidth = 2048;
-    this.directionalLight.shadowMapHeight = 2048;
-    this.directionalLight.shadowBias = 0;
-    this.directionalLight.shadowDarkness = 0.4;
+
+    var shadowCamera = this.directionalLight.shadow.camera;
+
+    shadowCamera.near = 1;
+    shadowCamera.far = 400;
+    shadowCamera.left = 400;
+    shadowCamera.right = -400;
+    shadowCamera.top = 400;
+    shadowCamera.bottom = -400;
+
+    this.directionalLight.shadow.mapSize.height = 2048;
+    this.directionalLight.shadow.mapSize.width = 2048;
+    //
+    // this.directionalLight.shadowCameraNear = 1;
+    // this.directionalLight.shadowCameraFar = 400;
+    // this.directionalLight.shadowMapWidth = 2048;
+    // this.directionalLight.shadowMapHeight = 2048;
+    this.directionalLight.shadow.bias = -0.007;
+    // this.directionalLight.shadowDarkness = 0.4;
 
     this.scene.add( this.directionalLight );
+
+    this.ambientLight = new THREE.AmbientLight( 0x505050, 1 );
+
+    this.scene.add( this.ambientLight);
 
     this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
 
