@@ -16,6 +16,7 @@ function BaseActor(config){
     this.rotationForce = 0;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.applyConfig = function(config){

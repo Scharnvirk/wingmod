@@ -106,6 +106,7 @@ ActorManager.prototype.secondaryActorUpdate = function(messageObject){
         let actor = this.storage[actorId];
         if (actor){
             Object.assign(actor, actorData[actorId]);
+            actor.secondaryUpdateFromLogic(actorData[actorId]);
         }
     }
 };

@@ -77,6 +77,11 @@ var SampleApp = function() {
         self.zcache['/models/orbot.json'] = fs.readFileSync('./models/orbot.json');
         self.zcache['/models/orbot.png'] = fs.readFileSync('./models/orbot.png');
         self.zcache['/models/orbot_B.png'] = fs.readFileSync('./models/orbot_B.png');
+        self.zcache['/models/telering_B.png'] = fs.readFileSync('./models/telering_B.png');
+        self.zcache['/models/telering_I.png'] = fs.readFileSync('./models/telering_I.png');
+        self.zcache['/models/telering.png'] = fs.readFileSync('./models/telering.png');
+        self.zcache['/models/telering_bottom.json'] = fs.readFileSync('./models/telering_bottom.json');
+        self.zcache['/models/telering_top.json'] = fs.readFileSync('./models/telering_top.json');
 
         self.zcache['/models/levels/chunk_HangarStraight_SideSmall_1.json'] = fs.readFileSync('./models/levels/chunk_HangarStraight_SideSmall_1.json');
         self.zcache['/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json'] = fs.readFileSync('./models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json');
@@ -189,6 +194,11 @@ var SampleApp = function() {
         self.routes['/models/orbot.json'] = function(req, res) {res.send(self.cache_get('/models/orbot.json') );};
         self.routes['/models/orbot.png'] = function(req, res) {res.send(self.cache_get('/models/orbot.png') );};
         self.routes['/models/orbot_B.png'] = function(req, res) {res.send(self.cache_get('/models/orbot_B.png') );};
+        self.routes['/models/telering_B.png'] = function(req, res) {res.send(self.cache_get('/models/telering_B.png') );};
+        self.routes['/models/telering_I.png'] = function(req, res) {res.send(self.cache_get('/models/telering_I.png') );};
+        self.routes['/models/telering.png'] = function(req, res) {res.send(self.cache_get('/models/telering.png') );};
+        self.routes['/models/telering_bottom.json'] = function(req, res) {res.send(self.cache_get('/models/telering_bottom.json') );};
+        self.routes['/models/telering_top.json'] = function(req, res) {res.send(self.cache_get('/models/telering_top.json') );};
 
         self.routes['/models/levels/chunk_HangarStraight_SideSmall_1.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarStraight_SideSmall_1.json') );};
         self.routes['/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json'] = function(req, res) {res.send(self.cache_get('/models/levels/chunk_HangarStraight_SideSmall_1_hitmap.json') );};

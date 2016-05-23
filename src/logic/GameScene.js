@@ -29,46 +29,76 @@ GameScene.prototype.fillScene = function(mapBodies){
     this.addMapBodies(mapBodies);
 
     this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -704,
-        positionY: -132,
-        angle: 0
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: 0,
+       positionY: 221,
+       angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: 220,
-        angle: 0
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: 0,
+       positionY: -414,
+       angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 352,
-        positionY: 132,
-        angle: 0
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: -352,
+       positionY: 414,
+       angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 704,
-        positionY: -132,
-        angle: 0
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: -352,
+       positionY: -221,
+       angle: Utils.degToRad(0)
     });
 
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 132,
-        positionY: -704,
-        angle: 0
-    });
 
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 572,
-        positionY: -704,
-        angle: 0
-    });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -704,
+    //     positionY: -132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -352,
+    //     positionY: 220,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 352,
+    //     positionY: 132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 704,
+    //     positionY: -132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 132,
+    //     positionY: -704,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 572,
+    //     positionY: -704,
+    //     angle: 0
+    // });
 
 };
 

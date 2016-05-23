@@ -377,45 +377,74 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -704,
-        positionY: -132,
-        angle: 0
+        positionX: 0,
+        positionY: 221,
+        angle: Utils.degToRad(180)
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -414,
+        angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
-        positionY: 220,
-        angle: 0
+        positionY: 414,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 352,
-        positionY: 132,
-        angle: 0
+        positionX: -352,
+        positionY: -221,
+        angle: Utils.degToRad(0)
     });
 
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 704,
-        positionY: -132,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 132,
-        positionY: -704,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 572,
-        positionY: -704,
-        angle: 0
-    });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -704,
+    //     positionY: -132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: -352,
+    //     positionY: 220,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 352,
+    //     positionY: 132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 704,
+    //     positionY: -132,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 132,
+    //     positionY: -704,
+    //     angle: 0
+    // });
+    //
+    // this.actorManager.addNew({
+    //     classId: ActorFactory.ENEMYSPAWNER,
+    //     positionX: 572,
+    //     positionY: -704,
+    //     angle: 0
+    // });
 };
 
 GameScene.prototype.update = function () {
@@ -681,7 +710,8 @@ ActorManager.prototype.buildSecondaryUpdateTransferData = function () {
         var actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
         if (actor) {
             transferData[this.actorIdsToSendUpdateAbout[i]] = {
-                hp: actor.hp
+                hp: actor.hp,
+                customParams: actor.customParams
             };
         }
     }
@@ -711,6 +741,7 @@ function BaseActor(config) {
     this.rotationForce = 0;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.applyConfig = function (config) {
@@ -1966,6 +1997,11 @@ function EnemySpawnerActor(config) {
     this.spawnDelay = 0;
 
     this.maxSpawnRate = 240;
+
+    this.applyConfig({
+        hp: 300,
+        removeOnHit: false
+    });
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -1989,16 +2025,40 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
         angle: 0,
         velocity: 0
     });
+    this.customParams.spawnDelay = this.spawnDelay;
+    this.notifyManagerOfUpdate();
 };
 
 EnemySpawnerActor.prototype.createBody = function () {
     return new BaseBody({
         shape: new p2.Circle({
-            radius: 1,
-            collisionGroup: null,
-            collisionMask: null
+            radius: 8,
+            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIPEXPLOSION
         })
     });
+};
+
+EnemySpawnerActor.prototype.onDeath = function () {
+    for (var i = 0; i < 40; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(0, 150)
+        });
+    }
+    for (var i = 0; i < 10; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.BOOMCHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(0, 50)
+        });
+    }
+    this.body.dead = true;
 };
 
 module.exports = EnemySpawnerActor;
@@ -2549,28 +2609,16 @@ MapBuilder.prototype.buildMap = function () {
     if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map builder has no chunks yet and is not ready!');
 
     this.mapLayout = [{
-        name: 'chunk_HangarCorner_1',
-        position: [0, 2],
+        name: 'chunk_HangarEndcap_1',
+        position: [-2, 1],
         rotation: 90
     }, {
         name: 'chunk_HangarCorner_1',
-        position: [1, 2],
-        rotation: 0
-    }, {
-        name: 'chunk_HangarEndcap_1',
         position: [-1, 1],
         rotation: 0
     }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [0, 1],
-        rotation: 180
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [1, 1],
-        rotation: 0
-    }, {
         name: 'chunk_HangarEndcap_1',
-        position: [-2, 0],
+        position: [0, 1],
         rotation: 0
     }, {
         name: 'chunk_HangarStraight_SideSmall_1',
@@ -2582,43 +2630,15 @@ MapBuilder.prototype.buildMap = function () {
         rotation: 0
     }, {
         name: 'chunk_HangarEndcap_1',
-        position: [1, 0],
-        rotation: 180
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [2, 0],
-        rotation: 0
-    }, {
-        name: 'chunk_HangarCorner_1',
-        position: [-2, -1],
-        rotation: 180
-    }, {
-        name: 'chunk_HangarCorner_1',
         position: [-1, -1],
-        rotation: 270
+        rotation: 180
     }, {
         name: 'chunk_HangarCorner_1',
         position: [0, -1],
         rotation: 180
     }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
+        name: 'chunk_HangarEndcap_1',
         position: [1, -1],
-        rotation: 90
-    }, {
-        name: 'chunk_HangarCorner_1',
-        position: [2, -1],
-        rotation: 270
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [0, -2],
-        rotation: 90
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [1, -2],
-        rotation: 270
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [2, -2],
         rotation: 270
     }];
 
@@ -2759,6 +2779,7 @@ function BaseActor(config, actorDependencies) {
     this.hp = Infinity;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.update = function (delta) {
@@ -2781,7 +2802,7 @@ BaseActor.prototype.update = function (delta) {
 
 BaseActor.prototype.customUpdate = function () {};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function () {};
+BaseActor.prototype.secondaryUpdateFromLogic = function (data) {};
 
 BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
@@ -3379,16 +3400,38 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 module.exports = EnemySpawnMarkerActor;
 
 },{"renderer/actor/BaseActor":41}],54:[function(require,module,exports){
-'use strict';
+"use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function EnemySpawnerActor(config) {
     Object.apply(this, config);
     BaseActor.apply(this, arguments);
+
+    this.bottomMesh = this.createBottomMesh();
+    this.topMesh = this.createTopMesh();
+    this.setupMeshes();
+
+    this.rotationSpeed = 0;
+
+    this.initialHp = 300;
+    this.hp = 300;
+    this.hpBarCount = 30;
 }
 
 EnemySpawnerActor.extend(BaseActor);
+
+EnemySpawnerActor.prototype.onSpawn = function () {
+    this.manager.newEnemy(this.actorId);
+};
+
+EnemySpawnerActor.prototype.onDeath = function () {
+    this.manager.enemyDestroyed(this.actorId);
+    this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
+    this.manager.requestUiFlash('white');
+};
 
 EnemySpawnerActor.prototype.customUpdate = function () {
     this.particleManager.createParticle('particleAddTrail', {
@@ -3420,9 +3463,75 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     });
 };
 
+EnemySpawnerActor.prototype.createBottomMesh = function () {
+    return new BaseMesh({
+        actor: this,
+        scaleX: 3,
+        scaleY: 3,
+        scaleZ: 3,
+        geometry: ModelStore.get('telering_bottom').geometry,
+        material: ModelStore.get('telering_bottom').material
+    });
+};
+
+EnemySpawnerActor.prototype.createTopMesh = function () {
+    return new BaseMesh({
+        actor: this,
+        scaleX: 3,
+        scaleY: 3,
+        scaleZ: 3,
+        geometry: ModelStore.get('telering_top').geometry,
+        material: ModelStore.get('telering_top').material
+    });
+};
+
+EnemySpawnerActor.prototype.setupMeshes = function () {
+    this.bottomMesh.positionX = 10;
+    this.topMesh.positionX = 10;
+    this.bottomMesh.material.emissiveIntensity = 0;
+    this.topMesh.material.emissiveIntensity = 0;
+};
+
+EnemySpawnerActor.prototype.update = function () {
+    this.timer++;
+
+    this.bottomMesh.update();
+    this.topMesh.update();
+
+    this.doChargingAnimation();
+
+    this.customUpdate();
+};
+
+EnemySpawnerActor.prototype.addToScene = function (scene) {
+    scene.add(this.bottomMesh);
+    scene.add(this.topMesh);
+};
+
+EnemySpawnerActor.prototype.removeFromScene = function (scene) {
+    scene.remove(this.bottomMesh);
+    scene.remove(this.topMesh);
+};
+
+EnemySpawnerActor.prototype.doChargingAnimation = function () {
+    if (this.customParams.spawnDelay > 0) {
+        this.customParams.spawnDelay--;
+        if (this.rotationSpeed < 0.25) {
+            this.rotationSpeed += 0.0015;
+        }
+    } else {
+        if (this.rotationSpeed > 0.006) {
+            this.rotationSpeed -= 0.003;
+        }
+    }
+    this.bottomMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    this.topMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    this.topMesh.rotation.y += this.rotationSpeed;
+};
+
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":41}],55:[function(require,module,exports){
+},{"renderer/actor/BaseActor":41,"renderer/actor/component/mesh/BaseMesh":43,"renderer/assetManagement/model/ModelStore":66}],55:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");

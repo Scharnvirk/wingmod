@@ -20,6 +20,7 @@ function BaseActor(config, actorDependencies){
     this.hp = Infinity;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.update = function(delta){
@@ -42,7 +43,7 @@ BaseActor.prototype.update = function(delta){
 
 BaseActor.prototype.customUpdate = function(){};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function(){};
+BaseActor.prototype.secondaryUpdateFromLogic = function(data){};
 
 BaseActor.prototype.updateFromLogic = function(positionX, positionY, angle){
     this.logicPreviousPosition[0] = this.logicPosition[0];

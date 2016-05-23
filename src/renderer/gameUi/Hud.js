@@ -44,7 +44,7 @@ Hud.prototype.drawHealthBar = function(otherActor){
         this.particleManager.createParticle('particleAddHUDSquare', {
             positionX: otherActor.position[0] + offsetPosition[0],
             positionY: otherActor.position[1] + offsetPosition[1],
-            positionZ: otherActor !== this.actor ? -5 : -Constants.DEFAULT_POSITION_Z,
+            positionZ: otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z,
             colorR: i >= hpPercentage * hpBarCount ? 1 : 0,
             colorG: i < hpPercentage * hpBarCount ? 1 : 0,
             colorB: 0,

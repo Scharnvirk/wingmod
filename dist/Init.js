@@ -387,6 +387,7 @@ function BaseActor(config) {
     this.rotationForce = 0;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.applyConfig = function (config) {
@@ -1642,6 +1643,11 @@ function EnemySpawnerActor(config) {
     this.spawnDelay = 0;
 
     this.maxSpawnRate = 240;
+
+    this.applyConfig({
+        hp: 300,
+        removeOnHit: false
+    });
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -1665,16 +1671,40 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
         angle: 0,
         velocity: 0
     });
+    this.customParams.spawnDelay = this.spawnDelay;
+    this.notifyManagerOfUpdate();
 };
 
 EnemySpawnerActor.prototype.createBody = function () {
     return new BaseBody({
         shape: new p2.Circle({
-            radius: 1,
-            collisionGroup: null,
-            collisionMask: null
+            radius: 8,
+            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+            collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIPEXPLOSION
         })
     });
+};
+
+EnemySpawnerActor.prototype.onDeath = function () {
+    for (var i = 0; i < 40; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(0, 150)
+        });
+    }
+    for (var i = 0; i < 10; i++) {
+        this.manager.addNew({
+            classId: ActorFactory.BOOMCHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(0, 50)
+        });
+    }
+    this.body.dead = true;
 };
 
 module.exports = EnemySpawnerActor;
@@ -2863,6 +2893,7 @@ ActorManager.prototype.secondaryActorUpdate = function (messageObject) {
         var actor = this.storage[actorId];
         if (actor) {
             Object.assign(actor, actorData[actorId]);
+            actor.secondaryUpdateFromLogic(actorData[actorId]);
         }
     }
 };
@@ -2909,6 +2940,7 @@ function BaseActor(config, actorDependencies) {
     this.hp = Infinity;
 
     this.timer = 0;
+    this.customParams = {};
 }
 
 BaseActor.prototype.update = function (delta) {
@@ -2931,7 +2963,7 @@ BaseActor.prototype.update = function (delta) {
 
 BaseActor.prototype.customUpdate = function () {};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function () {};
+BaseActor.prototype.secondaryUpdateFromLogic = function (data) {};
 
 BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
@@ -3529,16 +3561,38 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 module.exports = EnemySpawnMarkerActor;
 
 },{"renderer/actor/BaseActor":40}],53:[function(require,module,exports){
-'use strict';
+"use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function EnemySpawnerActor(config) {
     Object.apply(this, config);
     BaseActor.apply(this, arguments);
+
+    this.bottomMesh = this.createBottomMesh();
+    this.topMesh = this.createTopMesh();
+    this.setupMeshes();
+
+    this.rotationSpeed = 0;
+
+    this.initialHp = 300;
+    this.hp = 300;
+    this.hpBarCount = 30;
 }
 
 EnemySpawnerActor.extend(BaseActor);
+
+EnemySpawnerActor.prototype.onSpawn = function () {
+    this.manager.newEnemy(this.actorId);
+};
+
+EnemySpawnerActor.prototype.onDeath = function () {
+    this.manager.enemyDestroyed(this.actorId);
+    this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
+    this.manager.requestUiFlash('white');
+};
 
 EnemySpawnerActor.prototype.customUpdate = function () {
     this.particleManager.createParticle('particleAddTrail', {
@@ -3570,9 +3624,75 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     });
 };
 
+EnemySpawnerActor.prototype.createBottomMesh = function () {
+    return new BaseMesh({
+        actor: this,
+        scaleX: 3,
+        scaleY: 3,
+        scaleZ: 3,
+        geometry: ModelStore.get('telering_bottom').geometry,
+        material: ModelStore.get('telering_bottom').material
+    });
+};
+
+EnemySpawnerActor.prototype.createTopMesh = function () {
+    return new BaseMesh({
+        actor: this,
+        scaleX: 3,
+        scaleY: 3,
+        scaleZ: 3,
+        geometry: ModelStore.get('telering_top').geometry,
+        material: ModelStore.get('telering_top').material
+    });
+};
+
+EnemySpawnerActor.prototype.setupMeshes = function () {
+    this.bottomMesh.positionX = 10;
+    this.topMesh.positionX = 10;
+    this.bottomMesh.material.emissiveIntensity = 0;
+    this.topMesh.material.emissiveIntensity = 0;
+};
+
+EnemySpawnerActor.prototype.update = function () {
+    this.timer++;
+
+    this.bottomMesh.update();
+    this.topMesh.update();
+
+    this.doChargingAnimation();
+
+    this.customUpdate();
+};
+
+EnemySpawnerActor.prototype.addToScene = function (scene) {
+    scene.add(this.bottomMesh);
+    scene.add(this.topMesh);
+};
+
+EnemySpawnerActor.prototype.removeFromScene = function (scene) {
+    scene.remove(this.bottomMesh);
+    scene.remove(this.topMesh);
+};
+
+EnemySpawnerActor.prototype.doChargingAnimation = function () {
+    if (this.customParams.spawnDelay > 0) {
+        this.customParams.spawnDelay--;
+        if (this.rotationSpeed < 0.25) {
+            this.rotationSpeed += 0.0015;
+        }
+    } else {
+        if (this.rotationSpeed > 0.006) {
+            this.rotationSpeed -= 0.003;
+        }
+    }
+    this.bottomMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    this.topMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    this.topMesh.rotation.y += this.rotationSpeed;
+};
+
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":40}],54:[function(require,module,exports){
+},{"renderer/actor/BaseActor":40,"renderer/actor/component/mesh/BaseMesh":42,"renderer/assetManagement/model/ModelStore":74}],54:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -4672,7 +4792,7 @@ module.exports = CustomModelBuilder;
 'use strict';
 
 var ModelList = {
-    models: ['/models/ship.json', '/models/ravier.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json']
+    models: ['/models/ship.json', '/models/ravier.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json']
 };
 
 module.exports = ModelList;
@@ -4812,7 +4932,7 @@ Hud.prototype.drawHealthBar = function (otherActor) {
         this.particleManager.createParticle('particleAddHUDSquare', {
             positionX: otherActor.position[0] + offsetPosition[0],
             positionY: otherActor.position[1] + offsetPosition[1],
-            positionZ: otherActor !== this.actor ? -5 : -Constants.DEFAULT_POSITION_Z,
+            positionZ: otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z,
             colorR: i >= hpPercentage * hpBarCount ? 1 : 0,
             colorG: i < hpPercentage * hpBarCount ? 1 : 0,
             colorB: 0,
@@ -6150,8 +6270,19 @@ GameScene.prototype.make = function () {
     this.scene.add(this.ambientLight);
 
     this.scene.fog = new THREE.Fog(0x000000, Constants.RENDER_DISTANCE - 150, Constants.RENDER_DISTANCE);
-
-    // this.testMesh('orbot', 1.5);
+    //
+    // var tel1 = this.testMesh('telering_top', 5);
+    // var tel2 = this.testMesh('telering_bottom', 5);
+    //
+    // tel1.rotation.x = Utils.degToRad(90);
+    // tel2.rotation.x = Utils.degToRad(90);
+    //
+    // this.tel1 = tel1;
+    // this.tel2 = tel2;
+    //
+    // setInterval(() => {
+    //     tel1.rotation.y += 0.01;
+    // }, 5);
 };
 
 GameScene.prototype.update = function () {
@@ -6228,11 +6359,9 @@ GameScene.prototype.testMesh = function (meshClass, scale) {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    setInterval(function () {
-        mesh.rotation.z += 0.001;
-    }, 5);
-
     this.scene.add(mesh);
+
+    return mesh;
 };
 
 module.exports = GameScene;

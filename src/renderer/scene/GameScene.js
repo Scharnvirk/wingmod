@@ -56,8 +56,19 @@ GameScene.prototype.make = function() {
     this.scene.add( this.ambientLight);
 
     this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
-
-    // this.testMesh('orbot', 1.5);
+    // 
+    // var tel1 = this.testMesh('telering_top', 5);
+    // var tel2 = this.testMesh('telering_bottom', 5);
+    //
+    // tel1.rotation.x = Utils.degToRad(90);
+    // tel2.rotation.x = Utils.degToRad(90);
+    //
+    // this.tel1 = tel1;
+    // this.tel2 = tel2;
+    //
+    // setInterval(() => {
+    //     tel1.rotation.y += 0.01;
+    // }, 5);
 };
 
 GameScene.prototype.update = function(){
@@ -134,11 +145,9 @@ GameScene.prototype.testMesh = function(meshClass, scale){
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    setInterval(() => {
-        mesh.rotation.z += 0.001;
-    }, 5);
-
     this.scene.add(mesh);
+
+    return mesh;
 };
 
 

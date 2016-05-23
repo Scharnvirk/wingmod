@@ -26,7 +26,7 @@ BlenderExportFinisher = function(){
         visible:true,
         colorSpecular:[0.3,0.3,0.3],
         shading:"phong",
-        specularCoef:50,
+        specularCoef:40,
         mapDiffuseWrap:["RepeatWrapping","RepeatWrapping"],
         depthTest:true,
         mapEmissiveAnisotropy:0

@@ -96,7 +96,8 @@ ActorManager.prototype.buildSecondaryUpdateTransferData = function(){
         let actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
         if (actor){
             transferData[this.actorIdsToSendUpdateAbout[i]] = {
-                hp: actor.hp
+                hp: actor.hp,
+                customParams: actor.customParams
             };
         }
 

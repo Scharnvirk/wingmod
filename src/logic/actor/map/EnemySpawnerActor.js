@@ -9,6 +9,11 @@ function EnemySpawnerActor(config){
     this.spawnDelay = 0;
 
     this.maxSpawnRate = 240;
+
+    this.applyConfig({
+        hp: 300,
+        removeOnHit: false
+    });
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -32,16 +37,43 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
         angle: 0,
         velocity: 0
     });
+    this.customParams.spawnDelay = this.spawnDelay;
+    this.notifyManagerOfUpdate();
 };
 
 EnemySpawnerActor.prototype.createBody = function(){
     return new BaseBody({
         shape:  new p2.Circle({
-            radius: 1,
-            collisionGroup: null,
-            collisionMask: null
+            radius: 8,
+            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+            collisionMask:
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.SHIPEXPLOSION
         })
     });
+};
+
+EnemySpawnerActor.prototype.onDeath = function(){
+    for(let i = 0; i < 40; i++){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(0,150)
+        });
+    }
+    for(let i = 0; i < 10; i++){
+        this.manager.addNew({
+            classId: ActorFactory.BOOMCHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0,360),
+            velocity: Utils.rand(0,50)
+        });
+    }
+    this.body.dead = true;
 };
 
 module.exports = EnemySpawnerActor;
