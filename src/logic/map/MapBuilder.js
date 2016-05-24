@@ -13,11 +13,6 @@ MapBuilder.prototype.buildMap = function(){
     this.mapLayout = [
         {
             name: 'chunk_HangarEndcap_1',
-            position: [-2,1],
-            rotation: 90
-        },
-        {
-            name: 'chunk_HangarCorner_1',
             position: [-1,1],
             rotation: 0
         },
@@ -39,19 +34,25 @@ MapBuilder.prototype.buildMap = function(){
         },
 
         {
-            name: 'chunk_HangarEndcap_1',
+            name: 'chunk_HangarStraight_SideSmall_1',
             position: [-1,-1],
             rotation: 180
         },
         {
-            name: 'chunk_HangarCorner_1',
+            name: 'chunk_HangarStraight_SideSmall_1',
             position: [0,-1],
+            rotation: 0
+        },
+
+        {
+            name: 'chunk_HangarEndcap_1',
+            position: [-1,-2],
             rotation: 180
         },
         {
             name: 'chunk_HangarEndcap_1',
-            position: [1,-1],
-            rotation: 270
+            position: [0,-2],
+            rotation: 180
         },
     ];
 

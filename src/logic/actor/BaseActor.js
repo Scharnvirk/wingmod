@@ -41,7 +41,7 @@ BaseActor.prototype.update = function(){
 BaseActor.prototype.onCollision = function(otherActor){
     if(otherActor && this.hp != Infinity && otherActor.damage > 0){
         this.hp -= otherActor.damage;
-        this.notifyManagerOfUpdate();
+        this.sendActorEvent('currentHp', this.hp);
         this.onHit();
     }
 
@@ -50,8 +50,8 @@ BaseActor.prototype.onCollision = function(otherActor){
     }
 };
 
-BaseActor.prototype.notifyManagerOfUpdate = function(){
-    this.manager.requestUpdateActor(this.body.actorId);
+BaseActor.prototype.sendActorEvent = function(eventName, eventdata){
+    this.manager.requestActorEvent(this.body.actorId, eventName, eventdata);
 };
 
 BaseActor.prototype.remove = function(actorId){

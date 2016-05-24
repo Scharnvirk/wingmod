@@ -99,14 +99,13 @@ ActorManager.prototype.deleteActor = function(actorId){
     delete this.storage[actorId];
 };
 
-ActorManager.prototype.secondaryActorUpdate = function(messageObject){
+ActorManager.prototype.handleActorEvents = function(messageObject){
     var actorData = messageObject.actorData;
 
     for (let actorId in actorData ){
         let actor = this.storage[actorId];
         if (actor){
-            Object.assign(actor, actorData[actorId]);
-            actor.secondaryUpdateFromLogic(actorData[actorId]);
+            actor.handleEvent(actorData[actorId]);
         }
     }
 };

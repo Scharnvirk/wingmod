@@ -35,7 +35,7 @@ Core.prototype.initializeEventHandlers = function(){
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
-    this.actorManager.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+    this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
 };
 
@@ -92,8 +92,8 @@ Core.prototype.onNewPlayerActor = function(event){
     this.renderBus.postMessage('attachPlayer', {actorId: playerActor.body.actorId});
 };
 
-Core.prototype.onSecondaryActorUpdate = function(event){
-    this.renderBus.postMessage('secondaryActorUpdate', {actorData: event.data});
+Core.prototype.onActorEvents = function(event){
+    this.renderBus.postMessage('actorEvents', {actorData: event.data});
 };
 
 Core.prototype.onNewMapBodies = function(){

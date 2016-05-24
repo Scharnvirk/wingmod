@@ -35,6 +35,13 @@ var SampleApp = function() {
     };
 
 
+    self.buildVersionHtmlText = function() {
+        var version = JSON.parse(fs.readFileSync('./version', 'utf-8'));
+        var versionText = version.major + '.' + version.minor + '.' + version.patch + '.' + version.build;
+
+        return "<script>Constants.VERSION = '" + versionText + "'</script>";
+    };
+
     /**
      *  Populate the cache.
      */
@@ -43,8 +50,13 @@ var SampleApp = function() {
             self.zcache = { 'index.html': '' };
         }
 
+        var index = fs.readFileSync('./index.html', 'utf-8');
+        index += self.buildVersionHtmlText();
+
         //  Local cache for static content.
-        self.zcache['index.html'] = fs.readFileSync('./index.html');
+        self.zcache['index.html'] = index;
+
+
         self.zcache['/styles.css'] = fs.readFileSync('./styles.css');
 
         self.zcache['/fonts/Oswald-Regular.ttf'] = fs.readFileSync('./fonts/Oswald-Regular.ttf');

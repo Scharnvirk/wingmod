@@ -59,7 +59,7 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+    this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
     this.logicBus.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
@@ -216,8 +216,8 @@ Core.prototype.onGetAiImage = function(event){
     this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
 };
 
-Core.prototype.onSecondaryActorUpdate = function(event){
-    this.actorManager.secondaryActorUpdate(event.data);
+Core.prototype.onActorEvents = function(event){
+    this.actorManager.handleActorEvents(event.data);
 };
 
 Core.prototype.onRequestUiFlash = function(event){

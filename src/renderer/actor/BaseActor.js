@@ -43,7 +43,14 @@ BaseActor.prototype.update = function(delta){
 
 BaseActor.prototype.customUpdate = function(){};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function(data){};
+BaseActor.prototype.handleEvent = function(eventData){
+    if (eventData.currentHp){
+        this.hp = eventData.currentHp;
+    }
+    this.customHandleEvent(eventData);
+};
+
+BaseActor.prototype.customHandleEvent = function(eventData){};
 
 BaseActor.prototype.updateFromLogic = function(positionX, positionY, angle){
     this.logicPreviousPosition[0] = this.logicPosition[0];

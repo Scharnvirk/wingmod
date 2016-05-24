@@ -254,7 +254,7 @@ Core.prototype.initializeEventHandlers = function () {
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
-    this.actorManager.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+    this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
 };
 
@@ -313,8 +313,8 @@ Core.prototype.onNewPlayerActor = function (event) {
     this.renderBus.postMessage('attachPlayer', { actorId: playerActor.body.actorId });
 };
 
-Core.prototype.onSecondaryActorUpdate = function (event) {
-    this.renderBus.postMessage('secondaryActorUpdate', { actorData: event.data });
+Core.prototype.onActorEvents = function (event) {
+    this.renderBus.postMessage('actorEvents', { actorData: event.data });
 };
 
 Core.prototype.onNewMapBodies = function () {
@@ -384,67 +384,24 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: -414,
-        angle: Utils.degToRad(0)
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
-        positionY: 414,
+        positionY: 221,
         angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: -221,
+        positionX: 0,
+        positionY: -573,
         angle: Utils.degToRad(0)
     });
 
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -704,
-    //     positionY: -132,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: -352,
-    //     positionY: 220,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 352,
-    //     positionY: 132,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 704,
-    //     positionY: -132,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 132,
-    //     positionY: -704,
-    //     angle: 0
-    // });
-    //
-    // this.actorManager.addNew({
-    //     classId: ActorFactory.ENEMYSPAWNER,
-    //     positionX: 572,
-    //     positionY: -704,
-    //     angle: 0
-    // });
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: -573,
+        angle: Utils.degToRad(0)
+    });
 };
 
 GameScene.prototype.update = function () {
@@ -623,7 +580,7 @@ function ActorManager(config) {
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
-    this.actorIdsToSendUpdateAbout = [];
+    this.actorEventsToSend = {};
 
     this.enemiesKilled = 0;
 
@@ -672,13 +629,7 @@ ActorManager.prototype.update = function (inputState) {
         this.storage[actorId].update();
     }
 
-    if (this.actorIdsToSendUpdateAbout.length > 0) {
-        this.emit({
-            type: 'secondaryActorUpdate',
-            data: this.buildSecondaryUpdateTransferData()
-        });
-        this.actorIdsToSendUpdateAbout = [];
-    }
+    this.sendActorEvents();
 };
 
 ActorManager.prototype.setPlayerActor = function (actor) {
@@ -700,22 +651,19 @@ ActorManager.prototype.getFirstPlayerActor = function () {
     return this.storage[this.playerActors[0]];
 };
 
-ActorManager.prototype.requestUpdateActor = function (actorId) {
-    this.actorIdsToSendUpdateAbout.push(actorId);
+ActorManager.prototype.requestActorEvent = function (actorId, eventName, eventParams) {
+    this.actorEventsToSend[actorId] = this.actorEventsToSend[actorId] || {};
+    this.actorEventsToSend[actorId][eventName] = eventParams;
 };
 
-ActorManager.prototype.buildSecondaryUpdateTransferData = function () {
-    var transferData = {};
-    for (var i = 0; i < this.actorIdsToSendUpdateAbout.length; i++) {
-        var actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
-        if (actor) {
-            transferData[this.actorIdsToSendUpdateAbout[i]] = {
-                hp: actor.hp,
-                customParams: actor.customParams
-            };
-        }
+ActorManager.prototype.sendActorEvents = function () {
+    if (Object.keys(this.actorEventsToSend).length > 0) {
+        this.emit({
+            type: 'actorEvents',
+            data: this.actorEventsToSend
+        });
+        this.actorEventsToSend = {};
     }
-    return transferData;
 };
 
 module.exports = ActorManager;
@@ -766,7 +714,7 @@ BaseActor.prototype.update = function () {
 BaseActor.prototype.onCollision = function (otherActor) {
     if (otherActor && this.hp != Infinity && otherActor.damage > 0) {
         this.hp -= otherActor.damage;
-        this.notifyManagerOfUpdate();
+        this.sendActorEvent('currentHp', this.hp);
         this.onHit();
     }
 
@@ -775,8 +723,8 @@ BaseActor.prototype.onCollision = function (otherActor) {
     }
 };
 
-BaseActor.prototype.notifyManagerOfUpdate = function () {
-    this.manager.requestUpdateActor(this.body.actorId);
+BaseActor.prototype.sendActorEvent = function (eventName, eventdata) {
+    this.manager.requestActorEvent(this.body.actorId, eventName, eventdata);
 };
 
 BaseActor.prototype.remove = function (actorId) {
@@ -1996,10 +1944,10 @@ function EnemySpawnerActor(config) {
 
     this.spawnDelay = 0;
 
-    this.maxSpawnRate = 240;
+    this.spawnRate = 240;
 
     this.applyConfig({
-        hp: 300,
+        hp: 220,
         removeOnHit: false
     });
 }
@@ -2010,14 +1958,14 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     if (this.spawnDelay > 0) {
         this.spawnDelay--;
     } else {
-        if (Utils.rand(Math.min(this.timer / 60, this.maxSpawnRate), this.maxSpawnRate) === this.maxSpawnRate) {
+        if (Utils.rand(Math.min(this.timer / 60, this.spawnRate), this.spawnRate) === this.spawnRate) {
             this.createEnemySpawnMarker();
         }
     }
 };
 
 EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
-    this.spawnDelay += 240;
+    this.spawnDelay = this.spawnRate;
     this.manager.addNew({
         classId: ActorFactory.ENEMYSPAWNMARKER,
         positionX: this.body.position[0],
@@ -2025,8 +1973,7 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
         angle: 0,
         velocity: 0
     });
-    this.customParams.spawnDelay = this.spawnDelay;
-    this.notifyManagerOfUpdate();
+    this.sendActorEvent('newSpawnDelay', this.spawnRate);
 };
 
 EnemySpawnerActor.prototype.createBody = function () {
@@ -2610,10 +2557,6 @@ MapBuilder.prototype.buildMap = function () {
 
     this.mapLayout = [{
         name: 'chunk_HangarEndcap_1',
-        position: [-2, 1],
-        rotation: 90
-    }, {
-        name: 'chunk_HangarCorner_1',
         position: [-1, 1],
         rotation: 0
     }, {
@@ -2629,17 +2572,21 @@ MapBuilder.prototype.buildMap = function () {
         position: [0, 0],
         rotation: 0
     }, {
-        name: 'chunk_HangarEndcap_1',
+        name: 'chunk_HangarStraight_SideSmall_1',
         position: [-1, -1],
         rotation: 180
     }, {
-        name: 'chunk_HangarCorner_1',
+        name: 'chunk_HangarStraight_SideSmall_1',
         position: [0, -1],
+        rotation: 0
+    }, {
+        name: 'chunk_HangarEndcap_1',
+        position: [-1, -2],
         rotation: 180
     }, {
         name: 'chunk_HangarEndcap_1',
-        position: [1, -1],
-        rotation: 270
+        position: [0, -2],
+        rotation: 180
     }];
 
     return this.mapLayout;
@@ -2802,7 +2749,14 @@ BaseActor.prototype.update = function (delta) {
 
 BaseActor.prototype.customUpdate = function () {};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function (data) {};
+BaseActor.prototype.handleEvent = function (eventData) {
+    if (eventData.currentHp) {
+        this.hp = eventData.currentHp;
+    }
+    this.customHandleEvent(eventData);
+};
+
+BaseActor.prototype.customHandleEvent = function (eventData) {};
 
 BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
@@ -3325,7 +3279,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         colorR: 0.5,
         colorG: 0.3,
         colorB: 1,
-        scale: Utils.rand(this.timer / 6, this.timer / 6 + 20),
+        scale: Utils.rand(this.timer / 5, this.timer / 5 + 20),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
@@ -3339,7 +3293,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: Utils.rand(this.timer / 12, this.timer / 12 + 10),
+        scale: Utils.rand(this.timer / 10, this.timer / 10 + 10),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
@@ -3347,7 +3301,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         lifeTime: 2
     });
 
-    for (var i = 0; i < this.timer / 20; i++) {
+    for (var i = 0; i < this.timer / 15; i++) {
         var angle = Utils.rand(0, 360);
         var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
         this.particleManager.createParticle('particleAddSplash', {
@@ -3356,45 +3310,48 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             colorR: 0.5,
             colorG: 0.3,
             colorB: 1,
-            scale: 1,
+            scale: 0.4 + this.timer / 300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
-            particleVelocity: -(Utils.rand(10, 20) / 10),
+            particleVelocity: -(Utils.rand(this.timer / 15, this.timer / 10) / 10),
             particleAngle: angle,
-            speedZ: Utils.rand(-20, 20) / 100,
+            speedZ: Utils.rand(-40, 40) / 100,
             lifeTime: 12
         });
     }
 };
 
 EnemySpawnMarkerActor.prototype.onDeath = function () {
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
-        scale: 200,
-        alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 5
-    });
+    var pointCount = 8;
+    for (var i = 0; i < pointCount; i++) {
+        this.particleManager.createParticle('particleAddTrail', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.5,
+            colorG: 0.3,
+            colorB: 1,
+            scale: 50,
+            alpha: 0.25,
+            alphaMultiplier: 0.7,
+            particleVelocity: 2,
+            particleAngle: 360 / pointCount * i,
+            lifeTime: 5
+        });
 
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 100,
-        alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 5
-    });
+        this.particleManager.createParticle('particleAddTrail', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 50,
+            alpha: 0.25,
+            alphaMultiplier: 0.7,
+            particleVelocity: 2,
+            particleAngle: 360 / pointCount * i,
+            lifeTime: 5
+        });
+    }
 };
 
 module.exports = EnemySpawnMarkerActor;
@@ -3416,9 +3373,11 @@ function EnemySpawnerActor(config) {
 
     this.rotationSpeed = 0;
 
-    this.initialHp = 300;
-    this.hp = 300;
+    this.initialHp = 220;
+    this.hp = 220;
     this.hpBarCount = 30;
+
+    this.spawnDelay = 0;
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -3429,38 +3388,29 @@ EnemySpawnerActor.prototype.onSpawn = function () {
 
 EnemySpawnerActor.prototype.onDeath = function () {
     this.manager.enemyDestroyed(this.actorId);
-    this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
-    this.manager.requestUiFlash('white');
+
+    var makeBoomRandomly = function makeBoomRandomly() {
+        var position = [this.position[0] + Utils.rand(-5, 5), this.position[1] + Utils.rand(-5, 5)];
+        this.particleManager.createPremade('OrangeBoomLarge', { position: position });
+        this.manager.requestUiFlash('white');
+    };
+
+    for (var i = 0; i < 5; i++) {
+        setTimeout(makeBoomRandomly.bind(this), Utils.rand(0, 40));
+    }
 };
 
-EnemySpawnerActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
-        scale: Utils.rand(30, 40),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+EnemySpawnerActor.prototype.handleDamage = function () {
+    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
+    var offsetPosition = Utils.angleToVector(this.angle, -12);
+    var position = [this.position[0] + offsetPosition[0] + Utils.rand(-8, 8), this.position[1] + offsetPosition[1] + Utils.rand(-8, 8)];
+    if (damageRandomValue > 20) {
+        this.particleManager.createPremade('SmokePuffSmall', { position: position });
+    }
 
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: Utils.rand(20, 25),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+    if (damageRandomValue > 50 && Utils.rand(0, 100) > 90) {
+        this.particleManager.createPremade('BlueSparks', { position: position });
+    }
 };
 
 EnemySpawnerActor.prototype.createBottomMesh = function () {
@@ -3470,7 +3420,7 @@ EnemySpawnerActor.prototype.createBottomMesh = function () {
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_bottom').geometry,
-        material: ModelStore.get('telering_bottom').material
+        material: ModelStore.get('telering_bottom').material.clone()
     });
 };
 
@@ -3481,7 +3431,7 @@ EnemySpawnerActor.prototype.createTopMesh = function () {
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_top').geometry,
-        material: ModelStore.get('telering_top').material
+        material: ModelStore.get('telering_top').material.clone()
     });
 };
 
@@ -3501,6 +3451,8 @@ EnemySpawnerActor.prototype.update = function () {
     this.doChargingAnimation();
 
     this.customUpdate();
+
+    this.handleDamage();
 };
 
 EnemySpawnerActor.prototype.addToScene = function (scene) {
@@ -3513,19 +3465,25 @@ EnemySpawnerActor.prototype.removeFromScene = function (scene) {
     scene.remove(this.topMesh);
 };
 
+EnemySpawnerActor.prototype.customHandleEvent = function (eventData) {
+    if (eventData.newSpawnDelay) {
+        this.spawnDelay = eventData.newSpawnDelay;
+        this.maxSpawnDelay = eventData.newSpawnDelay;
+    }
+};
+
 EnemySpawnerActor.prototype.doChargingAnimation = function () {
-    if (this.customParams.spawnDelay > 0) {
-        this.customParams.spawnDelay--;
-        if (this.rotationSpeed < 0.25) {
+    if (this.spawnDelay > 0) {
+        this.spawnDelay--;
+        if (this.rotationSpeed < 0.2) {
             this.rotationSpeed += 0.0015;
         }
     } else {
-        if (this.rotationSpeed > 0.006) {
-            this.rotationSpeed -= 0.003;
-        }
+        this.rotationSpeed *= 0.98;
     }
-    this.bottomMesh.material.emissiveIntensity = this.rotationSpeed * 8;
-    this.topMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    var intensity = this.spawnDelay > 0 ? 1 - this.spawnDelay / this.maxSpawnDelay : 0;
+    this.bottomMesh.material.emissiveIntensity = intensity;
+    this.topMesh.material.emissiveIntensity = intensity;
     this.topMesh.rotation.y += this.rotationSpeed;
 };
 

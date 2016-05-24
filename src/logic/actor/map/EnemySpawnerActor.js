@@ -8,10 +8,10 @@ function EnemySpawnerActor(config){
 
     this.spawnDelay = 0;
 
-    this.maxSpawnRate = 240;
+    this.spawnRate = 240;
 
     this.applyConfig({
-        hp: 300,
+        hp: 220,
         removeOnHit: false
     });
 }
@@ -22,14 +22,14 @@ EnemySpawnerActor.prototype.customUpdate = function(){
     if (this.spawnDelay > 0){
         this.spawnDelay -- ;
     } else {
-        if ( Utils.rand( Math.min(this.timer/60, this.maxSpawnRate), this.maxSpawnRate) === this.maxSpawnRate ){
+        if ( Utils.rand( Math.min(this.timer/60, this.spawnRate), this.spawnRate) === this.spawnRate ){
             this.createEnemySpawnMarker();
         }
     }
 };
 
 EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
-    this.spawnDelay += 240;
+    this.spawnDelay = this.spawnRate;
     this.manager.addNew({
         classId: ActorFactory.ENEMYSPAWNMARKER,
         positionX: this.body.position[0],
@@ -37,8 +37,7 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
         angle: 0,
         velocity: 0
     });
-    this.customParams.spawnDelay = this.spawnDelay;
-    this.notifyManagerOfUpdate();
+    this.sendActorEvent('newSpawnDelay', this.spawnRate);
 };
 
 EnemySpawnerActor.prototype.createBody = function(){

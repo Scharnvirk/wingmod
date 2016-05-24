@@ -12,9 +12,11 @@ function EnemySpawnerActor(config){
 
     this.rotationSpeed = 0;
 
-    this.initialHp = 300;
-    this.hp = 300;
+    this.initialHp = 220;
+    this.hp = 220;
     this.hpBarCount = 30;
+
+    this.spawnDelay = 0;
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -25,38 +27,33 @@ EnemySpawnerActor.prototype.onSpawn = function(){
 
 EnemySpawnerActor.prototype.onDeath = function(){
     this.manager.enemyDestroyed(this.actorId);
-    this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
-    this.manager.requestUiFlash('white');
+
+    var makeBoomRandomly = function(){
+        let position = [this.position[0] + Utils.rand(-5,5), this.position[1] + Utils.rand(-5,5)];
+        this.particleManager.createPremade('OrangeBoomLarge', {position: position});
+        this.manager.requestUiFlash('white');
+    };
+
+    for(let i = 0; i < 5; i++){
+        setTimeout(makeBoomRandomly.bind(this), Utils.rand(0,40));
+    }
+
 };
 
-EnemySpawnerActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAddTrail',{
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
-        scale: Utils.rand(30,40),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+EnemySpawnerActor.prototype.handleDamage = function(){
+    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
+    let offsetPosition = Utils.angleToVector(this.angle, -12);
+    let position = [
+        this.position[0] + offsetPosition[0] + Utils.rand(-8,8),
+        this.position[1] + offsetPosition[1] + Utils.rand(-8,8)
+    ];
+    if (damageRandomValue > 20){
+        this.particleManager.createPremade('SmokePuffSmall', {position: position});
+    }
 
-    this.particleManager.createParticle('particleAddTrail',{
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: Utils.rand(20,25),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+    if (damageRandomValue > 50 && Utils.rand(0,100) > 90){
+        this.particleManager.createPremade('BlueSparks', {position: position});
+    }
 };
 
 EnemySpawnerActor.prototype.createBottomMesh = function(){
@@ -66,7 +63,7 @@ EnemySpawnerActor.prototype.createBottomMesh = function(){
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_bottom').geometry,
-        material: ModelStore.get('telering_bottom').material
+        material: ModelStore.get('telering_bottom').material.clone()
     });
 };
 
@@ -77,7 +74,7 @@ EnemySpawnerActor.prototype.createTopMesh = function(){
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_top').geometry,
-        material: ModelStore.get('telering_top').material
+        material: ModelStore.get('telering_top').material.clone()
     });
 };
 
@@ -97,6 +94,8 @@ EnemySpawnerActor.prototype.update = function(){
     this.doChargingAnimation();
 
     this.customUpdate();
+
+    this.handleDamage();
 };
 
 EnemySpawnerActor.prototype.addToScene = function(scene){
@@ -109,19 +108,26 @@ EnemySpawnerActor.prototype.removeFromScene = function(scene){
     scene.remove(this.topMesh);
 };
 
+EnemySpawnerActor.prototype.customHandleEvent = function(eventData){
+    if(eventData.newSpawnDelay){
+        this.spawnDelay = eventData.newSpawnDelay;
+        this.maxSpawnDelay = eventData.newSpawnDelay;
+    }
+};
+
 EnemySpawnerActor.prototype.doChargingAnimation = function(){
-    if (this.customParams.spawnDelay > 0) {
-        this.customParams.spawnDelay --;
-        if(this.rotationSpeed < 0.25){
+    if (this.spawnDelay > 0) {
+        this.spawnDelay --;
+        if(this.rotationSpeed < 0.2){
             this.rotationSpeed += 0.0015;
         }
     } else {
-        if(this.rotationSpeed > 0.006){
-            this.rotationSpeed -= 0.003;
-        }
+        this.rotationSpeed *= 0.98;
+
     }
-    this.bottomMesh.material.emissiveIntensity = this.rotationSpeed * 8;
-    this.topMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    var intensity = this.spawnDelay > 0 ? (1 - this.spawnDelay / this.maxSpawnDelay) : 0;
+    this.bottomMesh.material.emissiveIntensity = intensity;
+    this.topMesh.material.emissiveIntensity = intensity;
     this.topMesh.rotation.y += this.rotationSpeed;
 };
 

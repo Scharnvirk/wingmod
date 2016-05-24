@@ -7,7 +7,7 @@ function ActorManager(config){
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
-    this.actorIdsToSendUpdateAbout = [];
+    this.actorEventsToSend = {};
 
     this.enemiesKilled = 0;
 
@@ -58,13 +58,7 @@ ActorManager.prototype.update = function(inputState){
         this.storage[actorId].update();
     }
 
-    if (this.actorIdsToSendUpdateAbout.length > 0){
-        this.emit({
-            type: 'secondaryActorUpdate',
-            data: this.buildSecondaryUpdateTransferData()
-        });
-        this.actorIdsToSendUpdateAbout = [];
-    }
+    this.sendActorEvents();
 };
 
 ActorManager.prototype.setPlayerActor = function(actor){
@@ -86,23 +80,19 @@ ActorManager.prototype.getFirstPlayerActor = function(){
     return this.storage[this.playerActors[0]];
 };
 
-ActorManager.prototype.requestUpdateActor = function(actorId){
-    this.actorIdsToSendUpdateAbout.push(actorId);
+ActorManager.prototype.requestActorEvent = function(actorId, eventName, eventParams){
+    this.actorEventsToSend[actorId] = this.actorEventsToSend[actorId] || {};
+    this.actorEventsToSend[actorId][eventName] = eventParams;
 };
 
-ActorManager.prototype.buildSecondaryUpdateTransferData = function(){
-    var transferData = {};
-    for (let i = 0; i < this.actorIdsToSendUpdateAbout.length; i++){
-        let actor = this.storage[this.actorIdsToSendUpdateAbout[i]];
-        if (actor){
-            transferData[this.actorIdsToSendUpdateAbout[i]] = {
-                hp: actor.hp,
-                customParams: actor.customParams
-            };
-        }
-
+ActorManager.prototype.sendActorEvents = function(){
+    if (Object.keys(this.actorEventsToSend).length > 0){
+        this.emit({
+            type: 'actorEvents',
+            data: this.actorEventsToSend
+        });
+        this.actorEventsToSend = {};
     }
-    return transferData;
 };
 
 module.exports = ActorManager;

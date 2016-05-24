@@ -412,7 +412,7 @@ BaseActor.prototype.update = function () {
 BaseActor.prototype.onCollision = function (otherActor) {
     if (otherActor && this.hp != Infinity && otherActor.damage > 0) {
         this.hp -= otherActor.damage;
-        this.notifyManagerOfUpdate();
+        this.sendActorEvent('currentHp', this.hp);
         this.onHit();
     }
 
@@ -421,8 +421,8 @@ BaseActor.prototype.onCollision = function (otherActor) {
     }
 };
 
-BaseActor.prototype.notifyManagerOfUpdate = function () {
-    this.manager.requestUpdateActor(this.body.actorId);
+BaseActor.prototype.sendActorEvent = function (eventName, eventdata) {
+    this.manager.requestActorEvent(this.body.actorId, eventName, eventdata);
 };
 
 BaseActor.prototype.remove = function (actorId) {
@@ -1642,10 +1642,10 @@ function EnemySpawnerActor(config) {
 
     this.spawnDelay = 0;
 
-    this.maxSpawnRate = 240;
+    this.spawnRate = 240;
 
     this.applyConfig({
-        hp: 300,
+        hp: 220,
         removeOnHit: false
     });
 }
@@ -1656,14 +1656,14 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     if (this.spawnDelay > 0) {
         this.spawnDelay--;
     } else {
-        if (Utils.rand(Math.min(this.timer / 60, this.maxSpawnRate), this.maxSpawnRate) === this.maxSpawnRate) {
+        if (Utils.rand(Math.min(this.timer / 60, this.spawnRate), this.spawnRate) === this.spawnRate) {
             this.createEnemySpawnMarker();
         }
     }
 };
 
 EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
-    this.spawnDelay += 240;
+    this.spawnDelay = this.spawnRate;
     this.manager.addNew({
         classId: ActorFactory.ENEMYSPAWNMARKER,
         positionX: this.body.position[0],
@@ -1671,8 +1671,7 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
         angle: 0,
         velocity: 0
     });
-    this.customParams.spawnDelay = this.spawnDelay;
-    this.notifyManagerOfUpdate();
+    this.sendActorEvent('newSpawnDelay', this.spawnRate);
 };
 
 EnemySpawnerActor.prototype.createBody = function () {
@@ -2440,7 +2439,7 @@ Core.prototype.initEventHandlers = function () {
     this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('secondaryActorUpdate', this.onSecondaryActorUpdate.bind(this));
+    this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
     this.logicBus.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
@@ -2599,8 +2598,8 @@ Core.prototype.onGetAiImage = function (event) {
     this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
 };
 
-Core.prototype.onSecondaryActorUpdate = function (event) {
-    this.actorManager.secondaryActorUpdate(event.data);
+Core.prototype.onActorEvents = function (event) {
+    this.actorManager.handleActorEvents(event.data);
 };
 
 Core.prototype.onRequestUiFlash = function (event) {
@@ -2886,14 +2885,13 @@ ActorManager.prototype.deleteActor = function (actorId) {
     delete this.storage[actorId];
 };
 
-ActorManager.prototype.secondaryActorUpdate = function (messageObject) {
+ActorManager.prototype.handleActorEvents = function (messageObject) {
     var actorData = messageObject.actorData;
 
     for (var actorId in actorData) {
         var actor = this.storage[actorId];
         if (actor) {
-            Object.assign(actor, actorData[actorId]);
-            actor.secondaryUpdateFromLogic(actorData[actorId]);
+            actor.handleEvent(actorData[actorId]);
         }
     }
 };
@@ -2963,7 +2961,14 @@ BaseActor.prototype.update = function (delta) {
 
 BaseActor.prototype.customUpdate = function () {};
 
-BaseActor.prototype.secondaryUpdateFromLogic = function (data) {};
+BaseActor.prototype.handleEvent = function (eventData) {
+    if (eventData.currentHp) {
+        this.hp = eventData.currentHp;
+    }
+    this.customHandleEvent(eventData);
+};
+
+BaseActor.prototype.customHandleEvent = function (eventData) {};
 
 BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
@@ -3486,7 +3491,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         colorR: 0.5,
         colorG: 0.3,
         colorB: 1,
-        scale: Utils.rand(this.timer / 6, this.timer / 6 + 20),
+        scale: Utils.rand(this.timer / 5, this.timer / 5 + 20),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
@@ -3500,7 +3505,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         colorR: 1,
         colorG: 1,
         colorB: 1,
-        scale: Utils.rand(this.timer / 12, this.timer / 12 + 10),
+        scale: Utils.rand(this.timer / 10, this.timer / 10 + 10),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
@@ -3508,7 +3513,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         lifeTime: 2
     });
 
-    for (var i = 0; i < this.timer / 20; i++) {
+    for (var i = 0; i < this.timer / 15; i++) {
         var angle = Utils.rand(0, 360);
         var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
         this.particleManager.createParticle('particleAddSplash', {
@@ -3517,45 +3522,48 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             colorR: 0.5,
             colorG: 0.3,
             colorB: 1,
-            scale: 1,
+            scale: 0.4 + this.timer / 300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
-            particleVelocity: -(Utils.rand(10, 20) / 10),
+            particleVelocity: -(Utils.rand(this.timer / 15, this.timer / 10) / 10),
             particleAngle: angle,
-            speedZ: Utils.rand(-20, 20) / 100,
+            speedZ: Utils.rand(-40, 40) / 100,
             lifeTime: 12
         });
     }
 };
 
 EnemySpawnMarkerActor.prototype.onDeath = function () {
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
-        scale: 200,
-        alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 5
-    });
+    var pointCount = 8;
+    for (var i = 0; i < pointCount; i++) {
+        this.particleManager.createParticle('particleAddTrail', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 0.5,
+            colorG: 0.3,
+            colorB: 1,
+            scale: 50,
+            alpha: 0.25,
+            alphaMultiplier: 0.7,
+            particleVelocity: 2,
+            particleAngle: 360 / pointCount * i,
+            lifeTime: 5
+        });
 
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: 100,
-        alpha: 1,
-        alphaMultiplier: 0.7,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 5
-    });
+        this.particleManager.createParticle('particleAddTrail', {
+            positionX: this.position[0],
+            positionY: this.position[1],
+            colorR: 1,
+            colorG: 1,
+            colorB: 1,
+            scale: 50,
+            alpha: 0.25,
+            alphaMultiplier: 0.7,
+            particleVelocity: 2,
+            particleAngle: 360 / pointCount * i,
+            lifeTime: 5
+        });
+    }
 };
 
 module.exports = EnemySpawnMarkerActor;
@@ -3577,9 +3585,11 @@ function EnemySpawnerActor(config) {
 
     this.rotationSpeed = 0;
 
-    this.initialHp = 300;
-    this.hp = 300;
+    this.initialHp = 220;
+    this.hp = 220;
     this.hpBarCount = 30;
+
+    this.spawnDelay = 0;
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -3590,38 +3600,29 @@ EnemySpawnerActor.prototype.onSpawn = function () {
 
 EnemySpawnerActor.prototype.onDeath = function () {
     this.manager.enemyDestroyed(this.actorId);
-    this.particleManager.createPremade('OrangeBoomLarge', { position: this.position });
-    this.manager.requestUiFlash('white');
+
+    var makeBoomRandomly = function makeBoomRandomly() {
+        var position = [this.position[0] + Utils.rand(-5, 5), this.position[1] + Utils.rand(-5, 5)];
+        this.particleManager.createPremade('OrangeBoomLarge', { position: position });
+        this.manager.requestUiFlash('white');
+    };
+
+    for (var i = 0; i < 5; i++) {
+        setTimeout(makeBoomRandomly.bind(this), Utils.rand(0, 40));
+    }
 };
 
-EnemySpawnerActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
-        scale: Utils.rand(30, 40),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+EnemySpawnerActor.prototype.handleDamage = function () {
+    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
+    var offsetPosition = Utils.angleToVector(this.angle, -12);
+    var position = [this.position[0] + offsetPosition[0] + Utils.rand(-8, 8), this.position[1] + offsetPosition[1] + Utils.rand(-8, 8)];
+    if (damageRandomValue > 20) {
+        this.particleManager.createPremade('SmokePuffSmall', { position: position });
+    }
 
-    this.particleManager.createParticle('particleAddTrail', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
-        scale: Utils.rand(20, 25),
-        alpha: 0.2,
-        alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleAngle: 0,
-        lifeTime: 2
-    });
+    if (damageRandomValue > 50 && Utils.rand(0, 100) > 90) {
+        this.particleManager.createPremade('BlueSparks', { position: position });
+    }
 };
 
 EnemySpawnerActor.prototype.createBottomMesh = function () {
@@ -3631,7 +3632,7 @@ EnemySpawnerActor.prototype.createBottomMesh = function () {
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_bottom').geometry,
-        material: ModelStore.get('telering_bottom').material
+        material: ModelStore.get('telering_bottom').material.clone()
     });
 };
 
@@ -3642,7 +3643,7 @@ EnemySpawnerActor.prototype.createTopMesh = function () {
         scaleY: 3,
         scaleZ: 3,
         geometry: ModelStore.get('telering_top').geometry,
-        material: ModelStore.get('telering_top').material
+        material: ModelStore.get('telering_top').material.clone()
     });
 };
 
@@ -3662,6 +3663,8 @@ EnemySpawnerActor.prototype.update = function () {
     this.doChargingAnimation();
 
     this.customUpdate();
+
+    this.handleDamage();
 };
 
 EnemySpawnerActor.prototype.addToScene = function (scene) {
@@ -3674,19 +3677,25 @@ EnemySpawnerActor.prototype.removeFromScene = function (scene) {
     scene.remove(this.topMesh);
 };
 
+EnemySpawnerActor.prototype.customHandleEvent = function (eventData) {
+    if (eventData.newSpawnDelay) {
+        this.spawnDelay = eventData.newSpawnDelay;
+        this.maxSpawnDelay = eventData.newSpawnDelay;
+    }
+};
+
 EnemySpawnerActor.prototype.doChargingAnimation = function () {
-    if (this.customParams.spawnDelay > 0) {
-        this.customParams.spawnDelay--;
-        if (this.rotationSpeed < 0.25) {
+    if (this.spawnDelay > 0) {
+        this.spawnDelay--;
+        if (this.rotationSpeed < 0.2) {
             this.rotationSpeed += 0.0015;
         }
     } else {
-        if (this.rotationSpeed > 0.006) {
-            this.rotationSpeed -= 0.003;
-        }
+        this.rotationSpeed *= 0.98;
     }
-    this.bottomMesh.material.emissiveIntensity = this.rotationSpeed * 8;
-    this.topMesh.material.emissiveIntensity = this.rotationSpeed * 8;
+    var intensity = this.spawnDelay > 0 ? 1 - this.spawnDelay / this.maxSpawnDelay : 0;
+    this.bottomMesh.material.emissiveIntensity = intensity;
+    this.topMesh.material.emissiveIntensity = intensity;
     this.topMesh.rotation.y += this.rotationSpeed;
 };
 
@@ -6247,21 +6256,15 @@ GameScene.prototype.make = function () {
     var shadowCamera = this.directionalLight.shadow.camera;
 
     shadowCamera.near = 1;
-    shadowCamera.far = 400;
-    shadowCamera.left = 400;
-    shadowCamera.right = -400;
-    shadowCamera.top = 400;
-    shadowCamera.bottom = -400;
+    shadowCamera.far = Constants.RENDER_DISTANCE;
+    shadowCamera.left = Constants.RENDER_DISTANCE;
+    shadowCamera.right = -Constants.RENDER_DISTANCE;
+    shadowCamera.top = Constants.RENDER_DISTANCE;
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE;
 
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
-    //
-    // this.directionalLight.shadowCameraNear = 1;
-    // this.directionalLight.shadowCameraFar = 400;
-    // this.directionalLight.shadowMapWidth = 2048;
-    // this.directionalLight.shadowMapHeight = 2048;
-    this.directionalLight.shadow.bias = -0.007;
-    // this.directionalLight.shadowDarkness = 0.4;
+    this.directionalLight.shadow.bias = -0.0075;
 
     this.scene.add(this.directionalLight);
 
@@ -6270,19 +6273,6 @@ GameScene.prototype.make = function () {
     this.scene.add(this.ambientLight);
 
     this.scene.fog = new THREE.Fog(0x000000, Constants.RENDER_DISTANCE - 150, Constants.RENDER_DISTANCE);
-    //
-    // var tel1 = this.testMesh('telering_top', 5);
-    // var tel2 = this.testMesh('telering_bottom', 5);
-    //
-    // tel1.rotation.x = Utils.degToRad(90);
-    // tel2.rotation.x = Utils.degToRad(90);
-    //
-    // this.tel1 = tel1;
-    // this.tel2 = tel2;
-    //
-    // setInterval(() => {
-    //     tel1.rotation.y += 0.01;
-    // }, 5);
 };
 
 GameScene.prototype.update = function () {
@@ -6360,6 +6350,10 @@ GameScene.prototype.testMesh = function (meshClass, scale) {
     mesh.receiveShadow = true;
 
     this.scene.add(mesh);
+
+    setInterval(function () {
+        mesh.rotation.y += 0.01;
+    }, 5);
 
     return mesh;
 };
@@ -6666,7 +6660,7 @@ var Button = require('renderer/ui/component/base/Button');
 var ToggleButton = require('renderer/ui/component/base/ToggleButton');
 var ReactUtils = require('renderer/ui/ReactUtils');
 
-var BOTTOM_TEXT = ReactUtils.multilinize('Wingmod 2 is a little experimental project aimed at learning' + '\nand experimenting with various web technologies.\n' + '\n' + 'Please note that this project depends very heavily on WebGL, so it works best on a PC.\n' + 'No mobile support is planned as keyboard and mouse are essential, but for debug you can try it.\n' + '\n' + 'Some frameworks were surely and painfully harmed in the making of this... thing.\n');
+var bottomText = ReactUtils.multilinize('Wingmod 2 is a little experimental project aimed at learning' + '\nand experimenting with various web technologies.\n' + '\n' + 'Please note that this project depends very heavily on WebGL, so it works best on a PC.\n' + 'No mobile support is planned as keyboard and mouse are essential, but for debug you can try it.\n' + '\n' + 'Some frameworks were surely and painfully harmed in the making of this... thing.\n');
 
 var StartScreen = function (_React$Component) {
     _inherits(StartScreen, _React$Component);
@@ -6680,6 +6674,7 @@ var StartScreen = function (_React$Component) {
     _createClass(StartScreen, [{
         key: 'render',
         value: function render() {
+            var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
             return React.createElement(
                 'div',
                 null,
@@ -6711,7 +6706,16 @@ var StartScreen = function (_React$Component) {
                     React.createElement(
                         'span',
                         { className: 'textDark' },
-                        BOTTOM_TEXT
+                        bottomText
+                    )
+                ),
+                React.createElement(
+                    StyledText,
+                    { style: (0, _classnames2.default)('class', ['smallText', 'topRightCorner']) },
+                    React.createElement(
+                        'span',
+                        { className: 'textDark' },
+                        versionText
                     )
                 )
             );

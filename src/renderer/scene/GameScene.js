@@ -33,21 +33,15 @@ GameScene.prototype.make = function() {
     var shadowCamera = this.directionalLight.shadow.camera;
 
     shadowCamera.near = 1;
-    shadowCamera.far = 400;
-    shadowCamera.left = 400;
-    shadowCamera.right = -400;
-    shadowCamera.top = 400;
-    shadowCamera.bottom = -400;
+    shadowCamera.far = Constants.RENDER_DISTANCE;
+    shadowCamera.left = Constants.RENDER_DISTANCE;
+    shadowCamera.right = -Constants.RENDER_DISTANCE;
+    shadowCamera.top = Constants.RENDER_DISTANCE;
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE;
 
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
-    //
-    // this.directionalLight.shadowCameraNear = 1;
-    // this.directionalLight.shadowCameraFar = 400;
-    // this.directionalLight.shadowMapWidth = 2048;
-    // this.directionalLight.shadowMapHeight = 2048;
-    this.directionalLight.shadow.bias = -0.007;
-    // this.directionalLight.shadowDarkness = 0.4;
+    this.directionalLight.shadow.bias = -0.0075;
 
     this.scene.add( this.directionalLight );
 
@@ -56,19 +50,6 @@ GameScene.prototype.make = function() {
     this.scene.add( this.ambientLight);
 
     this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
-    // 
-    // var tel1 = this.testMesh('telering_top', 5);
-    // var tel2 = this.testMesh('telering_bottom', 5);
-    //
-    // tel1.rotation.x = Utils.degToRad(90);
-    // tel2.rotation.x = Utils.degToRad(90);
-    //
-    // this.tel1 = tel1;
-    // this.tel2 = tel2;
-    //
-    // setInterval(() => {
-    //     tel1.rotation.y += 0.01;
-    // }, 5);
 };
 
 GameScene.prototype.update = function(){
@@ -146,6 +127,10 @@ GameScene.prototype.testMesh = function(meshClass, scale){
     mesh.receiveShadow = true;
 
     this.scene.add(mesh);
+
+    setInterval(() => {
+        mesh.rotation.y += 0.01;
+    }, 5);
 
     return mesh;
 };

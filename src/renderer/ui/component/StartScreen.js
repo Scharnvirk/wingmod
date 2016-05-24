@@ -5,7 +5,7 @@ var Button = require('renderer/ui/component/base/Button');
 var ToggleButton = require('renderer/ui/component/base/ToggleButton');
 var ReactUtils = require('renderer/ui/ReactUtils');
 
-var BOTTOM_TEXT = ReactUtils.multilinize(
+var bottomText = ReactUtils.multilinize(
     'Wingmod 2 is a little experimental project aimed at learning'+
     '\nand experimenting with various web technologies.\n'+
     '\n'+
@@ -17,6 +17,7 @@ var BOTTOM_TEXT = ReactUtils.multilinize(
 
 class StartScreen extends React.Component {
     render() {
+        var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         return <div>
             <div
                 className={ classnames('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing']) }
@@ -29,7 +30,10 @@ class StartScreen extends React.Component {
                 <SettingsMenu/>
             </div>
             <StyledText style={classnames('class', ['smallText', 'centerHorizontal', 'bottomVertical' ])}>
-                <span className={'textDark'} >{BOTTOM_TEXT}</span>
+                <span className={'textDark'} >{bottomText}</span>
+            </StyledText>
+            <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
+                <span className={'textDark'} >{versionText}</span>
             </StyledText>
         </div>;
     }

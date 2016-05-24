@@ -235,3 +235,9 @@
 .bottomVertical{
   bottom: 50px;
 }
+
+.topRightCorner{
+  top: 10px;
+  right: 10px;
+  position: absolute;
+}
