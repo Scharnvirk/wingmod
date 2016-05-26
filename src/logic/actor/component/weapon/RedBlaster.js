@@ -10,7 +10,7 @@ function Blaster(config){
 
     this.cooldown = 150;
     this.velocity = 550;
-    this.burstCount = 2;
+    this.burstCount = 1;
     this.burstCooldown = 20;
 }
 

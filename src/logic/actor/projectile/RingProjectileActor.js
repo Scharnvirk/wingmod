@@ -8,7 +8,7 @@ function RingProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 5,
+        damage: 6,
         removeOnHit: true,
         timeout: 120,
         bodyConfig: {

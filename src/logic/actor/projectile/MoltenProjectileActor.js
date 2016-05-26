@@ -8,7 +8,7 @@ function MoltenProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 1,
+        damage: 2,
         removeOnHit: true,
         timeout: 1000,
         bodyConfig: {

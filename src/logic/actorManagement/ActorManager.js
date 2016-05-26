@@ -8,6 +8,8 @@ function ActorManager(config){
     this.currentId = 1;
     this.playerActors = [];
     this.actorEventsToSend = {};
+    this.aiImage = null;
+    this.aiGraph = {};
 
     this.enemiesKilled = 0;
 

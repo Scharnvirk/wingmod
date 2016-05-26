@@ -7,7 +7,7 @@ function DebugActor(config){
     Object.assign(this, config);
 
     this.applyConfig({
-        timeout: 5
+        timeout: config.timeout || 5
     });
 }
 

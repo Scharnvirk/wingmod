@@ -481,7 +481,7 @@ function DebugActor(config) {
     Object.assign(this, config);
 
     this.applyConfig({
-        timeout: 5
+        timeout: config.timeout || 5
     });
 }
 
@@ -1015,7 +1015,7 @@ function MoltenBallThrower(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.burstCount = 4;
+    this.burstCount = 2;
     this.burstCooldown = 5;
     this.cooldown = 60;
     this.recoil = 100;
@@ -1062,7 +1062,7 @@ function Blaster(config) {
 
     this.cooldown = 150;
     this.velocity = 550;
-    this.burstCount = 2;
+    this.burstCount = 1;
     this.burstCooldown = 20;
 }
 
@@ -2101,7 +2101,7 @@ function MoltenProjectileActor(config) {
 
     this.applyConfig({
         hp: 1,
-        damage: 1,
+        damage: 2,
         removeOnHit: true,
         timeout: 1000,
         bodyConfig: {
@@ -2171,7 +2171,7 @@ function RedLaserProjectileActor(config) {
 
     this.applyConfig({
         hp: 1,
-        damage: 2,
+        damage: 4,
         removeOnHit: true,
         timeout: 120,
         bodyConfig: {
@@ -2208,7 +2208,7 @@ function RingProjectileActor(config) {
 
     this.applyConfig({
         hp: 1,
-        damage: 5,
+        damage: 6,
         removeOnHit: true,
         timeout: 120,
         bodyConfig: {

@@ -8,7 +8,7 @@ function RedLaserProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 2,
+        damage: 4,
         removeOnHit: true,
         timeout: 120,
         bodyConfig: {
