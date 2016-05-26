@@ -112,7 +112,7 @@ OrbotActor.prototype.onDeath = function(){
 };
 
 OrbotActor.prototype.onHit = function(){
-    if(Utils.rand(0,10) == 10){
+    if (Utils.rand(0, 5) == 5){
         this.manager.addNew({
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],

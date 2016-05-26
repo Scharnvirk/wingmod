@@ -35,26 +35,26 @@ GameScene.prototype.fillScene = function(mapBodies){
        angle: Utils.degToRad(180)
     });
 
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: -352,
-    //    positionY: 221,
-    //    angle: Utils.degToRad(180)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: 0,
-    //    positionY: -573,
-    //    angle: Utils.degToRad(0)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: -352,
-    //    positionY: -573,
-    //    angle: Utils.degToRad(0)
-    // });
+    this.actorManager.addNew({
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: -352,
+       positionY: 221,
+       angle: Utils.degToRad(180)
+    });
+
+    this.actorManager.addNew({
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: 0,
+       positionY: -573,
+       angle: Utils.degToRad(0)
+    });
+
+    this.actorManager.addNew({
+       classId: ActorFactory.ENEMYSPAWNER,
+       positionX: -352,
+       positionY: -573,
+       angle: Utils.degToRad(0)
+    });
 };
 
 GameScene.prototype.update = function(){

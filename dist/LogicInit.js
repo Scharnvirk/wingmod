@@ -387,26 +387,26 @@ GameScene.prototype.fillScene = function (mapBodies) {
         angle: Utils.degToRad(180)
     });
 
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: -352,
-    //    positionY: 221,
-    //    angle: Utils.degToRad(180)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: 0,
-    //    positionY: -573,
-    //    angle: Utils.degToRad(0)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.ENEMYSPAWNER,
-    //    positionX: -352,
-    //    positionY: -573,
-    //    angle: Utils.degToRad(0)
-    // });
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: 221,
+        angle: Utils.degToRad(180)
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -573,
+        angle: Utils.degToRad(0)
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: -573,
+        angle: Utils.degToRad(0)
+    });
 };
 
 GameScene.prototype.update = function () {
@@ -1754,7 +1754,7 @@ OrbotActor.prototype.onDeath = function () {
 };
 
 OrbotActor.prototype.onHit = function () {
-    if (Utils.rand(0, 10) == 10) {
+    if (Utils.rand(0, 5) == 5) {
         this.manager.addNew({
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
@@ -2034,6 +2034,18 @@ EnemySpawnerActor.prototype.onDeath = function () {
         });
     }
     this.body.dead = true;
+};
+
+EnemySpawnerActor.prototype.onHit = function () {
+    if (Utils.rand(0, 5) == 5) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
 };
 
 module.exports = EnemySpawnerActor;
@@ -3108,6 +3120,18 @@ MookActor.prototype.drawEyes = function () {
     });
 };
 
+MookActor.prototype.onHit = function () {
+    if (Utils.rand(0, 5) == 5) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
+};
+
 module.exports = MookActor;
 
 },{"renderer/actor/BaseActor":42,"renderer/actor/component/mesh/ShipMesh":48,"renderer/assetManagement/model/ModelStore":67}],51:[function(require,module,exports){
@@ -3301,6 +3325,18 @@ SniperActor.prototype.drawEyes = function () {
         angleOffset: this.eyeAngle,
         distance: 2.3
     });
+};
+
+SniperActor.prototype.onHit = function () {
+    if (Utils.rand(0, 5) == 5) {
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
 };
 
 module.exports = SniperActor;
@@ -3633,7 +3669,7 @@ function ChunkActor() {
 ChunkActor.extend(BaseActor);
 
 ChunkActor.prototype.createMesh = function () {
-    return new ChunkMesh({ actor: this, scaleX: Utils.rand(5, 10) / 10, scaleY: Utils.rand(5, 10) / 10, scaleZ: Utils.rand(5, 10) / 10 });
+    return new ChunkMesh({ actor: this, scaleX: Utils.rand(3, 15) / 10, scaleY: Utils.rand(3, 15) / 10, scaleZ: Utils.rand(3, 15) / 10 });
 };
 
 ChunkActor.prototype.customUpdate = function () {

@@ -86,5 +86,18 @@ SniperActor.prototype.drawEyes = function(){
     });
 };
 
+SniperActor.prototype.onHit = function(){
+    if (Utils.rand(0, 5) == 5){
+        this.manager.addNew({
+            classId: ActorFactory.CHUNK,
+            positionX: this.body.position[0],
+            positionY: this.body.position[1],
+            angle: Utils.rand(0, 360),
+            velocity: Utils.rand(50, 100)
+        });
+    }
+};
+
+
 
 module.exports = SniperActor;
