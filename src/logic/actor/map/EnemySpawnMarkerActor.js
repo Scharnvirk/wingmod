@@ -39,7 +39,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
         enemyType = ActorFactory.SNIPER;
     } else if (rand == 10){
         enemyType = ActorFactory.ORBOT;
-        mobsToSpawn = 3;
+        mobsToSpawn = 2;
     }
 
     if(!this.created){

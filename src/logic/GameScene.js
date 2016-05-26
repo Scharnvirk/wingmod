@@ -27,14 +27,14 @@ GameScene.prototype.fillScene = function(mapBodies){
     });
 
     this.addMapBodies(mapBodies);
-
+    //
     this.actorManager.addNew({
        classId: ActorFactory.ENEMYSPAWNER,
        positionX: 0,
        positionY: 221,
        angle: Utils.degToRad(180)
     });
-
+    //
     this.actorManager.addNew({
        classId: ActorFactory.ENEMYSPAWNER,
        positionX: -352,

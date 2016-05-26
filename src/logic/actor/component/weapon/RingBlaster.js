@@ -9,7 +9,7 @@ function RingBlaster(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 80;
-    this.velocity = 150;
+    this.velocity = 130;
 }
 
 RingBlaster.extend(BaseWeapon);

@@ -12,7 +12,7 @@ function MoltenBallThrower(config){
     this.burstCooldown = 5;
     this.cooldown = 60;
     this.recoil = 100;
-    this.velocity = 210;
+    this.velocity = 160;
 }
 
 MoltenBallThrower.extend(BaseWeapon);

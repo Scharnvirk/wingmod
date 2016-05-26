@@ -25,7 +25,7 @@
        "doubleSided": false,
        "wireframe": false,
        "DbgColor": 15658734,
-       "specularCoef": 40,
+       "specularCoef": 20,
        "visible": true,
        "DbgIndex": 0,
        "depthTest": true,

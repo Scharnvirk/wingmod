@@ -11,7 +11,7 @@ function ShipActor(config){
     Object.assign(this, config);
 
     this.applyConfig({
-        acceleration: 500,
+        acceleration: 600,
         turnSpeed: 6,
         hp: 30,
         bodyConfig: {
@@ -52,7 +52,7 @@ ShipActor.prototype.playerUpdate = function(inputState){
         this.applyThrustInput(inputState);
         this.applyLookAtRotationInput(inputState);
         this.applyWeaponInput(inputState);
-    }    
+    }
 };
 
 ShipActor.prototype.applyLookAtRotationInput = function(inputState){

@@ -19,6 +19,8 @@ BlenderExportFinisher = function(){
         colorDiffuse:[0.4,0.4,0.4],
         mapSpecularRepeat:[1,1],
         mapBumpAnisotropy:0,
+        mapBumpRepeat: null,
+        mapBumpScale: null,
         mapSpecular:"map_256_S.png",
         mapEmissive:"map_256_I.png",
         mapLightAnisotropy:0,
@@ -66,7 +68,7 @@ BlenderExportFinisher.prototype.alterProperties = function(){
 };
 
 BlenderExportFinisher.prototype.resave = function(){
-    var newFileContent = JSON.stringify(this.objectConfig);
+    var newFileContent = JSON.stringify(this.objectConfig, null, '\t');
     fs.writeFileSync(this.fileName, newFileContent);
 };
 

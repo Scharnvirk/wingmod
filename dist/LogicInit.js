@@ -374,14 +374,14 @@ GameScene.prototype.fillScene = function (mapBodies) {
     });
 
     this.addMapBodies(mapBodies);
-
+    //
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: 0,
         positionY: 221,
         angle: Utils.degToRad(180)
     });
-
+    //
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
         positionX: -352,
@@ -1321,7 +1321,7 @@ function MoltenBallThrower(config) {
     this.burstCooldown = 5;
     this.cooldown = 60;
     this.recoil = 100;
-    this.velocity = 210;
+    this.velocity = 160;
 }
 
 MoltenBallThrower.extend(BaseWeapon);
@@ -1409,7 +1409,7 @@ function RingBlaster(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 80;
-    this.velocity = 150;
+    this.velocity = 130;
 }
 
 RingBlaster.extend(BaseWeapon);
@@ -1912,7 +1912,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
         enemyType = ActorFactory.SNIPER;
     } else if (rand == 10) {
         enemyType = ActorFactory.ORBOT;
-        mobsToSpawn = 3;
+        mobsToSpawn = 2;
     }
 
     if (!this.created) {
@@ -2194,7 +2194,7 @@ function ShipActor(config) {
     Object.assign(this, config);
 
     this.applyConfig({
-        acceleration: 500,
+        acceleration: 600,
         turnSpeed: 6,
         hp: 30,
         bodyConfig: {
