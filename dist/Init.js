@@ -2438,6 +2438,7 @@ Core.prototype.initEventHandlers = function () {
     this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
     this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
+    this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
     this.logicBus.on('mapDone', this.onMapDone.bind(this));
@@ -2592,6 +2593,13 @@ Core.prototype.onGameEnded = function (event) {
         this.ui.stopGame(event.data);
         this.renderLoop.stop();
     }.bind(this), 2000);
+};
+
+Core.prototype.onGameFinished = function (event) {
+    setTimeout(function () {
+        this.ui.stopGameFinished();
+        this.renderLoop.stop();
+    }.bind(this), 500);
 };
 
 Core.prototype.onGetAiImage = function (event) {
@@ -6469,8 +6477,15 @@ Ui.prototype.startGame = function () {
 };
 
 Ui.prototype.stopGame = function (info) {
+    var bigText = 'GAME OVER';
     var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
-    this.reactUi.changeMode('gameOverScreen', { scoreText: scoreText });
+    this.reactUi.changeMode('gameOverScreen', { scoreText: scoreText, bigText: bigText });
+};
+
+Ui.prototype.stopGameFinished = function () {
+    var bigText = 'SUCCESS!';
+    var scoreText = 'Congratulations! You have done it!';
+    this.reactUi.changeMode('gameOverScreen', { scoreText: scoreText, bigText: bigText });
 };
 
 Ui.prototype.onStartButtonClick = function () {
@@ -6559,7 +6574,7 @@ var EndScreen = function (_React$Component) {
                 React.createElement(
                     StyledText,
                     { style: 'titleText' },
-                    'GAME OVER'
+                    this.props.bigText
                 ),
                 React.createElement(
                     StyledText,
@@ -6606,7 +6621,10 @@ var InitialView = React.createClass({
                 UIcontent.push(React.createElement(StartScreen, { key: ReactUtils.generateKey() }));
                 break;
             case 'gameOverScreen':
-                UIcontent.push(React.createElement(EndScreen, { key: ReactUtils.generateKey(), scoreText: ReactUtils.multilinize(this.props.context.scoreText) }));
+                UIcontent.push(React.createElement(EndScreen, { key: ReactUtils.generateKey(),
+                    scoreText: ReactUtils.multilinize(this.props.context.scoreText),
+                    bigText: ReactUtils.multilinize(this.props.context.bigText)
+                }));
                 break;
         }
 

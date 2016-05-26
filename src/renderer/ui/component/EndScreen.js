@@ -6,7 +6,7 @@ class EndScreen extends React.Component {
     render() {
         return <div className={classnames('class', ['centerHorizontal', 'centerVertical'])}>
             <StyledText style={'titleText'}>
-                {'GAME OVER'}
+                {this.props.bigText}
             </StyledText>
             <StyledText style={'smallText'}>
                 {this.props.scoreText}

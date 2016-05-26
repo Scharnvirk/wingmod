@@ -245,6 +245,7 @@ Core.prototype.makeMainComponents = function (worker) {
 Core.prototype.initializeEventHandlers = function () {
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
     this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
+    this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
     this.renderBus.on('pause', this.onPause.bind(this));
     this.renderBus.on('start', this.onStart.bind(this));
@@ -327,6 +328,10 @@ Core.prototype.onPlayerDied = function (event) {
     this.renderBus.postMessage('gameEnded', { enemiesKilled: event.data });
 };
 
+Core.prototype.onGameFinished = function (event) {
+    this.renderBus.postMessage('gameFinished', {});
+};
+
 Core.prototype.onMapHitmapsLoaded = function (event) {
     if (!event.data.hitmaps) throw new Error('No hitmap data received on onMapHitmapsLoaded event!');
     var hitmaps = JSON.parse(event.data.hitmaps);
@@ -374,21 +379,6 @@ GameScene.prototype.fillScene = function (mapBodies) {
     });
 
     this.addMapBodies(mapBodies);
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.MOOK,
-    //    positionX: 0,
-    //    positionY: 221,
-    //    angle: Utils.degToRad(180)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.DEBUG,
-    //    positionX: 0,
-    //    positionY: 221,
-    //    timeout: Infinity,
-    //    angle: Utils.degToRad(180)
-    // });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
@@ -396,31 +386,35 @@ GameScene.prototype.fillScene = function (mapBodies) {
         positionY: 221,
         angle: Utils.degToRad(180)
     });
+
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: -352,
+    //    positionY: 221,
+    //    angle: Utils.degToRad(180)
+    // });
     //
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: 221,
-        angle: Utils.degToRad(180)
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: -573,
-        angle: Utils.degToRad(0)
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: -573,
-        angle: Utils.degToRad(0)
-    });
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: 0,
+    //    positionY: -573,
+    //    angle: Utils.degToRad(0)
+    // });
+    //
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: -352,
+    //    positionY: -573,
+    //    angle: Utils.degToRad(0)
+    // });
 };
 
 GameScene.prototype.update = function () {
     this.timer++;
+
+    if (this.timer % 180 === 0) {
+        this.checkGameEndCondition();
+    }
 };
 
 GameScene.prototype.addMapBodies = function (mapBodies) {
@@ -428,6 +422,12 @@ GameScene.prototype.addMapBodies = function (mapBodies) {
         this.world.addBody(mapBodies[i]);
     }
     this.emit({ type: 'newMapBodies' });
+};
+
+GameScene.prototype.checkGameEndCondition = function () {
+    if (this.world.countEnemies() === 0) {
+        this.emit({ type: 'gameFinished' });
+    }
 };
 
 module.exports = GameScene;
@@ -490,6 +490,17 @@ GameWorld.prototype.makeUpdateData = function () {
 GameWorld.prototype.onCollision = function (collisionEvent) {
     collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
+};
+
+GameWorld.prototype.countEnemies = function () {
+    var enemies = 0;
+    for (var i = 0; i < this.bodies.length; i++) {
+        var body = this.bodies[i];
+        if (body.actor && body.shape.collisionGroup === Constants.COLLISION_GROUPS.ENEMY) {
+            enemies++;
+        }
+    }
+    return enemies;
 };
 
 module.exports = GameWorld;

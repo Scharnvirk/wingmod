@@ -16,7 +16,11 @@ var InitialView = React.createClass({
                 UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
                 break;
             case 'gameOverScreen':
-                UIcontent.push(<EndScreen key={ReactUtils.generateKey()} scoreText={ReactUtils.multilinize(this.props.context.scoreText)} />);
+                UIcontent.push(<
+                    EndScreen key={ReactUtils.generateKey()}
+                    scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
+                    bigText={ReactUtils.multilinize(this.props.context.bigText)} 
+                    />);
                 break;
         }
 

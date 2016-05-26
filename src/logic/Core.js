@@ -26,6 +26,7 @@ Core.prototype.makeMainComponents = function(worker){
 Core.prototype.initializeEventHandlers = function(){
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
     this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
+    this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
     this.renderBus.on('pause', this.onPause.bind(this));
     this.renderBus.on('start', this.onStart.bind(this));
@@ -37,6 +38,7 @@ Core.prototype.initializeEventHandlers = function(){
 
     this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
+
 };
 
 Core.prototype.initFpsCounter = function(){
@@ -104,6 +106,10 @@ Core.prototype.onNewMapBodies = function(){
 
 Core.prototype.onPlayerDied = function(event){
     this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
+};
+
+Core.prototype.onGameFinished = function(event){
+    this.renderBus.postMessage('gameFinished', {});
 };
 
 Core.prototype.onMapHitmapsLoaded = function(event){

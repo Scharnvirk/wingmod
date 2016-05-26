@@ -58,6 +58,7 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
     this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
+    this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
     this.logicBus.on('mapDone', this.onMapDone.bind(this));
@@ -210,6 +211,13 @@ Core.prototype.onGameEnded = function(event){
         this.ui.stopGame(event.data);
         this.renderLoop.stop();
     }.bind(this), 2000);
+};
+
+Core.prototype.onGameFinished = function(event){
+    setTimeout(function(){
+        this.ui.stopGameFinished();
+        this.renderLoop.stop();
+    }.bind(this), 500);
 };
 
 Core.prototype.onGetAiImage = function(event){

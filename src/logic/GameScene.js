@@ -27,22 +27,6 @@ GameScene.prototype.fillScene = function(mapBodies){
     });
 
     this.addMapBodies(mapBodies);
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.MOOK,
-    //    positionX: 0,
-    //    positionY: 221,
-    //    angle: Utils.degToRad(180)
-    // });
-    //
-    // this.actorManager.addNew({
-    //    classId: ActorFactory.DEBUG,
-    //    positionX: 0,
-    //    positionY: 221,
-    //    timeout: Infinity,
-    //    angle: Utils.degToRad(180)
-    // });
-
 
     this.actorManager.addNew({
        classId: ActorFactory.ENEMYSPAWNER,
@@ -50,31 +34,35 @@ GameScene.prototype.fillScene = function(mapBodies){
        positionY: 221,
        angle: Utils.degToRad(180)
     });
+
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: -352,
+    //    positionY: 221,
+    //    angle: Utils.degToRad(180)
+    // });
     //
-    this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: 221,
-       angle: Utils.degToRad(180)
-    });
-
-    this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: 0,
-       positionY: -573,
-       angle: Utils.degToRad(0)
-    });
-
-    this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: -573,
-       angle: Utils.degToRad(0)
-    });
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: 0,
+    //    positionY: -573,
+    //    angle: Utils.degToRad(0)
+    // });
+    //
+    // this.actorManager.addNew({
+    //    classId: ActorFactory.ENEMYSPAWNER,
+    //    positionX: -352,
+    //    positionY: -573,
+    //    angle: Utils.degToRad(0)
+    // });
 };
 
 GameScene.prototype.update = function(){
     this.timer++;
+
+    if(this.timer % 180 === 0){
+        this.checkGameEndCondition();
+    }
 };
 
 
@@ -83,6 +71,12 @@ GameScene.prototype.addMapBodies = function(mapBodies){
         this.world.addBody(mapBodies[i]);
     }
     this.emit({type: 'newMapBodies'});
+};
+
+GameScene.prototype.checkGameEndCondition = function(){
+    if(this.world.countEnemies() === 0){
+        this.emit({type: 'gameFinished'});
+    }
 };
 
 module.exports = GameScene;

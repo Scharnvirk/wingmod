@@ -55,4 +55,15 @@ GameWorld.prototype.onCollision = function(collisionEvent){
     collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
 };
 
+GameWorld.prototype.countEnemies = function(){
+    var enemies = 0;
+    for(let i = 0; i < this.bodies.length; i ++){
+        let body = this.bodies[i];
+        if(body.actor && body.shape.collisionGroup === Constants.COLLISION_GROUPS.ENEMY){
+            enemies ++;
+        }
+    }
+    return enemies;
+};
+
 module.exports = GameWorld;

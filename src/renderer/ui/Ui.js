@@ -46,8 +46,15 @@ Ui.prototype.startGame = function(){
 };
 
 Ui.prototype.stopGame = function(info){
+    var bigText = 'GAME OVER';
     var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
-    this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText});
+    this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
+};
+
+Ui.prototype.stopGameFinished = function(){
+    var bigText = 'SUCCESS!';
+    var scoreText = 'Congratulations! You have done it!';
+    this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
 };
 
 Ui.prototype.onStartButtonClick = function(){
