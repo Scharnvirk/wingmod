@@ -12,8 +12,6 @@ function ControlsHandler(config){
     this.inputState =  {};
 
     this.hudKeys = ['shift'];
-
-    this.camera = config.camera;
 }
 
 ControlsHandler.prototype.update = function(){

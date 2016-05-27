@@ -1,6 +1,6 @@
 var RenderBus = require("logic/RenderBus");
 var GameWorld = require("logic/GameWorld");
-var ActorManager = require("logic/actorManagement/ActorManager");
+var ActorManager = require("logic/actor/ActorManager");
 var MapManager = require("logic/map/MapManager");
 var GameScene = require("logic/GameScene");
 var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
@@ -29,7 +29,7 @@ Core.prototype.initializeEventHandlers = function(){
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
     this.renderBus.on('pause', this.onPause.bind(this));
-    this.renderBus.on('start', this.onStart.bind(this));
+    this.renderBus.on('startGame', this.onStart.bind(this));
     this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
     this.renderBus.on('inputState', this.onInputState.bind(this));
     this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
@@ -38,7 +38,6 @@ Core.prototype.initializeEventHandlers = function(){
 
     this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
-
 };
 
 Core.prototype.initFpsCounter = function(){
@@ -122,7 +121,6 @@ Core.prototype.onMapHitmapsLoaded = function(event){
 Core.prototype.onMapDone = function(event){
     this.scene.fillScene(event.data.bodies);
     this.renderBus.postMessage('mapDone', event.data.layout);
-    this.onStart();
 };
 
 module.exports = Core;

@@ -2,14 +2,23 @@ var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var ChunkMesh = require("renderer/map/ChunkMesh");
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var BaseScene = require("renderer/scene/BaseScene");
+var Camera = require("renderer/Camera");
 
 function GameScene(config) {
+
+    if (!config.inputListener) throw new Error ('no Input Listener specified for GameScene!');
+
     Object.assign(this, config);
     this.lightCounter = 0;
     this.shadows = config.shadows;
+
+    BaseScene.apply(this, arguments);
 }
 
-GameScene.prototype.make = function() {
+GameScene.extend(BaseScene);
+
+GameScene.prototype.build = function() {
     this.initialColor = {
         r: Utils.rand(100,100)/100,
         g: Utils.rand(100,100)/100,
@@ -43,16 +52,16 @@ GameScene.prototype.make = function() {
     this.directionalLight.shadow.mapSize.width = 2048;
     this.directionalLight.shadow.bias = -0.0075;
 
-    this.scene.add( this.directionalLight );
+    this.threeScene.add( this.directionalLight );
 
     this.ambientLight = new THREE.AmbientLight( 0x505050, 1 );
 
-    this.scene.add( this.ambientLight);
+    this.threeScene.add( this.ambientLight);
 
-    this.scene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
+    this.threeScene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
 };
 
-GameScene.prototype.update = function(){
+GameScene.prototype.customUpdate = function(){
     if(this.actor){
         this.directionalLight.position.x = this.actor.position[0] + 100;
         this.directionalLight.position.y = this.actor.position[1] + 100;
@@ -110,7 +119,7 @@ GameScene.prototype.buildMap = function(layoutData){
         });
         chunk.setPosition(config.position);
         chunk.setRotation(config.rotation);
-        this.scene.add(chunk);
+        this.threeScene.add(chunk);
     }
 };
 
@@ -126,13 +135,28 @@ GameScene.prototype.testMesh = function(meshClass, scale){
     mesh.castShadow = true;
     mesh.receiveShadow = true;
 
-    this.scene.add(mesh);
+    this.threeScene.add(mesh);
 
     setInterval(() => {
         mesh.rotation.y += 0.01;
     }, 5);
 
     return mesh;
+};
+
+GameScene.prototype.buildCamera = function(){
+    var camera = new Camera({inputListener: this.inputListener});
+    camera.setPositionZ(80, 20);
+    return camera;
+};
+
+GameScene.prototype.resetCamera = function(){
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+};
+
+GameScene.prototype.addPlayerActor = function(actor){
+    this.camera.actor = actor;
 };
 
 

@@ -1,13 +1,11 @@
 var ParticleConfigBuilder = require("renderer/particleSystem/ParticleConfigBuilder");
 var ParticleGenerator = require("renderer/particleSystem/ParticleGenerator");
 
-
-
 function ParticleManager(config){
     config = config || {};
     Object.assign(this, config);
 
-    if(!this.scene) throw new Error('No scene specified for ParticleGenerator!');
+    if(!this.sceneManager) throw new Error('No sceneManager specified for ParticleManager!');
 
     this.configBuilder = new ParticleConfigBuilder(config);
     this.configs = this.configBuilder.getAllConfigs();
@@ -20,7 +18,7 @@ ParticleManager.prototype.buildGenerators = function(){
     Object.keys(this.configs).forEach(configName => {
         let generator = new ParticleGenerator(this.configs[configName]);
         this.generators[configName] = (generator);
-        this.scene.add(generator);
+        this.sceneManager.add(generator);
     });
 };
 

@@ -23,6 +23,7 @@ Init.prototype.start = function(){
         });
 
         ui.gameCore = core;
+        ui.init();
 
         global.uiDebugHandle = ui;
         global.gameCore = core;

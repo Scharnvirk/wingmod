@@ -40,7 +40,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
 
 };
 
-EnemySpawnerActor.prototype.handleDamage = function(){
+EnemySpawnerActor.prototype.handleDamage = function(damageValue){
     let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     let offsetPosition = Utils.angleToVector(this.angle, -12);
     let position = [

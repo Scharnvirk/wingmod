@@ -1,10 +1,9 @@
 var InputListener = require("renderer/InputListener");
-var Camera = require("renderer/Camera");
 var ParticleManager = require("renderer/particleSystem/ParticleManager");
-var ActorManager = require("renderer/actorManagement/ActorManager");
+var ActorManager = require("renderer/actor/ActorManager");
 var LogicBus = require("renderer/LogicBus");
 var ControlsHandler = require("renderer/ControlsHandler");
-var GameScene = require("renderer/scene/GameScene");
+var SceneManager = require("renderer/scene/SceneManager");
 var AssetManager = require("renderer/assetManagement/assetManager.js");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 var Hud = require("renderer/gameUi/Hud");
@@ -42,13 +41,11 @@ Core.prototype.init = function(config){
 
 Core.prototype.makeMainComponents = function(){
     this.inputListener = new InputListener({domElement: this.renderer.domElement});
-    this.camera = this.makeCamera(this.inputListener);
-    this.scene = this.makeScene(this.camera);
-    this.particleManager = new ParticleManager({scene: this.scene, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
-    this.actorManager = new ActorManager({scene: this.scene, particleManager: this.particleManager});
+    this.sceneManager = new SceneManager();
+    this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
+    this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
     this.logicBus = new LogicBus({worker: this.logicWorker});
-    this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus, camera: this.camera});
-    this.gameScene = new GameScene({scene: this.scene, actorManager: this.actorManager, shadows: this.renderShadows});
+    this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.assetManager = new AssetManager();
@@ -61,7 +58,9 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
-    this.logicBus.on('mapDone', this.onMapDone.bind(this));
+    this.logicBus.on('mapDone', this.sceneManager.onMapDone.bind(this.sceneManager));
+
+    this.ui.on('startGame', this.onStartGame.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -92,17 +91,6 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
     this.autoResize();
 };
 
-Core.prototype.makeCamera = function(inputListener) {
-    var camera = new Camera({inputListener: inputListener});
-    return camera;
-};
-
-Core.prototype.makeScene = function(camera) {
-    var scene = new THREE.Scene();
-    scene.add(camera);
-    return scene;
-};
-
 Core.prototype.makeRenderer = function(config) {
     config = config || {};
     var renderer = new THREE.WebGLRenderer();
@@ -111,12 +99,6 @@ Core.prototype.makeRenderer = function(config) {
     renderer.shadowMap.enabled = !!config.shadows;
     renderer.shadowMap.type = !!config.shadows ? THREE.PCFSoftShadowMap : null;
     return renderer;
-};
-
-Core.prototype.applyResolutionCoefficient = function(){
-    this.renderer.setPixelRatio(this.resolutionCoefficient);
-    this.resetRenderer();
-    this.resetCamera();
 };
 
 Core.prototype.autoResize = function() {
@@ -137,13 +119,11 @@ Core.prototype.resetRenderer = function(){
 };
 
 Core.prototype.resetCamera = function(){
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
+    this.sceneManager.resetCamera();
 };
 
 Core.prototype.assetsLoaded = function(){
     console.log("assets loaded");
-    this.gameScene.make();
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -168,20 +148,18 @@ Core.prototype.controlsUpdate = function(){
     this.controlsHandler.update();
 };
 
-Core.prototype.render = function(){
-    this.gameScene.update();
+Core.prototype.render = function(){    
     this.actorManager.update();
     this.hud.update();
     this.particleManager.update();
-    this.camera.update();
+    this.sceneManager.update();
     this.renderTicks++;
-    this.renderer.render(this.scene, this.camera);
+    this.sceneManager.render(this.renderer);
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
 
 Core.prototype.startGameRenderMode = function(){
-    this.camera.setPositionZ(80, 20);
     this.renderLoop.start();
 };
 
@@ -192,10 +170,10 @@ Core.prototype.getAiImageObject = function(wallsData){
 //todo: something better for injecting that actor?
 Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
-    this.camera.actor = actor;
-    this.gameScene.actor = actor;
-    this.hud.actor = actor;
     actor.inputListener = this.inputListener;
+    this.hud.actor = actor;
+
+    this.sceneManager.onPlayerActorAppeared(actor);
 };
 
 Core.prototype.onUpdateActors = function(event){
@@ -229,11 +207,12 @@ Core.prototype.onActorEvents = function(event){
 };
 
 Core.prototype.onRequestUiFlash = function(event){
-    this.gameScene.doUiFlash(event.data);
+    this.sceneManager.doUiFlash(event.data);
 };
 
-Core.prototype.onMapDone = function(event){
-    this.gameScene.buildMap(event.data);
+Core.prototype.onStartGame = function(event){
+    this.logicBus.postMessage('startGame', {});
+    this.sceneManager.makeScene('gameScene', {scene: this.scene, actorManager: this.actorManager, shadows: this.renderShadows, inputListener: this.inputListener});
 };
 
 module.exports = Core;

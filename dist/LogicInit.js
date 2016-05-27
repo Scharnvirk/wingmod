@@ -219,7 +219,7 @@ if ('function' === typeof importScripts) {
 
 var RenderBus = require("logic/RenderBus");
 var GameWorld = require("logic/GameWorld");
-var ActorManager = require("logic/actorManagement/ActorManager");
+var ActorManager = require("logic/actor/ActorManager");
 var MapManager = require("logic/map/MapManager");
 var GameScene = require("logic/GameScene");
 var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
@@ -248,7 +248,7 @@ Core.prototype.initializeEventHandlers = function () {
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
     this.renderBus.on('pause', this.onPause.bind(this));
-    this.renderBus.on('start', this.onStart.bind(this));
+    this.renderBus.on('startGame', this.onStart.bind(this));
     this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
     this.renderBus.on('inputState', this.onInputState.bind(this));
     this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
@@ -342,12 +342,11 @@ Core.prototype.onMapHitmapsLoaded = function (event) {
 Core.prototype.onMapDone = function (event) {
     this.scene.fillScene(event.data.bodies);
     this.renderBus.postMessage('mapDone', event.data.layout);
-    this.onStart();
 };
 
 module.exports = Core;
 
-},{"logic/GameScene":4,"logic/GameWorld":5,"logic/RenderBus":6,"logic/WorldAiMapExtractor":7,"logic/actorManagement/ActorManager":8,"logic/map/MapManager":41}],4:[function(require,module,exports){
+},{"logic/GameScene":4,"logic/GameWorld":5,"logic/RenderBus":6,"logic/WorldAiMapExtractor":7,"logic/actor/ActorManager":8,"logic/map/MapManager":41}],4:[function(require,module,exports){
 "use strict";
 
 var ActorFactory = require("shared/ActorFactory")('logic');
@@ -3481,7 +3480,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
     }
 };
 
-EnemySpawnerActor.prototype.handleDamage = function () {
+EnemySpawnerActor.prototype.handleDamage = function (damageValue) {
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
     var offsetPosition = Utils.angleToVector(this.angle, -12);
     var position = [this.position[0] + offsetPosition[0] + Utils.rand(-8, 8), this.position[1] + offsetPosition[1] + Utils.rand(-8, 8)];

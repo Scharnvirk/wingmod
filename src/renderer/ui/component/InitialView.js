@@ -19,7 +19,7 @@ var InitialView = React.createClass({
                 UIcontent.push(<
                     EndScreen key={ReactUtils.generateKey()}
                     scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
-                    bigText={ReactUtils.multilinize(this.props.context.bigText)} 
+                    bigText={ReactUtils.multilinize(this.props.context.bigText)}
                     />);
                 break;
         }
@@ -33,7 +33,7 @@ var InitialView = React.createClass({
                 blurState = 'start';
                 break;
             default:
-                blurState = 'on';
+                blurState = 'end';
         }
 
         return <div>

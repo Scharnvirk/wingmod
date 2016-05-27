@@ -12,7 +12,7 @@ function ActorManager(config){
 
     Object.assign(this, config);
 
-    if(!this.scene) throw new Error('No scene for Renderer ActorManager!');
+    if(!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
     if(!this.particleManager) throw new Error('No particleManager for Renderer ActorManager!');
 
     this.factory = config.factory || ActorFactory.getInstance({particleManager: this.particleManager});
@@ -80,7 +80,7 @@ ActorManager.prototype.createActor = function(config){
     }
 
     this.storage[config.actorId] = actor;
-    actor.addToScene(this.scene);
+    actor.addToScene(this.sceneManager.getThreeScene());
     actor.onSpawn();
 };
 
@@ -94,7 +94,7 @@ ActorManager.prototype.deleteActor = function(actorId){
     var actor = this.storage[actorId];
     if(actor){
         actor.onDeath();
-        actor.removeFromScene(this.scene);
+        actor.removeFromScene(this.sceneManager.getThreeScene());
     }
     delete this.storage[actorId];
 };
