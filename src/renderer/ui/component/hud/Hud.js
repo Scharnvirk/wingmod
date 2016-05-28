@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-
 var PubSub = require('pubsub-js');
 
 class Hud extends React.Component {

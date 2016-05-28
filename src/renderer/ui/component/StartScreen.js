@@ -15,9 +15,20 @@ var bottomText = ReactUtils.multilinize(
     'Some frameworks were surely and painfully harmed in the making of this... thing.\n'
 );
 
-class StartScreen extends React.Component {
+var StartScreen = React.createClass({
+    getInitialState() {
+        return { assetsLoaded: false };
+    },
+    componentWillMount() {
+        PubSub.subscribe( 'assetsLoaded', (msg, data) => {
+            this.setState({assetsLoaded: true});
+        });
+    },
     render() {
         var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
+        console.log("rendereing", this.state.assetsLoaded);
+        var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
+        var startClass = this.state.assetsLoaded ? '' : 'textDark';
         return <div>
             <div
                 className={ classnames('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing']) }
@@ -26,18 +37,15 @@ class StartScreen extends React.Component {
                     <span>{'WINGMOD'}</span>
                     <span style={{color: 'red'}}>{'2'}</span>
                 </StyledText>
-                <Button text={'START GAME'} buttonEvent={'start'}/>
+                <Button text={startButtonText} buttonEvent={'start'} />
                 <SettingsMenu/>
             </div>
-            <StyledText style={classnames('class', ['smallText', 'centerHorizontal', 'bottomVertical' ])}>
-                <span className={'textDark'} >{bottomText}</span>
-            </StyledText>
             <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
                 <span className={'textDark'} >{versionText}</span>
             </StyledText>
         </div>;
     }
-}
+});
 
 class SettingsMenu extends React.Component {
     render(){

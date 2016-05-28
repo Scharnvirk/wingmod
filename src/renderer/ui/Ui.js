@@ -8,6 +8,7 @@ function Ui(config){
     this.gameCore = null;
 
     this.configState = {};
+    this.assetsLoaded = false;
 
     this.setupButtonListener();
     EventEmitter.apply(this, arguments);
@@ -16,6 +17,7 @@ function Ui(config){
 Ui.extend(EventEmitter);
 
 Ui.prototype.setupButtonListener = function(){
+    console.log(PubSub);
     PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
             case 'start':
@@ -49,6 +51,10 @@ Ui.prototype.init = function(){
     });
 };
 
+Ui.prototype.setAssetsLoaded = function(state){
+    this.assetsLoaded = state;
+};
+
 Ui.prototype.stopGame = function(info){
     var bigText = 'GAME OVER';
     var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
@@ -62,8 +68,10 @@ Ui.prototype.stopGameFinished = function(){
 };
 
 Ui.prototype.onStartButtonClick = function(){
-    this.emit({type: 'startGame'});
-    this.reactUi.changeMode('running');
+    if(this.assetsLoaded){
+        this.emit({type: 'startGame'});
+        this.reactUi.changeMode('running');
+    }
 };
 
 Ui.prototype.onShadowConfig = function(data){

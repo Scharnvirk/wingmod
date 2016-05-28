@@ -132,9 +132,9 @@ MainMenuScene.prototype.customUpdate = function(){
 MainMenuScene.prototype.doBob = function(){
     this.shipMesh.position.z += this.shipMesh.speedZ;
     if (this.shipMesh.position.z > 4){
-        this.shipMesh.speedZ -= 0.0012;
+        this.shipMesh.speedZ -= 0.001;
     } else {
-        this.shipMesh.speedZ += 0.0012;
+        this.shipMesh.speedZ += 0.001;
     }
 
     this.shipMesh.rotation.y += this.shipMesh.speedY;

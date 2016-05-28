@@ -161,6 +161,8 @@ Core.prototype.render = function(){
 };
 
 Core.prototype.startGameRenderMode = function(){
+    PubSub.publish('assetsLoaded');
+    this.ui.setAssetsLoaded(true);
     this.renderLoop.start();
 };
 
@@ -214,6 +216,12 @@ Core.prototype.onRequestUiFlash = function(event){
 Core.prototype.onStartGame = function(event){
     this.logicBus.postMessage('startGame', {});
     this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+};
+
+Core.prototype.rebuildRenderer = function(){
+    this.viewportElement.removeChild( this.renderer.domElement );
+    this.renderer = this.makeRenderer();
+    this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
 module.exports = Core;

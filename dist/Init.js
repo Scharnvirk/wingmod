@@ -2564,6 +2564,8 @@ Core.prototype.render = function () {
 };
 
 Core.prototype.startGameRenderMode = function () {
+    PubSub.publish('assetsLoaded');
+    this.ui.setAssetsLoaded(true);
     this.renderLoop.start();
 };
 
@@ -2617,6 +2619,12 @@ Core.prototype.onRequestUiFlash = function (event) {
 Core.prototype.onStartGame = function (event) {
     this.logicBus.postMessage('startGame', {});
     this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+};
+
+Core.prototype.rebuildRenderer = function () {
+    this.viewportElement.removeChild(this.renderer.domElement);
+    this.renderer = this.makeRenderer();
+    this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
 module.exports = Core;
@@ -6621,9 +6629,9 @@ MainMenuScene.prototype.customUpdate = function () {
 MainMenuScene.prototype.doBob = function () {
     this.shipMesh.position.z += this.shipMesh.speedZ;
     if (this.shipMesh.position.z > 4) {
-        this.shipMesh.speedZ -= 0.0012;
+        this.shipMesh.speedZ -= 0.001;
     } else {
-        this.shipMesh.speedZ += 0.0012;
+        this.shipMesh.speedZ += 0.001;
     }
 
     this.shipMesh.rotation.y += this.shipMesh.speedY;
@@ -6827,6 +6835,7 @@ function Ui(config) {
     this.gameCore = null;
 
     this.configState = {};
+    this.assetsLoaded = false;
 
     this.setupButtonListener();
     EventEmitter.apply(this, arguments);
@@ -6837,6 +6846,7 @@ Ui.extend(EventEmitter);
 Ui.prototype.setupButtonListener = function () {
     var _this = this;
 
+    console.log(PubSub);
     PubSub.subscribe('buttonClick', function (msg, data) {
         switch (data.buttonEvent) {
             case 'start':
@@ -6870,6 +6880,10 @@ Ui.prototype.init = function () {
     });
 };
 
+Ui.prototype.setAssetsLoaded = function (state) {
+    this.assetsLoaded = state;
+};
+
 Ui.prototype.stopGame = function (info) {
     var bigText = 'GAME OVER';
     var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
@@ -6883,8 +6897,10 @@ Ui.prototype.stopGameFinished = function () {
 };
 
 Ui.prototype.onStartButtonClick = function () {
-    this.emit({ type: 'startGame' });
-    this.reactUi.changeMode('running');
+    if (this.assetsLoaded) {
+        this.emit({ type: 'startGame' });
+        this.reactUi.changeMode('running');
+    }
 };
 
 Ui.prototype.onShadowConfig = function (data) {
@@ -7044,71 +7060,63 @@ var ReactUtils = require('renderer/ui/ReactUtils');
 
 var bottomText = ReactUtils.multilinize('Wingmod 2 is a little experimental project aimed at learning' + '\nand experimenting with various web technologies.\n' + '\n' + 'Please note that this project depends very heavily on WebGL, so it works best on a PC.\n' + 'No mobile support is planned as keyboard and mouse are essential, but for debug you can try it.\n' + '\n' + 'Some frameworks were surely and painfully harmed in the making of this... thing.\n');
 
-var StartScreen = function (_React$Component) {
-    _inherits(StartScreen, _React$Component);
+var StartScreen = React.createClass({
+    displayName: 'StartScreen',
+    getInitialState: function getInitialState() {
+        return { assetsLoaded: false };
+    },
+    componentWillMount: function componentWillMount() {
+        var _this = this;
 
-    function StartScreen() {
-        _classCallCheck(this, StartScreen);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StartScreen).apply(this, arguments));
-    }
-
-    _createClass(StartScreen, [{
-        key: 'render',
-        value: function render() {
-            var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
-            return React.createElement(
+        PubSub.subscribe('assetsLoaded', function (msg, data) {
+            _this.setState({ assetsLoaded: true });
+        });
+    },
+    render: function render() {
+        var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
+        console.log("rendereing", this.state.assetsLoaded);
+        var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
+        var startClass = this.state.assetsLoaded ? '' : 'textDark';
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
                 'div',
-                null,
+                {
+                    className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing'])
+                },
                 React.createElement(
-                    'div',
-                    {
-                        className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing'])
-                    },
+                    StyledText,
+                    { style: 'titleText' },
                     React.createElement(
-                        StyledText,
-                        { style: 'titleText' },
-                        React.createElement(
-                            'span',
-                            null,
-                            'WINGMOD'
-                        ),
-                        React.createElement(
-                            'span',
-                            { style: { color: 'red' } },
-                            '2'
-                        )
+                        'span',
+                        null,
+                        'WINGMOD'
                     ),
-                    React.createElement(Button, { text: 'START GAME', buttonEvent: 'start' }),
-                    React.createElement(SettingsMenu, null)
-                ),
-                React.createElement(
-                    StyledText,
-                    { style: (0, _classnames2.default)('class', ['smallText', 'centerHorizontal', 'bottomVertical']) },
                     React.createElement(
                         'span',
-                        { className: 'textDark' },
-                        bottomText
+                        { style: { color: 'red' } },
+                        '2'
                     )
                 ),
+                React.createElement(Button, { text: startButtonText, buttonEvent: 'start' }),
+                React.createElement(SettingsMenu, null)
+            ),
+            React.createElement(
+                StyledText,
+                { style: (0, _classnames2.default)('class', ['smallText', 'topRightCorner']) },
                 React.createElement(
-                    StyledText,
-                    { style: (0, _classnames2.default)('class', ['smallText', 'topRightCorner']) },
-                    React.createElement(
-                        'span',
-                        { className: 'textDark' },
-                        versionText
-                    )
+                    'span',
+                    { className: 'textDark' },
+                    versionText
                 )
-            );
-        }
-    }]);
+            )
+        );
+    }
+});
 
-    return StartScreen;
-}(React.Component);
-
-var SettingsMenu = function (_React$Component2) {
-    _inherits(SettingsMenu, _React$Component2);
+var SettingsMenu = function (_React$Component) {
+    _inherits(SettingsMenu, _React$Component);
 
     function SettingsMenu() {
         _classCallCheck(this, SettingsMenu);
