@@ -33,6 +33,19 @@ function OrbotActor(config){
 
 OrbotActor.extend(BaseActor);
 
+OrbotActor.prototype.createBrain = function(config){
+    return new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor(),
+        shootingArc: 30,
+        nearDistance: 10,
+        farDistance: 30,
+        firingDistance: 50
+    });
+};
+
+
 OrbotActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
@@ -74,17 +87,6 @@ OrbotActor.prototype.lookAtPosition = function(position){
     if (angle >= 180 && angle < 360) {
         this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
     }
-};
-
-OrbotActor.prototype.createBrain = function(config){
-    return new MookBrain({
-        actor: this,
-        manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor(),
-        shootingArc: 30,
-        nearDistance: 10,
-        farDistance: 30
-    });
 };
 
 OrbotActor.prototype.createWeapon = function(){

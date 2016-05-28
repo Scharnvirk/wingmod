@@ -5,6 +5,7 @@ function MookBrain(config){
     config.shootingArc = config.shootingArc || 15;
     config.nearDistance = config.nearDistance || 40;
     config.farDistance = config.farDistance || 90;
+    config.firingDistance = config.firingDistance || 200;
 
     Object.assign(this, config);
     BaseBrain.apply(this, arguments);
@@ -144,12 +145,18 @@ MookBrain.prototype.seesPlayerAction = function(){
     var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
 
     this.orders.thrust = 0;
-    if (distance > this.farDistance) this.orders.thrust = 1;
-    if (distance < this.nearDistance) this.orders.thrust = -1;
+    if (distance > this.farDistance) {
+        this.orders.thrust = 1;
+    }
+    if (distance < this.nearDistance) {
+        this.orders.thrust = -1;
+    }
 
     this.orders.turn = 0;
 
-    this.shootAction(distance);
+    if (distance < this.firingDistance){
+        this.shootAction(distance);
+    }
     this.randomStrafeAction();
 };
 

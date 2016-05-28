@@ -33,6 +33,18 @@ function SniperActor(config){
 
 SniperActor.extend(BaseActor);
 
+SniperActor.prototype.createBrain = function(){
+    return new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor(),
+        shootingArc: 8,
+        nearDistance: 200,
+        farDistance: 300,
+        firingDistance: 400
+    });
+};
+
 SniperActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
@@ -74,17 +86,6 @@ SniperActor.prototype.lookAtPosition = function(position){
     if (angle >= 180 && angle < 360) {
         this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
     }
-};
-
-SniperActor.prototype.createBrain = function(){
-    return new MookBrain({
-        actor: this,
-        manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor(),
-        shootingArc: 8,
-        nearDistance: 200,
-        farDistance: 300
-    });
 };
 
 SniperActor.prototype.createWeapon = function(){

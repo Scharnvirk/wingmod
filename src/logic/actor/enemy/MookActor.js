@@ -34,6 +34,15 @@ function MookActor(config){
 
 MookActor.extend(BaseActor);
 
+MookActor.prototype.createBrain = function(){
+    return new MookBrain({
+        actor: this,
+        manager: this.manager,
+        playerActor: this.manager.getFirstPlayerActor(),
+        firingDistance: 140
+    });
+};
+
 MookActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
@@ -75,14 +84,6 @@ MookActor.prototype.lookAtPosition = function(position){
     if (angle >= 180 && angle < 360) {
         this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
     }
-};
-
-MookActor.prototype.createBrain = function(){
-    return new MookBrain({
-        actor: this,
-        manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor()
-    });
 };
 
 MookActor.prototype.createWeapon = function(){

@@ -20,7 +20,7 @@ function ShipActor(){
 ShipActor.extend(BaseActor);
 
 ShipActor.prototype.createMesh = function(){
-    return new RavierMesh({actor: this, scaleX: 3, scaleY: 3, scaleZ: 3});
+    return new RavierMesh({actor: this, scaleX: 3.3, scaleY: 3.3, scaleZ: 3.3});
 };
 
 ShipActor.prototype.customUpdate = function(){
@@ -72,14 +72,14 @@ ShipActor.prototype.doEngineGlow = function(){
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 15,
-                distance: -5.2
+                distance: -5.8
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
                 angle: this.angle,
                 angleOffset: 345,
-                distance: -5.2
+                distance: -5.8
             });
         }
 
