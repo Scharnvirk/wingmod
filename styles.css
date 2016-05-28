@@ -183,8 +183,8 @@
 
 .titleText{
   text-align: center;
-  letter-spacing: 40px;
-  font-size: 100px;
+  letter-spacing: 7px;
+  font-size: 50px;
   color: white;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
@@ -206,7 +206,7 @@
 }
 
 .centerVertical{
-  top: 50%;
+  top: 65%;
   transform: translate(0, -50%);
 }
 
@@ -233,7 +233,7 @@
 }
 
 .bottomVertical{
-  bottom: 50px;
+  bottom: 30px;
 }
 
 .topRightCorner{

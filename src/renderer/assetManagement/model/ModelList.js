@@ -7,7 +7,8 @@ var ModelList = {
         '/models/orbot.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
-        '/models/telering_top.json'
+        '/models/telering_top.json',
+        '/models/levels/startmenu.json'
     ]
 };
 

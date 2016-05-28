@@ -93,7 +93,7 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
 
 Core.prototype.makeRenderer = function(config) {
     config = config || {};
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({antialias: false});
     renderer.setPixelRatio(this.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadows;
@@ -124,6 +124,7 @@ Core.prototype.resetCamera = function(){
 
 Core.prototype.assetsLoaded = function(){
     console.log("assets loaded");
+    this.sceneManager.makeScene('mainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -148,7 +149,7 @@ Core.prototype.controlsUpdate = function(){
     this.controlsHandler.update();
 };
 
-Core.prototype.render = function(){    
+Core.prototype.render = function(){
     this.actorManager.update();
     this.hud.update();
     this.particleManager.update();
@@ -212,7 +213,7 @@ Core.prototype.onRequestUiFlash = function(event){
 
 Core.prototype.onStartGame = function(event){
     this.logicBus.postMessage('startGame', {});
-    this.sceneManager.makeScene('gameScene', {scene: this.scene, actorManager: this.actorManager, shadows: this.renderShadows, inputListener: this.inputListener});
+    this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
 };
 
 module.exports = Core;

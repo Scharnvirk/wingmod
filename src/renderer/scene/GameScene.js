@@ -1,7 +1,6 @@
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var ChunkMesh = require("renderer/map/ChunkMesh");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
 var BaseScene = require("renderer/scene/BaseScene");
 var Camera = require("renderer/Camera");
 
@@ -123,30 +122,10 @@ GameScene.prototype.buildMap = function(layoutData){
     }
 };
 
-GameScene.prototype.testMesh = function(meshClass, scale){
-    scale = scale || 1;
-    var mesh = new BaseMesh({
-        geometry: ModelStore.get(meshClass).geometry,
-        material: ModelStore.get(meshClass).material
-    });
-    mesh.scale.x = scale;
-    mesh.scale.y = scale;
-    mesh.scale.z = scale;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    this.threeScene.add(mesh);
-
-    setInterval(() => {
-        mesh.rotation.y += 0.01;
-    }, 5);
-
-    return mesh;
-};
-
 GameScene.prototype.buildCamera = function(){
     var camera = new Camera({inputListener: this.inputListener});
-    camera.setPositionZ(80, 20);
+    camera.position.z = 800;
+    camera.setMovementZ(80, 20);
     return camera;
 };
 
@@ -158,6 +137,5 @@ GameScene.prototype.resetCamera = function(){
 GameScene.prototype.addPlayerActor = function(actor){
     this.camera.actor = actor;
 };
-
 
 module.exports = GameScene;

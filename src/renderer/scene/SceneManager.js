@@ -6,7 +6,6 @@ function SceneManager(config){
     EventEmitter.apply(this, arguments);
     this.activeScene = null;
     this.sceneList = this.buildSceneList();
-    this.scenes = {};
 
     this.threeObjects = [];
 
@@ -32,8 +31,7 @@ SceneManager.prototype.update = function(){
 SceneManager.prototype.makeScene = function(sceneName, config){
     if (!this.sceneList[sceneName]) throw new Error('No such scene: ' + sceneName);
 
-    this.scenes[sceneName] = new this.sceneList[sceneName](config);
-    this.activeScene = this.scenes[sceneName];
+    this.activeScene = new this.sceneList[sceneName](config);
     this.activeScene.build();
 
     if(this.storedMapData){
@@ -43,7 +41,6 @@ SceneManager.prototype.makeScene = function(sceneName, config){
     this.threeObjects.forEach(objectToAdd => {
         this.activeScene.add(objectToAdd);
     });
-    this.threeObjects = [];
 };
 
 SceneManager.prototype.onMapDone = function(event){
@@ -81,6 +78,7 @@ SceneManager.prototype.render = function(renderer){
 SceneManager.prototype.onPlayerActorAppeared = function(actor){
     if (this.activeScene){
         this.activeScene.addPlayerActor(actor);
+        this.activeScene.actor = actor;
     }
 };
 

@@ -2272,7 +2272,7 @@ function Camera(config) {
     this.expectedPositionZ = this.position.z;
     this.rotation.reorder('ZXY');
 
-    this.position.z = 800;
+    this.position.z = 0;
     this.rotation.x = 1.0;
     this.rotation.y = 0;
 
@@ -2318,7 +2318,7 @@ Camera.prototype.update = function () {
     }
 };
 
-Camera.prototype.setPositionZ = function (newPositionZ, zoomSpeed) {
+Camera.prototype.setMovementZ = function (newPositionZ, zoomSpeed) {
     this.zoomSpeed = zoomSpeed ? zoomSpeed : this.zoomSpeed;
     this.expectedPositionZ = newPositionZ;
 };
@@ -2484,7 +2484,7 @@ Core.prototype.attachToDom = function (renderer, stats, renderStats) {
 
 Core.prototype.makeRenderer = function (config) {
     config = config || {};
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({ antialias: false });
     renderer.setPixelRatio(this.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadows;
@@ -2517,6 +2517,7 @@ Core.prototype.resetCamera = function () {
 
 Core.prototype.assetsLoaded = function () {
     console.log("assets loaded");
+    this.sceneManager.makeScene('mainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -2605,7 +2606,7 @@ Core.prototype.onRequestUiFlash = function (event) {
 
 Core.prototype.onStartGame = function (event) {
     this.logicBus.postMessage('startGame', {});
-    this.sceneManager.makeScene('gameScene', { scene: this.scene, actorManager: this.actorManager, shadows: this.renderShadows, inputListener: this.inputListener });
+    this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
 };
 
 module.exports = Core;
@@ -3879,6 +3880,10 @@ function ShipActor() {
     this.hp = 30;
     this.lastHp = this.hp;
     this.hpBarCount = 20;
+
+    this.speedZ = 0.04;
+    this.speedY = 0.0025;
+    this.speedX = 0.002;
 }
 
 ShipActor.extend(BaseActor);
@@ -3899,11 +3904,33 @@ ShipActor.prototype.doBank = function () {
 };
 
 ShipActor.prototype.doBob = function () {
+
     if (this.positionZ > 10) {
         this.speedZ -= 0.002;
     } else {
         this.speedZ += 0.002;
     }
+
+    this.mesh.rotation.y += this.speedY;
+    if (this.mesh.rotation.y > 0) {
+        this.speedY -= 0.00012;
+    } else {
+        this.speedY += 0.00012;
+    }
+
+    this.mesh.rotation.x += this.speedX;
+    if (this.mesh.rotation.x > 0) {
+        this.speedX -= 0.00009;
+    } else {
+        this.speedX += 0.00009;
+    }
+
+    // this.positionZ += this.speedZ;
+    // if (this.positionZ > 10){
+    //     this.speedZ -= 0.002;
+    // } else {
+    //     this.speedZ += 0.002;
+    // }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
@@ -4823,7 +4850,7 @@ module.exports = CustomModelBuilder;
 'use strict';
 
 var ModelList = {
-    models: ['/models/ship.json', '/models/ravier.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json']
+    models: ['/models/ship.json', '/models/ravier.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json']
 };
 
 module.exports = ModelList;
@@ -6241,7 +6268,10 @@ module.exports = function (config) {
 };
 
 },{}],99:[function(require,module,exports){
-'use strict';
+"use strict";
+
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function BaseScene(config) {
     Object.assign(this, config);
@@ -6264,6 +6294,10 @@ BaseScene.prototype.buildCamera = function () {
     throw new Error('Attempting to use default (empty) camera constructor for Scene!');
 };
 
+BaseScene.prototype.build = function () {
+    throw new Error('Attempting to use default (empty) build function for Scene!');
+};
+
 BaseScene.prototype.buildThreeScene = function () {
     return new THREE.Scene();
 };
@@ -6273,15 +6307,35 @@ BaseScene.prototype.customUpdate = function () {};
 BaseScene.prototype.resetCamera = function () {};
 BaseScene.prototype.doUiFlash = function () {};
 
+BaseScene.prototype.testMesh = function (meshClass, scale) {
+    scale = scale || 1;
+    var mesh = new BaseMesh({
+        geometry: ModelStore.get(meshClass).geometry,
+        material: ModelStore.get(meshClass).material
+    });
+    mesh.scale.x = scale;
+    mesh.scale.y = scale;
+    mesh.scale.z = scale;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    this.threeScene.add(mesh);
+
+    setInterval(function () {
+        mesh.rotation.z += 0.001;
+    }, 5);
+
+    return mesh;
+};
+
 module.exports = BaseScene;
 
-},{}],100:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":42,"renderer/assetManagement/model/ModelStore":74}],100:[function(require,module,exports){
 "use strict";
 
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var ChunkMesh = require("renderer/map/ChunkMesh");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
 var BaseScene = require("renderer/scene/BaseScene");
 var Camera = require("renderer/Camera");
 
@@ -6403,30 +6457,10 @@ GameScene.prototype.buildMap = function (layoutData) {
     }
 };
 
-GameScene.prototype.testMesh = function (meshClass, scale) {
-    scale = scale || 1;
-    var mesh = new BaseMesh({
-        geometry: ModelStore.get(meshClass).geometry,
-        material: ModelStore.get(meshClass).material
-    });
-    mesh.scale.x = scale;
-    mesh.scale.y = scale;
-    mesh.scale.z = scale;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    this.threeScene.add(mesh);
-
-    setInterval(function () {
-        mesh.rotation.y += 0.01;
-    }, 5);
-
-    return mesh;
-};
-
 GameScene.prototype.buildCamera = function () {
     var camera = new Camera({ inputListener: this.inputListener });
-    camera.setPositionZ(80, 20);
+    camera.position.z = 800;
+    camera.setMovementZ(80, 20);
     return camera;
 };
 
@@ -6441,12 +6475,190 @@ GameScene.prototype.addPlayerActor = function (actor) {
 
 module.exports = GameScene;
 
-},{"renderer/Camera":34,"renderer/actor/component/mesh/BaseMesh":42,"renderer/assetManagement/level/ChunkStore":69,"renderer/assetManagement/model/ModelStore":74,"renderer/map/ChunkMesh":76,"renderer/scene/BaseScene":99}],101:[function(require,module,exports){
+},{"renderer/Camera":34,"renderer/assetManagement/level/ChunkStore":69,"renderer/assetManagement/model/ModelStore":74,"renderer/map/ChunkMesh":76,"renderer/scene/BaseScene":99}],101:[function(require,module,exports){
 "use strict";
 
-function MainMenuScene(config) {}
+var BaseScene = require("renderer/scene/BaseScene");
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var Camera = require("renderer/Camera");
 
-},{}],102:[function(require,module,exports){
+function MainMenuScene(config) {
+    Object.assign(this, config);
+    BaseScene.apply(this, arguments);
+    this.timer = 0;
+    this.lightChargeDelay = 20;
+    this.lightChargeTime = 300;
+}
+
+MainMenuScene.extend(BaseScene);
+
+MainMenuScene.prototype.build = function () {
+    this.initialColor = {
+        r: Utils.rand(100, 100) / 100,
+        g: Utils.rand(100, 100) / 100,
+        b: Utils.rand(100, 100) / 100
+    };
+
+    this.currentColor = {
+        r: Utils.rand(100, 100) / 100,
+        g: Utils.rand(100, 100) / 100,
+        b: Utils.rand(100, 100) / 100
+    };
+
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    this.directionalLight.position.set(50, -50, 200);
+    this.directionalLight.distance = 1000;
+
+    this.directionalLight.color = this.initialColor;
+
+    this.directionalLight.castShadow = this.shadows;
+
+    var shadowCamera = this.directionalLight.shadow.camera;
+
+    shadowCamera.near = 1;
+    shadowCamera.far = Constants.RENDER_DISTANCE;
+    shadowCamera.left = Constants.RENDER_DISTANCE;
+    shadowCamera.right = -Constants.RENDER_DISTANCE;
+    shadowCamera.top = Constants.RENDER_DISTANCE;
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE;
+
+    this.directionalLight.shadow.mapSize.height = 2048;
+    this.directionalLight.shadow.mapSize.width = 2048;
+    this.directionalLight.shadow.bias = -0.0075;
+
+    this.threeScene.add(this.directionalLight);
+
+    this.ambientLight = new THREE.AmbientLight(0x505050, 1);
+
+    this.threeScene.add(this.ambientLight);
+
+    this.buildStartScene();
+};
+
+MainMenuScene.prototype.buildCamera = function () {
+    var camera = new Camera({ inputListener: this.inputListener });
+    camera.position.y = -50;
+    camera.position.z = 15;
+    camera.position.x = 10;
+
+    camera.rotation.x = 1.1;
+    camera.rotation.z = 0.15;
+
+    camera.setMovementZ(camera.position.z, 0);
+    return camera;
+};
+
+MainMenuScene.prototype.resetCamera = function () {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+};
+
+MainMenuScene.prototype.buildStartScene = function () {
+
+    this.sceneMaterial = ModelStore.get('startmenu').material;
+
+    var mesh = new BaseMesh({
+        geometry: ModelStore.get('startmenu').geometry,
+        material: this.sceneMaterial
+    });
+    var scale = 0.5;
+    mesh.scale.x = scale;
+    mesh.scale.y = scale;
+    mesh.scale.z = scale;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.rotation.x = Utils.degToRad(90);
+    mesh.rotation.y = Utils.degToRad(-90);
+
+    this.threeScene.add(mesh);
+
+    var shipMesh = new BaseMesh({
+        geometry: ModelStore.get('ravier').geometry,
+        material: ModelStore.get('ravier').material
+    });
+
+    scale = 4;
+    shipMesh.scale.x = scale;
+    shipMesh.scale.y = scale;
+    shipMesh.scale.z = scale;
+    shipMesh.castShadow = true;
+    shipMesh.receiveShadow = true;
+    shipMesh.rotation.z = Utils.degToRad(-120);
+
+    shipMesh.position.z = 4;
+    shipMesh.speedZ = 0.03;
+    shipMesh.speedY = 0.0025;
+    shipMesh.speedX = 0.002;
+
+    this.shipMesh = shipMesh;
+    this.sceneMesh = mesh;
+
+    this.threeScene.add(shipMesh);
+
+    this.directionalLight.intensity = 0;
+    this.ambientLight.intensity = 0;
+    this.sceneMaterial.emissiveIntensity = 0;
+};
+
+MainMenuScene.prototype.customUpdate = function () {
+    this.doBob();
+    this.lightPowerUp();
+    this.doFlicker();
+    this.timer++;
+};
+
+MainMenuScene.prototype.doBob = function () {
+    this.shipMesh.position.z += this.shipMesh.speedZ;
+    if (this.shipMesh.position.z > 4) {
+        this.shipMesh.speedZ -= 0.0012;
+    } else {
+        this.shipMesh.speedZ += 0.0012;
+    }
+
+    this.shipMesh.rotation.y += this.shipMesh.speedY;
+    if (this.shipMesh.rotation.y > 0) {
+        this.shipMesh.speedY -= 0.0002;
+    } else {
+        this.shipMesh.speedY += 0.0002;
+    }
+
+    this.shipMesh.rotation.x += this.shipMesh.speedX;
+    if (this.shipMesh.rotation.x > 0) {
+        this.shipMesh.speedX -= 0.00015;
+    } else {
+        this.shipMesh.speedX += 0.00015;
+    }
+
+    this.shipMesh.rotation.z -= 0.003;
+};
+
+MainMenuScene.prototype.doFlicker = function () {
+    var random = Utils.rand(0, 1000);
+
+    if (random > 980) {
+        this.directionalLight.intensity -= 0.05;
+        this.ambientLight.intensity -= 0.05;
+        this.sceneMaterial.emissiveIntensity -= 0.2;
+    }
+};
+
+MainMenuScene.prototype.lightPowerUp = function () {
+    var lightIntensity, lampIntensity;
+
+    lightIntensity = (this.timer - this.lightChargeDelay) * (1 / this.lightChargeTime);
+    lampIntensity = (this.timer - this.lightChargeDelay) * (4 / this.lightChargeTime);
+    lightIntensity = Math.min(1, lightIntensity);
+    lampIntensity = Math.min(1, lampIntensity);
+
+    this.directionalLight.intensity = lightIntensity;
+    this.ambientLight.intensity = lightIntensity;
+    this.sceneMaterial.emissiveIntensity = lampIntensity;
+};
+
+module.exports = MainMenuScene;
+
+},{"renderer/Camera":34,"renderer/actor/component/mesh/BaseMesh":42,"renderer/assetManagement/model/ModelStore":74,"renderer/scene/BaseScene":99}],102:[function(require,module,exports){
 "use strict";
 
 var GameScene = require("renderer/scene/GameScene");
@@ -6457,7 +6669,6 @@ function SceneManager(config) {
     EventEmitter.apply(this, arguments);
     this.activeScene = null;
     this.sceneList = this.buildSceneList();
-    this.scenes = {};
 
     this.threeObjects = [];
 
@@ -6484,8 +6695,7 @@ SceneManager.prototype.makeScene = function (sceneName, config) {
 
     if (!this.sceneList[sceneName]) throw new Error('No such scene: ' + sceneName);
 
-    this.scenes[sceneName] = new this.sceneList[sceneName](config);
-    this.activeScene = this.scenes[sceneName];
+    this.activeScene = new this.sceneList[sceneName](config);
     this.activeScene.build();
 
     if (this.storedMapData) {
@@ -6495,7 +6705,6 @@ SceneManager.prototype.makeScene = function (sceneName, config) {
     this.threeObjects.forEach(function (objectToAdd) {
         _this.activeScene.add(objectToAdd);
     });
-    this.threeObjects = [];
 };
 
 SceneManager.prototype.onMapDone = function (event) {
@@ -6533,6 +6742,7 @@ SceneManager.prototype.render = function (renderer) {
 SceneManager.prototype.onPlayerActorAppeared = function (actor) {
     if (this.activeScene) {
         this.activeScene.addPlayerActor(actor);
+        this.activeScene.actor = actor;
     }
 };
 

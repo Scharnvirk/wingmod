@@ -16,7 +16,7 @@ function Camera(config){
     this.expectedPositionZ = this.position.z;
     this.rotation.reorder('ZXY');
 
-    this.position.z = 800;
+    this.position.z = 0;
     this.rotation.x = 1.0;
     this.rotation.y = 0;
 
@@ -64,7 +64,7 @@ Camera.prototype.update = function(){
     }
 };
 
-Camera.prototype.setPositionZ = function(newPositionZ, zoomSpeed){
+Camera.prototype.setMovementZ = function(newPositionZ, zoomSpeed){
     this.zoomSpeed = zoomSpeed ? zoomSpeed : this.zoomSpeed;
     this.expectedPositionZ = newPositionZ;
 };

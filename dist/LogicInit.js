@@ -3725,6 +3725,10 @@ function ShipActor() {
     this.hp = 30;
     this.lastHp = this.hp;
     this.hpBarCount = 20;
+
+    this.speedZ = 0.04;
+    this.speedY = 0.0025;
+    this.speedX = 0.002;
 }
 
 ShipActor.extend(BaseActor);
@@ -3745,11 +3749,33 @@ ShipActor.prototype.doBank = function () {
 };
 
 ShipActor.prototype.doBob = function () {
+
     if (this.positionZ > 10) {
         this.speedZ -= 0.002;
     } else {
         this.speedZ += 0.002;
     }
+
+    this.mesh.rotation.y += this.speedY;
+    if (this.mesh.rotation.y > 0) {
+        this.speedY -= 0.00012;
+    } else {
+        this.speedY += 0.00012;
+    }
+
+    this.mesh.rotation.x += this.speedX;
+    if (this.mesh.rotation.x > 0) {
+        this.speedX -= 0.00009;
+    } else {
+        this.speedX += 0.00009;
+    }
+
+    // this.positionZ += this.speedZ;
+    // if (this.positionZ > 10){
+    //     this.speedZ -= 0.002;
+    // } else {
+    //     this.speedZ += 0.002;
+    // }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
