@@ -30,4 +30,9 @@ LaserProjectileActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
+LaserProjectileActor.prototype.onDeath = function(){
+    this.body.dead = true;
+    this.manager.playSound({sounds: ['matterhit3'], actor: this});
+};
+
 module.exports = LaserProjectileActor;

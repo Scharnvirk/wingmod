@@ -257,6 +257,7 @@ Core.prototype.initializeEventHandlers = function () {
 
     this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
+    this.actorManager.on('playSound', this.onPlaySound.bind(this));
 };
 
 Core.prototype.initFpsCounter = function () {
@@ -342,6 +343,10 @@ Core.prototype.onMapHitmapsLoaded = function (event) {
 Core.prototype.onMapDone = function (event) {
     this.scene.fillScene(event.data.bodies);
     this.renderBus.postMessage('mapDone', event.data.layout);
+};
+
+Core.prototype.onPlaySound = function (event) {
+    this.renderBus.postMessage('playSound', event.data);
 };
 
 module.exports = Core;
@@ -668,6 +673,9 @@ ActorManager.prototype.removeActorAt = function (actorId) {
 };
 
 ActorManager.prototype.endGame = function () {
+    setTimeout(function () {
+        this.muteSounds = true;
+    }.bind(this), 3000);
     this.emit({
         type: 'playerDied',
         data: this.enemiesKilled
@@ -690,6 +698,22 @@ ActorManager.prototype.sendActorEvents = function () {
             data: this.actorEventsToSend
         });
         this.actorEventsToSend = {};
+    }
+};
+
+ActorManager.prototype.playSound = function (config) {
+    if (!this.muteSounds) {
+        var volume = config.volume || 1;
+        var playerActor = this.getFirstPlayerActor();
+        var distance = config.actor && playerActor ? Utils.distanceBetweenPoints(playerActor.body.position[0], config.actor.body.position[0], playerActor.body.position[1], config.actor.body.position[1]) : 0;
+        this.emit({
+            type: 'playSound',
+            data: {
+                sounds: config.sounds,
+                distance: distance,
+                volume: volume
+            }
+        });
     }
 };
 
@@ -1066,6 +1090,7 @@ MookBrain.prototype.seesPlayerAction = function () {
         this.shootAction(distance);
     }
     this.randomStrafeAction();
+    this.playCalloutSound();
 };
 
 MookBrain.prototype.freeRoamActon = function (nearbyWalls) {
@@ -1123,6 +1148,14 @@ MookBrain.prototype.shootAction = function () {
 MookBrain.prototype.randomStrafeAction = function () {
     if (Utils.rand(0, 100) > 98) {
         this.orders.horizontalThrust = Utils.rand(0, 2) - 1;
+    }
+};
+
+MookBrain.prototype.playCalloutSound = function () {
+    if (this.actor.calloutSound) {
+        if (Utils.rand(0, 150) === 0) {
+            this.manager.playSound({ sounds: [this.actor.calloutSound], actor: this.actor });
+        }
     }
 };
 
@@ -1227,6 +1260,7 @@ function BaseWeapon(config) {
     this.cooldown = 100;
     this.recoil = 0;
     this.velocity = 10;
+    this.sound = null;
 
     /*example:
         this.firingPoints = [
@@ -1302,6 +1336,10 @@ BaseWeapon.prototype.handleFiringSimultaneous = function () {
     this.firingPoints.forEach(this.fireProjectile.bind(this));
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
+
+    if (this.sound) {
+        this.manager.playSound({ sounds: [this.sound], actor: this.actor, volume: this.volume });
+    }
 };
 
 BaseWeapon.prototype.handleFiringAlternate = function () {
@@ -1313,6 +1351,10 @@ BaseWeapon.prototype.handleFiringAlternate = function () {
     this.fireProjectile(this.firingPoints[this.currentFiringPoint]);
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
+
+    if (this.sound) {
+        this.manager.playSound({ sounds: [this.sound], actor: this.actor, volume: this.volume });
+    }
 };
 
 module.exports = BaseWeapon;
@@ -1332,6 +1374,7 @@ function Blaster(config) {
 
     this.cooldown = 15;
     this.velocity = 600;
+    this.sound = 'blue_laser';
 }
 
 Blaster.extend(BaseWeapon);
@@ -1356,6 +1399,8 @@ function MoltenBallThrower(config) {
     this.cooldown = 60;
     this.recoil = 100;
     this.velocity = 160;
+    this.sound = 'molten';
+    this.volume = 0.4;
 }
 
 MoltenBallThrower.extend(BaseWeapon);
@@ -1377,6 +1422,8 @@ function PlasmaGun(config) {
 
     this.cooldown = 10;
     this.velocity = 250;
+    this.sound = 'plasmashot3';
+    this.volume = 0.5;
 }
 
 PlasmaGun.extend(BaseWeapon);
@@ -1400,6 +1447,7 @@ function Blaster(config) {
     this.velocity = 550;
     this.burstCount = 1;
     this.burstCooldown = 20;
+    this.sound = 'laser_purple';
 }
 
 Blaster.extend(BaseWeapon);
@@ -1444,6 +1492,7 @@ function RingBlaster(config) {
 
     this.cooldown = 80;
     this.velocity = 130;
+    this.sound = 'laser_charged';
 }
 
 RingBlaster.extend(BaseWeapon);
@@ -1480,6 +1529,7 @@ function MookActor(config) {
         }
     });
 
+    this.calloutSound = 'drone';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
@@ -1562,6 +1612,7 @@ MookActor.prototype.onDeath = function () {
     }
     this.body.dead = true;
     this.manager.enemiesKilled++;
+    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
 };
 
 MookActor.prototype.onHit = function () {
@@ -1675,6 +1726,7 @@ function OrbotActor(config) {
         }
     });
 
+    this.calloutSound = 'orbot';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
@@ -1759,6 +1811,7 @@ OrbotActor.prototype.onDeath = function () {
     }
     this.body.dead = true;
     this.manager.enemiesKilled++;
+    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
 };
 
 OrbotActor.prototype.onHit = function () {
@@ -1804,6 +1857,7 @@ function SniperActor(config) {
         }
     });
 
+    this.calloutSound = 'sniper';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
@@ -1888,6 +1942,7 @@ SniperActor.prototype.onDeath = function () {
     }
     this.body.dead = true;
     this.manager.enemiesKilled++;
+    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
 };
 
 SniperActor.prototype.onHit = function () {
@@ -1964,6 +2019,8 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
         }
         this.created = true;
     }
+
+    this.manager.playSound({ sounds: ['spawn'], actor: this, volume: 10 });
 };
 
 module.exports = EnemySpawnMarkerActor;
@@ -2170,7 +2227,7 @@ WallActor.prototype.createBody = function () {
 module.exports = WallActor;
 
 },{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":13}],30:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var ChunkActor = require("logic/actor/object/ChunkActor");
 
@@ -2185,6 +2242,11 @@ function BoomChunkActor(config) {
 }
 
 BoomChunkActor.extend(ChunkActor);
+
+BoomChunkActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+};
 
 module.exports = BoomChunkActor;
 
@@ -2386,6 +2448,7 @@ ShipActor.prototype.onDeath = function () {
     }
     this.body.dead = true;
     this.manager.endGame();
+    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this });
 };
 
 ShipActor.prototype.onHit = function () {
@@ -2437,6 +2500,11 @@ LaserProjectileActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
 };
 
+LaserProjectileActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['matterhit3'], actor: this });
+};
+
 module.exports = LaserProjectileActor;
 
 },{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":13}],34:[function(require,module,exports){
@@ -2470,6 +2538,11 @@ MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
+};
+
+MoltenProjectileActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['matterhit3'], actor: this });
 };
 
 module.exports = MoltenProjectileActor;
@@ -2507,6 +2580,11 @@ PlasmaProjectileActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
 };
 
+PlasmaProjectileActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['matterhit3'], actor: this });
+};
+
 module.exports = PlasmaProjectileActor;
 
 },{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":13}],36:[function(require,module,exports){
@@ -2542,6 +2620,11 @@ RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
+};
+
+RedLaserProjectileActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['matterhit3'], actor: this });
 };
 
 module.exports = RedLaserProjectileActor;
@@ -2585,6 +2668,11 @@ RingProjectileActor.prototype.customUpdate = function () {
     this.body.mass *= 0.96;
     this.damage *= 0.95;
     this.body.updateMassProperties();
+};
+
+RingProjectileActor.prototype.onDeath = function () {
+    this.body.dead = true;
+    this.manager.playSound({ sounds: ['matterhit3'], actor: this });
 };
 
 module.exports = RingProjectileActor;
@@ -4332,7 +4420,9 @@ var Constants = {
 
     STORAGE_SIZE: 1000,
 
-    CHUNK_SIZE: 352
+    CHUNK_SIZE: 352,
+
+    MAX_SOUND_DISTANCE: 500
 };
 
 module.exports = Constants;

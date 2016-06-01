@@ -72,6 +72,9 @@ ActorManager.prototype.removeActorAt = function(actorId){
 };
 
 ActorManager.prototype.endGame = function(){
+    setTimeout(function(){
+        this.muteSounds = true;
+    }.bind(this), 3000);
     this.emit({
         type: 'playerDied',
         data: this.enemiesKilled
@@ -94,6 +97,28 @@ ActorManager.prototype.sendActorEvents = function(){
             data: this.actorEventsToSend
         });
         this.actorEventsToSend = {};
+    }
+};
+
+ActorManager.prototype.playSound = function(config){
+    if(!this.muteSounds){
+        var volume = config.volume || 1;
+        var playerActor = this.getFirstPlayerActor();
+        var distance = config.actor && playerActor ?
+            Utils.distanceBetweenPoints(
+                playerActor.body.position[0],
+                config.actor.body.position[0],
+                playerActor.body.position[1],
+                config.actor.body.position[1]
+            ) : 0;
+        this.emit({
+            type: 'playSound',
+            data: {
+                sounds: config.sounds,
+                distance: distance,
+                volume: volume
+            }
+        });
     }
 };
 

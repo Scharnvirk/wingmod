@@ -36,4 +36,9 @@ RingProjectileActor.prototype.customUpdate = function(){
     this.body.updateMassProperties();
 };
 
+RingProjectileActor.prototype.onDeath = function(){
+    this.body.dead = true;
+    this.manager.playSound({sounds: ['matterhit3'], actor: this});
+};
+
 module.exports = RingProjectileActor;

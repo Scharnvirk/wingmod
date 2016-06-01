@@ -59,6 +59,7 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
     this.logicBus.on('mapDone', this.sceneManager.onMapDone.bind(this.sceneManager));
+    this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
     this.ui.on('startGame', this.onStartGame.bind(this));
 
@@ -220,8 +221,17 @@ Core.prototype.onStartGame = function(event){
 
 Core.prototype.rebuildRenderer = function(){
     this.viewportElement.removeChild( this.renderer.domElement );
-    this.renderer = this.makeRenderer();
+    this.renderer = this.makeRenderer({shadows: false});
     this.attachToDom(this.renderer, this.stats, this.renderStats);
+};
+
+Core.prototype.onPlaySound = function(event){
+    var baseVolume = Math.max(Constants.MAX_SOUND_DISTANCE - event.data.distance, 0) / Constants.MAX_SOUND_DISTANCE;
+    var configVolume = event.data.volume || 1;
+    var finalVolume = Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
+    if (finalVolume > 0.1){
+        createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
+    }
 };
 
 module.exports = Core;

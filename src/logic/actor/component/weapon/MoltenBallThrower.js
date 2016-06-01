@@ -13,6 +13,8 @@ function MoltenBallThrower(config){
     this.cooldown = 60;
     this.recoil = 100;
     this.velocity = 160;
+    this.sound = 'molten';
+    this.volume = 0.4;
 }
 
 MoltenBallThrower.extend(BaseWeapon);

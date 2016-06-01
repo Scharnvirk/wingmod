@@ -8,12 +8,15 @@ var ChunkLoader = require("renderer/assetManagement/level/ChunkLoader");
 var ChunkList = require("renderer/assetManagement/level/ChunkList");
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 
+var SoundLoader = require("renderer/assetManagement/sound/SoundLoader");
+
 function AssetManager(config) {
     config = config || {};
     Object.assign(this, config);
 
     this.modelStore = ModelStore;
     this.chunkStore = ChunkStore;
+    this.soundLoader = new SoundLoader();
 
     EventEmitter.apply(this, arguments);
 }
@@ -21,6 +24,8 @@ function AssetManager(config) {
 AssetManager.extend(EventEmitter);
 
 AssetManager.prototype.loadAll = function(){
+    this.soundLoader.loadSounds();
+
     var loaders = [this.loadModels, this.loadChunks];
 
     var willLoadModels = new Promise((resolve, reject)=>{

@@ -38,6 +38,7 @@ Core.prototype.initializeEventHandlers = function(){
 
     this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
+    this.actorManager.on('playSound', this.onPlaySound.bind(this));
 };
 
 Core.prototype.initFpsCounter = function(){
@@ -121,6 +122,10 @@ Core.prototype.onMapHitmapsLoaded = function(event){
 Core.prototype.onMapDone = function(event){
     this.scene.fillScene(event.data.bodies);
     this.renderBus.postMessage('mapDone', event.data.layout);
+};
+
+Core.prototype.onPlaySound = function(event){
+    this.renderBus.postMessage('playSound', event.data);
 };
 
 module.exports = Core;

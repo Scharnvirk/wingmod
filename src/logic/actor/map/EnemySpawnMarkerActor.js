@@ -54,6 +54,8 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
         }
         this.created = true;
     }
+
+    this.manager.playSound({sounds: ['spawn'], actor: this, volume: 10});
 };
 
 module.exports = EnemySpawnMarkerActor;

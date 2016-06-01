@@ -12,6 +12,7 @@ function Blaster(config){
     this.velocity = 550;
     this.burstCount = 1;
     this.burstCooldown = 20;
+    this.sound = 'laser_purple';
 }
 
 Blaster.extend(BaseWeapon);

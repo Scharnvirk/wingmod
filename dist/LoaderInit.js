@@ -48,7 +48,9 @@ var Constants = {
 
     STORAGE_SIZE: 1000,
 
-    CHUNK_SIZE: 352
+    CHUNK_SIZE: 352,
+
+    MAX_SOUND_DISTANCE: 500
 };
 
 module.exports = Constants;

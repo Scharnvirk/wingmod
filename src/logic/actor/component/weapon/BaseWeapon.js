@@ -4,6 +4,7 @@ function BaseWeapon(config){
     this.cooldown = 100;
     this.recoil = 0;
     this.velocity = 10;
+    this.sound = null;
 
     /*example:
         this.firingPoints = [
@@ -82,6 +83,10 @@ BaseWeapon.prototype.handleFiringSimultaneous = function(){
     this.firingPoints.forEach(this.fireProjectile.bind(this));
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
+
+    if (this.sound){
+        this.manager.playSound({sounds:[this.sound], actor: this.actor, volume:this.volume});
+    }
 };
 
 BaseWeapon.prototype.handleFiringAlternate = function(){
@@ -93,6 +98,10 @@ BaseWeapon.prototype.handleFiringAlternate = function(){
     this.fireProjectile(this.firingPoints[this.currentFiringPoint]);
     this.timer += this.burstCooldown;
     this.actor.body.applyForceLocal([0, -this.recoil]);
+
+    if (this.sound){
+        this.manager.playSound({sounds: [this.sound], actor: this.actor, volume: this.volume});
+    }
 };
 
 module.exports = BaseWeapon;

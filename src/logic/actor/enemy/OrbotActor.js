@@ -24,6 +24,7 @@ function OrbotActor(config){
         }
     });
 
+    this.calloutSound = 'orbot';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
@@ -111,6 +112,7 @@ OrbotActor.prototype.onDeath = function(){
     }
     this.body.dead = true;
     this.manager.enemiesKilled ++;
+    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
 };
 
 OrbotActor.prototype.onHit = function(){

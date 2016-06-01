@@ -160,6 +160,7 @@ ShipActor.prototype.onDeath = function(){
     }
     this.body.dead = true;
     this.manager.endGame();
+    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this});
 };
 
 ShipActor.prototype.onHit = function(){

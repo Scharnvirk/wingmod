@@ -158,6 +158,7 @@ MookBrain.prototype.seesPlayerAction = function(){
         this.shootAction(distance);
     }
     this.randomStrafeAction();
+    this.playCalloutSound();
 };
 
 MookBrain.prototype.freeRoamActon = function(nearbyWalls){
@@ -213,6 +214,14 @@ MookBrain.prototype.shootAction = function(distance = 0){
 MookBrain.prototype.randomStrafeAction = function(){
     if(Utils.rand(0,100) > 98){
         this.orders.horizontalThrust = Utils.rand(0,2) - 1;
+    }
+};
+
+MookBrain.prototype.playCalloutSound = function(){
+    if(this.actor.calloutSound) {
+        if(Utils.rand(0, 150) === 0){
+            this.manager.playSound({sounds: [this.actor.calloutSound], actor: this.actor});
+        }
     }
 };
 

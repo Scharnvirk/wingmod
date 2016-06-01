@@ -10,6 +10,8 @@ function PlasmaGun(config){
 
     this.cooldown = 10;
     this.velocity = 250;
+    this.sound = 'plasmashot3';
+    this.volume = 0.5;
 }
 
 PlasmaGun.extend(BaseWeapon);

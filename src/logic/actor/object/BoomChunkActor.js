@@ -12,4 +12,9 @@ function BoomChunkActor(config){
 
 BoomChunkActor.extend(ChunkActor);
 
+BoomChunkActor.prototype.onDeath = function(){
+    this.body.dead = true;
+    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
+};
+
 module.exports = BoomChunkActor;

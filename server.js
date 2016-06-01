@@ -61,7 +61,8 @@ var SampleApp = function() {
 
         self.zcache['/fonts/Oswald-Regular.ttf'] = fs.readFileSync('./fonts/Oswald-Regular.ttf');
 
-		self.zcache['/lib/three75.js'] = fs.readFileSync('./lib/three75.js');
+		self.zcache['/lib/three77.js'] = fs.readFileSync('./lib/three77.js');
+        self.zcache['/lib/soundjs-0.6.2.min.js'] = fs.readFileSync('./lib/soundjs-0.6.2.min.js');
         self.zcache['/lib/react.js'] = fs.readFileSync('./lib/react.js');
         self.zcache['/lib/react-dom.js'] = fs.readFileSync('./lib/react-dom.js');
 		self.zcache['/lib/stats.min.js'] = fs.readFileSync('./lib/stats.min.js');
@@ -109,9 +110,36 @@ var SampleApp = function() {
         self.zcache['/models/levels/map_256_S.png'] = fs.readFileSync('./models/levels/map_256_S.png');
         self.zcache['/models/levels/map_256.png'] = fs.readFileSync('./models/levels/map_256.png');
 
+        self.zcache['/sounds/shortzap2.wav'] = fs.readFileSync('./sounds/shortzap2.wav');
+        self.zcache['/sounds/blue_laser.wav'] = fs.readFileSync('./sounds/blue_laser.wav');
+        self.zcache['/sounds/plasmashot.wav'] = fs.readFileSync('./sounds/plasmashot.wav');
+        self.zcache['/sounds/plasmashot2.wav'] = fs.readFileSync('./sounds/plasmashot2.wav');
+        self.zcache['/sounds/plasmashot3.wav'] = fs.readFileSync('./sounds/plasmashot3.wav');
+        self.zcache['/sounds/plasma1.wav'] = fs.readFileSync('./sounds/plasma1.wav');
+        self.zcache['/sounds/SoundsCrate-SciFi-Laser1.wav'] = fs.readFileSync('./sounds/SoundsCrate-SciFi-Laser1.wav');
+        self.zcache['/sounds/SoundsCrate-SciFi-Laser1b.wav'] = fs.readFileSync('./sounds/SoundsCrate-SciFi-Laser1b.wav');
+        self.zcache['/sounds/SoundsCrate-SciFi-Laser2.wav'] = fs.readFileSync('./sounds/SoundsCrate-SciFi-Laser2.wav');
+        self.zcache['/sounds/matterhit3.wav'] = fs.readFileSync('./sounds/matterhit3.wav');
+        self.zcache['/sounds/plasmahit.wav'] = fs.readFileSync('./sounds/plasmahit.wav');
+        self.zcache['/sounds/molten.wav'] = fs.readFileSync('./sounds/molten.wav');
+        self.zcache['/sounds/debris1.wav'] = fs.readFileSync('./sounds/debris1.wav');
+        self.zcache['/sounds/debris2.wav'] = fs.readFileSync('./sounds/debris2.wav');
+        self.zcache['/sounds/debris3.wav'] = fs.readFileSync('./sounds/debris3.wav');
+        self.zcache['/sounds/debris4.wav'] = fs.readFileSync('./sounds/debris4.wav');
+        self.zcache['/sounds/debris5.wav'] = fs.readFileSync('./sounds/debris5.wav');
+        self.zcache['/sounds/debris6.wav'] = fs.readFileSync('./sounds/debris6.wav');
+        self.zcache['/sounds/debris7.wav'] = fs.readFileSync('./sounds/debris7.wav');
+        self.zcache['/sounds/debris8.wav'] = fs.readFileSync('./sounds/debris8.wav');
+        self.zcache['/sounds/debris8.wav'] = fs.readFileSync('./sounds/debris8.wav');
+        self.zcache['/sounds/drone1s1.wav'] = fs.readFileSync('./sounds/drone1s1.wav');
+        self.zcache['/sounds/spiders1.wav'] = fs.readFileSync('./sounds/spiders1.wav');
+        self.zcache['/sounds/itds3.wav'] = fs.readFileSync('./sounds/itds3.wav');
+        self.zcache['/sounds/spawn.wav'] = fs.readFileSync('./sounds/spawn.wav');
+
         self.zcache['/dist/Init.js'] = fs.readFileSync('./dist/Init.js');
         self.zcache['/dist/LogicInit.js'] = fs.readFileSync('./dist/LogicInit.js');
     };
+
 
     /**
      *  Retrieve entry (content) from cache.
@@ -178,7 +206,8 @@ var SampleApp = function() {
 
         self.routes['/fonts/Oswald-Regular.ttf'] = function(req, res) {res.send(self.cache_get('/fonts/Oswald-Regular.ttf') );};
 
-		self.routes['/lib/three75.js'] = function(req, res) {res.send(self.cache_get('/lib/three75.js') );};
+		self.routes['/lib/three77.js'] = function(req, res) {res.send(self.cache_get('/lib/three77.js') );};
+        self.routes['/lib/soundjs-0.6.2.min.js'] = function(req, res) {res.send(self.cache_get('/lib/soundjs-0.6.2.min.js') );};
         self.routes['/lib/react.js'] = function(req, res) {res.send(self.cache_get('/lib/react.js') );};
         self.routes['/lib/react-dom.js'] = function(req, res) {res.send(self.cache_get('/lib/react-dom.js') );};
 		self.routes['/lib/stats.min.js'] = function(req, res) {res.send(self.cache_get('/lib/stats.min.js') );};
@@ -227,10 +256,34 @@ var SampleApp = function() {
         self.routes['/models/levels/map_256_I.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_I.png') );};
         self.routes['/models/levels/map_256_S.png'] = function(req, res) {res.send(self.cache_get('/models/levels/map_256_S.png') );};
 
+        self.routes['/sounds/shortzap2.wav'] = function(req, res) {res.send(self.cache_get('/sounds/shortzap2.wav') );};
+        self.routes['/sounds/blue_laser.wav'] = function(req, res) {res.send(self.cache_get('/sounds/blue_laser.wav') );};
+        self.routes['/sounds/plasmashot.wav'] = function(req, res) {res.send(self.cache_get('/sounds/plasmashot.wav') );};
+        self.routes['/sounds/plasmashot2.wav'] = function(req, res) {res.send(self.cache_get('/sounds/plasmashot2.wav') );};
+        self.routes['/sounds/plasmashot3.wav'] = function(req, res) {res.send(self.cache_get('/sounds/plasmashot3.wav') );};
+        self.routes['/sounds/plasma1.wav'] = function(req, res) {res.send(self.cache_get('/sounds/plasma1.wav') );};
+        self.routes['/sounds/SoundsCrate-SciFi-Laser1.wav'] = function(req, res) {res.send(self.cache_get('/sounds/SoundsCrate-SciFi-Laser1.wav') );};
+        self.routes['/sounds/SoundsCrate-SciFi-Laser1b.wav'] = function(req, res) {res.send(self.cache_get('/sounds/SoundsCrate-SciFi-Laser1b.wav') );};
+        self.routes['/sounds/SoundsCrate-SciFi-Laser2.wav'] = function(req, res) {res.send(self.cache_get('/sounds/SoundsCrate-SciFi-Laser2.wav') );};
+        self.routes['/sounds/matterhit3.wav'] = function(req, res) {res.send(self.cache_get('/sounds/matterhit3.wav') );};
+        self.routes['/sounds/plasmahit.wav'] = function(req, res) {res.send(self.cache_get('/sounds/plasmahit.wav') );};
+        self.routes['/sounds/molten.wav'] = function(req, res) {res.send(self.cache_get('/sounds/molten.wav') );};
+        self.routes['/sounds/debris1.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris1.wav') );};
+        self.routes['/sounds/debris2.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris2.wav') );};
+        self.routes['/sounds/debris3.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris3.wav') );};
+        self.routes['/sounds/debris4.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris4.wav') );};
+        self.routes['/sounds/debris5.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris5.wav') );};
+        self.routes['/sounds/debris6.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris6.wav') );};
+        self.routes['/sounds/debris7.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris7.wav') );};
+        self.routes['/sounds/debris8.wav'] = function(req, res) {res.send(self.cache_get('/sounds/debris8.wav') );};
+        self.routes['/sounds/drone1s1.wav'] = function(req, res) {res.send(self.cache_get('/sounds/drone1s1.wav') );};
+        self.routes['/sounds/spiders1.wav'] = function(req, res) {res.send(self.cache_get('/sounds/spiders1.wav') );};
+        self.routes['/sounds/itds3.wav'] = function(req, res) {res.send(self.cache_get('/sounds/itds3.wav') );};
+        self.routes['/sounds/spawn.wav'] = function(req, res) {res.send(self.cache_get('/sounds/spawn.wav') );};
+
 		self.routes['/dist/Init.js'] = function(req, res) {res.send(self.cache_get('/dist/Init.js') );};
         self.routes['/dist/LogicInit.js'] = function(req, res) {res.send(self.cache_get('/dist/LogicInit.js') );};
     };
-
 
 
     /**
