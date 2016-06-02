@@ -38,7 +38,7 @@ var StartScreen = React.createClass({
                     <span style={{color: 'red'}}>{'2'}</span>
                 </StyledText>
                 <Button text={startButtonText} buttonEvent={'start'} />
-                <SettingsMenu/>
+                
             </div>
             <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
                 <span className={'textDark'} >{versionText}</span>

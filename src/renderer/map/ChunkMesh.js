@@ -1,6 +1,8 @@
 function ChunkMesh(config){
     config = config || {};
 
+    config.geometry.dynamic = false;
+
     THREE.Mesh.apply(this, [config.geometry, config.material]);
 
     this.receiveShadow = true;

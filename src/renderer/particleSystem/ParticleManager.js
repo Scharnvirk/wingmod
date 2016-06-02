@@ -45,4 +45,10 @@ ParticleManager.prototype.createPremade = function(premadeName, config){
     this.premades[premadeName](config);
 };
 
+ParticleManager.prototype.updateResolutionCoefficient = function(coefficient){
+    for (let typeName in this.generators){
+        this.generators[typeName].updateResolutionCoefficient(coefficient);
+    }
+};
+
 module.exports = ParticleManager;

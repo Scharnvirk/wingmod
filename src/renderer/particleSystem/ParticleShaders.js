@@ -26,7 +26,7 @@ var ParticleShaders = {
                 vPosition.y += speed.y * (time - startTime); \
                 vPosition.z += speed.z * (time - startTime); \
                 mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
-                gl_PointSize = scale * (1000.0 / - mvPosition.z) ;  \
+                gl_PointSize = scale * (1000.0 / - mvPosition.z);  \
             } \
             gl_Position = projectionMatrix * mvPosition; \
         }",

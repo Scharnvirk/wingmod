@@ -330,7 +330,7 @@ Core.prototype.onPlayerDied = function (event) {
 };
 
 Core.prototype.onGameFinished = function (event) {
-    this.renderBus.postMessage('gameFinished', {});
+    //this.renderBus.postMessage('gameFinished', {});
 };
 
 Core.prototype.onMapHitmapsLoaded = function (event) {

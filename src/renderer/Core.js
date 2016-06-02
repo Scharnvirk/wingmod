@@ -142,12 +142,25 @@ Core.prototype.assetsLoaded = function(){
 };
 
 Core.prototype.onEachSecond = function(){
+    this.updatePerformanceParameters();
     this.renderTicks = 0;
 };
 
 Core.prototype.controlsUpdate = function(){
     this.inputListener.update();
     this.controlsHandler.update();
+};
+
+Core.prototype.updatePerformanceParameters = function(){
+    if (this.renderTicks < 59 && this.resolutionCoefficient > 0.4){
+        this.resolutionCoefficient -= 0.1;
+        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+        this.renderer.setPixelRatio(this.resolutionCoefficient);
+    } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1){
+        this.resolutionCoefficient += 0.1;
+        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+        this.renderer.setPixelRatio(this.resolutionCoefficient);
+    }
 };
 
 Core.prototype.render = function(){
@@ -217,6 +230,8 @@ Core.prototype.onRequestUiFlash = function(event){
 Core.prototype.onStartGame = function(event){
     this.logicBus.postMessage('startGame', {});
     this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.renderer.setPixelRatio(this.resolutionCoefficient);
+    console.log(this.resolutionCoefficient);
 };
 
 Core.prototype.rebuildRenderer = function(){

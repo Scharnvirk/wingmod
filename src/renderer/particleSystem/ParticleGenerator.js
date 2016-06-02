@@ -78,6 +78,7 @@ ParticleGenerator.prototype.update = function(){
     this.tick += 1;
 
     this.material.uniforms.time.value = this.tick;
+    this.material.uniforms.pixelRatio = Math.round(window.devicePixelRatio*10)/10 || 0.1;
 
     this.geometry.attributes.position.needsUpdate = true;
     this.geometry.attributes.speed.needsUpdate = true;
@@ -99,7 +100,7 @@ ParticleGenerator.prototype.initParticle = function(particleId, config){
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;
-    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient;
+    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient * 1/(window.devicePixelRatio);
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
     this.speedHandle[particleId * 3] = offsetPosition[0];
@@ -107,6 +108,10 @@ ParticleGenerator.prototype.initParticle = function(particleId, config){
     this.speedHandle[particleId * 3 + 2] = config.speedZ || 0;
     this.startTimeHandle[particleId] = this.tick;
     this.lifeTimeHandle[particleId] = config.lifeTime;
+};
+
+ParticleGenerator.prototype.updateResolutionCoefficient = function(resolutionCoefficient){
+    this.resolutionCoefficient = resolutionCoefficient;
 };
 
 module.exports = ParticleGenerator;

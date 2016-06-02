@@ -2609,12 +2609,25 @@ Core.prototype.assetsLoaded = function () {
 };
 
 Core.prototype.onEachSecond = function () {
+    this.updatePerformanceParameters();
     this.renderTicks = 0;
 };
 
 Core.prototype.controlsUpdate = function () {
     this.inputListener.update();
     this.controlsHandler.update();
+};
+
+Core.prototype.updatePerformanceParameters = function () {
+    if (this.renderTicks < 59 && this.resolutionCoefficient > 0.4) {
+        this.resolutionCoefficient -= 0.1;
+        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+        this.renderer.setPixelRatio(this.resolutionCoefficient);
+    } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
+        this.resolutionCoefficient += 0.1;
+        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+        this.renderer.setPixelRatio(this.resolutionCoefficient);
+    }
 };
 
 Core.prototype.render = function () {
@@ -2684,6 +2697,8 @@ Core.prototype.onRequestUiFlash = function (event) {
 Core.prototype.onStartGame = function (event) {
     this.logicBus.postMessage('startGame', {});
     this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.renderer.setPixelRatio(this.resolutionCoefficient);
+    console.log(this.resolutionCoefficient);
 };
 
 Core.prototype.rebuildRenderer = function () {
@@ -5147,6 +5162,8 @@ module.exports = Hud;
 function ChunkMesh(config) {
     config = config || {};
 
+    config.geometry.dynamic = false;
+
     THREE.Mesh.apply(this, [config.geometry, config.material]);
 
     this.receiveShadow = true;
@@ -5395,6 +5412,7 @@ ParticleGenerator.prototype.update = function () {
     this.tick += 1;
 
     this.material.uniforms.time.value = this.tick;
+    this.material.uniforms.pixelRatio = Math.round(window.devicePixelRatio * 10) / 10 || 0.1;
 
     this.geometry.attributes.position.needsUpdate = true;
     this.geometry.attributes.speed.needsUpdate = true;
@@ -5414,7 +5432,7 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
     this.colorHandle[particleId * 3] = config.colorR;
     this.colorHandle[particleId * 3 + 1] = config.colorG;
     this.colorHandle[particleId * 3 + 2] = config.colorB;
-    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient;
+    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient * 1 / window.devicePixelRatio;
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
     this.speedHandle[particleId * 3] = offsetPosition[0];
@@ -5422,6 +5440,10 @@ ParticleGenerator.prototype.initParticle = function (particleId, config) {
     this.speedHandle[particleId * 3 + 2] = config.speedZ || 0;
     this.startTimeHandle[particleId] = this.tick;
     this.lifeTimeHandle[particleId] = config.lifeTime;
+};
+
+ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCoefficient) {
+    this.resolutionCoefficient = resolutionCoefficient;
 };
 
 module.exports = ParticleGenerator;
@@ -5478,6 +5500,12 @@ ParticleManager.prototype.createPremade = function (premadeName, config) {
     this.premades[premadeName](config);
 };
 
+ParticleManager.prototype.updateResolutionCoefficient = function (coefficient) {
+    for (var typeName in this.generators) {
+        this.generators[typeName].updateResolutionCoefficient(coefficient);
+    }
+};
+
 module.exports = ParticleManager;
 
 },{"renderer/particleSystem/ParticleConfigBuilder":78,"renderer/particleSystem/ParticleGenerator":79}],81:[function(require,module,exports){
@@ -5511,7 +5539,7 @@ var ParticleShaders = {
                 vPosition.y += speed.y * (time - startTime); \
                 vPosition.z += speed.z * (time - startTime); \
                 mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
-                gl_PointSize = scale * (1000.0 / - mvPosition.z) ;  \
+                gl_PointSize = scale * (1000.0 / - mvPosition.z);  \
             } \
             gl_Position = projectionMatrix * mvPosition; \
         }",
@@ -6705,6 +6733,8 @@ MainMenuScene.prototype.buildStartScene = function () {
     mesh.receiveShadow = true;
     mesh.rotation.x = Utils.degToRad(90);
     mesh.rotation.y = Utils.degToRad(-90);
+    mesh.matrixAutoUpdate = false;
+    mesh.updateMatrix();
 
     this.threeScene.add(mesh);
 
@@ -7216,8 +7246,7 @@ var StartScreen = React.createClass({
                         '2'
                     )
                 ),
-                React.createElement(Button, { text: startButtonText, buttonEvent: 'start' }),
-                React.createElement(SettingsMenu, null)
+                React.createElement(Button, { text: startButtonText, buttonEvent: 'start' })
             ),
             React.createElement(
                 StyledText,

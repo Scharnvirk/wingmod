@@ -77,7 +77,7 @@ MainMenuScene.prototype.resetCamera = function(){
 
 MainMenuScene.prototype.buildStartScene = function(){
 
-    this.sceneMaterial =  ModelStore.get('startmenu').material;
+    this.sceneMaterial = ModelStore.get('startmenu').material;
 
     var mesh = new BaseMesh({
         geometry: ModelStore.get('startmenu').geometry,
@@ -91,6 +91,8 @@ MainMenuScene.prototype.buildStartScene = function(){
     mesh.receiveShadow = true;
     mesh.rotation.x = Utils.degToRad(90);
     mesh.rotation.y = Utils.degToRad(-90);
+    mesh.matrixAutoUpdate = false;
+    mesh.updateMatrix();
 
     this.threeScene.add(mesh);
 
