@@ -152,14 +152,16 @@ Core.prototype.controlsUpdate = function(){
 };
 
 Core.prototype.updatePerformanceParameters = function(){
-    if (this.renderTicks < 59 && this.resolutionCoefficient > 0.4){
-        this.resolutionCoefficient -= 0.1;
-        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-        this.renderer.setPixelRatio(this.resolutionCoefficient);
-    } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1){
-        this.resolutionCoefficient += 0.1;
-        this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-        this.renderer.setPixelRatio(this.resolutionCoefficient);
+    if(!this.gameEnded){
+        if (this.renderTicks < 55 && this.resolutionCoefficient > 0.6){
+            this.resolutionCoefficient -= 0.05;
+            this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+            this.renderer.setPixelRatio(this.resolutionCoefficient);
+        } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1){
+            this.resolutionCoefficient += 0.05;
+            this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+            this.renderer.setPixelRatio(this.resolutionCoefficient);
+        }
     }
 };
 
@@ -202,6 +204,7 @@ Core.prototype.onAttachPlayer = function(event){
 };
 
 Core.prototype.onGameEnded = function(event){
+    this.gameEnded = true;
     setTimeout(function(){
         this.ui.stopGame(event.data);
         this.renderLoop.stop();
@@ -209,6 +212,7 @@ Core.prototype.onGameEnded = function(event){
 };
 
 Core.prototype.onGameFinished = function(event){
+    this.gameEnded = true;
     setTimeout(function(){
         this.ui.stopGameFinished();
         this.renderLoop.stop();
