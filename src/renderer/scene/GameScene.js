@@ -10,7 +10,6 @@ function GameScene(config) {
 
     Object.assign(this, config);
     this.lightCounter = 0;
-    this.shadows = config.shadows;
 
     BaseScene.apply(this, arguments);
 }
@@ -36,7 +35,7 @@ GameScene.prototype.build = function() {
 
     this.directionalLight.color = this.initialColor;
 
-    this.directionalLight.castShadow = this.shadows;
+    this.directionalLight.castShadow = true;
 
     var shadowCamera = this.directionalLight.shadow.camera;
 

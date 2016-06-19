@@ -2487,14 +2487,14 @@ function Core(config) {
     this.viewportElement = document.getElementById('viewport');
 
     this.renderTicks = 0;
+
+    this.coreConfig = {
+        soundVolume: 1
+    };
 }
 
-Core.prototype.init = function (config) {
-    this.renderer = this.makeRenderer(config);
-    this.resolutionCoefficient = config.lowRes ? 0.5 : 1;
-    this.particleLimitMultiplier = config.lowParticles ? 0.5 : 1;
-    this.renderShadows = config.shadows;
-
+Core.prototype.init = function () {
+    this.renderer = this.makeRenderer({ shadows: true });
     this.makeMainComponents();
     this.initEventHandlers();
     this.renderStats = this.makeRenderStatsWatcher();
@@ -2505,9 +2505,9 @@ Core.prototype.init = function (config) {
 };
 
 Core.prototype.makeMainComponents = function () {
-    this.inputListener = new InputListener({ domElement: this.renderer.domElement });
+    this.inputListener = new InputListener({ renderer: this.renderer });
     this.sceneManager = new SceneManager();
-    this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: this.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier });
+    this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: this.coreConfig.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ sceneManager: this.sceneManager, particleManager: this.particleManager });
     this.logicBus = new LogicBus({ worker: this.logicWorker });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
@@ -2527,6 +2527,7 @@ Core.prototype.initEventHandlers = function () {
     this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
     this.ui.on('startGame', this.onStartGame.bind(this));
+    this.ui.on('coreConfig', this.onCoreConfig.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -2560,7 +2561,7 @@ Core.prototype.attachToDom = function (renderer, stats, renderStats) {
 Core.prototype.makeRenderer = function (config) {
     config = config || {};
     var renderer = new THREE.WebGLRenderer({ antialias: false });
-    renderer.setPixelRatio(this.resolutionCoefficient);
+    renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadows;
     renderer.shadowMap.type = !!config.shadows ? THREE.PCFSoftShadowMap : null;
@@ -2609,7 +2610,7 @@ Core.prototype.assetsLoaded = function () {
 };
 
 Core.prototype.onEachSecond = function () {
-    this.updatePerformanceParameters();
+    //this.updatePerformanceParameters();
     this.renderTicks = 0;
 };
 
@@ -2617,20 +2618,20 @@ Core.prototype.controlsUpdate = function () {
     this.inputListener.update();
     this.controlsHandler.update();
 };
-
-Core.prototype.updatePerformanceParameters = function () {
-    if (!this.gameEnded) {
-        if (this.renderTicks < 55 && this.resolutionCoefficient > 0.6) {
-            this.resolutionCoefficient -= 0.05;
-            this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-            this.renderer.setPixelRatio(this.resolutionCoefficient);
-        } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1) {
-            this.resolutionCoefficient += 0.05;
-            this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-            this.renderer.setPixelRatio(this.resolutionCoefficient);
-        }
-    }
-};
+//
+// Core.prototype.updatePerformanceParameters = function(){
+//     if(!this.gameEnded){
+//         if (this.renderTicks < 55 && this.resolutionCoefficient > 0.6){
+//             this.resolutionCoefficient -= 0.05;
+//             this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+//             this.renderer.setPixelRatio(this.resolutionCoefficient);
+//         } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1){
+//             this.resolutionCoefficient += 0.05;
+//             this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
+//             this.renderer.setPixelRatio(this.resolutionCoefficient);
+//         }
+//     }
+// };
 
 Core.prototype.render = function () {
     this.actorManager.update();
@@ -2701,20 +2702,33 @@ Core.prototype.onRequestUiFlash = function (event) {
 Core.prototype.onStartGame = function (event) {
     this.logicBus.postMessage('startGame', {});
     this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
-    this.renderer.setPixelRatio(this.resolutionCoefficient);
-    console.log(this.resolutionCoefficient);
+    this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+};
+
+Core.prototype.onCoreConfig = function (event) {
+    this.coreConfig[event.option] = event.value;
+
+    this.coreConfig.soundVolume = this.coreConfig.noSound ? 0 : 1;
+
+    this.rebuildRenderer();
 };
 
 Core.prototype.rebuildRenderer = function () {
+    this.coreConfig.resolutionCoefficient = this.coreConfig.lowRes ? 0.6 : 1;
+    this.particleManager.updateResolutionCoefficient(this.coreConfig.resolutionCoefficient);
+    this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+
     this.viewportElement.removeChild(this.renderer.domElement);
-    this.renderer = this.makeRenderer({ shadows: false });
+    this.renderer = this.makeRenderer({ shadows: !this.coreConfig.noShadows });
+    this.inputListener = new InputListener({ renderer: this.renderer });
+    this.controlsHandler.inputListener = this.inputListener;
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
 Core.prototype.onPlaySound = function (event) {
     var baseVolume = Math.max(Constants.MAX_SOUND_DISTANCE - event.data.distance, 0) / Constants.MAX_SOUND_DISTANCE;
     var configVolume = event.data.volume || 1;
-    var finalVolume = Math.min(baseVolume * (Utils.rand(80, 100) / 100) * configVolume, 1);
+    var finalVolume = this.coreConfig.soundVolume * Math.min(baseVolume * (Utils.rand(80, 100) / 100) * configVolume, 1);
     if (finalVolume > 0.1) {
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], { volume: finalVolume });
     }
@@ -2733,7 +2747,7 @@ var InputListener = function InputListener(config) {
     this.scrollDuration = 4;
     this.scrollFallOffPercent = 10;
 
-    this.domElement = config.domElement !== undefined ? config.domElement : document;
+    this.domElement = config.renderer !== undefined ? config.renderer.domElement : document;
     if (this.domElement) {
         this.domElement.setAttribute('tabindex', -1);
     }
@@ -6512,7 +6526,6 @@ function GameScene(config) {
 
     Object.assign(this, config);
     this.lightCounter = 0;
-    this.shadows = config.shadows;
 
     BaseScene.apply(this, arguments);
 }
@@ -6538,7 +6551,7 @@ GameScene.prototype.build = function () {
 
     this.directionalLight.color = this.initialColor;
 
-    this.directionalLight.castShadow = this.shadows;
+    this.directionalLight.castShadow = true;
 
     var shadowCamera = this.directionalLight.shadow.camera;
 
@@ -6679,7 +6692,7 @@ MainMenuScene.prototype.build = function () {
 
     this.directionalLight.color = this.initialColor;
 
-    this.directionalLight.castShadow = this.shadows;
+    this.directionalLight.castShadow = true;
 
     var shadowCamera = this.directionalLight.shadow.camera;
 
@@ -6942,6 +6955,13 @@ ReactUi.prototype.changeMode = function (newMode, context) {
     var additionalConfig = context || null;
     this.InitialView = React.createElement(InitialView, { mode: newMode, context: context });
     this.render();
+
+    switch (newMode) {
+        case 'running':
+            document.getElementById('gameViewport').addClass('noPointerEvents');
+            break;
+
+    }
 };
 
 module.exports = ReactUi;
@@ -6985,7 +7005,6 @@ function Ui(config) {
     this.reactUi = new ReactUi();
     this.gameCore = null;
 
-    this.configState = {};
     this.assetsLoaded = false;
 
     this.setupButtonListener();
@@ -7006,14 +7025,14 @@ Ui.prototype.setupButtonListener = function () {
             case 'stop':
                 _this.onStop();
                 break;
-            case 'shadowConfig':
-                _this.onShadowConfig(data);
+            case 'noShadows':
+                _this.onNoShadowsConfig(data);
                 break;
-            case 'lowResConfig':
+            case 'lowRes':
                 _this.onLowResConfig(data);
                 break;
-            case 'lowParticlesConfig':
-                _this.onLowParticleConfig(data);
+            case 'noSound':
+                _this.onNoSoundConfig(data);
                 break;
         }
     });
@@ -7024,11 +7043,7 @@ Ui.prototype.init = function () {
         console.error("no GameCore set in UI!");
     }
 
-    this.gameCore.init({
-        shadows: !this.configState.shadows,
-        lowRes: this.configState.lowRes,
-        lowParticles: this.configState.lowParticles
-    });
+    this.gameCore.init();
 };
 
 Ui.prototype.setAssetsLoaded = function (state) {
@@ -7054,16 +7069,16 @@ Ui.prototype.onStartButtonClick = function () {
     }
 };
 
-Ui.prototype.onShadowConfig = function (data) {
-    this.configState.shadows = data.state;
+Ui.prototype.onNoShadowsConfig = function (data) {
+    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
 };
 
 Ui.prototype.onLowResConfig = function (data) {
-    this.configState.lowRes = data.state;
+    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
 };
 
-Ui.prototype.onLowParticleConfig = function (data) {
-    this.configState.lowParticles = data.state;
+Ui.prototype.onNoSoundConfig = function (data) {
+    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
 };
 
 module.exports = Ui;
@@ -7177,8 +7192,7 @@ var InitialView = React.createClass({
             React.createElement(
                 FullScreenEffect,
                 { blur: blurState },
-                React.createElement(Viewport, null),
-                React.createElement(Hud, null)
+                React.createElement(Viewport, null)
             ),
             UIcontent
         );
@@ -7225,7 +7239,6 @@ var StartScreen = React.createClass({
     },
     render: function render() {
         var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
-        console.log("rendereing", this.state.assetsLoaded);
         var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
         return React.createElement(
@@ -7250,7 +7263,8 @@ var StartScreen = React.createClass({
                         '2'
                     )
                 ),
-                React.createElement(Button, { text: startButtonText, buttonEvent: 'start' })
+                React.createElement(Button, { text: startButtonText, buttonEvent: 'start' }),
+                React.createElement(SettingsMenu, null)
             ),
             React.createElement(
                 StyledText,
@@ -7289,12 +7303,12 @@ var SettingsMenu = function (_React$Component) {
                     React.createElement(
                         'span',
                         { className: 'textDark' },
-                        'Performance settings'
+                        'Settings'
                     )
                 ),
-                React.createElement(ToggleButton, { text: 'No shadows', buttonEvent: 'shadowConfig' }),
-                React.createElement(ToggleButton, { text: 'Low-res', buttonEvent: 'lowResConfig' }),
-                React.createElement(ToggleButton, { text: 'Less particles', buttonEvent: 'lowParticlesConfig' })
+                React.createElement(ToggleButton, { text: 'No shadows', buttonEvent: 'noShadows' }),
+                React.createElement(ToggleButton, { text: 'Low-res', buttonEvent: 'lowRes' }),
+                React.createElement(ToggleButton, { text: 'No sound', buttonEvent: 'noSound' })
             );
         }
     }]);

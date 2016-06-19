@@ -374,7 +374,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
         classId: ActorFactory.SHIP,
         positionX: 0,
         positionY: 0,
-        angle: 0
+        angle: Utils.rand(0, 360)
     });
 
     this.emit({

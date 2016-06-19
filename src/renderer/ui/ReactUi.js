@@ -19,6 +19,13 @@ ReactUi.prototype.changeMode = function(newMode, context){
     var additionalConfig = context || null;
     this.InitialView = <InitialView mode={newMode} context={context}/>;
     this.render();
+
+    switch(newMode){
+        case 'running':
+            document.getElementById('gameViewport').addClass('noPointerEvents');
+            break;
+
+    }
 };
 
 module.exports = ReactUi;

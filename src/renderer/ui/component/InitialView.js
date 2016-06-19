@@ -39,7 +39,6 @@ var InitialView = React.createClass({
         return <div>
             <FullScreenEffect blur={blurState}>
                 <Viewport/>
-                <Hud/>
             </FullScreenEffect>
             {UIcontent}
         </div>;

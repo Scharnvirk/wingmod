@@ -7,7 +7,6 @@ function Ui(config){
     this.reactUi = new ReactUi();
     this.gameCore = null;
 
-    this.configState = {};
     this.assetsLoaded = false;
 
     this.setupButtonListener();
@@ -26,14 +25,14 @@ Ui.prototype.setupButtonListener = function(){
             case 'stop':
                 this.onStop();
                 break;
-            case 'shadowConfig':
-                this.onShadowConfig(data);
+            case 'noShadows':
+                this.onNoShadowsConfig(data);
                 break;
-            case 'lowResConfig':
+            case 'lowRes':
                 this.onLowResConfig(data);
                 break;
-            case 'lowParticlesConfig':
-                this.onLowParticleConfig(data);
+            case 'noSound':
+                this.onNoSoundConfig(data);
                 break;
         }
     } );
@@ -44,11 +43,7 @@ Ui.prototype.init = function(){
         console.error("no GameCore set in UI!");
     }
 
-    this.gameCore.init({
-        shadows: !this.configState.shadows,
-        lowRes: this.configState.lowRes,
-        lowParticles: this.configState.lowParticles
-    });
+    this.gameCore.init();
 };
 
 Ui.prototype.setAssetsLoaded = function(state){
@@ -74,16 +69,16 @@ Ui.prototype.onStartButtonClick = function(){
     }
 };
 
-Ui.prototype.onShadowConfig = function(data){
-    this.configState.shadows = data.state;
+Ui.prototype.onNoShadowsConfig = function(data){
+    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
 };
 
 Ui.prototype.onLowResConfig = function(data){
-    this.configState.lowRes = data.state;
+    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
 };
 
-Ui.prototype.onLowParticleConfig = function(data){
-    this.configState.lowParticles = data.state;
+Ui.prototype.onNoSoundConfig = function(data){
+    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
 };
 
 module.exports = Ui;

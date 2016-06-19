@@ -26,7 +26,6 @@ var StartScreen = React.createClass({
     },
     render() {
         var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
-        console.log("rendereing", this.state.assetsLoaded);
         var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
         return <div>
@@ -38,7 +37,8 @@ var StartScreen = React.createClass({
                     <span style={{color: 'red'}}>{'2'}</span>
                 </StyledText>
                 <Button text={startButtonText} buttonEvent={'start'} />
-                
+                <SettingsMenu/>
+
             </div>
             <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
                 <span className={'textDark'} >{versionText}</span>
@@ -54,11 +54,11 @@ class SettingsMenu extends React.Component {
             style={ {marginTop:'150px'} }
         >
             <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                <span className={'textDark'} >{'Performance settings'}</span>
+                <span className={'textDark'} >{'Settings'}</span>
             </StyledText>
-            <ToggleButton text={'No shadows'} buttonEvent={'shadowConfig'}/>
-            <ToggleButton text={'Low-res'} buttonEvent={'lowResConfig'}/>
-            <ToggleButton text={'Less particles'} buttonEvent={'lowParticlesConfig'}/>
+            <ToggleButton text={'No shadows'} buttonEvent={'noShadows'}/>
+            <ToggleButton text={'Low-res'} buttonEvent={'lowRes'}/>
+            <ToggleButton text={'No sound'} buttonEvent={'noSound'}/>
         </div>;
     }
 }

@@ -32,7 +32,7 @@ MainMenuScene.prototype.build = function(){
 
     this.directionalLight.color = this.initialColor;
 
-    this.directionalLight.castShadow = this.shadows;
+    this.directionalLight.castShadow = true;
 
     var shadowCamera = this.directionalLight.shadow.camera;
 

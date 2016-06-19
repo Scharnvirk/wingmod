@@ -3,7 +3,7 @@ class InputListener{
         this.scrollDuration = 4;
         this.scrollFallOffPercent = 10;
 
-        this.domElement = (config.domElement !== undefined) ? config.domElement : document;
+        this.domElement = (config.renderer !== undefined) ? config.renderer.domElement : document;
         if (this.domElement) {
             this.domElement.setAttribute('tabindex', -1);
         }
