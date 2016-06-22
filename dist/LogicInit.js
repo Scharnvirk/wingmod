@@ -3867,13 +3867,6 @@ ShipActor.prototype.doBob = function () {
     } else {
         this.speedX += 0.00009;
     }
-
-    // this.positionZ += this.speedZ;
-    // if (this.positionZ > 10){
-    //     this.speedZ -= 0.002;
-    // } else {
-    //     this.speedZ += 0.002;
-    // }
 };
 
 ShipActor.prototype.doEngineGlow = function () {

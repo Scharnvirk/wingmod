@@ -2,6 +2,7 @@ import classnames from 'classnames';
 
 var StartScreen = require('renderer/ui/component/StartScreen');
 var EndScreen = require('renderer/ui/component/EndScreen');
+var StartHelp = require('renderer/ui/component/StartHelp');
 var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
 var Hud = require('renderer/ui/component/hud/Hud');
@@ -11,9 +12,13 @@ var ReactUtils = require('renderer/ui/ReactUtils');
 var InitialView = React.createClass({
     render(){
         let UIcontent = [];
+        console.log(this.props.mode);
         switch(this.props.mode || 'startScreen'){
             case 'startScreen':
                 UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
+                break;
+            case 'helpScreen':
+                UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);
                 break;
             case 'gameOverScreen':
                 UIcontent.push(<

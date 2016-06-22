@@ -61,7 +61,6 @@
     }
 }
 
-
 @keyframes textAppear {
     from {
       color: rgba(255, 255, 255, 0);;
@@ -73,6 +72,16 @@
     }
 }
 
+@keyframes textBlink {
+    from {
+      color: rgba(255, 255, 255, 0.5);;
+      text-shadow: 5px 5px 5px rgba(0, 0, 0, 0);
+    }
+    to {
+      color: rgba(255, 255, 255, 1);;
+      text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    }
+}
 
 .noSelect {
   -webkit-touch-callout: none;
@@ -197,7 +206,16 @@
 .smallText{
   text-align: center;
   letter-spacing: 3px;
-  font-size: 50;
+  font-size: 20px;
+  color: white;
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.mediumText{
+  text-align: center;
+  letter-spacing: 4px;
+  font-size: 30px;
   color: white;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
@@ -207,6 +225,15 @@
   animation-name: textAppear;
   animation-duration: 3s;
   animation-fill-mode: forwards;
+}
+
+.textBlink{
+  animation-name: textBlink;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease
 }
 
 .centerVertical{

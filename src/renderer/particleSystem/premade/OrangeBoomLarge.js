@@ -15,6 +15,23 @@ module.exports = function(config){
         });
     }
 
+    for (let i = 0; i < 60; i++){
+        config.particleManager.createParticle('particleAddSplash',{
+            positionX: config.position[0],
+            positionY: config.position[1],
+            colorR: 1,
+            colorG: 0.8,
+            colorB: 0.5,
+            scale: 1.2,
+            alpha: 1,
+            alphaMultiplier: 0.94,
+            particleVelocity: Utils.rand(5, 20) / 10,
+            particleAngle: Utils.rand(0,360),
+            speedZ: Utils.rand(-50, 50) / 100,
+            lifeTime: Utils.rand(10,50)
+        });
+    }
+
     config.particleManager.createParticle('mainExplosionAdd', {
         positionX: config.position[0],
         positionY: config.position[1],

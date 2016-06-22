@@ -62,7 +62,7 @@ function ParticleConfigBuilder(config){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500 * config.particleLimitMultiplier,
+            maxParticles: 1500,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
@@ -74,7 +74,7 @@ function ParticleConfigBuilder(config){
         },
         particleAddSplash: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000 * config.particleLimitMultiplier,
+            maxParticles: 3000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient,
         },
@@ -92,7 +92,7 @@ function ParticleConfigBuilder(config){
         },
         mainExplosionAdd: {
             material: this.particleMaterialConfig.mainExplosionAdd,
-            maxParticles: 500 * config.particleLimitMultiplier,
+            maxParticles: 500,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         }

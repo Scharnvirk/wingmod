@@ -61,8 +61,12 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('mapDone', this.sceneManager.onMapDone.bind(this.sceneManager));
     this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
+    this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
     this.ui.on('startGame', this.onStartGame.bind(this));
     this.ui.on('coreConfig', this.onCoreConfig.bind(this));
+
+    this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
+    this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -95,7 +99,8 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
 
 Core.prototype.makeRenderer = function(config) {
     config = config || {};
-    var renderer = new THREE.WebGLRenderer({antialias: false});
+    var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
+    var renderer = new THREE.WebGLRenderer({antialias: false, canvas: exisitngDomElement});
     renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadows;
@@ -143,7 +148,6 @@ Core.prototype.assetsLoaded = function(){
 };
 
 Core.prototype.onEachSecond = function(){
-    //this.updatePerformanceParameters();
     this.renderTicks = 0;
 };
 
@@ -151,20 +155,6 @@ Core.prototype.controlsUpdate = function(){
     this.inputListener.update();
     this.controlsHandler.update();
 };
-//
-// Core.prototype.updatePerformanceParameters = function(){
-//     if(!this.gameEnded){
-//         if (this.renderTicks < 55 && this.resolutionCoefficient > 0.6){
-//             this.resolutionCoefficient -= 0.05;
-//             this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-//             this.renderer.setPixelRatio(this.resolutionCoefficient);
-//         } else if (this.renderTicks === 60 && this.resolutionCoefficient < 1){
-//             this.resolutionCoefficient += 0.05;
-//             this.particleManager.updateResolutionCoefficient(this.resolutionCoefficient);
-//             this.renderer.setPixelRatio(this.resolutionCoefficient);
-//         }
-//     }
-// };
 
 Core.prototype.render = function(){
     this.actorManager.update();
@@ -233,14 +223,33 @@ Core.prototype.onRequestUiFlash = function(event){
 };
 
 Core.prototype.onStartGame = function(event){
-    this.logicBus.postMessage('startGame', {});
-    this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
-    this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+    if (!this.running) {
+        this.running = true;
+        this.logicBus.postMessage('startGame', {});
+        this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+        this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+    }
+};
+
+Core.prototype.onGetPointerLock = function(event){
+    this.inputListener.acquirePointerLock();
+};
+
+Core.prototype.onGotPointerLock = function(event){
+    //TODO: game state machine
+    if(!this.gameEnded){
+        this.ui.gotPointerLock();
+    }
+};
+
+Core.prototype.onLostPointerLock = function(event){
+    if(!this.gameEnded){
+        this.ui.lostPointerLock();
+    }
 };
 
 Core.prototype.onCoreConfig = function(event){
     this.coreConfig[event.option] = event.value;
-
     this.coreConfig.soundVolume = this.coreConfig.noSound ? 0 : 1;
 
     this.rebuildRenderer();
@@ -253,8 +262,7 @@ Core.prototype.rebuildRenderer = function(){
 
     this.viewportElement.removeChild( this.renderer.domElement );
     this.renderer = this.makeRenderer({shadows: !this.coreConfig.noShadows});
-    this.inputListener = new InputListener({renderer: this.renderer});
-    this.controlsHandler.inputListener = this.inputListener;
+
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
 
@@ -262,7 +270,7 @@ Core.prototype.onPlaySound = function(event){
     var baseVolume = Math.max(Constants.MAX_SOUND_DISTANCE - event.data.distance, 0) / Constants.MAX_SOUND_DISTANCE;
     var configVolume = event.data.volume || 1;
     var finalVolume = this.coreConfig.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
-    if (finalVolume > 0.1){
+    if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
     }
 };

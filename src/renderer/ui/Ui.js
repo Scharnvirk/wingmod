@@ -16,7 +16,6 @@ function Ui(config){
 Ui.extend(EventEmitter);
 
 Ui.prototype.setupButtonListener = function(){
-    console.log(PubSub);
     PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
             case 'start':
@@ -64,10 +63,21 @@ Ui.prototype.stopGameFinished = function(){
 
 Ui.prototype.onStartButtonClick = function(){
     if(this.assetsLoaded){
-        this.emit({type: 'startGame'});
-        this.reactUi.changeMode('running');
+        this.emit({type: 'getPointerLock'});
+        this.reactUi.changeMode('helpScreen');
     }
 };
+
+Ui.prototype.gotPointerLock = function(){
+    this.emit({type: 'startGame'});
+    this.reactUi.changeMode('running');
+};
+
+Ui.prototype.lostPointerLock = function(){
+    this.emit({type: 'getPointerLock'});
+    this.reactUi.changeMode('helpScreen');
+};
+
 
 Ui.prototype.onNoShadowsConfig = function(data){
     this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});

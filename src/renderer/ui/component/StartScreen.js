@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 
 var StyledText = require('renderer/ui/component/base/StyledText');
+var SettingsMenu = require('renderer/ui/component/SettingsMenu');
 var Button = require('renderer/ui/component/base/Button');
-var ToggleButton = require('renderer/ui/component/base/ToggleButton');
 var ReactUtils = require('renderer/ui/ReactUtils');
 
 var bottomText = ReactUtils.multilinize(
@@ -38,29 +38,13 @@ var StartScreen = React.createClass({
                 </StyledText>
                 <Button text={startButtonText} buttonEvent={'start'} />
                 <SettingsMenu/>
-
             </div>
             <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
                 <span className={'textDark'} >{versionText}</span>
             </StyledText>
+
         </div>;
     }
 });
-
-class SettingsMenu extends React.Component {
-    render(){
-        return <div
-            className={classnames('class', ['centerVertical'])}
-            style={ {marginTop:'150px'} }
-        >
-            <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                <span className={'textDark'} >{'Settings'}</span>
-            </StyledText>
-            <ToggleButton text={'No shadows'} buttonEvent={'noShadows'}/>
-            <ToggleButton text={'Low-res'} buttonEvent={'lowRes'}/>
-            <ToggleButton text={'No sound'} buttonEvent={'noSound'}/>
-        </div>;
-    }
-}
 
 module.exports = StartScreen;
