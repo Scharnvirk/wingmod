@@ -19,7 +19,7 @@ RedLaserProjectileActor.prototype.onDeath = function(){
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -33,7 +33,7 @@ RedLaserProjectileActor.prototype.onSpawn = function(){
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,

@@ -16,7 +16,7 @@ module.exports = function(config){
     }
 
     for (let i = 0; i < 60; i++){
-        config.particleManager.createParticle('particleAddSplash',{
+        config.particleManager.createParticle('particleAdd',{
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -32,7 +32,7 @@ module.exports = function(config){
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -46,7 +46,7 @@ module.exports = function(config){
         lifeTime: 20
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -60,7 +60,7 @@ module.exports = function(config){
         lifeTime: 80
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,

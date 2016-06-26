@@ -7,7 +7,7 @@ function DebugActor(){
 DebugActor.extend(BaseActor);
 
 DebugActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAddTrail',{
+    this.particleManager.createParticle('particleAdd',{
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,

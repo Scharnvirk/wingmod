@@ -3549,7 +3549,7 @@ function DebugActor() {
 DebugActor.extend(BaseActor);
 
 DebugActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -4032,7 +4032,7 @@ function EnemySpawnMarkerActor(config) {
 EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 0.5,
@@ -4046,7 +4046,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         lifeTime: 2
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -4063,7 +4063,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
     for (var i = 0; i < this.timer / 15; i++) {
         var angle = Utils.rand(0, 360);
         var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
-        this.particleManager.createParticle('particleAddSplash', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: 0.5,
@@ -4083,7 +4083,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
 EnemySpawnMarkerActor.prototype.onDeath = function () {
     var pointCount = 8;
     for (var i = 0; i < pointCount; i++) {
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -4097,7 +4097,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             lifeTime: 5
         });
 
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -4563,7 +4563,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4577,7 +4577,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4617,7 +4617,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4631,7 +4631,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4671,7 +4671,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4685,7 +4685,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4725,7 +4725,7 @@ RedLaserProjectileActor.prototype.onDeath = function () {
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4739,7 +4739,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4777,7 +4777,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
         offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 10);
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
             colorR: this.colorR,
@@ -4795,7 +4795,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
 RingProjectileActor.prototype.onDeath = function () {
     for (var i = 0; i < 15; i++) {
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + Utils.rand(-4, 4),
             positionY: this.position[1] + Utils.rand(-4, 4),
             positionZ: Utils.rand(-5, 5),
@@ -4812,7 +4812,7 @@ RingProjectileActor.prototype.onDeath = function () {
     }
 
     for (var i = 0; i < 100 - this.timer; i++) {
-        this.particleManager.createParticle('particleAddSplash', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -4830,7 +4830,7 @@ RingProjectileActor.prototype.onDeath = function () {
 };
 
 RingProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4844,7 +4844,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -5654,7 +5654,7 @@ function ParticleConfigBuilder(config) {
             transparent: true,
             depthTest: false
         }),
-        mainExplosionAdd: new THREE.ShaderMaterial({
+        particleAdd: new THREE.ShaderMaterial({
             uniforms: {
                 map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/particleAdd.png") },
                 time: { type: "f", value: 1.0 }
@@ -5670,38 +5670,26 @@ function ParticleConfigBuilder(config) {
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500,
+            maxParticles: 1000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
-        particleAddTrail: {
+        particleAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 6000,
-            positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient
-        },
-        particleAddSplash: {
-            material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000,
+            maxParticles: 8000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
-            maxParticles: 200,
+            maxParticles: 100,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient
         },
         particleAddHUDSquare: {
             material: this.particleMaterialConfig.particleAddHUDSquare,
-            maxParticles: 1000,
+            maxParticles: 400,
             positionZ: 20,
-            resolutionCoefficient: config.resolutionCoefficient
-        },
-        mainExplosionAdd: {
-            material: this.particleMaterialConfig.mainExplosionAdd,
-            maxParticles: 500,
-            positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         }
     };
@@ -5963,7 +5951,7 @@ module.exports = ParticleShaders;
 module.exports = function (config) {
     for (var i = 0; i < 15; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -5980,7 +5968,7 @@ module.exports = function (config) {
 
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 0.3,
@@ -6001,7 +5989,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 30; i++) {
-        config.particleManager.createParticle('particleAddSplash', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 0.8,
@@ -6017,7 +6005,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6031,7 +6019,7 @@ module.exports = function (config) {
         lifeTime: 10
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 0.8,
@@ -6045,7 +6033,7 @@ module.exports = function (config) {
         lifeTime: 60
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6059,7 +6047,7 @@ module.exports = function (config) {
         lifeTime: 15
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 0.3,
@@ -6078,7 +6066,7 @@ module.exports = function (config) {
 'use strict';
 
 module.exports = function (config) {
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6093,7 +6081,7 @@ module.exports = function (config) {
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6113,7 +6101,7 @@ module.exports = function (config) {
 'use strict';
 
 module.exports = function (config) {
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6128,7 +6116,7 @@ module.exports = function (config) {
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6166,7 +6154,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6180,7 +6168,7 @@ module.exports = function (config) {
         lifeTime: 10
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6194,7 +6182,7 @@ module.exports = function (config) {
         lifeTime: 15
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 0.8,
@@ -6215,7 +6203,7 @@ module.exports = function (config) {
 module.exports = function (config) {
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.7);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -6230,7 +6218,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 0.3,
@@ -6266,7 +6254,7 @@ module.exports = function (config) {
     }
 
     for (var i = 0; i < 60; i++) {
-        config.particleManager.createParticle('particleAddSplash', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -6282,7 +6270,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6296,7 +6284,7 @@ module.exports = function (config) {
         lifeTime: 20
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6310,7 +6298,7 @@ module.exports = function (config) {
         lifeTime: 80
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6346,7 +6334,7 @@ module.exports = function (config) {
     }
 
     for (var i = 0; i < 40; i++) {
-        config.particleManager.createParticle('particleAddSplash', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -6362,7 +6350,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6376,7 +6364,7 @@ module.exports = function (config) {
         lifeTime: 20
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6390,7 +6378,7 @@ module.exports = function (config) {
         lifeTime: 80
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6427,7 +6415,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6441,7 +6429,7 @@ module.exports = function (config) {
         lifeTime: 10
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6455,7 +6443,7 @@ module.exports = function (config) {
         lifeTime: 15
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6476,7 +6464,7 @@ module.exports = function (config) {
 module.exports = function (config) {
     for (var i = 0; i < 3; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -6491,7 +6479,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6510,7 +6498,7 @@ module.exports = function (config) {
 'use strict';
 
 module.exports = function (config) {
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6525,7 +6513,7 @@ module.exports = function (config) {
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6547,7 +6535,7 @@ module.exports = function (config) {
 module.exports = function (config) {
     for (var i = 0; i < 15; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -6564,7 +6552,7 @@ module.exports = function (config) {
 
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -6585,7 +6573,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 30; i++) {
-        config.particleManager.createParticle('particleAddSplash', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -6601,7 +6589,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6615,7 +6603,7 @@ module.exports = function (config) {
         lifeTime: 10
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6629,7 +6617,7 @@ module.exports = function (config) {
         lifeTime: 60
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6643,7 +6631,7 @@ module.exports = function (config) {
         lifeTime: 15
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6662,7 +6650,7 @@ module.exports = function (config) {
 'use strict';
 
 module.exports = function (config) {
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6677,7 +6665,7 @@ module.exports = function (config) {
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6697,7 +6685,7 @@ module.exports = function (config) {
 'use strict';
 
 module.exports = function (config) {
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6712,7 +6700,7 @@ module.exports = function (config) {
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -6734,7 +6722,7 @@ module.exports = function (config) {
 module.exports = function (config) {
     for (var i = 0; i < 15; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -6751,7 +6739,7 @@ module.exports = function (config) {
 
     for (var i = 0; i < 5; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -6772,7 +6760,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 30; i++) {
-        config.particleManager.createParticle('particleAddSplash', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
             colorR: 1,
@@ -6788,7 +6776,7 @@ module.exports = function (config) {
         });
     }
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6802,7 +6790,7 @@ module.exports = function (config) {
         lifeTime: 10
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6816,7 +6804,7 @@ module.exports = function (config) {
         lifeTime: 60
     });
 
-    config.particleManager.createParticle('particleAddSplash', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,
@@ -6830,7 +6818,7 @@ module.exports = function (config) {
         lifeTime: 15
     });
 
-    config.particleManager.createParticle('mainExplosionAdd', {
+    config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
         colorR: 1,

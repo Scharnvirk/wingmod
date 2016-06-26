@@ -8,7 +8,7 @@ function EnemySpawnMarkerActor(config){
 EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAddTrail',{
+    this.particleManager.createParticle('particleAdd',{
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 0.5,
@@ -22,7 +22,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
         lifeTime: 2
     });
 
-    this.particleManager.createParticle('particleAddTrail',{
+    this.particleManager.createParticle('particleAdd',{
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -39,7 +39,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
     for(let i = 0; i < this.timer/15; i++){
         let angle = Utils.rand(0,360);
         var offsetPosition = Utils.angleToVector(angle, Utils.rand(20,30));
-        this.particleManager.createParticle('particleAddSplash',{
+        this.particleManager.createParticle('particleAdd',{
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: 0.5,
@@ -59,7 +59,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
 EnemySpawnMarkerActor.prototype.onDeath = function(){
     var pointCount = 8;
     for (let i = 0; i < pointCount; i++){
-        this.particleManager.createParticle('particleAddTrail',{
+        this.particleManager.createParticle('particleAdd',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -73,7 +73,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function(){
             lifeTime: 5
         });
 
-        this.particleManager.createParticle('particleAddTrail',{
+        this.particleManager.createParticle('particleAdd',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,

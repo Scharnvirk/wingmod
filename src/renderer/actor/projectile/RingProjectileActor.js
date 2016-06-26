@@ -17,7 +17,7 @@ RingProjectileActor.prototype.customUpdate = function(){
 
     for (let i = -ringSections/2; i < ringSections/2; i ++){
       offsetPositionZ = Utils.angleToVector(Utils.degToRad(240/ringSections * i) + this.angle, 1 + this.timer/10);
-      this.particleManager.createParticle('particleAddTrail', {
+      this.particleManager.createParticle('particleAdd', {
           positionX: this.position[0] + offsetPositionZ[0],
           positionY: this.position[1] + offsetPositionZ[1],
           colorR: this.colorR,
@@ -35,7 +35,7 @@ RingProjectileActor.prototype.customUpdate = function(){
 
 RingProjectileActor.prototype.onDeath = function(){
     for (let i = 0; i < 15; i++){
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + Utils.rand(-4,4),
             positionY: this.position[1] + Utils.rand(-4,4),
             positionZ: Utils.rand(-5,5),
@@ -52,7 +52,7 @@ RingProjectileActor.prototype.onDeath = function(){
     }
 
     for (let i = 0; i < 100-this.timer; i++){
-        this.particleManager.createParticle('particleAddSplash',{
+        this.particleManager.createParticle('particleAdd',{
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -70,7 +70,7 @@ RingProjectileActor.prototype.onDeath = function(){
 };
 
 RingProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,
@@ -84,7 +84,7 @@ RingProjectileActor.prototype.onSpawn = function(){
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR*0.3+0.7,

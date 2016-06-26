@@ -1,7 +1,7 @@
 module.exports = function(config){
     for(let i = 0; i < 15; i++){
         let offsetPosition = Utils.angleToVector(config.angle, -i*0.6);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,
@@ -18,7 +18,7 @@ module.exports = function(config){
 
     for(let i = 0; i < 5; i++){
         let offsetPosition = Utils.angleToVector(config.angle, -i*1.8);
-        config.particleManager.createParticle('particleAddTrail', {
+        config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
             colorR: 1,

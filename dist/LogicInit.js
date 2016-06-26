@@ -2968,7 +2968,7 @@ function DebugActor() {
 DebugActor.extend(BaseActor);
 
 DebugActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -3451,7 +3451,7 @@ function EnemySpawnMarkerActor(config) {
 EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 0.5,
@@ -3465,7 +3465,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         lifeTime: 2
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: 1,
@@ -3482,7 +3482,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
     for (var i = 0; i < this.timer / 15; i++) {
         var angle = Utils.rand(0, 360);
         var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
-        this.particleManager.createParticle('particleAddSplash', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
             colorR: 0.5,
@@ -3502,7 +3502,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
 EnemySpawnMarkerActor.prototype.onDeath = function () {
     var pointCount = 8;
     for (var i = 0; i < pointCount; i++) {
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 0.5,
@@ -3516,7 +3516,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             lifeTime: 5
         });
 
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -3982,7 +3982,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -3996,7 +3996,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4036,7 +4036,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4050,7 +4050,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4090,7 +4090,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4104,7 +4104,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4144,7 +4144,7 @@ RedLaserProjectileActor.prototype.onDeath = function () {
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4158,7 +4158,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4196,7 +4196,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
         offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 10);
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
             colorR: this.colorR,
@@ -4214,7 +4214,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
 RingProjectileActor.prototype.onDeath = function () {
     for (var i = 0; i < 15; i++) {
-        this.particleManager.createParticle('particleAddTrail', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + Utils.rand(-4, 4),
             positionY: this.position[1] + Utils.rand(-4, 4),
             positionZ: Utils.rand(-5, 5),
@@ -4231,7 +4231,7 @@ RingProjectileActor.prototype.onDeath = function () {
     }
 
     for (var i = 0; i < 100 - this.timer; i++) {
-        this.particleManager.createParticle('particleAddSplash', {
+        this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
             colorR: 1,
@@ -4249,7 +4249,7 @@ RingProjectileActor.prototype.onDeath = function () {
 };
 
 RingProjectileActor.prototype.onSpawn = function () {
-    this.particleManager.createParticle('mainExplosionAdd', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,
@@ -4263,7 +4263,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAddTrail', {
+    this.particleManager.createParticle('particleAdd', {
         positionX: this.position[0],
         positionY: this.position[1],
         colorR: this.colorR * 0.3 + 0.7,

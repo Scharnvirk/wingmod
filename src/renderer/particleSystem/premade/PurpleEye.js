@@ -1,5 +1,5 @@
 module.exports = function(config){
-    config.particleManager.createParticle('particleAddTrail',{
+    config.particleManager.createParticle('particleAdd',{
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
@@ -14,7 +14,7 @@ module.exports = function(config){
         lifeTime: 1
     });
 
-    config.particleManager.createParticle('particleAddTrail',{
+    config.particleManager.createParticle('particleAdd',{
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,

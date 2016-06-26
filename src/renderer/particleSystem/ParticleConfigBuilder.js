@@ -46,7 +46,7 @@ function ParticleConfigBuilder(config){
              transparent: true,
              depthTest: false,
         }),
-        mainExplosionAdd: new THREE.ShaderMaterial( {
+        particleAdd: new THREE.ShaderMaterial( {
              uniforms: {
                  map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleAdd.png" )},
                  time: { type: "f", value: 1.0 }
@@ -62,39 +62,27 @@ function ParticleConfigBuilder(config){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1500,
+            maxParticles: 1000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient
         },
-        particleAddTrail: {
+        particleAdd: {
             material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 6000,
-            positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient,
-        },
-        particleAddSplash: {
-            material: this.particleMaterialConfig.particleAdd,
-            maxParticles: 3000,
+            maxParticles: 8000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient,
         },
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
-            maxParticles: 200,
+            maxParticles: 100,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient,
         },
         particleAddHUDSquare: {
             material: this.particleMaterialConfig.particleAddHUDSquare,
-            maxParticles: 1000,
+            maxParticles: 400,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient,
-        },
-        mainExplosionAdd: {
-            material: this.particleMaterialConfig.mainExplosionAdd,
-            maxParticles: 500,
-            positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient
         }
     };
 }
