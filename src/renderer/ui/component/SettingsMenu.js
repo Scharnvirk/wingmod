@@ -4,7 +4,15 @@ var StyledText = require('renderer/ui/component/base/StyledText');
 var ToggleButton = require('renderer/ui/component/base/ToggleButton');
 var OptionButton = require('renderer/ui/component/base/OptionButton');
 
-class SettingsMenu extends React.Component {
+var SettingsMenu = React.createClass({
+    getInitialState() {
+        return { initialConfigs: {} };
+    },
+    componentWillMount() {
+        PubSub.subscribe( 'setConfig', (message, data) => {
+            this.setState({initialConfigs: data});
+        });
+    },
     render(){
         return <div style={{marginTop: '100px'}} className={'bottomCenter'}>
 
@@ -13,7 +21,7 @@ class SettingsMenu extends React.Component {
                     <span className={'textDark'} >{'SHADOWS:'}</span>
                 </StyledText> </div>
                 <div style = { {float:'right'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <OptionButton buttonEvent={'shadowConfig'} options={['NONE', 'BASIC', 'SMOOTH']} defaultValue={1}/>
+                    <OptionButton buttonEvent={'shadowConfig'} options={['NONE', 'BASIC', 'SMOOTH']} value={this.state.initialConfigs.shadow}/>
                 </StyledText>  </div>
             </div>
 
@@ -22,7 +30,7 @@ class SettingsMenu extends React.Component {
                     <span className={'textDark'} >{'RESOLUTION:'}</span>
                 </StyledText> </div>
                 <div style = { {float:'right'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <OptionButton buttonEvent={'resolutionConfig'} options={['LOW', 'MEDIUM', 'HIGH', 'TOO HIGH']} defaultValue={2}/>
+                    <OptionButton buttonEvent={'resolutionConfig'} options={['LOW', 'MEDIUM', 'HIGH', 'TOO HIGH']} value={this.state.initialConfigs.resolution}/>
                 </StyledText>  </div>
             </div>
 
@@ -31,15 +39,11 @@ class SettingsMenu extends React.Component {
                     <span className={'textDark'} >{'SOUND:'}</span>
                 </StyledText> </div>
                 <div style = { {float:'right'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <OptionButton buttonEvent={'soundConfig'} options={['OFF', 'SILENT', 'NORMAL', 'LOUD']} defaultValue={2}/>
+                    <OptionButton buttonEvent={'soundConfig'} options={['OFF', 'SILENT', 'NORMAL', 'LOUD']} value={this.state.initialConfigs.soundVolume}/>
                 </StyledText>  </div>
             </div>
-
-            <span style={{clear:'both'}}> {'asd'} </span>
-
-
         </div>;
     }
-}
+});
 
 module.exports = SettingsMenu;

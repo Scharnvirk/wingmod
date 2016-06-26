@@ -1,3 +1,4 @@
+var ConfigManager = require("renderer/ConfigManager");
 var InputListener = require("renderer/InputListener");
 var ParticleManager = require("renderer/particleSystem/ParticleManager");
 var ActorManager = require("renderer/actor/ActorManager");
@@ -22,14 +23,9 @@ function Core(config){
     this.viewportElement = document.getElementById('viewport');
 
     this.renderTicks = 0;
-
-    this.coreConfig = {
-        soundVolume: 1
-    };
 }
 
 Core.prototype.init = function(){
-    this.renderer = this.makeRenderer({shadows: true});
     this.makeMainComponents();
     this.initEventHandlers();
     this.renderStats = this.makeRenderStatsWatcher();
@@ -37,9 +33,14 @@ Core.prototype.init = function(){
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
     this.assetManager.loadAll();
+
+    console.log('asd', this.configManager.settingConfig);
+    PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
 Core.prototype.makeMainComponents = function(){
+    this.configManager = new ConfigManager();
+    this.renderer = this.makeRenderer();
     this.inputListener = new InputListener({renderer: this.renderer});
     this.sceneManager = new SceneManager();
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
@@ -100,12 +101,13 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
 };
 
 Core.prototype.makeRenderer = function() {
+    var config = this.configManager.config;
     var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
     var renderer = new THREE.WebGLRenderer({antialias: false, canvas: exisitngDomElement});
-    renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+    renderer.setPixelRatio(config.resolution);
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = !!this.coreConfig.shadow;
-    renderer.shadowMap.type = this.coreConfig.shadow;
+    renderer.shadowMap.enabled = !!config.shadow;
+    renderer.shadowMap.type = config.shadow;
     return renderer;
 };
 
@@ -249,34 +251,23 @@ Core.prototype.onLostPointerLock = function(event){
 };
 
 Core.prototype.onShadowConfig = function(event){
-    switch(event.value){
-        case 0:
-            this.coreConfig.shadow = null;
-            break;
-        case 1:
-            this.coreConfig.shadow = THREE.PCFShadowMap;
-            break;
-        case 2:
-            this.coreConfig.shadow = THREE.PCFSoftShadowMap;
-            break;
-    }
+    this.configManager.saveShadow(event.value);
     this.rebuildRenderer();
 };
 
 Core.prototype.onResolutionConfig = function(event){
-    this.coreConfig.resolutionCoefficient = 1 - (1 - (event.value + 1.6) * 0.25);
-    console.log(this.coreConfig.resolutionCoefficient);
+    this.configManager.saveResolution(event.value);
     this.rebuildRenderer();
 };
 
 Core.prototype.onSoundConfig = function(event){
-    this.coreConfig.soundVolume =  event.value > 0 ? 1 - (1 - event.value * 0.3) : 0;
-    console.log(this.coreConfig.soundVolume);
+    this.configManager.saveSoundVolume(event.value);
 };
 
 Core.prototype.rebuildRenderer = function(){
-    this.particleManager.updateResolutionCoefficient(this.coreConfig.resolutionCoefficient);
-    this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
+    var config = this.configManager.config;
+    this.particleManager.updateResolutionCoefficient(config.resolution);
+    this.renderer.setPixelRatio(config.resolution);
 
     this.viewportElement.removeChild( this.renderer.domElement );
     this.renderer = this.makeRenderer();
@@ -285,13 +276,13 @@ Core.prototype.rebuildRenderer = function(){
 };
 
 Core.prototype.onPlaySound = function(event){
+    var config = this.configManager.config;
     var baseVolume = Math.max(Constants.MAX_SOUND_DISTANCE - event.data.distance, 0) / Constants.MAX_SOUND_DISTANCE;
     var configVolume = event.data.volume || 1;
-    var finalVolume = this.coreConfig.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
+    var finalVolume = config.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
     if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
     }
 };
-
 
 module.exports = Core;

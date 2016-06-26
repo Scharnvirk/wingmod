@@ -12,7 +12,6 @@ var ReactUtils = require('renderer/ui/ReactUtils');
 var InitialView = React.createClass({
     render(){
         let UIcontent = [];
-        console.log(this.props.mode);
         switch(this.props.mode || 'startScreen'){
             case 'startScreen':
                 UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
