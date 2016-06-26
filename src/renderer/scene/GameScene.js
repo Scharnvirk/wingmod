@@ -54,7 +54,7 @@ GameScene.prototype.build = function() {
 
     this.ambientLight = new THREE.AmbientLight( 0x505050, 1 );
 
-    this.threeScene.add( this.ambientLight);
+    this.threeScene.add( this.ambientLight );
 
     this.threeScene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
 };

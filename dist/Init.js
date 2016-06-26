@@ -2842,8 +2842,6 @@ Core.prototype.init = function () {
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
     this.assetManager.loadAll();
-
-    console.log('asd', this.configManager.settingConfig);
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
@@ -5774,13 +5772,10 @@ ParticleGenerator.prototype.createGeometry = function () {
     var geometry = new THREE.BufferGeometry();
 
     var vertices = new Float32Array(this.maxParticles * 3);
-    var types = new Float32Array(this.maxParticles * 1);
     var colors = new Float32Array(this.maxParticles * 3);
     var speeds = new Float32Array(this.maxParticles * 3);
     var alphas = new Float32Array(this.maxParticles * 2);
-    var scales = new Float32Array(this.maxParticles * 1);
-    var startTimes = new Float32Array(this.maxParticles * 1);
-    var lifeTimes = new Float32Array(this.maxParticles * 1);
+    var configs = new Float32Array(this.maxParticles * 3);
 
     for (var i = 0; i < this.maxParticles; i++) {
         vertices[i * 3 + 0] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
@@ -5792,17 +5787,13 @@ ParticleGenerator.prototype.createGeometry = function () {
     geometry.addAttribute('color', new THREE.BufferAttribute(colors, 3));
     geometry.addAttribute('speed', new THREE.BufferAttribute(speeds, 3));
     geometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 2));
-    geometry.addAttribute('scale', new THREE.BufferAttribute(scales, 1));
-    geometry.addAttribute('startTime', new THREE.BufferAttribute(startTimes, 1));
-    geometry.addAttribute('lifeTime', new THREE.BufferAttribute(lifeTimes, 1));
+    geometry.addAttribute('configs', new THREE.BufferAttribute(configs, 3));
 
     this.positionHandle = geometry.attributes.position.array;
     this.alphaHandle = geometry.attributes.alpha.array;
     this.colorHandle = geometry.attributes.color.array;
-    this.scaleHandle = geometry.attributes.scale.array;
     this.speedHandle = geometry.attributes.speed.array;
-    this.startTimeHandle = geometry.attributes.startTime.array;
-    this.lifeTimeHandle = geometry.attributes.lifeTime.array;
+    this.configsHandle = geometry.attributes.configs.array;
 
     return geometry;
 };
@@ -5828,30 +5819,30 @@ ParticleGenerator.prototype.update = function () {
 
     this.geometry.attributes.position.needsUpdate = true;
     this.geometry.attributes.speed.needsUpdate = true;
-
     this.geometry.attributes.alpha.needsUpdate = true;
     this.geometry.attributes.color.needsUpdate = true;
-    this.geometry.attributes.scale.needsUpdate = true;
-    this.geometry.attributes.startTime.needsUpdate = true;
-    this.geometry.attributes.lifeTime.needsUpdate = true;
+    this.geometry.attributes.configs.needsUpdate = true;
+
+    this.frameResolution = this.resolutionCoefficient * 1 / window.devicePixelRatio;
 };
 
 ParticleGenerator.prototype.initParticle = function (particleId, config) {
+    var particle3 = particleId * 3;
     var offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
-    this.positionHandle[particleId * 3] = config.positionX;
-    this.positionHandle[particleId * 3 + 1] = config.positionY;
-    this.positionHandle[particleId * 3 + 2] = config.positionZ || 0;
-    this.colorHandle[particleId * 3] = config.colorR;
-    this.colorHandle[particleId * 3 + 1] = config.colorG;
-    this.colorHandle[particleId * 3 + 2] = config.colorB;
-    this.scaleHandle[particleId] = config.scale * this.resolutionCoefficient * 1 / window.devicePixelRatio;
+    this.positionHandle[particle3] = config.positionX;
+    this.positionHandle[particle3 + 1] = config.positionY;
+    this.positionHandle[particle3 + 2] = config.positionZ || 0;
+    this.colorHandle[particle3] = config.colorR;
+    this.colorHandle[particle3 + 1] = config.colorG;
+    this.colorHandle[particle3 + 2] = config.colorB;
     this.alphaHandle[particleId * 2] = config.alpha;
     this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
-    this.speedHandle[particleId * 3] = offsetPosition[0];
-    this.speedHandle[particleId * 3 + 1] = offsetPosition[1];
-    this.speedHandle[particleId * 3 + 2] = config.speedZ || 0;
-    this.startTimeHandle[particleId] = this.tick;
-    this.lifeTimeHandle[particleId] = config.lifeTime;
+    this.speedHandle[particle3] = offsetPosition[0];
+    this.speedHandle[particle3 + 1] = offsetPosition[1];
+    this.speedHandle[particle3 + 2] = config.speedZ || 0;
+    this.configsHandle[particle3] = config.scale * this.frameResolution;
+    this.configsHandle[particle3 + 1] = this.tick;
+    this.configsHandle[particle3 + 2] = config.lifeTime;
 };
 
 ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCoefficient) {
@@ -5925,13 +5916,11 @@ module.exports = ParticleManager;
 
 var ParticleShaders = {
     vertexShader: " \
-        attribute float scale; \
         attribute vec2 alpha; \
         attribute vec3 speed; \
         attribute float alphaMultiplier; \
-        attribute float startTime; \
-        attribute float lifeTime; \
         attribute vec3 color; \
+        attribute vec3 configs; \
         \
         varying float vAlpha; \
         varying vec3 vColor; \
@@ -5943,15 +5932,15 @@ var ParticleShaders = {
         void main() { \
             vec4 mvPosition; \
             vec3 vPosition; \
-            if ((time - startTime) <= lifeTime){ \
-                vAlpha = alpha.x * pow(alpha.y, (time - startTime)); \
+            if ((time - configs[1]) <= configs[2]){ \
+                vAlpha = alpha.x * pow(alpha.y, (time - configs[1])); \
                 vColor = color; \
                 vPosition = position; \
-                vPosition.x += speed.x * (time - startTime); \
-                vPosition.y += speed.y * (time - startTime); \
-                vPosition.z += speed.z * (time - startTime); \
+                vPosition.x += speed.x * (time - configs[1]); \
+                vPosition.y += speed.y * (time - configs[1]); \
+                vPosition.z += speed.z * (time - configs[1]); \
                 mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
-                gl_PointSize = scale * (1000.0 / - mvPosition.z);  \
+                gl_PointSize = configs[0] * (1000.0 / - mvPosition.z);  \
             } \
             gl_Position = projectionMatrix * mvPosition; \
         }",

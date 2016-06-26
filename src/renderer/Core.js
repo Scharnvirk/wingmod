@@ -33,8 +33,6 @@ Core.prototype.init = function(){
     this.startTime = Date.now();
     this.attachToDom(this.renderer, this.stats, this.renderStats);
     this.assetManager.loadAll();
-
-    console.log('asd', this.configManager.settingConfig);
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 

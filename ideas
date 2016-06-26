@@ -1,0 +1,9 @@
+* sprite sheet in shaders
+
+* autoperfer
+
+* render map shadow once (...somehow?)
+
+* pausing game
+
+* material config (could be applied as an extension to JSON loader which based on given config would skip specular and other expensive textures...)
