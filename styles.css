@@ -237,13 +237,14 @@
 }
 
 .centerVertical{
+  position: relative;
   top: 65%;
   transform: translate(0, -50%);
 }
 
 .centerHorizontal{
   text-align: center;
-  position: absolute;
+  position: relative;
   margin-left: auto;
   margin-right: auto;
   left: 0;
@@ -251,6 +252,16 @@
   width: 100%;
   word-wrap: normal;
 }
+
+.flexColumn{
+  display: flex;
+  flex-flow: column wrap;
+  /* this indicates, when a new "column" will be started */
+  height: 200px;
+  align-content: flex-start;
+}
+
+.flexContent{}
 
 .reactContent{
   position: fixed;
@@ -264,14 +275,17 @@
   margin-bottom: 20px;
 }
 
-.bottomVertical{
-  bottom: 30px;
+.bottomCenter{
+  bottom: 100px;
+  position: fixed;
+  left: 0;
+  right: 0;
 }
 
 .topRightCorner{
   top: 10px;
   right: 10px;
-  position: absolute;
+  position: fixed;
 }
 
 .scalable{

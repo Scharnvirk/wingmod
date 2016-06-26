@@ -30,7 +30,8 @@ var StartScreen = React.createClass({
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
         return <div>
             <div
-                className={ classnames('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing']) }
+                className = { classnames('class', ['bottomCenter', 'verticalSpacing']) }
+                style = {{bottom: '300px'}}
             >
                 <StyledText style={'titleText'}>
                     <span>{'WINGMOD'}</span>

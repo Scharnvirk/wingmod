@@ -367,7 +367,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":2,"renderer/Core":36,"renderer/ui/Ui":106,"shared/Constants":119,"shared/EventEmitter":120,"shared/Utils":121}],5:[function(require,module,exports){
+},{"domready":2,"renderer/Core":36,"renderer/ui/Ui":106,"shared/Constants":120,"shared/EventEmitter":121,"shared/Utils":122}],5:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("shared/ActorFactory")('logic');
@@ -470,7 +470,7 @@ BaseActor.prototype.drawDebug = function (position) {
 
 module.exports = BaseActor;
 
-},{"shared/ActorFactory":118}],6:[function(require,module,exports){
+},{"shared/ActorFactory":119}],6:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1029,7 +1029,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],12:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],12:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1055,7 +1055,7 @@ MoltenBallThrower.extend(BaseWeapon);
 
 module.exports = MoltenBallThrower;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],13:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],13:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1078,7 +1078,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],14:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],14:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1102,7 +1102,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],15:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],15:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1125,7 +1125,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],16:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],16:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1147,7 +1147,7 @@ RingBlaster.extend(BaseWeapon);
 
 module.exports = RingBlaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":118}],17:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":10,"shared/ActorFactory":119}],17:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1277,7 +1277,7 @@ MookActor.prototype.onHit = function () {
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/MoltenBallThrower":12,"logic/actor/component/weapon/RedBlaster":14,"shared/ActorFactory":118}],18:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/MoltenBallThrower":12,"logic/actor/component/weapon/RedBlaster":14,"shared/ActorFactory":119}],18:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1345,7 +1345,7 @@ MookBossActor.prototype.onDeath = function () {
 
 module.exports = MookBossActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RedSuperBlaster":15,"logic/actor/enemy/MookActor":17,"shared/ActorFactory":118}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RedSuperBlaster":15,"logic/actor/enemy/MookActor":17,"shared/ActorFactory":119}],19:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1476,7 +1476,7 @@ OrbotActor.prototype.onHit = function () {
 
 module.exports = OrbotActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RingBlaster":16,"shared/ActorFactory":118}],20:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RingBlaster":16,"shared/ActorFactory":119}],20:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1607,7 +1607,7 @@ SniperActor.prototype.onHit = function () {
 
 module.exports = SniperActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RedBlaster":14,"shared/ActorFactory":118}],21:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/ai/MookBrain":8,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/RedBlaster":14,"shared/ActorFactory":119}],21:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1673,7 +1673,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":118}],22:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":119}],22:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1764,7 +1764,7 @@ EnemySpawnerActor.prototype.onHit = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":118}],23:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":119}],23:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1845,7 +1845,7 @@ PillarActor.prototype.onDeath = function () {
 
 module.exports = PillarActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":118}],25:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/body/BaseBody":9,"shared/ActorFactory":119}],25:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2113,7 +2113,7 @@ ShipActor.prototype.onHit = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":5,"logic/actor/component/ai/BaseBrain":7,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/Blaster":11,"logic/actor/component/weapon/PlasmaGun":13,"shared/ActorFactory":118}],29:[function(require,module,exports){
+},{"logic/actor/BaseActor":5,"logic/actor/component/ai/BaseBrain":7,"logic/actor/component/body/BaseBody":9,"logic/actor/component/weapon/Blaster":11,"logic/actor/component/weapon/PlasmaGun":13,"shared/ActorFactory":119}],29:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2507,7 +2507,7 @@ Core.prototype.init = function () {
 Core.prototype.makeMainComponents = function () {
     this.inputListener = new InputListener({ renderer: this.renderer });
     this.sceneManager = new SceneManager();
-    this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: this.coreConfig.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier });
+    this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ sceneManager: this.sceneManager, particleManager: this.particleManager });
     this.logicBus = new LogicBus({ worker: this.logicWorker });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
@@ -2528,7 +2528,9 @@ Core.prototype.initEventHandlers = function () {
 
     this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
     this.ui.on('startGame', this.onStartGame.bind(this));
-    this.ui.on('coreConfig', this.onCoreConfig.bind(this));
+    this.ui.on('soundConfig', this.onSoundConfig.bind(this));
+    this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
+    this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
@@ -2562,14 +2564,13 @@ Core.prototype.attachToDom = function (renderer, stats, renderStats) {
     this.autoResize();
 };
 
-Core.prototype.makeRenderer = function (config) {
-    config = config || {};
+Core.prototype.makeRenderer = function () {
     var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
     var renderer = new THREE.WebGLRenderer({ antialias: false, canvas: exisitngDomElement });
     renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = !!config.shadows;
-    renderer.shadowMap.type = !!config.shadows ? THREE.PCFSoftShadowMap : null;
+    renderer.shadowMap.enabled = !!this.coreConfig.shadow;
+    renderer.shadowMap.type = this.coreConfig.shadow;
     return renderer;
 };
 
@@ -2694,7 +2695,6 @@ Core.prototype.onStartGame = function (event) {
         this.running = true;
         this.logicBus.postMessage('startGame', {});
         this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
-        this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     }
 };
 
@@ -2715,20 +2715,38 @@ Core.prototype.onLostPointerLock = function (event) {
     }
 };
 
-Core.prototype.onCoreConfig = function (event) {
-    this.coreConfig[event.option] = event.value;
-    this.coreConfig.soundVolume = this.coreConfig.noSound ? 0 : 1;
-
+Core.prototype.onShadowConfig = function (event) {
+    switch (event.value) {
+        case 0:
+            this.coreConfig.shadow = null;
+            break;
+        case 1:
+            this.coreConfig.shadow = THREE.PCFShadowMap;
+            break;
+        case 2:
+            this.coreConfig.shadow = THREE.PCFSoftShadowMap;
+            break;
+    }
     this.rebuildRenderer();
 };
 
+Core.prototype.onResolutionConfig = function (event) {
+    this.coreConfig.resolutionCoefficient = 1 - (1 - (event.value + 1.6) * 0.25);
+    console.log(this.coreConfig.resolutionCoefficient);
+    this.rebuildRenderer();
+};
+
+Core.prototype.onSoundConfig = function (event) {
+    this.coreConfig.soundVolume = event.value > 0 ? 1 - (1 - event.value * 0.3) : 0;
+    console.log(this.coreConfig.soundVolume);
+};
+
 Core.prototype.rebuildRenderer = function () {
-    this.coreConfig.resolutionCoefficient = this.coreConfig.lowRes ? 0.6 : 1;
     this.particleManager.updateResolutionCoefficient(this.coreConfig.resolutionCoefficient);
     this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
 
     this.viewportElement.removeChild(this.renderer.domElement);
-    this.renderer = this.makeRenderer({ shadows: !this.coreConfig.noShadows });
+    this.renderer = this.makeRenderer();
 
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };
@@ -2806,11 +2824,8 @@ function InputListener(config) {
     };
 
     this.mouseMove = function (event) {
-        var mouseX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-        this.inputState.mouseAngle -= mouseX * 0.002;
-        this.inputState.mouseY = mouseY;
+        this.inputState.mouseAngle -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
+        this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
     this.mouseDown = function (event) {
@@ -2955,7 +2970,7 @@ LogicBus.extend(WorkerBus);
 
 module.exports = WorkerBus;
 
-},{"shared/WorkerBus":122}],39:[function(require,module,exports){
+},{"shared/WorkerBus":123}],39:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("shared/ActorFactory")('renderer');
@@ -3087,7 +3102,7 @@ ActorManager.prototype.requestUiFlash = function (flashType) {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":118}],40:[function(require,module,exports){
+},{"shared/ActorFactory":119}],40:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -5935,7 +5950,7 @@ module.exports = function (config) {
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
-            particleVelocity: Utils.rand(5, 20) / 10,
+            particleVelocity: Utils.rand(1, 20) / 10,
             particleAngle: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 50)
@@ -6015,7 +6030,7 @@ module.exports = function (config) {
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
-            particleVelocity: Utils.rand(5, 20) / 10,
+            particleVelocity: Utils.rand(1, 20) / 10,
             particleAngle: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 50)
@@ -7101,14 +7116,14 @@ Ui.prototype.setupButtonListener = function () {
             case 'stop':
                 _this.onStop();
                 break;
-            case 'noShadows':
-                _this.onNoShadowsConfig(data);
+            case 'shadowConfig':
+                _this.onShadowConfig(data);
                 break;
-            case 'lowRes':
-                _this.onLowResConfig(data);
+            case 'resolutionConfig':
+                _this.onResolutionConfig(data);
                 break;
-            case 'noSound':
-                _this.onNoSoundConfig(data);
+            case 'soundConfig':
+                _this.onSoundConfig(data);
                 break;
         }
     });
@@ -7155,16 +7170,16 @@ Ui.prototype.lostPointerLock = function () {
     this.reactUi.changeMode('helpScreen');
 };
 
-Ui.prototype.onNoShadowsConfig = function (data) {
-    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
+Ui.prototype.onShadowConfig = function (data) {
+    this.emit({ type: 'shadowConfig', option: data.buttonEvent, value: data.state });
 };
 
-Ui.prototype.onLowResConfig = function (data) {
-    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
+Ui.prototype.onResolutionConfig = function (data) {
+    this.emit({ type: 'resolutionConfig', option: data.buttonEvent, value: data.state });
 };
 
-Ui.prototype.onNoSoundConfig = function (data) {
-    this.emit({ type: 'coreConfig', option: data.buttonEvent, value: data.state });
+Ui.prototype.onSoundConfig = function (data) {
+    this.emit({ type: 'soundConfig', option: data.buttonEvent, value: data.state });
 };
 
 module.exports = Ui;
@@ -7227,7 +7242,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":1,"renderer/ui/component/base/StyledText":114}],108:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/StyledText":115}],108:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -7292,7 +7307,7 @@ var InitialView = React.createClass({
 
 module.exports = InitialView;
 
-},{"classnames":1,"renderer/ui/ReactUtils":105,"renderer/ui/component/EndScreen":107,"renderer/ui/component/StartHelp":110,"renderer/ui/component/StartScreen":111,"renderer/ui/component/base/FullScreenEffect":113,"renderer/ui/component/base/Viewport":116,"renderer/ui/component/hud/Hud":117}],109:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/ReactUtils":105,"renderer/ui/component/EndScreen":107,"renderer/ui/component/StartHelp":110,"renderer/ui/component/StartScreen":111,"renderer/ui/component/base/FullScreenEffect":113,"renderer/ui/component/base/Viewport":117,"renderer/ui/component/hud/Hud":118}],109:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7311,6 +7326,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var StyledText = require('renderer/ui/component/base/StyledText');
 var ToggleButton = require('renderer/ui/component/base/ToggleButton');
+var OptionButton = require('renderer/ui/component/base/OptionButton');
 
 var SettingsMenu = function (_React$Component) {
     _inherits(SettingsMenu, _React$Component);
@@ -7326,22 +7342,104 @@ var SettingsMenu = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 'div',
-                {
-                    className: (0, _classnames2.default)('class', ['centerVertical']),
-                    style: { marginTop: '150px' }
-                },
+                { style: { marginTop: '100px' }, className: 'bottomCenter' },
                 React.createElement(
-                    StyledText,
-                    { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                    'div',
+                    { style: { width: '350px' }, className: 'centerHorizontal' },
                     React.createElement(
-                        'span',
-                        { className: 'textDark' },
-                        'Settings'
+                        'div',
+                        { style: { float: 'left', marginTop: '6px' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(
+                                'span',
+                                { className: 'textDark' },
+                                'SHADOWS:'
+                            )
+                        ),
+                        ' '
+                    ),
+                    React.createElement(
+                        'div',
+                        { style: { float: 'right' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(OptionButton, { buttonEvent: 'shadowConfig', options: ['NONE', 'BASIC', 'SMOOTH'], defaultValue: 1 })
+                        ),
+                        '  '
                     )
                 ),
-                React.createElement(ToggleButton, { text: 'No shadows', buttonEvent: 'noShadows' }),
-                React.createElement(ToggleButton, { text: 'Low-res', buttonEvent: 'lowRes' }),
-                React.createElement(ToggleButton, { text: 'No sound', buttonEvent: 'noSound' })
+                React.createElement(
+                    'div',
+                    { style: { width: '350px' }, className: 'centerHorizontal' },
+                    React.createElement(
+                        'div',
+                        { style: { float: 'left', marginTop: '12px' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(
+                                'span',
+                                { className: 'textDark' },
+                                'RESOLUTION:'
+                            )
+                        ),
+                        ' '
+                    ),
+                    React.createElement(
+                        'div',
+                        { style: { float: 'right' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(OptionButton, { buttonEvent: 'resolutionConfig', options: ['LOW', 'MEDIUM', 'HIGH', 'TOO HIGH'], defaultValue: 2 })
+                        ),
+                        '  '
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { style: { width: '350px' }, className: 'centerHorizontal' },
+                    React.createElement(
+                        'div',
+                        { style: { float: 'left', marginTop: '12px' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(
+                                'span',
+                                { className: 'textDark' },
+                                'SOUND:'
+                            )
+                        ),
+                        ' '
+                    ),
+                    React.createElement(
+                        'div',
+                        { style: { float: 'right' } },
+                        ' ',
+                        React.createElement(
+                            StyledText,
+                            { style: (0, _classnames2.default)('class', ['smallText', 'verticalSpacing']) },
+                            React.createElement(OptionButton, { buttonEvent: 'soundConfig', options: ['OFF', 'SILENT', 'NORMAL', 'LOUD'], defaultValue: 2 })
+                        ),
+                        '  '
+                    )
+                ),
+                React.createElement(
+                    'span',
+                    { style: { clear: 'both' } },
+                    ' ',
+                    'asd',
+                    ' '
+                )
             );
         }
     }]);
@@ -7351,7 +7449,7 @@ var SettingsMenu = function (_React$Component) {
 
 module.exports = SettingsMenu;
 
-},{"classnames":1,"renderer/ui/component/base/StyledText":114,"renderer/ui/component/base/ToggleButton":115}],110:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/OptionButton":114,"renderer/ui/component/base/StyledText":115,"renderer/ui/component/base/ToggleButton":116}],110:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7385,11 +7483,11 @@ var StartHelp = function (_React$Component) {
             var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
             return React.createElement(
                 'div',
-                null,
+                { style: { bottom: '100px' } },
                 React.createElement(
                     'div',
                     {
-                        className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing'])
+                        className: (0, _classnames2.default)('class', ['centerHorizontal', 'bottomCenter', 'verticalSpacing'])
                     },
                     React.createElement(
                         StyledText,
@@ -7437,7 +7535,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":1,"renderer/ui/component/base/StyledText":114}],111:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/StyledText":115}],111:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -7475,7 +7573,8 @@ var StartScreen = React.createClass({
             React.createElement(
                 'div',
                 {
-                    className: (0, _classnames2.default)('class', ['centerHorizontal', 'centerVertical', 'verticalSpacing'])
+                    className: (0, _classnames2.default)('class', ['bottomCenter', 'verticalSpacing']),
+                    style: { bottom: '300px' }
                 },
                 React.createElement(
                     StyledText,
@@ -7509,7 +7608,7 @@ var StartScreen = React.createClass({
 
 module.exports = StartScreen;
 
-},{"classnames":1,"renderer/ui/ReactUtils":105,"renderer/ui/component/SettingsMenu":109,"renderer/ui/component/base/Button":112,"renderer/ui/component/base/StyledText":114}],112:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/ReactUtils":105,"renderer/ui/component/SettingsMenu":109,"renderer/ui/component/base/Button":112,"renderer/ui/component/base/StyledText":115}],112:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7617,6 +7716,56 @@ module.exports = FullScreenEffect;
 },{"classnames":1}],114:[function(require,module,exports){
 'use strict';
 
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PubSub = require('pubsub-js');
+
+var OptionButton = React.createClass({
+    displayName: 'OptionButton',
+    getInitialState: function getInitialState() {
+        return {
+            selectedOption: this.props.defaultValue
+        };
+    },
+    render: function render() {
+        var _this = this;
+
+        var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'textLight', 'verticalSpacing', 'Oswald', 'noSelect']);
+
+        var options = this.props.options || [];
+
+        var buttonEvent = {
+            buttonEvent: this.props.buttonEvent || 'noAction',
+            state: this.state.selectedOption
+        };
+
+        PubSub.publish('buttonClick', buttonEvent);
+
+        return React.createElement(
+            'div',
+            {
+                onClick: function onClick() {
+                    var nextOptionValue = _this.state.selectedOption >= options.length - 1 ? 0 : _this.state.selectedOption + 1;
+                    _this.setState({ selectedOption: nextOptionValue });
+                    buttonEvent.state = nextOptionValue;
+                    PubSub.publish('buttonClick', buttonEvent);
+                },
+                className: classes
+            },
+            options[this.state.selectedOption]
+        );
+    }
+});
+
+module.exports = OptionButton;
+
+},{"classnames":1,"pubsub-js":3}],115:[function(require,module,exports){
+'use strict';
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _classnames = require('classnames');
@@ -7657,7 +7806,7 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":1}],115:[function(require,module,exports){
+},{"classnames":1}],116:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -7704,7 +7853,7 @@ var ToggleButton = React.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":1,"pubsub-js":3}],116:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],117:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7742,7 +7891,7 @@ var Viewport = function (_React$Component) {
 
 module.exports = Viewport;
 
-},{"classnames":1}],117:[function(require,module,exports){
+},{"classnames":1}],118:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7801,7 +7950,7 @@ var Hud = function (_React$Component) {
 
 module.exports = Hud;
 
-},{"classnames":1,"pubsub-js":3}],118:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],119:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -7874,7 +8023,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":6,"logic/actor/enemy/MookActor":17,"logic/actor/enemy/MookBossActor":18,"logic/actor/enemy/OrbotActor":19,"logic/actor/enemy/SniperActor":20,"logic/actor/map/EnemySpawnMarkerActor":21,"logic/actor/map/EnemySpawnerActor":22,"logic/actor/map/MapActor":23,"logic/actor/map/PillarActor":24,"logic/actor/map/WallActor":25,"logic/actor/object/BoomChunkActor":26,"logic/actor/object/ChunkActor":27,"logic/actor/player/ShipActor":28,"logic/actor/projectile/LaserProjectileActor":29,"logic/actor/projectile/MoltenProjectileActor":30,"logic/actor/projectile/PlasmaProjectileActor":31,"logic/actor/projectile/RedLaserProjectileActor":32,"logic/actor/projectile/RingProjectileActor":33,"renderer/actor/DebugActor":41,"renderer/actor/enemy/MookActor":48,"renderer/actor/enemy/MookBossActor":49,"renderer/actor/enemy/OrbotActor":50,"renderer/actor/enemy/SniperActor":51,"renderer/actor/map/EnemySpawnMarkerActor":52,"renderer/actor/map/EnemySpawnerActor":53,"renderer/actor/map/MapActor":54,"renderer/actor/map/PillarActor":55,"renderer/actor/map/WallActor":56,"renderer/actor/object/BoomChunkActor":57,"renderer/actor/object/ChunkActor":58,"renderer/actor/player/ShipActor":59,"renderer/actor/projectile/LaserProjectileActor":60,"renderer/actor/projectile/MoltenProjectileActor":61,"renderer/actor/projectile/PlasmaProjectileActor":62,"renderer/actor/projectile/RedLaserProjectileActor":63,"renderer/actor/projectile/RingProjectileActor":64}],119:[function(require,module,exports){
+},{"logic/actor/DebugActor":6,"logic/actor/enemy/MookActor":17,"logic/actor/enemy/MookBossActor":18,"logic/actor/enemy/OrbotActor":19,"logic/actor/enemy/SniperActor":20,"logic/actor/map/EnemySpawnMarkerActor":21,"logic/actor/map/EnemySpawnerActor":22,"logic/actor/map/MapActor":23,"logic/actor/map/PillarActor":24,"logic/actor/map/WallActor":25,"logic/actor/object/BoomChunkActor":26,"logic/actor/object/ChunkActor":27,"logic/actor/player/ShipActor":28,"logic/actor/projectile/LaserProjectileActor":29,"logic/actor/projectile/MoltenProjectileActor":30,"logic/actor/projectile/PlasmaProjectileActor":31,"logic/actor/projectile/RedLaserProjectileActor":32,"logic/actor/projectile/RingProjectileActor":33,"renderer/actor/DebugActor":41,"renderer/actor/enemy/MookActor":48,"renderer/actor/enemy/MookBossActor":49,"renderer/actor/enemy/OrbotActor":50,"renderer/actor/enemy/SniperActor":51,"renderer/actor/map/EnemySpawnMarkerActor":52,"renderer/actor/map/EnemySpawnerActor":53,"renderer/actor/map/MapActor":54,"renderer/actor/map/PillarActor":55,"renderer/actor/map/WallActor":56,"renderer/actor/object/BoomChunkActor":57,"renderer/actor/object/ChunkActor":58,"renderer/actor/player/ShipActor":59,"renderer/actor/projectile/LaserProjectileActor":60,"renderer/actor/projectile/MoltenProjectileActor":61,"renderer/actor/projectile/PlasmaProjectileActor":62,"renderer/actor/projectile/RedLaserProjectileActor":63,"renderer/actor/projectile/RingProjectileActor":64}],120:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -7908,7 +8057,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],120:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 "use strict";
 
 /**
@@ -8013,7 +8162,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -8128,7 +8277,7 @@ if (!Function.prototype.extend) {
 
 module.exports = Utils;
 
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {

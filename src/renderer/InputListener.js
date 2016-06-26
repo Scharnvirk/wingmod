@@ -57,11 +57,8 @@ function InputListener(config){
     };
 
     this.mouseMove = function (event) {
-        var mouseX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        var mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-        this.inputState.mouseAngle -= mouseX * 0.002;
-        this.inputState.mouseY = mouseY;
+        this.inputState.mouseAngle -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
+        this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
     this.mouseDown = function (event) {

@@ -42,7 +42,7 @@ Core.prototype.init = function(){
 Core.prototype.makeMainComponents = function(){
     this.inputListener = new InputListener({renderer: this.renderer});
     this.sceneManager = new SceneManager();
-    this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: this.coreConfig.resolutionCoefficient, particleLimitMultiplier: this.particleLimitMultiplier});
+    this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
     this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
@@ -63,7 +63,9 @@ Core.prototype.initEventHandlers = function(){
 
     this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
     this.ui.on('startGame', this.onStartGame.bind(this));
-    this.ui.on('coreConfig', this.onCoreConfig.bind(this));
+    this.ui.on('soundConfig', this.onSoundConfig.bind(this));
+    this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
+    this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
@@ -97,14 +99,13 @@ Core.prototype.attachToDom = function(renderer, stats, renderStats){
     this.autoResize();
 };
 
-Core.prototype.makeRenderer = function(config) {
-    config = config || {};
+Core.prototype.makeRenderer = function() {
     var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
     var renderer = new THREE.WebGLRenderer({antialias: false, canvas: exisitngDomElement});
     renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     renderer.setSize(this.WIDTH, this.HEIGHT);
-    renderer.shadowMap.enabled = !!config.shadows;
-    renderer.shadowMap.type = !!config.shadows ? THREE.PCFSoftShadowMap : null;
+    renderer.shadowMap.enabled = !!this.coreConfig.shadow;
+    renderer.shadowMap.type = this.coreConfig.shadow;
     return renderer;
 };
 
@@ -227,7 +228,6 @@ Core.prototype.onStartGame = function(event){
         this.running = true;
         this.logicBus.postMessage('startGame', {});
         this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
-        this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
     }
 };
 
@@ -248,20 +248,38 @@ Core.prototype.onLostPointerLock = function(event){
     }
 };
 
-Core.prototype.onCoreConfig = function(event){
-    this.coreConfig[event.option] = event.value;
-    this.coreConfig.soundVolume = this.coreConfig.noSound ? 0 : 1;
-
+Core.prototype.onShadowConfig = function(event){
+    switch(event.value){
+        case 0:
+            this.coreConfig.shadow = null;
+            break;
+        case 1:
+            this.coreConfig.shadow = THREE.PCFShadowMap;
+            break;
+        case 2:
+            this.coreConfig.shadow = THREE.PCFSoftShadowMap;
+            break;
+    }
     this.rebuildRenderer();
 };
 
+Core.prototype.onResolutionConfig = function(event){
+    this.coreConfig.resolutionCoefficient = 1 - (1 - (event.value + 1.6) * 0.25);
+    console.log(this.coreConfig.resolutionCoefficient);
+    this.rebuildRenderer();
+};
+
+Core.prototype.onSoundConfig = function(event){
+    this.coreConfig.soundVolume =  event.value > 0 ? 1 - (1 - event.value * 0.3) : 0;
+    console.log(this.coreConfig.soundVolume);
+};
+
 Core.prototype.rebuildRenderer = function(){
-    this.coreConfig.resolutionCoefficient = this.coreConfig.lowRes ? 0.6 : 1;
     this.particleManager.updateResolutionCoefficient(this.coreConfig.resolutionCoefficient);
     this.renderer.setPixelRatio(this.coreConfig.resolutionCoefficient);
 
     this.viewportElement.removeChild( this.renderer.domElement );
-    this.renderer = this.makeRenderer({shadows: !this.coreConfig.noShadows});
+    this.renderer = this.makeRenderer();
 
     this.attachToDom(this.renderer, this.stats, this.renderStats);
 };

@@ -24,14 +24,14 @@ Ui.prototype.setupButtonListener = function(){
             case 'stop':
                 this.onStop();
                 break;
-            case 'noShadows':
-                this.onNoShadowsConfig(data);
+            case 'shadowConfig':
+                this.onShadowConfig(data);
                 break;
-            case 'lowRes':
-                this.onLowResConfig(data);
+            case 'resolutionConfig':
+                this.onResolutionConfig(data);
                 break;
-            case 'noSound':
-                this.onNoSoundConfig(data);
+            case 'soundConfig':
+                this.onSoundConfig(data);
                 break;
         }
     } );
@@ -78,17 +78,16 @@ Ui.prototype.lostPointerLock = function(){
     this.reactUi.changeMode('helpScreen');
 };
 
-
-Ui.prototype.onNoShadowsConfig = function(data){
-    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
+Ui.prototype.onShadowConfig = function(data){
+    this.emit({type: 'shadowConfig', option: data.buttonEvent, value: data.state});
 };
 
-Ui.prototype.onLowResConfig = function(data){
-    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
+Ui.prototype.onResolutionConfig = function(data){
+    this.emit({type: 'resolutionConfig', option: data.buttonEvent, value: data.state});
 };
 
-Ui.prototype.onNoSoundConfig = function(data){
-    this.emit({type: 'coreConfig', option: data.buttonEvent, value: data.state});
+Ui.prototype.onSoundConfig = function(data){
+    this.emit({type: 'soundConfig', option: data.buttonEvent, value: data.state});
 };
 
 module.exports = Ui;

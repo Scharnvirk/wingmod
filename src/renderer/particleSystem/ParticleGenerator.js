@@ -88,8 +88,6 @@ ParticleGenerator.prototype.update = function(){
     this.geometry.attributes.scale.needsUpdate = true;
     this.geometry.attributes.startTime.needsUpdate = true;
     this.geometry.attributes.lifeTime.needsUpdate = true;
-
-
 };
 
 ParticleGenerator.prototype.initParticle = function(particleId, config){

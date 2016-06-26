@@ -25,7 +25,7 @@ module.exports = function(config){
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
-            particleVelocity: Utils.rand(5, 20) / 10,
+            particleVelocity: Utils.rand(1, 20) / 10,
             particleAngle: Utils.rand(0,360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10,50)
