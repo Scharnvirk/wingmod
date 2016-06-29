@@ -20,5 +20,8 @@
   "jshintConfig": {
     "esnext": true,
     "multistr": true
+  },
+  "dependencies": {
+    "es6-promisify": "^4.1.0"
   }
 }

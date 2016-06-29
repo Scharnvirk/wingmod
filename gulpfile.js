@@ -20,11 +20,6 @@ var sources = [
         src: SOURCE_PATH + '/LogicInit.js',
         output: 'LogicInit.js',
         dest: 'dist/'
-    },
-    {
-        src: SOURCE_PATH + '/LoaderInit.js',
-        output: 'LoaderInit.js',
-        dest: 'dist/'
     }
 ];
 

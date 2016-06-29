@@ -7,11 +7,12 @@ module.exports = function(config){
         colorG: 0,
         colorB: 1,
         scale: 5,
-        alpha: 0.4,
+        alpha: 0.2,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
         particleAngle: config.angle + Utils.degToRad(config.angleOffset),
-        lifeTime: 1
+        lifeTime: 1,
+        spriteNumber: 3
     });
 
     config.particleManager.createParticle('particleAdd',{

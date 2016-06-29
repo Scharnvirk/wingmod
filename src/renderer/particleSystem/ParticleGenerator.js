@@ -30,7 +30,7 @@ ParticleGenerator.prototype.createGeometry = function(){
     let colors = new Float32Array( this.maxParticles * 3 );
     let speeds = new Float32Array( this.maxParticles * 3 );
     let alphas = new Float32Array( this.maxParticles * 2 );
-    let configs = new Float32Array( this.maxParticles * 3 );
+    let configs = new Float32Array( this.maxParticles * 4 );
 
     for ( let i = 0; i < this.maxParticles; i++ )
     {
@@ -43,7 +43,7 @@ ParticleGenerator.prototype.createGeometry = function(){
     geometry.addAttribute('color', new THREE.BufferAttribute( colors, 3 ));
     geometry.addAttribute('speed', new THREE.BufferAttribute( speeds, 3 ));
     geometry.addAttribute('alpha', new THREE.BufferAttribute( alphas, 2 ));
-    geometry.addAttribute('configs', new THREE.BufferAttribute( configs, 3 ));
+    geometry.addAttribute('configs', new THREE.BufferAttribute( configs, 4 ));
 
     this.positionHandle = geometry.attributes.position.array;
     this.alphaHandle = geometry.attributes.alpha.array;
@@ -96,9 +96,10 @@ ParticleGenerator.prototype.initParticle = function(particleId, config){
     this.speedHandle[particle3] = offsetPosition[0];
     this.speedHandle[particle3 + 1] = offsetPosition[1];
     this.speedHandle[particle3 + 2] = config.speedZ || 0;
-    this.configsHandle[particle3] = config.scale * this.frameResolution;
-    this.configsHandle[particle3 + 1] = this.tick;
-    this.configsHandle[particle3 + 2] = config.lifeTime;
+    this.configsHandle[particleId * 4] = config.scale * this.frameResolution;
+    this.configsHandle[particleId * 4 + 1] = this.tick;
+    this.configsHandle[particleId * 4 + 2] = config.lifeTime;
+    this.configsHandle[particleId * 4 + 3] = config.spriteNumber || 0;
 };
 
 ParticleGenerator.prototype.updateResolutionCoefficient = function(resolutionCoefficient){

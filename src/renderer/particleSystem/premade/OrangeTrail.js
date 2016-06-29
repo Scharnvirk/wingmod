@@ -12,7 +12,8 @@ module.exports = function(config){
             alphaMultiplier: 0.8,
             particleVelocity: 1,
             particleAngle: config.angle,
-            lifeTime: 1
+            lifeTime: 1,
+            spriteNumber: 2
         });
     }
 
@@ -22,7 +23,7 @@ module.exports = function(config){
         colorR: 1,
         colorG: 0.3,
         colorB: 0.1,
-        scale: 8,
+        scale: Utils.rand(5,11),
         alpha: 0.8,
         alphaMultiplier: 0.6,
         particleVelocity: 1,

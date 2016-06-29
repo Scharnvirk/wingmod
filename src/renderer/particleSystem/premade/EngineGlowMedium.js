@@ -28,4 +28,5 @@ module.exports = function(config){
         particleAngle: config.angle + Utils.degToRad(config.angleOffset),
         lifeTime: 1
     });
+    
 };

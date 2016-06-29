@@ -14,48 +14,27 @@ function ParticleConfigBuilder(config){
         }),
         particleAdd: new THREE.ShaderMaterial( {
              uniforms: {
-                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleAdd.png" )},
+                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/shaderSpriteAdd.png" )},
                  time: { type: "f", value: 1.0 },
+                 spriteSheetLength: { type: "f", value: 4.0},
              },
-             vertexShader: ParticleShaders.vertexShader,
-             fragmentShader: ParticleShaders.fragmentShader,
+             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
+             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
              blending: THREE.AdditiveBlending,
              transparent: true,
              depthWrite: false,
-             shading: THREE.FlatShading
         }),
         particleAddHUD: new THREE.ShaderMaterial( {
              uniforms: {
-                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleAdd.png" )},
+                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/shaderSpriteAdd.png" )},
                  time: { type: "f", value: 1.0 },
+                 spriteSheetLength: { type: "f", value: 4.0},
              },
-             vertexShader: ParticleShaders.vertexShader,
-             fragmentShader: ParticleShaders.fragmentShader,
+             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
+             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
              blending: THREE.AdditiveBlending,
              transparent: true,
              depthTest: false,
-        }),
-        particleAddHUDSquare: new THREE.ShaderMaterial( {
-             uniforms: {
-                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleSquareAdd.png" )},
-                 time: { type: "f", value: 1.0 },
-             },
-             vertexShader: ParticleShaders.vertexShader,
-             fragmentShader: ParticleShaders.fragmentShader,
-             blending: THREE.AdditiveBlending,
-             transparent: true,
-             depthTest: false,
-        }),
-        particleAdd: new THREE.ShaderMaterial( {
-             uniforms: {
-                 map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/particleAdd.png" )},
-                 time: { type: "f", value: 1.0 }
-             },
-             vertexShader: ParticleShaders.vertexShader,
-             fragmentShader: ParticleShaders.fragmentShader,
-             blending: THREE.AdditiveBlending,
-             transparent: true,
-             depthWrite: false,
         })
     };
 
@@ -74,13 +53,7 @@ function ParticleConfigBuilder(config){
         },
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
-            maxParticles: 100,
-            positionZ: 20,
-            resolutionCoefficient: config.resolutionCoefficient,
-        },
-        particleAddHUDSquare: {
-            material: this.particleMaterialConfig.particleAddHUDSquare,
-            maxParticles: 400,
+            maxParticles: 500,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient,
         }
@@ -114,7 +87,9 @@ ParticleConfigBuilder.prototype.buildPremades = function(){
         RedEyeBig: require("renderer/particleSystem/premade/RedEyeBig"),
         PurpleEye: require("renderer/particleSystem/premade/PurpleEye"),
         PurpleLaserTrail: require("renderer/particleSystem/premade/PurpleLaserTrail"),
-        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks")
+        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks"),
+        CrosshairBlue: require("renderer/particleSystem/premade/CrosshairBlue"),
+        CrosshairGreen: require("renderer/particleSystem/premade/CrosshairGreen")
     };
 };
 

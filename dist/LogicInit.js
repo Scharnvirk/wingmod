@@ -3494,7 +3494,8 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             particleVelocity: -(Utils.rand(this.timer / 15, this.timer / 10) / 10),
             particleAngle: angle,
             speedZ: Utils.rand(-40, 40) / 100,
-            lifeTime: 12
+            lifeTime: 12,
+            spriteNumber: 2
         });
     }
 };
