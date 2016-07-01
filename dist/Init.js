@@ -655,13 +655,13 @@ BaseActor.prototype.createBody = function () {
 BaseActor.prototype.update = function () {
     this.timer++;
     if (this.timer > this.timeout) {
-        this.onDeath();
+        this.deathMain();
     }
     this.customUpdate();
     this.processMovement();
 };
 
-BaseActor.prototype.onCollision = function (otherActor) {
+BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {
     if (otherActor && this.hp != Infinity && otherActor.damage > 0) {
         this.hp -= otherActor.damage;
         this.sendActorEvent('currentHp', this.hp);
@@ -669,7 +669,8 @@ BaseActor.prototype.onCollision = function (otherActor) {
     }
 
     if (this.hp <= 0 || this.removeOnHit) {
-        this.onDeath();
+        this.body.position = relativeContactPoint;
+        this.deathMain();
     }
 };
 
@@ -689,8 +690,11 @@ BaseActor.prototype.onHit = function () {};
 
 BaseActor.prototype.onSpawn = function () {};
 
-BaseActor.prototype.onDeath = function () {
-    this.body.dead = true;
+BaseActor.prototype.onDeath = function () {};
+
+BaseActor.prototype.deathMain = function () {
+    this.manager.actorDied(this);
+    this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function () {
@@ -1134,15 +1138,9 @@ BaseBody.prototype.initShape = function () {
     }
 };
 
-BaseBody.prototype.onDeath = function () {
+BaseBody.prototype.onCollision = function (otherBody, relativeContactPoint) {
     if (this.actor) {
-        this.actor.remove(this.actorId);
-    }
-};
-
-BaseBody.prototype.onCollision = function (otherBody) {
-    if (this.actor) {
-        this.actor.onCollision(otherBody.actor);
+        this.actor.onCollision(otherBody.actor, relativeContactPoint);
     }
 };
 
@@ -1272,7 +1270,7 @@ function Blaster(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 15;
-    this.velocity = 600;
+    this.velocity = 800;
     this.sound = 'blue_laser';
 }
 
@@ -1876,7 +1874,7 @@ EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
     if (this.timer >= 240) {
-        this.body.dead = true;
+        this.deathMain();
         this.createEnemy();
     }
 };
@@ -2314,7 +2312,7 @@ ShipActor.prototype.createBlaster = function () {
     return new Blaster({
         actor: this,
         manager: this.manager,
-        firingPoints: [{ offsetAngle: -90, offsetDistance: 3.2, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 3.2, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -20, offsetDistance: 10, fireAngle: 0 }, { offsetAngle: 20, offsetDistance: 10, fireAngle: 0 }]
     });
 };
 
@@ -3352,9 +3350,9 @@ ActorManager.prototype.updateFromLogic = function (messageObject) {
     this.lastPhysicsTime = this.currentPhysicsTime;
     this.currentPhysicsTime = Date.now();
     var dataArray = messageObject.transferArray;
-    var deadActorIds = messageObject.deadActors;
+    var deadDataArray = messageObject.deadTransferArray;
 
-    for (var i = 0; i < messageObject.length; i++) {
+    for (var i = 0; i < messageObject.actorCount; i++) {
         var actor = this.storage[dataArray[i * 5]];
         if (!actor) {
             if (dataArray[i * 5 + 1] > 0) {
@@ -3371,8 +3369,9 @@ ActorManager.prototype.updateFromLogic = function (messageObject) {
         }
     }
 
-    for (var i = 0; i < deadActorIds.length; i++) {
-        this.deleteActor(deadActorIds[i]);
+    for (var i = 0; i < messageObject.deadActorCount; i++) {
+        var actor = this.storage[deadDataArray[i]];
+        this.deleteActor(deadDataArray[i * 5], deadDataArray[i * 5 + 2], deadDataArray[i * 5 + 3]);
     }
 };
 
@@ -3399,10 +3398,12 @@ ActorManager.prototype.attachPlayer = function (messageObject) {
     }
 };
 
-ActorManager.prototype.deleteActor = function (actorId) {
+ActorManager.prototype.deleteActor = function (actorId, positionX, positionY) {
     var actor = this.storage[actorId];
     if (actor) {
+        actor.setPosition(positionX, positionY);
         actor.onDeath();
+
         actor.removeFromScene(this.sceneManager.getThreeScene());
     }
     delete this.storage[actorId];
@@ -3501,6 +3502,11 @@ BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPosition[0] = positionX || 0;
     this.logicPosition[1] = positionY || 0;
     this.logicAngle = angle || 0;
+};
+
+BaseActor.prototype.setPosition = function (positionX, positionY) {
+    this.position[0] = positionX || 0;
+    this.position[1] = positionY || 0;
 };
 
 BaseActor.prototype.createMesh = function () {
@@ -4560,7 +4566,8 @@ LaserProjectileActor.prototype.customUpdate = function () {
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('BlueSparks', { position: this.position });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('BlueSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
@@ -4614,7 +4621,8 @@ MoltenProjectileActor.prototype.customUpdate = function () {
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('OrangeBoomTiny', { position: this.position, angle: this.angle });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('OrangeBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
@@ -4668,7 +4676,8 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
 };
 
 PlasmaProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('GreenBoomTiny', { position: this.position, angle: this.angle });
+    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    this.particleManager.createPremade('GreenBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
@@ -4722,7 +4731,8 @@ RedLaserProjectileActor.prototype.customUpdate = function () {
 };
 
 RedLaserProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('PurpleSparks', { position: this.position });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('PurpleSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function () {
@@ -4934,8 +4944,6 @@ AiImageRenderer.prototype.drawObject = function (object) {
 };
 
 AiImageRenderer.prototype.drawBox = function (boxDataObject) {
-    console.log(boxDataObject);
-
     var objectsPosition = boxDataObject.position;
     var halfWidth = boxDataObject.width / 2 * this.lengthMultiplierX;
     var halfHeight = boxDataObject.height / 2 * this.lengthMultiplierY;
@@ -5657,7 +5665,7 @@ function ParticleConfigBuilder(config) {
             uniforms: {
                 map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/shaderSpriteAdd.png") },
                 time: { type: "f", value: 1.0 },
-                spriteSheetLength: { type: "f", value: 4.0 }
+                spriteSheetLength: { type: "f", value: 8.0 }
             },
             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -5669,7 +5677,7 @@ function ParticleConfigBuilder(config) {
             uniforms: {
                 map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/shaderSpriteAdd.png") },
                 time: { type: "f", value: 1.0 },
-                spriteSheetLength: { type: "f", value: 4.0 }
+                spriteSheetLength: { type: "f", value: 8.0 }
             },
             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -5994,6 +6002,8 @@ var ParticleShaders = {
         varying mediump vec2 textureCoord; \
         varying mediump vec2 textureSize; \
         void main() { \
+            float sin_factor = sin(0.02); \
+            float cos_factor = cos(0.02); \
             mediump vec2 realTexCoord = textureCoord + (gl_PointCoord * textureSize); \
             mediump vec4 fragColor = texture2D(map, realTexCoord); \
             gl_FragColor = vec4(vColor, vAlpha) * fragColor; \
@@ -6007,7 +6017,7 @@ module.exports = ParticleShaders;
 'use strict';
 
 module.exports = function (config) {
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < 44; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
@@ -6024,7 +6034,7 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 15; i++) {
         var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
@@ -8078,7 +8088,6 @@ var FullScreenEffect = React.createClass({
         }
     },
     render: function render() {
-        console.log("rendering FullScreenEffect", this.props.blur);
         var blur = '';
         if (!this.state.noEffects) {
             switch (this.props.blur) {
@@ -8087,7 +8096,6 @@ var FullScreenEffect = React.createClass({
                     break;
                 case 'end':
                     setTimeout(function () {
-                        console.log('set to true');
                         this.setState({ noEffects: true });
                     }.bind(this), 2000);
                     blur = 'fadeout';

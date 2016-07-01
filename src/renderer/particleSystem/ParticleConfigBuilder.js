@@ -16,7 +16,7 @@ function ParticleConfigBuilder(config){
              uniforms: {
                  map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/shaderSpriteAdd.png" )},
                  time: { type: "f", value: 1.0 },
-                 spriteSheetLength: { type: "f", value: 4.0},
+                 spriteSheetLength: { type: "f", value: 8.0},
              },
              vertexShader: ParticleShaders.vertexShaderSpriteSheet,
              fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -28,7 +28,7 @@ function ParticleConfigBuilder(config){
              uniforms: {
                  map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/shaderSpriteAdd.png" )},
                  time: { type: "f", value: 1.0 },
-                 spriteSheetLength: { type: "f", value: 4.0},
+                 spriteSheetLength: { type: "f", value: 8.0},
              },
              vertexShader: ParticleShaders.vertexShaderSpriteSheet,
              fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,

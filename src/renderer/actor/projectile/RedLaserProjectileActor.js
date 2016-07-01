@@ -1,4 +1,4 @@
- 
+
 var BaseActor = require("renderer/actor/BaseActor");
 
 function RedLaserProjectileActor(config){
@@ -15,7 +15,8 @@ RedLaserProjectileActor.prototype.customUpdate = function(){
 };
 
 RedLaserProjectileActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('PurpleSparks', {position: this.position});
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('PurpleSparks', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function(){

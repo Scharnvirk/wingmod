@@ -122,8 +122,8 @@ ShipActor.prototype.createBlaster = function(){
         actor: this,
         manager: this.manager,
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 3.2, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 3.2 , fireAngle: 0}
+            {offsetAngle: -20, offsetDistance: 10, fireAngle: 0},
+            {offsetAngle: 20, offsetDistance: 10, fireAngle: 0}
         ]
     });
 };

@@ -59,8 +59,10 @@ Core.prototype.processGameLogic = function(){
 
 Core.prototype.doTick = function(){
     this.actorManager.update(this.inputState);
-    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
+    this.world.cleanDeadActors();
+    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
+
     this.logicTicks ++;
     this.scene.update();
 };

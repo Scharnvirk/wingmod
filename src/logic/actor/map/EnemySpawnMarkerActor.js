@@ -13,7 +13,7 @@ EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function(){
     if (this.timer >= 240){
-        this.body.dead = true;
+        this.deathMain();
         this.createEnemy();
     }
 };

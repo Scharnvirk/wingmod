@@ -95,18 +95,10 @@ BaseBody.prototype.initShape = function(){
     }
 };
 
-BaseBody.prototype.onDeath = function(){
+BaseBody.prototype.onCollision = function(otherBody, relativeContactPoint){
     if (this.actor){
-        this.actor.remove(this.actorId);
+        this.actor.onCollision(otherBody.actor, relativeContactPoint);
     }
-
-};
-
-BaseBody.prototype.onCollision = function(otherBody){
-    if (this.actor){
-        this.actor.onCollision(otherBody.actor);
-    }
-
 };
 
 BaseBody.prototype.update = function(){};

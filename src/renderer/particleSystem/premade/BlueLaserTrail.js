@@ -1,5 +1,5 @@
 module.exports = function(config){
-    for(let i = 0; i < 15; i++){
+    for(let i = 0; i < 44; i++){
         let offsetPosition = Utils.angleToVector(config.angle, -i*0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
@@ -16,7 +16,7 @@ module.exports = function(config){
         });
     }
 
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < 15; i++){
         let offsetPosition = Utils.angleToVector(config.angle, -i*1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],

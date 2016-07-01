@@ -32,13 +32,13 @@ BaseActor.prototype.createBody = function(){
 BaseActor.prototype.update = function(){
     this.timer ++;
     if(this.timer > this.timeout){
-        this.onDeath();
+        this.deathMain();
     }
     this.customUpdate();
     this.processMovement();
 };
 
-BaseActor.prototype.onCollision = function(otherActor){
+BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     if(otherActor && this.hp != Infinity && otherActor.damage > 0){
         this.hp -= otherActor.damage;
         this.sendActorEvent('currentHp', this.hp);
@@ -46,7 +46,8 @@ BaseActor.prototype.onCollision = function(otherActor){
     }
 
     if (this.hp <= 0 || this.removeOnHit){
-        this.onDeath();
+        this.body.position = relativeContactPoint;
+        this.deathMain();
     }
 };
 
@@ -67,7 +68,12 @@ BaseActor.prototype.onHit = function(){};
 BaseActor.prototype.onSpawn = function(){};
 
 BaseActor.prototype.onDeath = function(){
-    this.body.dead = true;
+
+};
+
+BaseActor.prototype.deathMain = function(){
+    this.manager.actorDied(this);
+    this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function(){

@@ -14,7 +14,8 @@ MoltenProjectileActor.prototype.customUpdate = function(){
 };
 
 MoltenProjectileActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('OrangeBoomTiny', {position: this.position, angle: this.angle});
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('OrangeBoomTiny', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
 

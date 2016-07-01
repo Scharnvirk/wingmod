@@ -9,7 +9,7 @@ function Blaster(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 15;
-    this.velocity = 600;
+    this.velocity = 800;
     this.sound = 'blue_laser';
 }
 

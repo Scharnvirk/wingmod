@@ -14,7 +14,8 @@ PlasmaProjectileActor.prototype.customUpdate = function(){
 };
 
 PlasmaProjectileActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('GreenBoomTiny', {position: this.position, angle: this.angle});
+    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    this.particleManager.createPremade('GreenBoomTiny', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function(){

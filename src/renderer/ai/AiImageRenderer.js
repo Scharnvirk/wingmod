@@ -68,8 +68,6 @@ AiImageRenderer.prototype.drawObject = function(object){
 };
 
 AiImageRenderer.prototype.drawBox = function(boxDataObject){
-    console.log(boxDataObject);
-
     let objectsPosition = boxDataObject.position;
     let halfWidth = (boxDataObject.width / 2) * this.lengthMultiplierX;
     let halfHeight = (boxDataObject.height / 2) * this.lengthMultiplierY;

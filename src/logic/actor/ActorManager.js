@@ -71,6 +71,11 @@ ActorManager.prototype.removeActorAt = function(actorId){
     delete this.storage[actorId];
 };
 
+ActorManager.prototype.actorDied = function(actor){
+    delete this.storage[actor.body.actorId];
+    this.world.prepareBodyForDeath(actor.body);
+};
+
 ActorManager.prototype.endGame = function(){
     setTimeout(function(){
         this.muteSounds = true;

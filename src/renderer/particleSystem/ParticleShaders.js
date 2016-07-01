@@ -81,6 +81,8 @@ var ParticleShaders = {
         varying mediump vec2 textureCoord; \
         varying mediump vec2 textureSize; \
         void main() { \
+            float sin_factor = sin(0.02); \
+            float cos_factor = cos(0.02); \
             mediump vec2 realTexCoord = textureCoord + (gl_PointCoord * textureSize); \
             mediump vec4 fragColor = texture2D(map, realTexCoord); \
             gl_FragColor = vec4(vColor, vAlpha) * fragColor; \

@@ -62,6 +62,11 @@ BaseActor.prototype.updateFromLogic = function(positionX, positionY, angle){
     this.logicAngle = angle || 0;
 };
 
+BaseActor.prototype.setPosition = function(positionX, positionY){
+    this.position[0] = positionX || 0;
+    this.position[1] = positionY || 0;
+};
+
 BaseActor.prototype.createMesh = function(){
     return null;
 };

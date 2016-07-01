@@ -14,7 +14,6 @@ var FullScreenEffect = React.createClass({
     },
 
     render(){
-        console.log("rendering FullScreenEffect", this.props.blur);
         let blur = '';
         if(!this.state.noEffects){
             switch(this.props.blur){
@@ -23,7 +22,6 @@ var FullScreenEffect = React.createClass({
                     break;
                 case 'end':
                     setTimeout(function(){
-                        console.log('set to true');
                         this.setState({noEffects: true});
                     }.bind(this),2000);
                     blur = 'fadeout';

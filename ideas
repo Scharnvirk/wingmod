@@ -7,3 +7,5 @@
 * pausing game
 
 * material config (could be applied as an extension to JSON loader which based on given config would skip specular and other expensive textures...)
+
+* rotation of particles? but how given they're always face-up to the camera...?

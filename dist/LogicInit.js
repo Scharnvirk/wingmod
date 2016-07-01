@@ -280,8 +280,10 @@ Core.prototype.processGameLogic = function () {
 
 Core.prototype.doTick = function () {
     this.actorManager.update(this.inputState);
-    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
+    this.world.cleanDeadActors();
+    this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
+
     this.logicTicks++;
     this.scene.update();
 };
@@ -442,7 +444,8 @@ module.exports = GameScene;
 function GameWorld(config) {
     p2.World.apply(this, arguments);
 
-    this.transferArray = new Float32Array(Constants.STORAGE_SIZE * 5);
+    this.transferArray = new Float32Array(Constants.STORAGE_SIZE * 5); //this holds transfer data for all actors, needs to be ultra-fast
+    this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
 
     config = config || {};
     this.gravity = [0, 0];
@@ -460,40 +463,45 @@ function GameWorld(config) {
 
 GameWorld.extend(p2.World);
 
+/*
+    This function makes update data for existing actors,
+    but for dead actors it has it pre-done.
+    This is because dying actors fill the array during the cycle.
+    The format is otherwise identical.
+*/
 GameWorld.prototype.makeUpdateData = function () {
-    var deadActors = [];
     var transferArray = this.transferArray;
-    var transferrableBodyId = 0;
+    var transferrableActorCount = 0;
 
-    for (var i = 0; i < this.bodies.length; i++) {
+    for (var i = 0, l = this.bodies.length; i < l; i++) {
         var body = this.bodies[i];
         if (body.actor) {
-            transferArray[transferrableBodyId * 5] = body.actorId;
-            transferArray[transferrableBodyId * 5 + 1] = body.dead ? -1 : body.classId;
-            transferArray[transferrableBodyId * 5 + 2] = body.position[0];
-            transferArray[transferrableBodyId * 5 + 3] = body.position[1];
-            transferArray[transferrableBodyId * 5 + 4] = body.angle;
-            transferrableBodyId++;
-
-            if (body.dead) {
-                deadActors.push(body.actorId);
-                body.onDeath();
-                this.removeBody(body);
-            }
+            transferArray[transferrableActorCount * 5] = body.actorId;
+            transferArray[transferrableActorCount * 5 + 1] = body.classId;
+            transferArray[transferrableActorCount * 5 + 2] = body.position[0];
+            transferArray[transferrableActorCount * 5 + 3] = body.position[1];
+            transferArray[transferrableActorCount * 5 + 4] = body.angle;
+            transferrableActorCount++;
             body.update();
         }
     }
 
     return {
-        length: transferrableBodyId,
+        actorCount: transferrableActorCount,
         transferArray: this.transferArray,
-        deadActors: deadActors
+        deadActorCount: this.deadTransferArray.length / 5,
+        deadTransferArray: this.deadTransferArray
     };
 };
 
 GameWorld.prototype.onCollision = function (collisionEvent) {
-    collisionEvent.bodyA.onCollision(collisionEvent.bodyB);
-    collisionEvent.bodyB.onCollision(collisionEvent.bodyA);
+    var relativeContactPointB = collisionEvent.contactEquation.contactPointB;
+    var relativeContactPointA = collisionEvent.contactEquation.contactPointA;
+    var definiteContactPointB = [relativeContactPointB[0] + collisionEvent.bodyB.position[0], relativeContactPointB[1] + collisionEvent.bodyB.position[1]];
+    var definiteContactPointA = [relativeContactPointA[0] + collisionEvent.bodyA.position[0], relativeContactPointA[1] + collisionEvent.bodyA.position[1]];
+
+    collisionEvent.bodyA.onCollision(collisionEvent.bodyB, definiteContactPointB);
+    collisionEvent.bodyB.onCollision(collisionEvent.bodyA, definiteContactPointA);
 };
 
 GameWorld.prototype.countEnemies = function () {
@@ -505,6 +513,23 @@ GameWorld.prototype.countEnemies = function () {
         }
     }
     return enemies;
+};
+
+GameWorld.prototype.prepareBodyForDeath = function (body) {
+    var deadTransferArray = this.deadTransferArray;
+    var currentDeadsLength = deadTransferArray.length / 5; //because there are 5 properties in one-dimensional array
+
+    deadTransferArray[currentDeadsLength * 5] = body.actorId;
+    deadTransferArray[currentDeadsLength * 5 + 1] = -1;
+    deadTransferArray[currentDeadsLength * 5 + 2] = body.position[0];
+    deadTransferArray[currentDeadsLength * 5 + 3] = body.position[1];
+    deadTransferArray[currentDeadsLength * 5 + 4] = body.angle;
+
+    this.removeBody(body);
+};
+
+GameWorld.prototype.cleanDeadActors = function () {
+    this.deadTransferArray = [];
 };
 
 module.exports = GameWorld;
@@ -672,6 +697,11 @@ ActorManager.prototype.removeActorAt = function (actorId) {
     delete this.storage[actorId];
 };
 
+ActorManager.prototype.actorDied = function (actor) {
+    delete this.storage[actor.body.actorId];
+    this.world.prepareBodyForDeath(actor.body);
+};
+
 ActorManager.prototype.endGame = function () {
     setTimeout(function () {
         this.muteSounds = true;
@@ -756,13 +786,13 @@ BaseActor.prototype.createBody = function () {
 BaseActor.prototype.update = function () {
     this.timer++;
     if (this.timer > this.timeout) {
-        this.onDeath();
+        this.deathMain();
     }
     this.customUpdate();
     this.processMovement();
 };
 
-BaseActor.prototype.onCollision = function (otherActor) {
+BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {
     if (otherActor && this.hp != Infinity && otherActor.damage > 0) {
         this.hp -= otherActor.damage;
         this.sendActorEvent('currentHp', this.hp);
@@ -770,7 +800,8 @@ BaseActor.prototype.onCollision = function (otherActor) {
     }
 
     if (this.hp <= 0 || this.removeOnHit) {
-        this.onDeath();
+        this.body.position = relativeContactPoint;
+        this.deathMain();
     }
 };
 
@@ -790,8 +821,11 @@ BaseActor.prototype.onHit = function () {};
 
 BaseActor.prototype.onSpawn = function () {};
 
-BaseActor.prototype.onDeath = function () {
-    this.body.dead = true;
+BaseActor.prototype.onDeath = function () {};
+
+BaseActor.prototype.deathMain = function () {
+    this.manager.actorDied(this);
+    this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function () {
@@ -1235,15 +1269,9 @@ BaseBody.prototype.initShape = function () {
     }
 };
 
-BaseBody.prototype.onDeath = function () {
+BaseBody.prototype.onCollision = function (otherBody, relativeContactPoint) {
     if (this.actor) {
-        this.actor.remove(this.actorId);
-    }
-};
-
-BaseBody.prototype.onCollision = function (otherBody) {
-    if (this.actor) {
-        this.actor.onCollision(otherBody.actor);
+        this.actor.onCollision(otherBody.actor, relativeContactPoint);
     }
 };
 
@@ -1373,7 +1401,7 @@ function Blaster(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 15;
-    this.velocity = 600;
+    this.velocity = 800;
     this.sound = 'blue_laser';
 }
 
@@ -1977,7 +2005,7 @@ EnemySpawnMarkerActor.extend(BaseActor);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
     if (this.timer >= 240) {
-        this.body.dead = true;
+        this.deathMain();
         this.createEnemy();
     }
 };
@@ -2415,7 +2443,7 @@ ShipActor.prototype.createBlaster = function () {
     return new Blaster({
         actor: this,
         manager: this.manager,
-        firingPoints: [{ offsetAngle: -90, offsetDistance: 3.2, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 3.2, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -20, offsetDistance: 10, fireAngle: 0 }, { offsetAngle: 20, offsetDistance: 10, fireAngle: 0 }]
     });
 };
 
@@ -2920,6 +2948,11 @@ BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
     this.logicPosition[0] = positionX || 0;
     this.logicPosition[1] = positionY || 0;
     this.logicAngle = angle || 0;
+};
+
+BaseActor.prototype.setPosition = function (positionX, positionY) {
+    this.position[0] = positionX || 0;
+    this.position[1] = positionY || 0;
 };
 
 BaseActor.prototype.createMesh = function () {
@@ -3979,7 +4012,8 @@ LaserProjectileActor.prototype.customUpdate = function () {
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('BlueSparks', { position: this.position });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('BlueSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 LaserProjectileActor.prototype.onSpawn = function () {
@@ -4033,7 +4067,8 @@ MoltenProjectileActor.prototype.customUpdate = function () {
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('OrangeBoomTiny', { position: this.position, angle: this.angle });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('OrangeBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 MoltenProjectileActor.prototype.onSpawn = function () {
@@ -4087,7 +4122,8 @@ PlasmaProjectileActor.prototype.customUpdate = function () {
 };
 
 PlasmaProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('GreenBoomTiny', { position: this.position, angle: this.angle });
+    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    this.particleManager.createPremade('GreenBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 PlasmaProjectileActor.prototype.onSpawn = function () {
@@ -4141,7 +4177,8 @@ RedLaserProjectileActor.prototype.customUpdate = function () {
 };
 
 RedLaserProjectileActor.prototype.onDeath = function () {
-    this.particleManager.createPremade('PurpleSparks', { position: this.position });
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('PurpleSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
 RedLaserProjectileActor.prototype.onSpawn = function () {

@@ -15,7 +15,8 @@ LaserProjectileActor.prototype.customUpdate = function(){
 };
 
 LaserProjectileActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('BlueSparks', {position: this.position});
+    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    this.particleManager.createPremade('BlueSparks', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
 LaserProjectileActor.prototype.onSpawn = function(){
