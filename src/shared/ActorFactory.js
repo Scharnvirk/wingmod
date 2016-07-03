@@ -25,8 +25,6 @@ function ActorFactory(context, actorDependencies){
     ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
     ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
     ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
-    ActorFactory.WallActor = context === 'renderer' ? require("renderer/actor/map/WallActor") : require("logic/actor/map/WallActor");
-    ActorFactory.PillarActor = context === 'renderer' ? require("renderer/actor/map/PillarActor") : require("logic/actor/map/PillarActor");
     ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
     ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
     ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
@@ -45,9 +43,7 @@ function ActorFactory(context, actorDependencies){
         [idMap.MOOK]: ActorFactory.MookActor,
         [idMap.MOOKBOSS]: ActorFactory.MookBossActor,
         [idMap.SNIPER]: ActorFactory.SniperActor,
-        [idMap.ORBOT]: ActorFactory.OrbotActor,
-        [idMap.WALL]: ActorFactory.WallActor,
-        [idMap.PILLAR]: ActorFactory.PillarActor,
+        [idMap.ORBOT]: ActorFactory.OrbotActor,        
         [idMap.CHUNK]: ActorFactory.ChunkActor,
         [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
         [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,

@@ -13,15 +13,15 @@ function OrbotActor(){
 
 OrbotActor.extend(BaseActor);
 
-OrbotActor.prototype.createMesh = function(){
-    return new BaseMesh({
+OrbotActor.prototype.createMeshes = function(){
+    return [new BaseMesh({
         actor: this,
         scaleX: 1.3,
         scaleY: 1.3,
         scaleZ: 1.3,
         geometry: ModelStore.get('orbot').geometry,
         material: ModelStore.get('orbot').material
-    });
+    })];
 };
 
 OrbotActor.prototype.customUpdate = function(){

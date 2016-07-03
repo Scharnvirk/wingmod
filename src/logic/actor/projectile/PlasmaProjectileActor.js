@@ -8,7 +8,7 @@ function PlasmaProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 1.5,
+        damage: 2.5,
         removeOnHit: true,
         timeout: 300,
         bodyConfig: {
@@ -20,6 +20,8 @@ function PlasmaProjectileActor(config){
     });
 
     BaseActor.apply(this, arguments);
+
+    this.collisionFixesPosition = true;
 }
 
 PlasmaProjectileActor.extend(BaseActor);

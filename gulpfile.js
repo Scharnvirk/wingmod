@@ -3,7 +3,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var fs = require('fs');
-
+var nodemon = require('nodemon');
 var SOURCE_PATH = 'src';
 var LOG_PATH = 'gulpLog.txt';
 var VERSION_PATH = 'version';
@@ -116,6 +116,11 @@ gulp.task('build', function(){
 });
 
 gulp.task('watch', function(){
+    nodemon({
+        script: 'server.js',
+        ext: 'js',
+        watch: ['dist/']
+    });
     createBundles(sources, true);
 });
 

@@ -14,11 +14,9 @@ Init.prototype.start = function(){
         var ui = new Ui();
 
         var logicWorker = new Worker('dist/LogicInit.js');
-        var loaderWorker = new Worker('dist/LoaderInit.js');
 
         var core = new Core({
             logicWorker: logicWorker,
-            loaderWorker: loaderWorker,
             ui: ui,
         });
 

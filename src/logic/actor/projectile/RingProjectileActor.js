@@ -22,6 +22,8 @@ function RingProjectileActor(config){
     });
 
     BaseActor.apply(this, arguments);
+
+    this.collisionFixesPosition = true;
 }
 
 RingProjectileActor.extend(BaseActor);

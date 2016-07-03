@@ -18,8 +18,10 @@ function MoltenProjectileActor(config){
             actor: this
         }
     });
-
+    
     BaseActor.apply(this, arguments);
+
+    this.collisionFixesPosition = true;
 }
 
 MoltenProjectileActor.extend(BaseActor);

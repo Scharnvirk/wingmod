@@ -7,8 +7,8 @@ function ChunkActor(){
 
 ChunkActor.extend(BaseActor);
 
-ChunkActor.prototype.createMesh = function(){
-    return new ChunkMesh({actor: this, scaleX: Utils.rand(3,15)/10, scaleY: Utils.rand(3,15)/10, scaleZ: Utils.rand(3,15)/10});
+ChunkActor.prototype.createMeshes = function(){
+    return [new ChunkMesh({actor: this, scaleX: Utils.rand(3,15)/10, scaleY: Utils.rand(3,15)/10, scaleZ: Utils.rand(3,15)/10})];
 };
 
 ChunkActor.prototype.customUpdate = function(){

@@ -13,8 +13,8 @@ function MookBossActor(){
 
 MookBossActor.extend(MookActor);
 
-MookBossActor.prototype.createMesh = function(){
-    return new ShipMesh({actor: this, scaleX: 2, scaleY: 2, scaleZ: 2});
+MookBossActor.prototype.createMeshes = function(){
+    return [new ShipMesh({actor: this, scaleX: 2, scaleY: 2, scaleZ: 2})];
 };
 
 module.exports = MookBossActor;

@@ -7,21 +7,27 @@ function BaseMesh(config){
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
     this.angleOffset = 0;
+    this.positionZOffset = 0;
+    this.positionOffset = [0,0];
 
     Object.assign(this, config);
 
     this.scale.x = config.scaleX;
     this.scale.y = config.scaleY;
     this.scale.z = config.scaleZ;
+
+    this.receiveShadow = typeof config.shadows === 'undefined' ? true : config.shadows;
+    this.castShadow = typeof config.shadows === 'undefined' ? true : config.shadows;
 }
 
 BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function(){
     if(this.actor){
-        this.position.x = this.actor.position[0];
-        this.position.y = this.actor.position[1];
-        this.position.z = this.actor.positionZ;
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.angle * -1);
+        this.position.x = this.actor.position[0] + offsetVector[0];
+        this.position.y = this.actor.position[1] + offsetVector[1];
+        this.position.z = this.actor.positionZ + this.positionZOffset;
         this.rotation.z = this.actor.angle + this.angleOffset;
     }
 };

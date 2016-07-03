@@ -13,15 +13,15 @@ function MookActor(){
 
 MookActor.extend(BaseActor);
 
-MookActor.prototype.createMesh = function(){
-    return new BaseMesh({
+MookActor.prototype.createMeshes = function(){
+    return [new BaseMesh({
         actor: this,
         scaleX: 1.2,
         scaleY: 1.2,
         scaleZ: 1.2,
         geometry: ModelStore.get('drone').geometry,
         material: ModelStore.get('drone').material
-    });
+    })];
 };
 
 MookActor.prototype.customUpdate = function(){

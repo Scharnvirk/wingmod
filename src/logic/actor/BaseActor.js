@@ -46,7 +46,9 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     }
 
     if (this.hp <= 0 || this.removeOnHit){
-        this.body.position = relativeContactPoint;
+        if (this.collisionFixesPosition) {
+            this.body.position = relativeContactPoint;
+        }
         this.deathMain();
     }
 };

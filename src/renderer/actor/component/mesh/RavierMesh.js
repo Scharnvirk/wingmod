@@ -5,12 +5,9 @@ function RavierMesh(config){
     BaseMesh.apply(this, arguments);
 
     config = config || {};
-    config.geometry = ModelStore.get('ravier').geometry;
+    config.geometry = ModelStore.get('ravier_gunless').geometry;
     config.material = ModelStore.get('ravier').material;
     Object.assign(this, config);
-
-    this.receiveShadow = true;
-    this.castShadow = true;
 }
 
 

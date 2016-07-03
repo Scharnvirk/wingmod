@@ -18,15 +18,15 @@ function SniperActor(){
 
 SniperActor.extend(BaseActor);
 
-SniperActor.prototype.createMesh = function(){
-    return new BaseMesh({
+SniperActor.prototype.createMeshes = function(){
+    return [new BaseMesh({
         actor: this,
         scaleX: 1.9,
         scaleY: 1.9,
         scaleZ: 1.9,
         geometry: ModelStore.get('sniper').geometry,
         material: ModelStore.get('sniper').material
-    });
+    })];
 };
 
 SniperActor.prototype.customUpdate = function(){

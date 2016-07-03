@@ -44,9 +44,9 @@ var Utils = {
         return x < 0 ? Math.floor(x) : Math.ceil(x);
     },
 
-    angleToVector: function(angle, velocity){
-        velocity = velocity || 0;
-        return [(Math.sin(angle) * -1) * velocity, Math.cos(angle) * velocity];
+    angleToVector: function(angle, length){
+        length = length || 0;
+        return [(Math.sin(angle) * -1) * length, Math.cos(angle) * length];
     },
 
     angleBetweenPointsFromCenter: function(p1, p2){
@@ -100,6 +100,14 @@ var Utils = {
             p1x >= 0 && p2x >= 0 || p1x < 0 && p2x < 0 ? p1x - p2x : p1x + p2x * -1,
             p1y >= 0 && p2y >= 0 || p1y < 0 && p2y < 0 ? p1y - p2y : p1y + p2y * -1
         ];
+    },
+
+    rotateVector: function(x, y, angle) {
+        var cos = Math.cos(angle),
+            sin = Math.sin(angle),
+            nx = (cos * x) + (sin * y),
+            ny = (cos * y) - (sin * x);
+        return [nx, ny];
     }
 };
 

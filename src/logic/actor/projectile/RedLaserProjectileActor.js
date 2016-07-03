@@ -22,6 +22,8 @@ function RedLaserProjectileActor(config){
     });
 
     BaseActor.apply(this, arguments);
+
+    this.collisionFixesPosition = true;
 }
 
 RedLaserProjectileActor.extend(BaseActor);

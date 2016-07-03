@@ -13,8 +13,7 @@ function BaseActor(config, actorDependencies){
 
     this.updateFromLogic(config.positionX, config.positionY, config.angle);
 
-    this.mesh = this.createMesh();
-    this.sprite = this.createSprite();
+    this.meshes = this.createMeshes() || [];
 
     this.initialHp = Infinity;
     this.hp = Infinity;
@@ -30,12 +29,10 @@ BaseActor.prototype.update = function(delta){
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
     this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
 
-    if (this.mesh) {
-        this.mesh.update();
-    }
-
-    if (this.sprite){
-        this.sprite.update();
+    if (this.meshes) {
+        for(var i = 0, l = this.meshes.length; i < l; i++){
+            this.meshes[i].update();
+        }
     }
 
     this.customUpdate();
@@ -67,32 +64,23 @@ BaseActor.prototype.setPosition = function(positionX, positionY){
     this.position[1] = positionY || 0;
 };
 
-BaseActor.prototype.createMesh = function(){
-    return null;
+BaseActor.prototype.createMeshes = function(){
+    return [];
 };
-
-BaseActor.prototype.createSprite = function(){
-    return null;
-};
-
 
 BaseActor.prototype.addToScene = function(scene){
-    if (this.mesh){
-        scene.add(this.mesh);
-    }
-
-    if (this.sprite){
-        scene.add(this.sprite);
+    if (this.meshes){
+        for (let i = 0, l = this.meshes.length; i < l; i++){
+            scene.add(this.meshes[i]);
+        }
     }
 };
 
 BaseActor.prototype.removeFromScene = function(scene){
-    if (this.mesh){
-        scene.remove(this.mesh);
-    }
-
-    if (this.sprite){
-        scene.remove(this.sprite);
+    if (this.meshes){
+        for (let i = 0, l = this.meshes.length; i < l; i++){
+            scene.remove(this.meshes[i]);
+        }
     }
 };
 

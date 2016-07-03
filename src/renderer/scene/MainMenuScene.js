@@ -138,7 +138,7 @@ MainMenuScene.prototype.doBob = function(){
     } else {
         this.shipMesh.speedZ += 0.001;
     }
-
+    
     this.shipMesh.rotation.y += this.shipMesh.speedY;
     if (this.shipMesh.rotation.y > 0){
         this.shipMesh.speedY -= 0.0002;

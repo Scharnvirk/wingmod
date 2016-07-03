@@ -21,8 +21,9 @@ var ModelStore = {
     },
 
     addMaterial: function(name, material) {
-        if (!material) throw 'ERROR - no material specified';
-        this.materials[name] = material instanceof Array ? material[0] : material;
+        if (material) {
+            this.materials[name] = material instanceof Array ? material[0] : material;
+        }
     }
 };
 

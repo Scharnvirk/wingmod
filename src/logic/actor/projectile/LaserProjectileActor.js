@@ -8,7 +8,7 @@ function LaserProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 2,
+        damage: 4,
         removeOnHit: true,
         timeout: 60,
         bodyConfig: {
@@ -22,6 +22,8 @@ function LaserProjectileActor(config){
     });
 
     BaseActor.apply(this, arguments);
+
+    this.collisionFixesPosition = true;
 }
 
 LaserProjectileActor.extend(BaseActor);
