@@ -1,15 +1,16 @@
 #!/bin/env node
 //  OpenShift sample Node application
+
+var Promise = require('promise');
 var express = require('express');
-var fs      = require('fs');
 var path	= require('path');
-var fsp     = require('fs-promise');
+var fs     = require('fsp');
 
 
 /**
  *  Define the sample application.
  */
-var WingmodServer = function() {
+var SampleApp = function() {
     var self = this;
 
     var resourcePaths = [
@@ -33,9 +34,9 @@ var WingmodServer = function() {
     };
 
     self.readDirectory = function(path){
-        return fsp.readdir(path).then(result => {
+        return fs.readdirP(path).then(function(result){
             var fullPaths = [];
-            result.forEach(item => {
+            result.forEach(function(item){
                 fullPaths.push('/' + path + '/' + item);
             })
             return fullPaths;
@@ -44,12 +45,12 @@ var WingmodServer = function() {
 
     self.buildResourceList = function() {
         whenPathsLoaded = [];
-        resourcePaths.forEach((path) => {
+        resourcePaths.forEach(function(path){
             whenPathsLoaded.push(self.readDirectory(path));
         });
-        return Promise.all(whenPathsLoaded).then((result) => {
+        return Promise.all(whenPathsLoaded).then(function(result){
             var allItemsWithPaths = [];
-            result.forEach(itemDirectory => {
+            result.forEach(function(itemDirectory){
                 allItemsWithPaths = allItemsWithPaths.concat(itemDirectory);
             })
             return allItemsWithPaths;
@@ -73,7 +74,7 @@ var WingmodServer = function() {
         var index = fs.readFileSync('./index.html', 'utf-8');
         index += self.buildVersionHtmlText();
 
-        paths.forEach(itemPath => {
+        paths.forEach(function(itemPath){
             var isFileDirectory = fs.statSync(startingPath + itemPath).isDirectory();
             if(!isFileDirectory){
                 self.zcache[itemPath] = fs.readFileSync(startingPath + itemPath);
@@ -116,7 +117,7 @@ var WingmodServer = function() {
             res.setHeader('Content-Type', 'text/css');
             res.send(self.cache_get('/styles.css') );
         };
-        paths.forEach(itemPath => {
+        paths.forEach(function(itemPath){
             self.routes[itemPath] = function(req, res) {res.send(self.cache_get(itemPath) );};
         });
 
@@ -132,7 +133,7 @@ var WingmodServer = function() {
 
     self.initialize = function() {
         self.setupVariables();
-        self.buildResourceList().then(paths => {
+        self.buildResourceList().then(function(paths){
             self.populateCache(paths);
             self.setupTerminationHandlers();
             self.createRoutes(paths);
@@ -150,5 +151,5 @@ var WingmodServer = function() {
 
 };
 
-var wmServer = new WingmodServer();
-wmServer.initialize();
+var zapp = new SampleApp();
+zapp.initialize();
