@@ -4,6 +4,7 @@ var BaseActor = require("logic/actor/BaseActor");
 var ActorFactory = require("shared/ActorFactory")('logic');
 var Blaster = require("logic/actor/component/weapon/Blaster");
 var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
+var PulseWaveGun = require("logic/actor/component/weapon/PulseWaveGun");
 
 function ShipActor(config){
     config = config || [];
@@ -32,6 +33,7 @@ function ShipActor(config){
 
     this.plasma = this.createPlasma();
     this.blaster = this.createBlaster();
+    this.pulseWave = this.createPulseWave();
 
     BaseActor.apply(this, arguments);
 }
@@ -45,6 +47,7 @@ ShipActor.prototype.createBody = function(){
 ShipActor.prototype.customUpdate = function(){
     this.blaster.update();
     this.plasma.update();
+    this.pulseWave.update();
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
@@ -105,9 +108,9 @@ ShipActor.prototype.applyThrustInput = function(inputState){
 
 ShipActor.prototype.applyWeaponInput = function(inputState){
     if (inputState.mouseLeft){
-        this.plasma.shoot();
+        this.pulseWave.shoot();
     } else {
-        this.plasma.stopShooting();
+        this.pulseWave.stopShooting();
     }
 
     if (inputState.mouseRight){
@@ -130,6 +133,17 @@ ShipActor.prototype.createBlaster = function(){
 
 ShipActor.prototype.createPlasma = function(){
     return new PlasmaGun({
+        actor: this,
+        manager: this.manager,
+        firingPoints: [
+            {offsetAngle: -90, offsetDistance: 5, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 5 , fireAngle: 0}
+        ]
+    });
+};
+
+ShipActor.prototype.createPulseWave = function(){
+    return new PulseWaveGun({
         actor: this,
         manager: this.manager,
         firingPoints: [

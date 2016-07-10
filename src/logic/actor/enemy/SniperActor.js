@@ -15,7 +15,7 @@ function SniperActor(config){
         hp: 8,
         bodyConfig: {
             actor: this,
-            mass: 2,
+            mass: 8,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

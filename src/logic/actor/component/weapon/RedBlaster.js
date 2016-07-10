@@ -4,7 +4,7 @@ var ActorFactory = require("shared/ActorFactory")('logic');
 function Blaster(config){
     Object.assign(this, config);
 
-    this.projectileClass = ActorFactory.REDLASERPROJECITLE;
+    this.projectileClass = ActorFactory.REDLASERPROJECTILE;
 
     BaseWeapon.apply(this, arguments);
 

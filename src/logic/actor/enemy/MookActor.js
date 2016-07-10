@@ -16,7 +16,7 @@ function MookActor(config){
         hp: 6,
         bodyConfig: {
             actor: this,
-            mass: 2,
+            mass: 4,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

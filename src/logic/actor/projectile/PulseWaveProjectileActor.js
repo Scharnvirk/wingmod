@@ -1,7 +1,7 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
 
-function LaserProjectileActor(config){
+function PulseWaveProjectileActor(config){
     config = config || [];
 
     Object.assign(this, config);
@@ -10,12 +10,12 @@ function LaserProjectileActor(config){
         hp: 1,
         damage: 4,
         removeOnHit: true,
-        timeout: 60,
+        timeout: 30,
         bodyConfig: {
-            radius: 1,
-            mass: 0.04,
+            radius: 3,
+            mass: 2,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
+            ccdIterations: 2,
             collisionType: 'playerProjectile',
             actor: this
         }
@@ -26,15 +26,20 @@ function LaserProjectileActor(config){
     this.collisionFixesPosition = true;
 }
 
-LaserProjectileActor.extend(BaseActor);
+PulseWaveProjectileActor.extend(BaseActor);
 
-LaserProjectileActor.prototype.createBody = function(){
+PulseWaveProjectileActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-LaserProjectileActor.prototype.onDeath = function(){
+PulseWaveProjectileActor.prototype.customUpdate = function(){
+    this.damage *= 0.97;
+    this.body.updateMassProperties();
+};
+
+PulseWaveProjectileActor.prototype.onDeath = function(){
     this.body.dead = true;
     this.manager.playSound({sounds: ['matterhit3'], actor: this});
 };
 
-module.exports = LaserProjectileActor;
+module.exports = PulseWaveProjectileActor;

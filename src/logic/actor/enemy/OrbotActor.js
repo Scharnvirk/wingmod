@@ -15,7 +15,7 @@ function OrbotActor(config){
         hp: 4,
         bodyConfig: {
             actor: this,
-            mass: 1,
+            mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

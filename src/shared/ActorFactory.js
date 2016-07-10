@@ -1,60 +1,66 @@
+//This is an auto-generated template file. Any changes will be overwritten!
+
 var idMap = {
     SHIP: 1,
-    MOOK: 2,
-    PILLAR: 3,
-    WALL: 4,
-    CHUNK: 5,
-    MOOKBOSS: 6,
-    BOOMCHUNK: 7,
-    SNIPER: 8,
-    ORBOT: 9,
-    PLASMAPROJECTILE: 100,
-    MOLTENPROJECTILE: 101,
-    LASERPROJECITLE: 102,
-    REDLASERPROJECITLE: 103,
-    RINGPROJECTILE: 104,
-    MAP: 1000,
-    ENEMYSPAWNER: 1001,
-    ENEMYSPAWNMARKER: 1002,
-    DEBUG: 99999
+MOOK: 2,
+SNIPER: 3,
+ORBOT: 4,
+MOOKBOSS: 5,
+CHUNK: 6,
+BOOMCHUNK: 7,
+PLASMAPROJECTILE: 8,
+LASERPROJECTILE: 9,
+REDLASERPROJECTILE: 10,
+MOLTENPROJECTILE: 11,
+RINGPROJECTILE: 12,
+PULSEWAVEPROJECTILE: 13,
+MAP: 14,
+ENEMYSPAWNER: 15,
+ENEMYSPAWNMARKER: 16,
+DEBUG: 17,
+
 };
 
 function ActorFactory(context, actorDependencies){
-    ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
-    ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
-    ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
-    ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-    ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
-    ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
-    ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
-    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
-    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
-    ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
-    ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
-    ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RingProjectileActor") : require("logic/actor/projectile/RingProjectileActor");
-    ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
-    ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
-    ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
-    ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
-
     this.actorDependencies = actorDependencies;
+    ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
+ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
+ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
+ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
+ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
+ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
+ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
+ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
+ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
+ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
+ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
+ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RingProjectileActor") : require("logic/actor/projectile/RingProjectileActor");
+ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
+ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
+ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
+ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
+ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
+
+
     this.actorMap = {
         [idMap.SHIP]: ActorFactory.ShipActor,
-        [idMap.MOOK]: ActorFactory.MookActor,
-        [idMap.MOOKBOSS]: ActorFactory.MookBossActor,
-        [idMap.SNIPER]: ActorFactory.SniperActor,
-        [idMap.ORBOT]: ActorFactory.OrbotActor,        
-        [idMap.CHUNK]: ActorFactory.ChunkActor,
-        [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
-        [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
-        [idMap.MOLTENPROJECTILE]: ActorFactory.MoltenProjectileActor,
-        [idMap.LASERPROJECITLE]: ActorFactory.LaserProjectileActor,
-        [idMap.REDLASERPROJECITLE]: ActorFactory.RedLaserProjectileActor,
-        [idMap.RINGPROJECTILE]: ActorFactory.RingProjectileActor,
-        [idMap.MAP]: ActorFactory.MapActor,
-        [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
-        [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
-        [idMap.DEBUG]: ActorFactory.DebugActor,
+[idMap.MOOK]: ActorFactory.MookActor,
+[idMap.SNIPER]: ActorFactory.SniperActor,
+[idMap.ORBOT]: ActorFactory.OrbotActor,
+[idMap.MOOKBOSS]: ActorFactory.MookBossActor,
+[idMap.CHUNK]: ActorFactory.ChunkActor,
+[idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
+[idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
+[idMap.LASERPROJECTILE]: ActorFactory.LaserProjectileActor,
+[idMap.REDLASERPROJECTILE]: ActorFactory.RedLaserProjectileActor,
+[idMap.MOLTENPROJECTILE]: ActorFactory.MoltenProjectileActor,
+[idMap.RINGPROJECTILE]: ActorFactory.RingProjectileActor,
+[idMap.PULSEWAVEPROJECTILE]: ActorFactory.PulseWaveProjectileActor,
+[idMap.MAP]: ActorFactory.MapActor,
+[idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
+[idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
+[idMap.DEBUG]: ActorFactory.DebugActor,
+
     };
 }
 

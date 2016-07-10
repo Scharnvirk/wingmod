@@ -11,8 +11,8 @@ var ModelList = {
         '/models/telering_top.json',
         '/models/levels/startmenu.json',
         '/models/lasgun.json',
-        '/models/plasmagun.json'
-
+        '/models/plasmagun.json',
+        '/models/pulsewavegun.json'
     ]
 };
 

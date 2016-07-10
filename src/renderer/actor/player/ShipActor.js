@@ -18,9 +18,9 @@ function ShipActor(){
     this.speedY = 0.0025;
     this.speedX = 0.002;
 
-    this.weaponSetLocations = [[[5,3,-2.2], [-5,3,-2.2]], [[3,-1,0], [-3,-1,0]]];
+    this.weaponSetLocations = [[[5,3.5,-2.2], [-5,3.5,-2.2]], [[3,0,0], [-3,0,0]]];
 
-    this.changeWeaponMeshesTo(0, 'lasgun', 'plasmagun', [1.25, 2.5, 2.5]);
+    this.changeWeaponMeshesTo(0, 'pulsewavegun', 'pulsewavegun', [2, 2, 2]);
     this.changeWeaponMeshesTo(1, 'lasgun', 'lasgun', [1.5, 1.5, 1.5]);
 }
 

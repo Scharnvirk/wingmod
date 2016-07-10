@@ -192,6 +192,7 @@ Core.prototype.onUpdateActors = function(event){
 };
 
 Core.prototype.onAttachPlayer = function(event){
+    console.log('attach player');
     this.actorManager.attachPlayer(event.data);
 };
 

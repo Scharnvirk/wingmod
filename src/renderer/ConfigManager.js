@@ -82,7 +82,7 @@ ConfigManager.prototype.saveResolution = function(value){
 
 ConfigManager.prototype.saveSoundVolume = function(value){
     this.settingConfig.soundVolume = value;
-    this.config.soundVolume = value > 0 ? 1 - (1 - value * 0.3) : 0;
+    this.config.soundVolume = value > 0 ? 0.8 - (1 - value * 0.3) : 0;
     this.saveToLocalStorage();
 };
 
