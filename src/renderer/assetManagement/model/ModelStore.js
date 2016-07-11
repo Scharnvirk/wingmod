@@ -17,7 +17,9 @@ var ModelStore = {
     },
 
     addGeometry: function(name, geometry) {
-        this.geometries[name] = geometry;
+        if (geometry) {
+            this.geometries[name] = geometry;
+        }        
     },
 
     addMaterial: function(name, material) {

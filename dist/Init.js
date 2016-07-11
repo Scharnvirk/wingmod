@@ -934,20 +934,20 @@ MookBrain.prototype.detectNearbyWallsFast = function () {
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesRear.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesRear[i]] === 1) {
+    for (var _i = 0; _i < this.wallDetectionAngleIndexesRear.length; _i++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesRear[_i]] === 1) {
             directions.rear = true;
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesLeft.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesLeft[i]] === 1) {
+    for (var _i2 = 0; _i2 < this.wallDetectionAngleIndexesLeft.length; _i2++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesLeft[_i2]] === 1) {
             directions.left = true;
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesRight.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesRight[i]] === 1) {
+    for (var _i3 = 0; _i3 < this.wallDetectionAngleIndexesRight.length; _i3++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesRight[_i3]] === 1) {
             directions.right = true;
             break;
         }
@@ -1606,7 +1606,7 @@ MookBossActor.prototype.onDeath = function () {
             velocity: Utils.rand(20, 100)
         });
     }
-    for (var i = 0; i < 5; i++) {
+    for (var _i = 0; _i < 5; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -2014,7 +2014,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
             velocity: Utils.rand(0, 150)
         });
     }
-    for (var i = 0; i < 10; i++) {
+    for (var _i = 0; _i < 10; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -2301,7 +2301,7 @@ ShipActor.prototype.onDeath = function () {
             velocity: Utils.rand(0, 100)
         });
     }
-    for (var i = 0; i < 5; i++) {
+    for (var _i = 0; _i < 5; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -2770,8 +2770,6 @@ module.exports = ConfigManager;
 },{"sprintf":4}],37:[function(require,module,exports){
 'use strict';
 
-var PubSub = require('pubsub-js');
-
 function ControlsHandler(config) {
     if (!config.inputListener) throw new Error('No inputListener specified for the handler!');
     if (!config.logicBus) throw new Error('No logic bus specified for the handler!');
@@ -2784,7 +2782,11 @@ function ControlsHandler(config) {
     this.inputState = {};
 
     this.hudKeys = ['shift'];
+
+    EventEmitter.apply(this, arguments);
 }
+
+ControlsHandler.extend(EventEmitter);
 
 ControlsHandler.prototype.update = function () {
     Object.assign(this.oldInputState, this.inputState);
@@ -2794,7 +2796,7 @@ ControlsHandler.prototype.update = function () {
 
     var hudKeys = this.getChangedHudKeys();
     if (hudKeys) {
-        PubSub.publish('hud', hudKeys);
+        this.emit({ type: 'hud', data: hudKeys });
     }
 
     if (changed) this.sendUpdate();
@@ -2828,7 +2830,7 @@ ControlsHandler.prototype.sendUpdate = function () {
 
 module.exports = ControlsHandler;
 
-},{"pubsub-js":3}],38:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 
 var ConfigManager = require("renderer/ConfigManager");
@@ -2879,7 +2881,7 @@ Core.prototype.makeMainComponents = function () {
     this.logicBus = new LogicBus({ worker: this.logicWorker });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
     this.aiImageRenderer = new AiImageRenderer();
-    this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager });
+    this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager });
     this.assetManager = new AssetManager();
 };
 
@@ -2901,6 +2903,8 @@ Core.prototype.initEventHandlers = function () {
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
+
+    this.controlsHandler.on('hud', this.onHud.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -3117,6 +3121,10 @@ Core.prototype.onPlaySound = function (event) {
     if (finalVolume > 0.01) {
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], { volume: finalVolume });
     }
+};
+
+Core.prototype.onHud = function (event) {
+    this.hud.onInput(event.data);
 };
 
 module.exports = Core;
@@ -3396,9 +3404,9 @@ ActorManager.prototype.updateFromLogic = function (messageObject) {
         }
     }
 
-    for (var i = 0; i < messageObject.deadActorCount; i++) {
-        var actor = this.storage[deadDataArray[i]];
-        this.deleteActor(deadDataArray[i * 5], deadDataArray[i * 5 + 2], deadDataArray[i * 5 + 3]);
+    for (var _i = 0; _i < messageObject.deadActorCount; _i++) {
+        var _actor = this.storage[deadDataArray[_i]];
+        this.deleteActor(deadDataArray[_i * 5], deadDataArray[_i * 5 + 2], deadDataArray[_i * 5 + 3]);
     }
 };
 
@@ -4717,7 +4725,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    for (var i = 0; i < 30 - this.timer * 3; i++) {
+    for (var _i = 0; _i < 30 - this.timer * 3; _i++) {
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -4877,7 +4885,7 @@ RingProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    for (var i = 0; i < 100 - this.timer; i++) {
+    for (var _i = 0; _i < 100 - this.timer; _i++) {
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -5142,10 +5150,6 @@ var ChunkList = {
     }]
 };
 
-// {
-//     model: levelPath + '/chunk_Hangar_SmallCross_1.json',
-//     hitmap: levelPath + '/chunk_Hangar_SmallCross_1_hitmap.json'
-// }
 module.exports = ChunkList;
 
 },{}],67:[function(require,module,exports){
@@ -5338,13 +5342,13 @@ HitmapLoader.prototype.jsonToFaces = function (json) {
         }
 
         if (hasFaceUv) {
-            for (var i = 0; i < nUvLayers; i++) {
+            for (var _i = 0; _i < nUvLayers; _i++) {
                 offset++;
             }
         }
 
         if (hasFaceVertexUv) {
-            for (var i = 0; i < nUvLayers; i++) {
+            for (var _i2 = 0; _i2 < nUvLayers; _i2++) {
                 for (var j = 0; j < nVertices; j++) {
                     offset++;
                 }
@@ -5356,7 +5360,7 @@ HitmapLoader.prototype.jsonToFaces = function (json) {
         }
 
         if (hasFaceVertexNormal) {
-            for (var i = 0; i < nVertices; i++) {
+            for (var _i3 = 0; _i3 < nVertices; _i3++) {
                 offset++;
             }
         }
@@ -5366,7 +5370,7 @@ HitmapLoader.prototype.jsonToFaces = function (json) {
         }
 
         if (hasFaceVertexColor) {
-            for (var i = 0; i < nVertices; i++) {
+            for (var _i4 = 0; _i4 < nVertices; _i4++) {
                 offset++;
             }
         }
@@ -5436,7 +5440,7 @@ module.exports = CustomModelBuilder;
 'use strict';
 
 var ModelList = {
-    models: ['/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/plasmagun.json', '/models/pulsewavegun.json']
+    models: ['/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/drone.json', '/models/sniper.json', '/models/orbot.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/plasmagun.json', '/models/pulsewavegun.json', '/models/hudMaterial.json']
 };
 
 module.exports = ModelList;
@@ -5516,7 +5520,9 @@ var ModelStore = {
     },
 
     addGeometry: function addGeometry(name, geometry) {
-        this.geometries[name] = geometry;
+        if (geometry) {
+            this.geometries[name] = geometry;
+        }
     },
 
     addMaterial: function addMaterial(name, material) {
@@ -5567,7 +5573,10 @@ SoundLoader.prototype.loadSounds = function () {
 module.exports = SoundLoader;
 
 },{}],75:[function(require,module,exports){
-'use strict';
+"use strict";
+
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function Hud(config) {
     Object.assign(this, config);
@@ -5576,9 +5585,17 @@ function Hud(config) {
     if (!this.particleManager) throw new Error('No particleManager defined for MainContainer!');
 
     this.defaultHpBarCount = 10;
+
+    this.activationKey = 'shift';
+
+    this.itemRotation = 0;
+
+    this.hudVisible = false;
 }
 
 Hud.prototype.update = function () {
+    var _this = this;
+
     if (this.actor && !this.actor.dead) {
         for (var enemyId in this.actorManager.enemies) {
             var enemyActor = this.actorManager.enemies[enemyId];
@@ -5603,6 +5620,25 @@ Hud.prototype.update = function () {
             });
         }
         this.drawHealthBar(this.actor);
+
+        if (this.hudVisible && this.actor && !this.actor.dead) {
+            this.itemRotation += 1;
+            if (!this.meshes) {
+                this.meshes = this.createMeshes();
+            }
+
+            this.meshes.forEach(function (mesh) {
+                var offsetVector = Utils.rotateVector(mesh.positionOffset[0], mesh.positionOffset[1], _this.actor.angle * -1);
+                mesh.position.x = _this.actor.position[0] + offsetVector[0];
+                mesh.position.y = _this.actor.position[1] + offsetVector[1];
+                mesh.rotation.z = _this.actor.angle + Utils.degToRad(_this.itemRotation);
+                mesh.visible = true;
+            });
+        } else if (this.meshes) {
+            this.meshes.forEach(function (mesh) {
+                mesh.visible = false;
+            });
+        }
     }
 };
 
@@ -5661,9 +5697,49 @@ Hud.prototype.drawCrosshairs = function (actor) {
     });
 };
 
+Hud.prototype.createMeshes = function () {
+    var _this2 = this;
+
+    var scale = 3;
+    var meshes = [];
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('pulsewavegun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 0]
+    }));
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('plasmagun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 15]
+    }));
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('lasgun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 30]
+    }));
+
+    meshes.forEach(function (mesh) {
+        mesh.scale.x = scale;
+        mesh.scale.y = scale;
+        mesh.scale.z = scale;
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
+        _this2.sceneManager.getThreeScene().add(mesh);
+    });
+
+    return meshes;
+};
+
+Hud.prototype.onInput = function (input) {
+    this.hudVisible = input[this.activationKey];
+};
+
 module.exports = Hud;
 
-},{}],76:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":44,"renderer/assetManagement/model/ModelStore":73}],76:[function(require,module,exports){
 'use strict';
 
 function ChunkMesh(config) {
@@ -6090,16 +6166,16 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 15; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
+    for (var _i = 0; _i < 15; _i++) {
+        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
-            positionX: config.position[0] + offsetPosition[0],
-            positionY: config.position[1] + offsetPosition[1],
+            positionX: config.position[0] + _offsetPosition[0],
+            positionY: config.position[1] + _offsetPosition[1],
             colorR: 0.3,
             colorG: 0.3,
             colorB: 1,
             scale: 5,
-            alpha: 0.7 - 0.1 * i,
+            alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
             particleAngle: config.angle,
@@ -6419,7 +6495,7 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 60; i++) {
+    for (var _i = 0; _i < 60; _i++) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
@@ -6499,7 +6575,7 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 40; i++) {
+    for (var _i = 0; _i < 40; _i++) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
@@ -6718,16 +6794,16 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
+    for (var _i = 0; _i < 5; _i++) {
+        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
-            positionX: config.position[0] + offsetPosition[0],
-            positionY: config.position[1] + offsetPosition[1],
+            positionX: config.position[0] + _offsetPosition[0],
+            positionY: config.position[1] + _offsetPosition[1],
             colorR: 1,
             colorG: 0.3,
             colorB: 1,
             scale: 5,
-            alpha: 0.7 - 0.1 * i,
+            alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
             particleAngle: config.angle,
@@ -6905,16 +6981,16 @@ module.exports = function (config) {
         });
     }
 
-    for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 1.8);
+    for (var _i = 0; _i < 5; _i++) {
+        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
-            positionX: config.position[0] + offsetPosition[0],
-            positionY: config.position[1] + offsetPosition[1],
+            positionX: config.position[0] + _offsetPosition[0],
+            positionY: config.position[1] + _offsetPosition[1],
             colorR: 1,
             colorG: 0.3,
             colorB: 0.3,
             scale: 5,
-            alpha: 0.7 - 0.1 * i,
+            alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
             particleAngle: config.angle,
@@ -7760,7 +7836,7 @@ var InitialView = React.createClass({
                 break;
         }
 
-        var blurState = undefined;
+        var blurState = void 0;
         switch (this.props.mode) {
             case 'running':
                 blurState = 'end';

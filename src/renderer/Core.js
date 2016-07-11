@@ -46,7 +46,7 @@ Core.prototype.makeMainComponents = function(){
     this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
-    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
+    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager});
     this.assetManager = new AssetManager();
 };
 
@@ -68,6 +68,8 @@ Core.prototype.initEventHandlers = function(){
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
+
+    this.controlsHandler.on('hud', this.onHud.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
@@ -282,6 +284,10 @@ Core.prototype.onPlaySound = function(event){
     if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
     }
+};
+
+Core.prototype.onHud = function(event){
+    this.hud.onInput(event.data);
 };
 
 module.exports = Core;

@@ -1067,20 +1067,20 @@ MookBrain.prototype.detectNearbyWallsFast = function () {
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesRear.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesRear[i]] === 1) {
+    for (var _i = 0; _i < this.wallDetectionAngleIndexesRear.length; _i++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesRear[_i]] === 1) {
             directions.rear = true;
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesLeft.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesLeft[i]] === 1) {
+    for (var _i2 = 0; _i2 < this.wallDetectionAngleIndexesLeft.length; _i2++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesLeft[_i2]] === 1) {
             directions.left = true;
             break;
         }
     }
-    for (var i = 0; i < this.wallDetectionAngleIndexesRight.length; i++) {
-        if (this.detectionResults[this.wallDetectionAngleIndexesRight[i]] === 1) {
+    for (var _i3 = 0; _i3 < this.wallDetectionAngleIndexesRight.length; _i3++) {
+        if (this.detectionResults[this.wallDetectionAngleIndexesRight[_i3]] === 1) {
             directions.right = true;
             break;
         }
@@ -1739,7 +1739,7 @@ MookBossActor.prototype.onDeath = function () {
             velocity: Utils.rand(20, 100)
         });
     }
-    for (var i = 0; i < 5; i++) {
+    for (var _i = 0; _i < 5; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -2147,7 +2147,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
             velocity: Utils.rand(0, 150)
         });
     }
-    for (var i = 0; i < 10; i++) {
+    for (var _i = 0; _i < 10; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -2434,7 +2434,7 @@ ShipActor.prototype.onDeath = function () {
             velocity: Utils.rand(0, 100)
         });
     }
-    for (var i = 0; i < 5; i++) {
+    for (var _i = 0; _i < 5; _i++) {
         this.manager.addNew({
             classId: ActorFactory.BOOMCHUNK,
             positionX: this.body.position[0],
@@ -4164,7 +4164,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    for (var i = 0; i < 30 - this.timer * 3; i++) {
+    for (var _i = 0; _i < 30 - this.timer * 3; _i++) {
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],
@@ -4324,7 +4324,7 @@ RingProjectileActor.prototype.onDeath = function () {
         });
     }
 
-    for (var i = 0; i < 100 - this.timer; i++) {
+    for (var _i = 0; _i < 100 - this.timer; _i++) {
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0],
             positionY: this.position[1],

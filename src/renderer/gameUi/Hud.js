@@ -1,3 +1,6 @@
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
+
 function Hud(config){
     Object.assign(this, config);
 
@@ -5,6 +8,12 @@ function Hud(config){
     if(!this.particleManager) throw new Error('No particleManager defined for MainContainer!');
 
     this.defaultHpBarCount = 10;
+
+    this.activationKey = 'shift';
+
+    this.itemRotation = 0;
+
+    this.hudVisible = false;
 }
 
 Hud.prototype.update = function(){
@@ -32,6 +41,26 @@ Hud.prototype.update = function(){
             });
         }
         this.drawHealthBar(this.actor);
+
+        if (this.hudVisible && this.actor && !this.actor.dead){
+            this.itemRotation += 1;
+            if(!this.meshes){
+                this.meshes = this.createMeshes();
+            }
+
+            this.meshes.forEach(mesh => {
+                var offsetVector = Utils.rotateVector(mesh.positionOffset[0], mesh.positionOffset[1], this.actor.angle * -1);
+                mesh.position.x = this.actor.position[0] + offsetVector[0];
+                mesh.position.y = this.actor.position[1] + offsetVector[1];
+                mesh.rotation.z = this.actor.angle + Utils.degToRad(this.itemRotation);
+                mesh.visible = true;
+            });
+        } else if (this.meshes) {
+            this.meshes.forEach(mesh => {
+                mesh.visible = false;
+            });
+
+        }
     }
 };
 
@@ -88,6 +117,46 @@ Hud.prototype.drawCrosshairs = function(actor){
         angleOffset: -18,
         distance: 16
     });
+};
+
+Hud.prototype.createMeshes = function(){
+    var scale = 3;
+    var meshes = [];
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('pulsewavegun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 0]
+    }));
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('plasmagun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 15]
+    }));
+
+    meshes.push(new BaseMesh({
+        geometry: ModelStore.get('lasgun').geometry,
+        material: ModelStore.get('hudMaterial').material,
+        positionOffset: [-20, 30]
+    }));
+
+    meshes.forEach(mesh => {
+        mesh.scale.x = scale;
+        mesh.scale.y = scale;
+        mesh.scale.z = scale;
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
+        this.sceneManager.getThreeScene().add(mesh);
+    });
+
+    return meshes;
+};
+
+Hud.prototype.onInput = function(input){
+    this.hudVisible = input[this.activationKey];
+
+
 };
 
 module.exports = Hud;

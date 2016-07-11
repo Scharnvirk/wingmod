@@ -1,5 +1,3 @@
-var PubSub = require('pubsub-js');
-
 function ControlsHandler(config){
     if(!config.inputListener) throw new Error('No inputListener specified for the handler!');
     if(!config.logicBus) throw new Error('No logic bus specified for the handler!');
@@ -12,7 +10,12 @@ function ControlsHandler(config){
     this.inputState =  {};
 
     this.hudKeys = ['shift'];
+
+    EventEmitter.apply(this, arguments);
 }
+
+ControlsHandler.extend(EventEmitter);
+
 
 ControlsHandler.prototype.update = function(){
     Object.assign(this.oldInputState, this.inputState);
@@ -22,7 +25,7 @@ ControlsHandler.prototype.update = function(){
 
     var hudKeys = this.getChangedHudKeys();
     if (hudKeys) {
-        PubSub.publish('hud', hudKeys);
+        this.emit({type: 'hud', data: hudKeys});
     }
 
     if(changed) this.sendUpdate();
