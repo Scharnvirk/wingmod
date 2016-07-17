@@ -7,6 +7,29 @@ class StartHelp extends React.Component {
         var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         return <div style = {{bottom: '100px'}}>
             <div
+                className={ classnames('class', ['centerHorizontal', 'topCenter', 'verticalSpacing']) }
+            >
+                <StyledText style={classnames('mediumText')}>
+                    <span>{'CONTROLS:'}</span>
+                </StyledText>
+                <StyledText style={classnames('smallText', 'textDark')}>
+                    <span>{'WSAD: move the ship'}</span>
+                </StyledText>
+                <StyledText style={classnames('smallText', 'textDark')}>
+                    <span>{'Mouse left: fire primary weapon system'}</span>
+                </StyledText>
+                <StyledText style={classnames('smallText', 'textDark')}>
+                    <span>{'Mouse right: fire secondary weapon system'}</span>
+                </StyledText>
+                <StyledText style={classnames('smallText', 'textDark')}>
+                    <span>{'hold SHIFT + mouse left: change primary weapon'}</span>
+                </StyledText>
+                <StyledText style={classnames('smallText', 'textDark')}>
+                    <span>{'hold SHIFT + mouse right: change secondary weapon'}</span>
+                </StyledText>
+            </div>
+
+            <div
                 className={ classnames('class', ['centerHorizontal', 'bottomCenter', 'verticalSpacing']) }
             >
                 <StyledText style={classnames('mediumText', 'textBlink')}>

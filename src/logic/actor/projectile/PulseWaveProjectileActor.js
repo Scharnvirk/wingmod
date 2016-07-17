@@ -8,7 +8,7 @@ function PulseWaveProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 4,
+        damage: 3,
         removeOnHit: true,
         timeout: 30,
         bodyConfig: {

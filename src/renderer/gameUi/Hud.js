@@ -1,66 +1,112 @@
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var WeaponSwitcher = require("renderer/gameUi/WeaponSwitcher");
 
 function Hud(config){
     Object.assign(this, config);
 
-    if(!this.actorManager) throw new Error('No actorManager defined for MainContainer!');
-    if(!this.particleManager) throw new Error('No particleManager defined for MainContainer!');
+    if(!this.actorManager) throw new Error('No actorManager defined for Hud!');
+    if(!this.particleManager) throw new Error('No particleManager defined for Hud!');
+    if(!this.sceneManager) throw new Error('No sceneManager defined for Hud!');
+
+    this.switchers = [];
 
     this.defaultHpBarCount = 10;
-
     this.activationKey = 'shift';
+    this.switchersConfig = [
+        {
+            positionOffset: [-10, 0],
+            switchKey: 'mouseLeft'
+        }, {
+            positionOffset: [10, 0],
+            switchKey: 'mouseRight'
+        }
+    ];
 
-    this.itemRotation = 0;
-
-    this.hudVisible = false;
+    this.switchers = this.makeSwitchers();
+    EventEmitter.apply(this, arguments);
 }
+
+Hud.extend(EventEmitter);
+
+Hud.prototype.makeSwitchers = function(){
+    var switcherIndex = 0;
+    var switchers = [];
+    this.switchersConfig.forEach(switcherConfig => {
+        switcherConfig.sceneManager = this.sceneManager;
+        switcherConfig.activationKey = this.activationKey;
+        switcherConfig.index = switcherIndex;
+
+        var switcher = new WeaponSwitcher(switcherConfig);
+
+        switcher.on('weaponSwitched', this.onWeaponSwitched.bind(this));
+
+        switchers.push(switcher);
+        switcherIndex ++;
+    });
+    return switchers;
+};
 
 Hud.prototype.update = function(){
     if(this.actor && !this.actor.dead){
-        for (let enemyId in this.actorManager.enemies ){
-            let enemyActor = this.actorManager.enemies[enemyId];
-            let angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);
-            let offsetPosition = Utils.angleToVector(angle + Math.PI, 12);
-
-            this.drawHealthBar(enemyActor);
-
-            this.particleManager.createParticle('particleAddHUD', {
-                positionX: this.actor.position[0] + offsetPosition[0],
-                positionY: this.actor.position[1] + offsetPosition[1],
-                positionZ: -Constants.DEFAULT_POSITION_Z,
-                colorR: 1,
-                colorG: 0,
-                colorB: 0,
-                scale: 0.75,
-                alpha: 1,
-                alphaMultiplier: 1,
-                particleVelocity: 0,
-                particleAngle: 0,
-                lifeTime: 1
-            });
-        }
+        this.drawRadar();
         this.drawHealthBar(this.actor);
+        this.switchers.forEach(switcher => {
+            switcher.position = this.actor.position;
+            switcher.angle = this.actor.angle;
+            switcher.update();
+        });
+    }
+};
 
-        if (this.hudVisible && this.actor && !this.actor.dead){
-            this.itemRotation += 1;
-            if(!this.meshes){
-                this.meshes = this.createMeshes();
-            }
+Hud.prototype.onPlayerActorAppeared = function(actor){
+    this.actor = actor;
+};
 
-            this.meshes.forEach(mesh => {
-                var offsetVector = Utils.rotateVector(mesh.positionOffset[0], mesh.positionOffset[1], this.actor.angle * -1);
-                mesh.position.x = this.actor.position[0] + offsetVector[0];
-                mesh.position.y = this.actor.position[1] + offsetVector[1];
-                mesh.rotation.z = this.actor.angle + Utils.degToRad(this.itemRotation);
-                mesh.visible = true;
-            });
-        } else if (this.meshes) {
-            this.meshes.forEach(mesh => {
-                mesh.visible = false;
-            });
+Hud.prototype.onInput = function(inputState){
+    this.switchers.forEach(switcher => {
+        switcher.handleInput(inputState);
+    });
+};
 
+Hud.prototype.onWeaponSwitched = function(event){
+    var changeConfig = {
+        weapon: event.data.weapon,
+        index: event.index
+    };
+
+    if (this.actor && !this.actor.dead){
+        this.actor.switchWeapon(changeConfig);
+    }
+    this.emit(
+        {
+            type: 'weaponSwitched',
+            data: changeConfig
         }
+    );
+};
+
+
+Hud.prototype.drawRadar = function(){
+    for (let enemyId in this.actorManager.enemies ){
+        let enemyActor = this.actorManager.enemies[enemyId];
+        let angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);
+        let offsetPosition = Utils.angleToVector(angle + Math.PI, 12);
+
+        this.drawHealthBar(enemyActor);
+
+        this.particleManager.createParticle('particleAddHUD', {
+            positionX: this.actor.position[0] + offsetPosition[0],
+            positionY: this.actor.position[1] + offsetPosition[1],
+            positionZ: -Constants.DEFAULT_POSITION_Z,
+            colorR: 1,
+            colorG: 0,
+            colorB: 0,
+            scale: 0.75,
+            alpha: 1,
+            alphaMultiplier: 1,
+            particleVelocity: 0,
+            particleAngle: 0,
+            lifeTime: 1
+        });
     }
 };
 
@@ -117,46 +163,6 @@ Hud.prototype.drawCrosshairs = function(actor){
         angleOffset: -18,
         distance: 16
     });
-};
-
-Hud.prototype.createMeshes = function(){
-    var scale = 3;
-    var meshes = [];
-
-    meshes.push(new BaseMesh({
-        geometry: ModelStore.get('pulsewavegun').geometry,
-        material: ModelStore.get('hudMaterial').material,
-        positionOffset: [-20, 0]
-    }));
-
-    meshes.push(new BaseMesh({
-        geometry: ModelStore.get('plasmagun').geometry,
-        material: ModelStore.get('hudMaterial').material,
-        positionOffset: [-20, 15]
-    }));
-
-    meshes.push(new BaseMesh({
-        geometry: ModelStore.get('lasgun').geometry,
-        material: ModelStore.get('hudMaterial').material,
-        positionOffset: [-20, 30]
-    }));
-
-    meshes.forEach(mesh => {
-        mesh.scale.x = scale;
-        mesh.scale.y = scale;
-        mesh.scale.z = scale;
-        mesh.castShadow = false;
-        mesh.receiveShadow = false;
-        this.sceneManager.getThreeScene().add(mesh);
-    });
-
-    return meshes;
-};
-
-Hud.prototype.onInput = function(input){
-    this.hudVisible = input[this.activationKey];
-
-
 };
 
 module.exports = Hud;

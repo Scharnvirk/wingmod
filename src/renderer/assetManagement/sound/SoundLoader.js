@@ -29,6 +29,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:"sounds/spiders1.wav", id:"sniper"});
     createjs.Sound.registerSound({src:"sounds/itds3.wav", id:"orbot"});
     createjs.Sound.registerSound({src:"sounds/spawn.wav", id:"spawn"});
+    createjs.Sound.registerSound({src:"sounds/cannon_change.wav", id:"cannon_change"});
 };
 
 module.exports = SoundLoader;

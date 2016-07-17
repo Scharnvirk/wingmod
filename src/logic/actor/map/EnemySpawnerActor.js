@@ -11,7 +11,7 @@ function EnemySpawnerActor(config){
     this.spawnRate = 240;
 
     this.applyConfig({
-        hp: 220,
+        hp: 350,
         removeOnHit: false
     });
 }

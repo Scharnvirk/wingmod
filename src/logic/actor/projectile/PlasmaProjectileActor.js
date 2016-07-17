@@ -8,7 +8,7 @@ function PlasmaProjectileActor(config){
 
     this.applyConfig({
         hp: 1,
-        damage: 2.5,
+        damage: 1.8,
         removeOnHit: true,
         timeout: 300,
         bodyConfig: {

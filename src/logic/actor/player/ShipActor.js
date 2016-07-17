@@ -1,10 +1,8 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseBrain = require("logic/actor/component/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
+var WeaponSystem = require("logic/actor/component/WeaponSystem");
 var ActorFactory = require("shared/ActorFactory")('logic');
-var Blaster = require("logic/actor/component/weapon/Blaster");
-var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
-var PulseWaveGun = require("logic/actor/component/weapon/PulseWaveGun");
 
 function ShipActor(config){
     config = config || [];
@@ -26,14 +24,18 @@ function ShipActor(config){
         }
     });
 
+    this.hudModifier = 'shift';
+
     this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 
-    this.plasma = this.createPlasma();
-    this.blaster = this.createBlaster();
-    this.pulseWave = this.createPulseWave();
+    this.primaryWeaponSystem = this.createPrimaryWeaponSystem();
+    this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
+
+    this.primaryWeaponSystem.switchWeaponByIndex(0);
+    this.secondaryWeaponSystem.switchWeaponByIndex(0);
 
     BaseActor.apply(this, arguments);
 }
@@ -45,9 +47,8 @@ ShipActor.prototype.createBody = function(){
 };
 
 ShipActor.prototype.customUpdate = function(){
-    this.blaster.update();
-    this.plasma.update();
-    this.pulseWave.update();
+    this.primaryWeaponSystem.update();
+    this.secondaryWeaponSystem.update();
 };
 
 ShipActor.prototype.playerUpdate = function(inputState){
@@ -107,48 +108,40 @@ ShipActor.prototype.applyThrustInput = function(inputState){
 };
 
 ShipActor.prototype.applyWeaponInput = function(inputState){
-    if (inputState.mouseLeft){
-        this.pulseWave.shoot();
-    } else {
-        this.pulseWave.stopShooting();
-    }
+    if(!inputState[this.hudModifier]){
+        if (inputState.mouseLeft){
+            this.primaryWeaponSystem.shoot();
+        } else {
+            this.primaryWeaponSystem.stopShooting();
+        }
 
-    if (inputState.mouseRight){
-        this.blaster.shoot();
+        if (inputState.mouseRight){
+            this.secondaryWeaponSystem.shoot();
+        } else {
+            this.secondaryWeaponSystem.stopShooting();
+        }
     } else {
-        this.blaster.stopShooting();
+        this.primaryWeaponSystem.stopShooting();
+        this.secondaryWeaponSystem.stopShooting();
     }
 };
 
-ShipActor.prototype.createBlaster = function(){
-    return new Blaster({
+ShipActor.prototype.createPrimaryWeaponSystem = function(){
+    return new WeaponSystem({
         actor: this,
-        manager: this.manager,
         firingPoints: [
-            {offsetAngle: -20, offsetDistance: 10, fireAngle: 0},
-            {offsetAngle: 20, offsetDistance: 10, fireAngle: 0}
+            {offsetAngle: -50, offsetDistance: 4, fireAngle: 0},
+            {offsetAngle: 50, offsetDistance: 4, fireAngle: 0}
         ]
     });
 };
 
-ShipActor.prototype.createPlasma = function(){
-    return new PlasmaGun({
+ShipActor.prototype.createSecondaryWeaponSystem = function(){
+    return new WeaponSystem({
         actor: this,
-        manager: this.manager,
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 5 , fireAngle: 0}
-        ]
-    });
-};
-
-ShipActor.prototype.createPulseWave = function(){
-    return new PulseWaveGun({
-        actor: this,
-        manager: this.manager,
-        firingPoints: [
-            {offsetAngle: -90, offsetDistance: 5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 5 , fireAngle: 0}
+            {offsetAngle: -40, offsetDistance: 8, fireAngle: 0},
+            {offsetAngle: 40, offsetDistance: 8 , fireAngle: 0}
         ]
     });
 };
@@ -178,7 +171,7 @@ ShipActor.prototype.onDeath = function(){
 };
 
 ShipActor.prototype.onHit = function(){
-    if(Utils.rand(0, 10) == 10){
+    if(Utils.rand(8, 10) == 10){
         this.manager.addNew({
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
@@ -186,6 +179,17 @@ ShipActor.prototype.onHit = function(){
             angle: Utils.rand(0,360),
             velocity: Utils.rand(50, 100)
         });
+    }
+};
+
+ShipActor.prototype.switchWeapon = function(weaponConfig){
+    switch(weaponConfig.index){
+        case 0:
+            this.primaryWeaponSystem.switchWeapon(weaponConfig.weapon);
+            break;
+        case 1:
+            this.secondaryWeaponSystem.switchWeapon(weaponConfig.weapon);
+            break;
     }
 };
 

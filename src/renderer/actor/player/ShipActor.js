@@ -18,10 +18,10 @@ function ShipActor(){
     this.speedY = 0.0025;
     this.speedX = 0.002;
 
-    this.weaponSetLocations = [[[5,3.5,-2.2], [-5,3.5,-2.2]], [[3,0,0], [-3,0,0]]];
+    this.weaponSetLocations = [[[3,0,0], [-3,0,0]], [[5,3.5,-2.2], [-5,3.5,-2.2]]];
 
-    this.changeWeaponMeshesTo(0, 'pulsewavegun', 'pulsewavegun', [2, 2, 2]);
-    this.changeWeaponMeshesTo(1, 'lasgun', 'lasgun', [1.5, 1.5, 1.5]);
+    this.setupWeaponMeshes(0, 'plasmagun', 'plasmagun');
+    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');
 }
 
 ShipActor.extend(BaseActor);
@@ -31,7 +31,18 @@ ShipActor.prototype.createMeshes = function(){
     return [this.shipMesh];
 };
 
-ShipActor.prototype.changeWeaponMeshesTo = function(slotNumber, geometryName, materialName, scales){
+ShipActor.prototype.switchWeapon = function(changeConfig){
+    for (let i = 0, l = this.weaponSetLocations[changeConfig.index].length; i < l; i++){
+        var meshIndexLocation = (l * changeConfig.index + i) + 1; //zeroth is reserved for ship
+        this.meshes[meshIndexLocation].geometry = ModelStore.get(changeConfig.weapon).geometry;
+        this.meshes[meshIndexLocation].material = ModelStore.get(changeConfig.weapon).material;
+    }
+};
+
+ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, materialName, scales){
+    var defaultScale = 1;
+    scales = scales || [];
+
     if (slotNumber >= this.weaponSetLocations.length){
         throw new Error('This actor does not have a weapon slot of number', slotNumber);
     }
@@ -40,9 +51,9 @@ ShipActor.prototype.changeWeaponMeshesTo = function(slotNumber, geometryName, ma
         var meshIndexLocation = (l * slotNumber + i) + 1; //zeroth is reserved for ship
         this.meshes[meshIndexLocation] = new BaseMesh({
             actor: this,
-            scaleX: scales[0] || 1.5,
-            scaleY: scales[1] || 1.5,
-            scaleZ: scales[2] || 1.5,
+            scaleX: scales[0] || defaultScale,
+            scaleY: scales[1] || defaultScale,
+            scaleZ: scales[2] || defaultScale,
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
             angleOffset: Utils.degToRad(-90),

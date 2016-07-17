@@ -33,6 +33,7 @@ Core.prototype.initializeEventHandlers = function(){
     this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
     this.renderBus.on('inputState', this.onInputState.bind(this));
     this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
+    this.renderBus.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
@@ -128,6 +129,10 @@ Core.prototype.onMapDone = function(event){
 
 Core.prototype.onPlaySound = function(event){
     this.renderBus.postMessage('playSound', event.data);
+};
+
+Core.prototype.onWeaponSwitched = function(event){
+    this.actorManager.switchPlayerWeapon(event.data);
 };
 
 module.exports = Core;

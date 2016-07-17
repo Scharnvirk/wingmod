@@ -282,6 +282,13 @@
   right: 0;
 }
 
+.topCenter{
+  top: 200px;
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
 .topRightCorner{
   top: 10px;
   right: 10px;

@@ -27,7 +27,6 @@ function BaseWeapon(config){
     this.shotsFired = 0;
 
     if(!this.projectileClass) throw new Error('No projectile class for a Weapon!');
-    if(!this.manager) throw new Error('No actor manager for a Weapon!');
     if(!this.actor) throw new Error('No actor for a Weapon!');
 }
 
@@ -70,7 +69,7 @@ BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
         body.angle + Utils.degToRad(firingPointConfig.offsetAngle),
         firingPointConfig.offsetDistance
     );
-    this.manager.addNew({
+    this.actor.manager.addNew({
         classId: this.projectileClass,
         positionX: body.position[0] + offsetPosition[0],
         positionY: body.position[1] + offsetPosition[1],
@@ -85,7 +84,7 @@ BaseWeapon.prototype.handleFiringSimultaneous = function(){
     this.actor.body.applyForceLocal([0, -this.recoil]);
 
     if (this.sound){
-        this.manager.playSound({sounds:[this.sound], actor: this.actor, volume:this.volume});
+        this.actor.manager.playSound({sounds:[this.sound], actor: this.actor, volume:this.volume});
     }
 };
 
@@ -100,7 +99,7 @@ BaseWeapon.prototype.handleFiringAlternate = function(){
     this.actor.body.applyForceLocal([0, -this.recoil]);
 
     if (this.sound){
-        this.manager.playSound({sounds: [this.sound], actor: this.actor, volume: this.volume});
+        this.actor.manager.playSound({sounds: [this.sound], actor: this.actor, volume: this.volume});
     }
 };
 

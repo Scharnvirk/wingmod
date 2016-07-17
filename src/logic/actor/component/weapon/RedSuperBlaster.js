@@ -13,7 +13,7 @@ function Blaster(config){
     this.cooldown = 100;
     this.velocity = 700;
 }
-
+ 
 Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;

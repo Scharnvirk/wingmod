@@ -9,13 +9,12 @@ function ControlsHandler(config){
     this.oldInputState = {};
     this.inputState =  {};
 
-    this.hudKeys = ['shift'];
+    this.hudKeys = ['shift', 'mouseLeft', 'mouseRight'];
 
     EventEmitter.apply(this, arguments);
 }
 
 ControlsHandler.extend(EventEmitter);
-
 
 ControlsHandler.prototype.update = function(){
     Object.assign(this.oldInputState, this.inputState);
@@ -25,7 +24,7 @@ ControlsHandler.prototype.update = function(){
 
     var hudKeys = this.getChangedHudKeys();
     if (hudKeys) {
-        this.emit({type: 'hud', data: hudKeys});
+        this.emit({type: 'hud', data: this.inputState});
     }
 
     if(changed) this.sendUpdate();

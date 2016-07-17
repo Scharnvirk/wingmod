@@ -12,8 +12,8 @@ function EnemySpawnerActor(config){
 
     this.rotationSpeed = 0;
 
-    this.initialHp = 220;
-    this.hp = 220;
+    this.initialHp = 350;
+    this.hp = 350;
     this.hpBarCount = 30;
 
     this.spawnDelay = 0;

@@ -74,7 +74,9 @@ Core.prototype.initEventHandlers = function(){
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
 
-    this.assetManager.on('assetsLoaded', this.assetsLoaded.bind(this));
+    this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
+
+    this.hud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
 
 Core.prototype.makeRenderStatsWatcher = function(){
@@ -132,7 +134,7 @@ Core.prototype.resetCamera = function(){
     this.sceneManager.resetCamera();
 };
 
-Core.prototype.assetsLoaded = function(){
+Core.prototype.onAssetsLoaded = function(){
     console.log("assets loaded");
     this.sceneManager.makeScene('mainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
 
@@ -184,8 +186,8 @@ Core.prototype.getAiImageObject = function(wallsData){
 Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
     actor.inputListener = this.inputListener;
-    this.hud.actor = actor;
 
+    this.hud.onPlayerActorAppeared(actor);
     this.sceneManager.onPlayerActorAppeared(actor);
 };
 
@@ -288,6 +290,10 @@ Core.prototype.onPlaySound = function(event){
 
 Core.prototype.onHud = function(event){
     this.hud.onInput(event.data);
+};
+
+Core.prototype.onWeaponSwitched = function(event){
+    this.logicBus.postMessage('weaponSwitched', event.data);
 };
 
 module.exports = Core;

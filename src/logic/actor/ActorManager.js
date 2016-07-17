@@ -127,4 +127,11 @@ ActorManager.prototype.playSound = function(config){
     }
 };
 
+ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){
+    var playerActor = this.getFirstPlayerActor();
+    if (playerActor){
+        playerActor.switchWeapon(weaponConfig);
+    }
+};
+
 module.exports = ActorManager;

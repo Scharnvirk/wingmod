@@ -7,8 +7,8 @@ function MookActor(){
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 6;
-    this.hp = 6;
+    this.initialHp = 8;
+    this.hp = 8;
 }
 
 MookActor.extend(BaseActor);
