@@ -108,6 +108,20 @@ var Utils = {
             nx = (cos * x) + (sin * y),
             ny = (cos * y) - (sin * x);
         return [nx, ny];
+    },
+
+    objToScreenPosition: function(object, renderer, camera){
+        var vector = new THREE.Vector3();
+        var canvas = renderer.domElement;
+
+        vector.set( object.position[0], object.position[1], object.positionZ );
+
+        vector.project( camera );
+
+        vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );
+        vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 );
+
+        return [vector.x, vector.y];
     }
 };
 

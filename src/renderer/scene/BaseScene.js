@@ -4,8 +4,10 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 function BaseScene(config){
     Object.assign(this, config);
 
-    this.camera = this.buildCamera();
-    this.threeScene = this.buildThreeScene(this.camera);
+    if(!this.renderer){ throw new Error('No renderer specified for a Scene!'); }
+
+    this.camera = this.createCamera();
+    this.threeScene = this.createThreeScene(this.camera);
     this.threeScene.add(this.camera);
 }
 
@@ -18,15 +20,15 @@ BaseScene.prototype.update = function(){
     this.customUpdate();
 };
 
-BaseScene.prototype.buildCamera = function(){
+BaseScene.prototype.createCamera = function(){
     throw new Error ('Attempting to use default (empty) camera constructor for Scene!');
 };
 
-BaseScene.prototype.build = function(){
-    throw new Error ('Attempting to use default (empty) build function for Scene!');
+BaseScene.prototype.create = function(){
+    throw new Error ('Attempting to use default (empty) create function for Scene!');
 };
 
-BaseScene.prototype.buildThreeScene = function(){
+BaseScene.prototype.createThreeScene = function(){
     return new THREE.Scene();
 };
 

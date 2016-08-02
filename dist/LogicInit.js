@@ -3227,13 +3227,7 @@ function ShipMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    //onfig.geometry = ModelStore.get('drone').geometry;
-    //config.material = ModelStore.get('drone').material;
     Object.assign(this, config);
-
-    // this.scale.x = 1.2;
-    // this.scale.y = 1.2;
-    // this.scale.z = 1.2;
 
     this.castShadow = true;
     this.receiveShadow = true;
@@ -3947,23 +3941,6 @@ ShipActor.prototype.doBob = function () {
     } else {
         this.speedZ += 0.002;
     }
-    //
-    // for (var i = 0, l = this.meshes.length; i < l; i++){
-    //     this.meshes[i].rotation.y += this.speedY;
-    //     this.meshes[i].rotation.x += this.speedX;
-    // }
-    //
-    // if (this.shipMesh.rotation.y > 0){
-    //     this.speedY -= 0.00012;
-    // } else {
-    //     this.speedY += 0.00012;
-    // }
-    //
-    // if (this.shipMesh.rotation.x > 0){
-    //     this.speedX -= 0.00009;
-    // } else {
-    //     this.speedX += 0.00009;
-    // }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
@@ -4846,6 +4823,20 @@ var Utils = {
             nx = cos * x + sin * y,
             ny = cos * y - sin * x;
         return [nx, ny];
+    },
+
+    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {
+        var vector = new THREE.Vector3();
+        var canvas = renderer.domElement;
+
+        vector.set(object.position[0], object.position[1], object.positionZ);
+
+        vector.project(camera);
+
+        vector.x = Math.round((vector.x + 1) * canvas.width / 2);
+        vector.y = Math.round((-vector.y + 1) * canvas.height / 2);
+
+        return [vector.x, vector.y];
     }
 };
 

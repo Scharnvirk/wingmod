@@ -5,20 +5,19 @@ function ParticleManager(config){
     config = config || {};
     Object.assign(this, config);
 
-    if(!this.sceneManager) throw new Error('No sceneManager specified for ParticleManager!');
-
     this.configBuilder = new ParticleConfigBuilder(config);
     this.configs = this.configBuilder.getAllConfigs();
     this.generators = {};
-    this.buildGenerators();
     this.premades = this.buildPremadeGenerators();
+
+    if(!this.sceneManager) throw new Error('No sceneManager for Renderer ParticleManager!');
 }
 
 ParticleManager.prototype.buildGenerators = function(){
     Object.keys(this.configs).forEach(configName => {
         let generator = new ParticleGenerator(this.configs[configName]);
         this.generators[configName] = (generator);
-        this.sceneManager.add(generator);
+        this.sceneManager.get('GameScene').add(generator);
     });
 };
 

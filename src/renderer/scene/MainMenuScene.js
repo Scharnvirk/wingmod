@@ -13,7 +13,7 @@ function MainMenuScene(config){
 
 MainMenuScene.extend(BaseScene);
 
-MainMenuScene.prototype.build = function(){
+MainMenuScene.prototype.create = function(){
     this.initialColor = {
         r: Utils.rand(100,100)/100,
         g: Utils.rand(100,100)/100,
@@ -53,11 +53,11 @@ MainMenuScene.prototype.build = function(){
 
     this.threeScene.add( this.ambientLight );
 
-    this.buildStartScene();
+    this.createStartScene();
 };
 
 
-MainMenuScene.prototype.buildCamera = function(){
+MainMenuScene.prototype.createCamera = function(){
     var camera = new Camera({inputListener: this.inputListener});
     camera.position.y = -50;
     camera.position.z = 15;
@@ -75,7 +75,7 @@ MainMenuScene.prototype.resetCamera = function(){
     this.camera.updateProjectionMatrix();
 };
 
-MainMenuScene.prototype.buildStartScene = function(){
+MainMenuScene.prototype.createStartScene = function(){
 
     this.sceneMaterial = ModelStore.get('startmenu').material;
 

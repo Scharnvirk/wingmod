@@ -3,17 +3,15 @@ var ActorFactory = require("shared/ActorFactory")('renderer');
 function ActorManager(config){
     config = config || {};
     this.storage = Object.create(null);
+    this.enemies = Object.create(null);
+
     this.scene = null;
     this.framerate = config.framerate || 60;
 
-    this.enemies = Object.create(null);
-
-    this.DELTA_SMOOTHNESS = 0;
-
     Object.assign(this, config);
 
-    if(!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
     if(!this.particleManager) throw new Error('No particleManager for Renderer ActorManager!');
+    if(!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
 
     this.factory = config.factory || ActorFactory.getInstance({particleManager: this.particleManager});
     this.currentPhysicsTime = Date.now();
@@ -81,7 +79,7 @@ ActorManager.prototype.createActor = function(config){
     }
 
     this.storage[config.actorId] = actor;
-    actor.addToScene(this.sceneManager.getThreeScene());
+    actor.addToScene(this.sceneManager.getCoreActiveScene().threeScene);
     actor.onSpawn();
 };
 
@@ -97,7 +95,7 @@ ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
         actor.setPosition(positionX, positionY);
         actor.onDeath();
 
-        actor.removeFromScene(this.sceneManager.getThreeScene());
+        actor.removeFromScene(this.sceneManager.getCoreActiveScene().threeScene);
     }
     delete this.storage[actorId];
 };

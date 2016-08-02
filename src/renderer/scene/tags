@@ -1,0 +1,1463 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+e	E:\development\wingmod\dist\Init.js	/^(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){$/;"	function	line:1
+i	E:\development\wingmod\dist\Init.js	/^(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){$/;"	variable	line:1
+classNames	E:\development\wingmod\dist\Init.js	/^	function classNames () {$/;"	function	line:14
+define	E:\development\wingmod\dist\Init.js	/^		define('classnames', [], function () {$/;"	function	line:43
+listener	E:\development\wingmod\dist\Init.js	/^  doc.addEventListener(domContentLoaded, listener = function () {$/;"	function	line:71
+hasKeys	E:\development\wingmod\dist\Init.js	/^	function hasKeys(obj){$/;"	function	line:114
+throwException	E:\development\wingmod\dist\Init.js	/^	function throwException( ex ){$/;"	function	line:129
+reThrowException	E:\development\wingmod\dist\Init.js	/^		return function reThrowException(){$/;"	function	line:130
+callSubscriberWithDelayedExceptions	E:\development\wingmod\dist\Init.js	/^	function callSubscriberWithDelayedExceptions( subscriber, message, data ){$/;"	function	line:135
+callSubscriberWithImmediateExceptions	E:\development\wingmod\dist\Init.js	/^	function callSubscriberWithImmediateExceptions( subscriber, message, data ){$/;"	function	line:143
+deliverMessage	E:\development\wingmod\dist\Init.js	/^	function deliverMessage( originalMessage, matchedMessage, data, immediateExceptions ){$/;"	function	line:147
+createDeliveryFunction	E:\development\wingmod\dist\Init.js	/^	function createDeliveryFunction( message, data, immediateExceptions ){$/;"	function	line:163
+deliverNamespaced	E:\development\wingmod\dist\Init.js	/^		return function deliverNamespaced(){$/;"	function	line:164
+messageHasSubscribers	E:\development\wingmod\dist\Init.js	/^	function messageHasSubscribers( message ){$/;"	function	line:180
+publish	E:\development\wingmod\dist\Init.js	/^	function publish( message, data, sync, immediateExceptions ){$/;"	function	line:194
+publish	E:\development\wingmod\dist\Init.js	/^	PubSub.publish = function( message, data ){$/;"	function	line:216
+publishSync	E:\development\wingmod\dist\Init.js	/^	PubSub.publishSync = function( message, data ){$/;"	function	line:226
+subscribe	E:\development\wingmod\dist\Init.js	/^	PubSub.subscribe = function( message, func ){$/;"	function	line:237
+clearAllSubscriptions	E:\development\wingmod\dist\Init.js	/^	PubSub.clearAllSubscriptions = function clearAllSubscriptions(){$/;"	function	line:258
+clearSubscriptions	E:\development\wingmod\dist\Init.js	/^	PubSub.clearSubscriptions = function clearSubscriptions(topic){$/;"	function	line:264
+unsubscribe	E:\development\wingmod\dist\Init.js	/^	PubSub.unsubscribe = function(value){$/;"	function	line:292
+get_type	E:\development\wingmod\dist\Init.js	/^	function get_type(variable) {$/;"	function	line:395
+str_repeat	E:\development\wingmod\dist\Init.js	/^	function str_repeat(input, multiplier) {$/;"	function	line:398
+str_format	E:\development\wingmod\dist\Init.js	/^	var str_format = function() {$/;"	function	line:403
+object_stringify	E:\development\wingmod\dist\Init.js	/^	str_format.object_stringify = function(obj, depth, maxdepth, seen) {$/;"	function	line:421
+format	E:\development\wingmod\dist\Init.js	/^	str_format.format = function(parse_tree, argv) {$/;"	function	line:467
+switch	E:\development\wingmod\dist\Init.js	/^				switch (match[8]) {$/;"	function	line:495
+parse	E:\development\wingmod\dist\Init.js	/^	str_format.parse = function(fmt) {$/;"	function	line:520
+vsprintf	E:\development\wingmod\dist\Init.js	/^var vsprintf = function(fmt, argv) {$/;"	function	line:571
+Init	E:\development\wingmod\dist\Init.js	/^function Init() {}$/;"	function	line:594
+start	E:\development\wingmod\dist\Init.js	/^Init.prototype.start = function () {$/;"	function	line:596
+domready	E:\development\wingmod\dist\Init.js	/^    domready(function () {$/;"	function	line:597
+BaseActor	E:\development\wingmod\dist\Init.js	/^function BaseActor(config) {$/;"	function	line:624
+applyConfig	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.applyConfig = function (config) {$/;"	function	line:643
+createBody	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.createBody = function () {$/;"	function	line:649
+update	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.update = function () {$/;"	function	line:653
+onCollision	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {$/;"	function	line:662
+sendActorEvent	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.sendActorEvent = function (eventName, eventdata) {$/;"	function	line:677
+remove	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.remove = function (actorId) {$/;"	function	line:681
+customUpdate	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:685
+playerUpdate	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.playerUpdate = function () {};$/;"	function	line:687
+onHit	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onHit = function () {};$/;"	function	line:689
+onSpawn	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onSpawn = function () {};$/;"	function	line:691
+onDeath	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onDeath = function () {};$/;"	function	line:693
+deathMain	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.deathMain = function () {$/;"	function	line:695
+processMovement	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.processMovement = function () {$/;"	function	line:700
+drawDebug	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.drawDebug = function (position) {$/;"	function	line:716
+DebugActor	E:\development\wingmod\dist\Init.js	/^function DebugActor(config) {$/;"	function	line:734
+createBody	E:\development\wingmod\dist\Init.js	/^DebugActor.prototype.createBody = function () {$/;"	function	line:746
+onSpawn	E:\development\wingmod\dist\Init.js	/^DebugActor.prototype.onSpawn = function () {$/;"	function	line:756
+WeaponSystem	E:\development\wingmod\dist\Init.js	/^function WeaponSystem(config) {$/;"	function	line:769
+shoot	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.shoot = function () {$/;"	function	line:785
+stopShooting	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.stopShooting = function () {$/;"	function	line:791
+switchWeapon	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.switchWeapon = function (weaponName) {$/;"	function	line:797
+switchWeaponByIndex	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.switchWeaponByIndex = function (weaponIndex) {$/;"	function	line:806
+update	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.update = function () {$/;"	function	line:816
+createBlaster	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.createBlaster = function () {$/;"	function	line:822
+createPlasma	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.createPlasma = function () {$/;"	function	line:829
+createPulseWave	E:\development\wingmod\dist\Init.js	/^WeaponSystem.prototype.createPulseWave = function () {$/;"	function	line:836
+BaseBrain	E:\development\wingmod\dist\Init.js	/^function BaseBrain(config) {$/;"	function	line:848
+update	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.update = function () {};$/;"	function	line:865
+getPlayerPosition	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.getPlayerPosition = function () {$/;"	function	line:867
+getPlayerPositionWithLead	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.getPlayerPositionWithLead = function () {$/;"	function	line:871
+isPositionInWall	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.isPositionInWall = function (position) {$/;"	function	line:884
+castPosition	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.castPosition = function (position, imageObject) {$/;"	function	line:894
+isWallBetween	E:\development\wingmod\dist\Init.js	/^BaseBrain.prototype.isWallBetween = function (positionA, positionB) {$/;"	function	line:898
+MookBrain	E:\development\wingmod\dist\Init.js	/^function MookBrain(config) {$/;"	function	line:926
+createWallDetectionParameters	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.createWallDetectionParameters = function () {$/;"	function	line:947
+update	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.update = function () {$/;"	function	line:970
+detectNearbyWallsFast	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.detectNearbyWallsFast = function () {$/;"	function	line:1000
+avoidWalls	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.avoidWalls = function (nearbyWalls) {$/;"	function	line:1042
+seesPlayerAction	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.seesPlayerAction = function () {$/;"	function	line:1060
+freeRoamActon	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.freeRoamActon = function (nearbyWalls) {$/;"	function	line:1082
+seesGotoPointAction	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.seesGotoPointAction = function (nearbyWalls) {$/;"	function	line:1102
+shootAction	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.shootAction = function () {$/;"	function	line:1128
+randomStrafeAction	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.randomStrafeAction = function () {$/;"	function	line:1134
+playCalloutSound	E:\development\wingmod\dist\Init.js	/^MookBrain.prototype.playCalloutSound = function () {$/;"	function	line:1140
+BaseBody	E:\development\wingmod\dist\Init.js	/^function BaseBody(config) {$/;"	function	line:1153
+createShape	E:\development\wingmod\dist\Init.js	/^BaseBody.prototype.createShape = function () {$/;"	function	line:1170
+switch	E:\development\wingmod\dist\Init.js	/^    switch (this.collisionType) {$/;"	function	line:1171
+initShape	E:\development\wingmod\dist\Init.js	/^BaseBody.prototype.initShape = function () {$/;"	function	line:1214
+onCollision	E:\development\wingmod\dist\Init.js	/^BaseBody.prototype.onCollision = function (otherBody, relativeContactPoint) {$/;"	function	line:1224
+update	E:\development\wingmod\dist\Init.js	/^BaseBody.prototype.update = function () {};$/;"	function	line:1230
+BaseWeapon	E:\development\wingmod\dist\Init.js	/^function BaseWeapon(config) {$/;"	function	line:1237
+update	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.update = function () {$/;"	function	line:1269
+shoot	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.shoot = function () {$/;"	function	line:1279
+stopShooting	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.stopShooting = function () {$/;"	function	line:1283
+processActiveWeapon	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.processActiveWeapon = function () {$/;"	function	line:1287
+switch	E:\development\wingmod\dist\Init.js	/^    switch (this.firingMode) {$/;"	function	line:1288
+fireProjectile	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.fireProjectile = function (firingPointConfig) {$/;"	function	line:1302
+handleFiringSimultaneous	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.handleFiringSimultaneous = function () {$/;"	function	line:1314
+handleFiringAlternate	E:\development\wingmod\dist\Init.js	/^BaseWeapon.prototype.handleFiringAlternate = function () {$/;"	function	line:1324
+Blaster	E:\development\wingmod\dist\Init.js	/^function Blaster(config) {$/;"	function	line:1347
+MoltenBallThrower	E:\development\wingmod\dist\Init.js	/^function MoltenBallThrower(config) {$/;"	function	line:1372
+PlasmaGun	E:\development\wingmod\dist\Init.js	/^function PlasmaGun(config) {$/;"	function	line:1398
+PlasmaGun	E:\development\wingmod\dist\Init.js	/^function PlasmaGun(config) {$/;"	function	line:1421
+Blaster	E:\development\wingmod\dist\Init.js	/^function Blaster(config) {$/;"	function	line:1445
+Blaster	E:\development\wingmod\dist\Init.js	/^function Blaster(config) {$/;"	function	line:1469
+RingBlaster	E:\development\wingmod\dist\Init.js	/^function RingBlaster(config) {$/;"	function	line:1492
+MookActor	E:\development\wingmod\dist\Init.js	/^function MookActor(config) {$/;"	function	line:1518
+createBrain	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.createBrain = function () {$/;"	function	line:1548
+createBody	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.createBody = function () {$/;"	function	line:1557
+customUpdate	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.customUpdate = function () {$/;"	function	line:1561
+doBrainOrders	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.doBrainOrders = function () {$/;"	function	line:1567
+lookAtPosition	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.lookAtPosition = function (position) {$/;"	function	line:1587
+createWeapon	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.createWeapon = function () {$/;"	function	line:1600
+onDeath	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.onDeath = function () {$/;"	function	line:1609
+onHit	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.onHit = function () {$/;"	function	line:1624
+MookBossActor	E:\development\wingmod\dist\Init.js	/^function MookBossActor(config) {$/;"	function	line:1648
+createWeapon	E:\development\wingmod\dist\Init.js	/^MookBossActor.prototype.createWeapon = function () {$/;"	function	line:1673
+onDeath	E:\development\wingmod\dist\Init.js	/^MookBossActor.prototype.onDeath = function () {$/;"	function	line:1681
+OrbotActor	E:\development\wingmod\dist\Init.js	/^function OrbotActor(config) {$/;"	function	line:1715
+createBrain	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.createBrain = function (config) {$/;"	function	line:1745
+createBody	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.createBody = function () {$/;"	function	line:1757
+customUpdate	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.customUpdate = function () {$/;"	function	line:1761
+doBrainOrders	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.doBrainOrders = function () {$/;"	function	line:1767
+lookAtPosition	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.lookAtPosition = function (position) {$/;"	function	line:1787
+createWeapon	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.createWeapon = function () {$/;"	function	line:1800
+onDeath	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.onDeath = function () {$/;"	function	line:1808
+onHit	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.onHit = function () {$/;"	function	line:1823
+SniperActor	E:\development\wingmod\dist\Init.js	/^function SniperActor(config) {$/;"	function	line:1846
+createBrain	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.createBrain = function () {$/;"	function	line:1876
+createBody	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.createBody = function () {$/;"	function	line:1888
+customUpdate	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.customUpdate = function () {$/;"	function	line:1892
+doBrainOrders	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.doBrainOrders = function () {$/;"	function	line:1898
+lookAtPosition	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.lookAtPosition = function (position) {$/;"	function	line:1918
+createWeapon	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.createWeapon = function () {$/;"	function	line:1931
+onDeath	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.onDeath = function () {$/;"	function	line:1939
+onHit	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.onHit = function () {$/;"	function	line:1954
+EnemySpawnMarkerActor	E:\development\wingmod\dist\Init.js	/^function EnemySpawnMarkerActor(config) {$/;"	function	line:1975
+customUpdate	E:\development\wingmod\dist\Init.js	/^EnemySpawnMarkerActor.prototype.customUpdate = function () {$/;"	function	line:1984
+createBody	E:\development\wingmod\dist\Init.js	/^EnemySpawnMarkerActor.prototype.createBody = function () {$/;"	function	line:1991
+createEnemy	E:\development\wingmod\dist\Init.js	/^EnemySpawnMarkerActor.prototype.createEnemy = function () {$/;"	function	line:2001
+EnemySpawnerActor	E:\development\wingmod\dist\Init.js	/^function EnemySpawnerActor(config) {$/;"	function	line:2041
+customUpdate	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.customUpdate = function () {$/;"	function	line:2057
+createEnemySpawnMarker	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {$/;"	function	line:2067
+createBody	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.createBody = function () {$/;"	function	line:2079
+onDeath	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.onDeath = function () {$/;"	function	line:2089
+onHit	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.onHit = function () {$/;"	function	line:2111
+MapActor	E:\development\wingmod\dist\Init.js	/^function MapActor(config) {$/;"	function	line:2131
+createBody	E:\development\wingmod\dist\Init.js	/^MapActor.prototype.createBody = function () {$/;"	function	line:2139
+generateShapes	E:\development\wingmod\dist\Init.js	/^MapActor.prototype.generateShapes = function () {$/;"	function	line:2147
+BoomChunkActor	E:\development\wingmod\dist\Init.js	/^function BoomChunkActor(config) {$/;"	function	line:2169
+onDeath	E:\development\wingmod\dist\Init.js	/^BoomChunkActor.prototype.onDeath = function () {$/;"	function	line:2181
+ChunkActor	E:\development\wingmod\dist\Init.js	/^function ChunkActor(config) {$/;"	function	line:2194
+createBody	E:\development\wingmod\dist\Init.js	/^ChunkActor.prototype.createBody = function () {$/;"	function	line:2209
+onSpawn	E:\development\wingmod\dist\Init.js	/^ChunkActor.prototype.onSpawn = function () {$/;"	function	line:2221
+ShipActor	E:\development\wingmod\dist\Init.js	/^function ShipActor(config) {$/;"	function	line:2236
+createBody	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.createBody = function () {$/;"	function	line:2274
+customUpdate	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.customUpdate = function () {$/;"	function	line:2278
+playerUpdate	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.playerUpdate = function (inputState) {$/;"	function	line:2283
+applyLookAtRotationInput	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.applyLookAtRotationInput = function (inputState) {$/;"	function	line:2291
+applyThrustInput	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.applyThrustInput = function (inputState) {$/;"	function	line:2318
+applyWeaponInput	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.applyWeaponInput = function (inputState) {$/;"	function	line:2339
+createPrimaryWeaponSystem	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.createPrimaryWeaponSystem = function () {$/;"	function	line:2358
+createSecondaryWeaponSystem	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.createSecondaryWeaponSystem = function () {$/;"	function	line:2365
+onDeath	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.onDeath = function () {$/;"	function	line:2372
+onHit	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.onHit = function () {$/;"	function	line:2396
+switchWeapon	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.switchWeapon = function (weaponConfig) {$/;"	function	line:2408
+switch	E:\development\wingmod\dist\Init.js	/^    switch (weaponConfig.index) {$/;"	function	line:2409
+LaserProjectileActor	E:\development\wingmod\dist\Init.js	/^function LaserProjectileActor(config) {$/;"	function	line:2427
+createBody	E:\development\wingmod\dist\Init.js	/^LaserProjectileActor.prototype.createBody = function () {$/;"	function	line:2454
+onDeath	E:\development\wingmod\dist\Init.js	/^LaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:2458
+MoltenProjectileActor	E:\development\wingmod\dist\Init.js	/^function MoltenProjectileActor(config) {$/;"	function	line:2471
+createBody	E:\development\wingmod\dist\Init.js	/^MoltenProjectileActor.prototype.createBody = function () {$/;"	function	line:2496
+onDeath	E:\development\wingmod\dist\Init.js	/^MoltenProjectileActor.prototype.onDeath = function () {$/;"	function	line:2500
+PlasmaProjectileActor	E:\development\wingmod\dist\Init.js	/^function PlasmaProjectileActor(config) {$/;"	function	line:2513
+createBody	E:\development\wingmod\dist\Init.js	/^PlasmaProjectileActor.prototype.createBody = function () {$/;"	function	line:2538
+onDeath	E:\development\wingmod\dist\Init.js	/^PlasmaProjectileActor.prototype.onDeath = function () {$/;"	function	line:2542
+PulseWaveProjectileActor	E:\development\wingmod\dist\Init.js	/^function PulseWaveProjectileActor(config) {$/;"	function	line:2555
+createBody	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.createBody = function () {$/;"	function	line:2582
+customUpdate	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.customUpdate = function () {$/;"	function	line:2586
+onDeath	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.onDeath = function () {$/;"	function	line:2591
+RedLaserProjectileActor	E:\development\wingmod\dist\Init.js	/^function RedLaserProjectileActor(config) {$/;"	function	line:2604
+createBody	E:\development\wingmod\dist\Init.js	/^RedLaserProjectileActor.prototype.createBody = function () {$/;"	function	line:2631
+onDeath	E:\development\wingmod\dist\Init.js	/^RedLaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:2635
+RingProjectileActor	E:\development\wingmod\dist\Init.js	/^function RingProjectileActor(config) {$/;"	function	line:2648
+createBody	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.createBody = function () {$/;"	function	line:2675
+customUpdate	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.customUpdate = function () {$/;"	function	line:2679
+onDeath	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.onDeath = function () {$/;"	function	line:2685
+Camera	E:\development\wingmod\dist\Init.js	/^function Camera(config) {$/;"	function	line:2695
+update	E:\development\wingmod\dist\Init.js	/^Camera.prototype.update = function () {$/;"	function	line:2722
+setMovementZ	E:\development\wingmod\dist\Init.js	/^Camera.prototype.setMovementZ = function (newPositionZ, zoomSpeed) {$/;"	function	line:2759
+ConfigManager	E:\development\wingmod\dist\Init.js	/^function ConfigManager(config) {$/;"	function	line:2771
+makeConfig	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.makeConfig = function () {$/;"	function	line:2792
+restore	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.restore = function () {$/;"	function	line:2805
+restoreFromLocalStorage	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.restoreFromLocalStorage = function () {$/;"	function	line:2810
+saveToLocalStorage	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.saveToLocalStorage = function () {$/;"	function	line:2825
+saveShadow	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.saveShadow = function (value) {$/;"	function	line:2829
+switch	E:\development\wingmod\dist\Init.js	/^    switch (value) {$/;"	function	line:2831
+saveResolution	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.saveResolution = function (value) {$/;"	function	line:2845
+saveSoundVolume	E:\development\wingmod\dist\Init.js	/^ConfigManager.prototype.saveSoundVolume = function (value) {$/;"	function	line:2851
+ControlsHandler	E:\development\wingmod\dist\Init.js	/^function ControlsHandler(config) {$/;"	function	line:2862
+update	E:\development\wingmod\dist\Init.js	/^ControlsHandler.prototype.update = function () {$/;"	function	line:2880
+hasInputStateChanged	E:\development\wingmod\dist\Init.js	/^ControlsHandler.prototype.hasInputStateChanged = function () {$/;"	function	line:2894
+getChangedHudKeys	E:\development\wingmod\dist\Init.js	/^ControlsHandler.prototype.getChangedHudKeys = function () {$/;"	function	line:2905
+sendUpdate	E:\development\wingmod\dist\Init.js	/^ControlsHandler.prototype.sendUpdate = function () {$/;"	function	line:2916
+Core	E:\development\wingmod\dist\Init.js	/^function Core(config) {$/;"	function	line:2938
+init	E:\development\wingmod\dist\Init.js	/^Core.prototype.init = function () {$/;"	function	line:2953
+makeMainComponents	E:\development\wingmod\dist\Init.js	/^Core.prototype.makeMainComponents = function () {$/;"	function	line:2967
+initEventHandlers	E:\development\wingmod\dist\Init.js	/^Core.prototype.initEventHandlers = function () {$/;"	function	line:2982
+makeRenderStatsWatcher	E:\development\wingmod\dist\Init.js	/^Core.prototype.makeRenderStatsWatcher = function () {$/;"	function	line:3011
+makeStatsWatcher	E:\development\wingmod\dist\Init.js	/^Core.prototype.makeStatsWatcher = function () {$/;"	function	line:3019
+attachToDom	E:\development\wingmod\dist\Init.js	/^Core.prototype.attachToDom = function (object) {$/;"	function	line:3027
+attachRendererToDom	E:\development\wingmod\dist\Init.js	/^Core.prototype.attachRendererToDom = function (renderer) {$/;"	function	line:3031
+makeRenderer	E:\development\wingmod\dist\Init.js	/^Core.prototype.makeRenderer = function () {$/;"	function	line:3036
+autoResize	E:\development\wingmod\dist\Init.js	/^Core.prototype.autoResize = function () {$/;"	function	line:3047
+callback	E:\development\wingmod\dist\Init.js	/^    var callback = function callback() {$/;"	function	line:3050
+stop	E:\development\wingmod\dist\Init.js	/^        stop: function stop() {$/;"	function	line:3056
+resetRenderer	E:\development\wingmod\dist\Init.js	/^Core.prototype.resetRenderer = function () {$/;"	function	line:3062
+resetCamera	E:\development\wingmod\dist\Init.js	/^Core.prototype.resetCamera = function () {$/;"	function	line:3066
+onAssetsLoaded	E:\development\wingmod\dist\Init.js	/^Core.prototype.onAssetsLoaded = function () {$/;"	function	line:3070
+onEachSecond	E:\development\wingmod\dist\Init.js	/^Core.prototype.onEachSecond = function () {$/;"	function	line:3088
+controlsUpdate	E:\development\wingmod\dist\Init.js	/^Core.prototype.controlsUpdate = function () {$/;"	function	line:3092
+render	E:\development\wingmod\dist\Init.js	/^Core.prototype.render = function () {$/;"	function	line:3097
+startGameRenderMode	E:\development\wingmod\dist\Init.js	/^Core.prototype.startGameRenderMode = function () {$/;"	function	line:3109
+getAiImageObject	E:\development\wingmod\dist\Init.js	/^Core.prototype.getAiImageObject = function (wallsData) {$/;"	function	line:3115
+onPlayerActorAppeared	E:\development\wingmod\dist\Init.js	/^Core.prototype.onPlayerActorAppeared = function (event) {$/;"	function	line:3120
+onUpdateActors	E:\development\wingmod\dist\Init.js	/^Core.prototype.onUpdateActors = function (event) {$/;"	function	line:3128
+onAttachPlayer	E:\development\wingmod\dist\Init.js	/^Core.prototype.onAttachPlayer = function (event) {$/;"	function	line:3132
+onGameEnded	E:\development\wingmod\dist\Init.js	/^Core.prototype.onGameEnded = function (event) {$/;"	function	line:3137
+setTimeout	E:\development\wingmod\dist\Init.js	/^    setTimeout(function () {$/;"	function	line:3139
+onGameFinished	E:\development\wingmod\dist\Init.js	/^Core.prototype.onGameFinished = function (event) {$/;"	function	line:3145
+setTimeout	E:\development\wingmod\dist\Init.js	/^    setTimeout(function () {$/;"	function	line:3147
+onGetAiImage	E:\development\wingmod\dist\Init.js	/^Core.prototype.onGetAiImage = function (event) {$/;"	function	line:3153
+onActorEvents	E:\development\wingmod\dist\Init.js	/^Core.prototype.onActorEvents = function (event) {$/;"	function	line:3157
+onRequestUiFlash	E:\development\wingmod\dist\Init.js	/^Core.prototype.onRequestUiFlash = function (event) {$/;"	function	line:3161
+onStartGame	E:\development\wingmod\dist\Init.js	/^Core.prototype.onStartGame = function (event) {$/;"	function	line:3165
+onGetPointerLock	E:\development\wingmod\dist\Init.js	/^Core.prototype.onGetPointerLock = function (event) {$/;"	function	line:3174
+onGotPointerLock	E:\development\wingmod\dist\Init.js	/^Core.prototype.onGotPointerLock = function (event) {$/;"	function	line:3178
+onLostPointerLock	E:\development\wingmod\dist\Init.js	/^Core.prototype.onLostPointerLock = function (event) {$/;"	function	line:3185
+onShadowConfig	E:\development\wingmod\dist\Init.js	/^Core.prototype.onShadowConfig = function (event) {$/;"	function	line:3191
+onResolutionConfig	E:\development\wingmod\dist\Init.js	/^Core.prototype.onResolutionConfig = function (event) {$/;"	function	line:3196
+onSoundConfig	E:\development\wingmod\dist\Init.js	/^Core.prototype.onSoundConfig = function (event) {$/;"	function	line:3201
+recreateRenderer	E:\development\wingmod\dist\Init.js	/^Core.prototype.recreateRenderer = function () {$/;"	function	line:3205
+onPlaySound	E:\development\wingmod\dist\Init.js	/^Core.prototype.onPlaySound = function (event) {$/;"	function	line:3218
+onHud	E:\development\wingmod\dist\Init.js	/^Core.prototype.onHud = function (event) {$/;"	function	line:3228
+onWeaponSwitched	E:\development\wingmod\dist\Init.js	/^Core.prototype.onWeaponSwitched = function (event) {$/;"	function	line:3232
+InputListener	E:\development\wingmod\dist\Init.js	/^function InputListener(config) {$/;"	function	line:3241
+keydown	E:\development\wingmod\dist\Init.js	/^    this.keydown = function (event) {$/;"	function	line:3279
+keyup	E:\development\wingmod\dist\Init.js	/^    this.keyup = function (event) {$/;"	function	line:3288
+mouseWheel	E:\development\wingmod\dist\Init.js	/^    this.mouseWheel = function (event) {$/;"	function	line:3294
+mouseMove	E:\development\wingmod\dist\Init.js	/^    this.mouseMove = function (event) {$/;"	function	line:3299
+mouseDown	E:\development\wingmod\dist\Init.js	/^    this.mouseDown = function (event) {$/;"	function	line:3304
+switch	E:\development\wingmod\dist\Init.js	/^        switch (event.button) {$/;"	function	line:3305
+mouseUp	E:\development\wingmod\dist\Init.js	/^    this.mouseUp = function (event) {$/;"	function	line:3315
+switch	E:\development\wingmod\dist\Init.js	/^        switch (event.button) {$/;"	function	line:3316
+handleEvent	E:\development\wingmod\dist\Init.js	/^    this.handleEvent = function (event) {$/;"	function	line:3326
+bind	E:\development\wingmod\dist\Init.js	/^    function bind(scope, fn) {$/;"	function	line:3332
+contextmenu	E:\development\wingmod\dist\Init.js	/^    function contextmenu(event) {$/;"	function	line:3338
+update	E:\development\wingmod\dist\Init.js	/^    this.update = function () {$/;"	function	line:3342
+switch	E:\development\wingmod\dist\Init.js	/^            switch (key) {$/;"	function	line:3344
+dispose	E:\development\wingmod\dist\Init.js	/^    this.dispose = function () {$/;"	function	line:3358
+acquirePointerLock	E:\development\wingmod\dist\Init.js	/^InputListener.prototype.acquirePointerLock = function () {$/;"	function	line:3386
+onclick	E:\development\wingmod\dist\Init.js	/^    this.domElement.onclick = function () {$/;"	function	line:3387
+onPointerLockChange	E:\development\wingmod\dist\Init.js	/^    var onPointerLockChange = function onPointerLockChange(event) {$/;"	function	line:3399
+mozOnPointerLockChange	E:\development\wingmod\dist\Init.js	/^    var mozOnPointerLockChange = function mozOnPointerLockChange(event) {$/;"	function	line:3408
+webkitOnPointerLockChange	E:\development\wingmod\dist\Init.js	/^    var webkitOnPointerLockChange = function webkitOnPointerLockChange(event) {$/;"	function	line:3417
+LogicBus	E:\development\wingmod\dist\Init.js	/^function LogicBus(config) {$/;"	function	line:3438
+ActorManager	E:\development\wingmod\dist\Init.js	/^function ActorManager(config) {$/;"	function	line:3451
+update	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.update = function () {$/;"	function	line:3475
+updateFromLogic	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.updateFromLogic = function (messageObject) {$/;"	function	line:3490
+createActor	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.createActor = function (config) {$/;"	function	line:3519
+attachPlayer	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.attachPlayer = function (messageObject) {$/;"	function	line:3536
+deleteActor	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.deleteActor = function (actorId, positionX, positionY) {$/;"	function	line:3542
+handleActorEvents	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.handleActorEvents = function (messageObject) {$/;"	function	line:3553
+newEnemy	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.newEnemy = function (actorId) {$/;"	function	line:3564
+enemyDestroyed	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.enemyDestroyed = function (actorId) {$/;"	function	line:3568
+requestUiFlash	E:\development\wingmod\dist\Init.js	/^ActorManager.prototype.requestUiFlash = function (flashType) {$/;"	function	line:3572
+BaseActor	E:\development\wingmod\dist\Init.js	/^function BaseActor(config, actorDependencies) {$/;"	function	line:3584
+update	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.update = function (delta) {$/;"	function	line:3608
+customUpdate	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:3624
+handleEvent	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.handleEvent = function (eventData) {$/;"	function	line:3626
+customHandleEvent	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.customHandleEvent = function (eventData) {};$/;"	function	line:3633
+updateFromLogic	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {$/;"	function	line:3635
+setPosition	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.setPosition = function (positionX, positionY) {$/;"	function	line:3645
+createMeshes	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.createMeshes = function () {$/;"	function	line:3650
+addToScene	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.addToScene = function (scene) {$/;"	function	line:3654
+removeFromScene	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.removeFromScene = function (scene) {$/;"	function	line:3662
+onDeath	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onDeath = function () {};$/;"	function	line:3670
+onSpawn	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.onSpawn = function () {};$/;"	function	line:3672
+DebugActor	E:\development\wingmod\dist\Init.js	/^function DebugActor() {$/;"	function	line:3681
+customUpdate	E:\development\wingmod\dist\Init.js	/^DebugActor.prototype.customUpdate = function () {$/;"	function	line:3687
+BaseMesh	E:\development\wingmod\dist\Init.js	/^function BaseMesh(config) {$/;"	function	line:3708
+update	E:\development\wingmod\dist\Init.js	/^BaseMesh.prototype.update = function () {$/;"	function	line:3732
+ChunkMesh	E:\development\wingmod\dist\Init.js	/^function ChunkMesh(config) {$/;"	function	line:3750
+RavierMesh	E:\development\wingmod\dist\Init.js	/^function RavierMesh(config) {$/;"	function	line:3772
+ShipMesh	E:\development\wingmod\dist\Init.js	/^function ShipMesh(config) {$/;"	function	line:3791
+MookActor	E:\development\wingmod\dist\Init.js	/^function MookActor() {$/;"	function	line:3819
+createMeshes	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.createMeshes = function () {$/;"	function	line:3830
+customUpdate	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.customUpdate = function () {$/;"	function	line:3841
+doBob	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.doBob = function () {$/;"	function	line:3848
+onSpawn	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.onSpawn = function () {$/;"	function	line:3856
+onDeath	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.onDeath = function () {$/;"	function	line:3860
+handleDamage	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.handleDamage = function () {$/;"	function	line:3866
+drawEyes	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.drawEyes = function () {$/;"	function	line:3877
+onHit	E:\development\wingmod\dist\Init.js	/^MookActor.prototype.onHit = function () {$/;"	function	line:3894
+MookBossActor	E:\development\wingmod\dist\Init.js	/^function MookBossActor() {$/;"	function	line:3914
+createMeshes	E:\development\wingmod\dist\Init.js	/^MookBossActor.prototype.createMeshes = function () {$/;"	function	line:3926
+OrbotActor	E:\development\wingmod\dist\Init.js	/^function OrbotActor() {$/;"	function	line:3939
+createMeshes	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.createMeshes = function () {$/;"	function	line:3950
+customUpdate	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.customUpdate = function () {$/;"	function	line:3961
+doBob	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.doBob = function () {$/;"	function	line:3968
+onSpawn	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.onSpawn = function () {$/;"	function	line:3976
+onDeath	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.onDeath = function () {$/;"	function	line:3980
+handleDamage	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.handleDamage = function () {$/;"	function	line:3986
+drawEyes	E:\development\wingmod\dist\Init.js	/^OrbotActor.prototype.drawEyes = function () {$/;"	function	line:3997
+SniperActor	E:\development\wingmod\dist\Init.js	/^function SniperActor() {$/;"	function	line:4018
+createMeshes	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.createMeshes = function () {$/;"	function	line:4034
+customUpdate	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.customUpdate = function () {$/;"	function	line:4045
+doBob	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.doBob = function () {$/;"	function	line:4052
+onSpawn	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.onSpawn = function () {$/;"	function	line:4060
+onDeath	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.onDeath = function () {$/;"	function	line:4064
+handleDamage	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.handleDamage = function () {$/;"	function	line:4070
+drawEyes	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.drawEyes = function () {$/;"	function	line:4081
+onHit	E:\development\wingmod\dist\Init.js	/^SniperActor.prototype.onHit = function () {$/;"	function	line:4101
+EnemySpawnMarkerActor	E:\development\wingmod\dist\Init.js	/^function EnemySpawnMarkerActor(config) {$/;"	function	line:4120
+customUpdate	E:\development\wingmod\dist\Init.js	/^EnemySpawnMarkerActor.prototype.customUpdate = function () {$/;"	function	line:4127
+onDeath	E:\development\wingmod\dist\Init.js	/^EnemySpawnMarkerActor.prototype.onDeath = function () {$/;"	function	line:4177
+EnemySpawnerActor	E:\development\wingmod\dist\Init.js	/^function EnemySpawnerActor(config) {$/;"	function	line:4219
+onSpawn	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.onSpawn = function () {$/;"	function	line:4238
+onDeath	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.onDeath = function () {$/;"	function	line:4242
+makeBoomRandomly	E:\development\wingmod\dist\Init.js	/^    var makeBoomRandomly = function makeBoomRandomly() {$/;"	function	line:4245
+handleDamage	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.handleDamage = function (damageValue) {$/;"	function	line:4256
+createBottomMesh	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.createBottomMesh = function () {$/;"	function	line:4269
+createTopMesh	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.createTopMesh = function () {$/;"	function	line:4280
+setupMeshes	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.setupMeshes = function () {$/;"	function	line:4291
+update	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.update = function () {$/;"	function	line:4298
+addToScene	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.addToScene = function (scene) {$/;"	function	line:4311
+removeFromScene	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.removeFromScene = function (scene) {$/;"	function	line:4316
+customHandleEvent	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.customHandleEvent = function (eventData) {$/;"	function	line:4321
+doChargingAnimation	E:\development\wingmod\dist\Init.js	/^EnemySpawnerActor.prototype.doChargingAnimation = function () {$/;"	function	line:4328
+MapActor	E:\development\wingmod\dist\Init.js	/^function MapActor() {$/;"	function	line:4350
+BoomChunkActor	E:\development\wingmod\dist\Init.js	/^function BoomChunkActor() {$/;"	function	line:4363
+onDeath	E:\development\wingmod\dist\Init.js	/^BoomChunkActor.prototype.onDeath = function () {$/;"	function	line:4369
+ChunkActor	E:\development\wingmod\dist\Init.js	/^function ChunkActor() {$/;"	function	line:4382
+createMeshes	E:\development\wingmod\dist\Init.js	/^ChunkActor.prototype.createMeshes = function () {$/;"	function	line:4388
+customUpdate	E:\development\wingmod\dist\Init.js	/^ChunkActor.prototype.customUpdate = function () {$/;"	function	line:4392
+onDeath	E:\development\wingmod\dist\Init.js	/^ChunkActor.prototype.onDeath = function () {$/;"	function	line:4410
+ShipActor	E:\development\wingmod\dist\Init.js	/^function ShipActor() {$/;"	function	line:4438
+createMeshes	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.createMeshes = function () {$/;"	function	line:4461
+switchWeapon	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.switchWeapon = function (changeConfig) {$/;"	function	line:4466
+setupWeaponMeshes	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, materialName, scales) {$/;"	function	line:4474
+customUpdate	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.customUpdate = function () {$/;"	function	line:4498
+doBank	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.doBank = function () {$/;"	function	line:4505
+doBob	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.doBob = function () {$/;"	function	line:4509
+doEngineGlow	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.doEngineGlow = function () {$/;"	function	line:4535
+onDeath	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.onDeath = function () {$/;"	function	line:4600
+handleDamage	E:\development\wingmod\dist\Init.js	/^ShipActor.prototype.handleDamage = function () {$/;"	function	line:4606
+LaserProjectileActor	E:\development\wingmod\dist\Init.js	/^function LaserProjectileActor(config) {$/;"	function	line:4630
+customUpdate	E:\development\wingmod\dist\Init.js	/^LaserProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4639
+onDeath	E:\development\wingmod\dist\Init.js	/^LaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:4643
+onSpawn	E:\development\wingmod\dist\Init.js	/^LaserProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4648
+MoltenProjectileActor	E:\development\wingmod\dist\Init.js	/^function MoltenProjectileActor(config) {$/;"	function	line:4685
+customUpdate	E:\development\wingmod\dist\Init.js	/^MoltenProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4694
+onDeath	E:\development\wingmod\dist\Init.js	/^MoltenProjectileActor.prototype.onDeath = function () {$/;"	function	line:4698
+onSpawn	E:\development\wingmod\dist\Init.js	/^MoltenProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4703
+PlasmaProjectileActor	E:\development\wingmod\dist\Init.js	/^function PlasmaProjectileActor(config) {$/;"	function	line:4740
+customUpdate	E:\development\wingmod\dist\Init.js	/^PlasmaProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4749
+onDeath	E:\development\wingmod\dist\Init.js	/^PlasmaProjectileActor.prototype.onDeath = function () {$/;"	function	line:4753
+onSpawn	E:\development\wingmod\dist\Init.js	/^PlasmaProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4758
+PulseWaveProjectileActor	E:\development\wingmod\dist\Init.js	/^function PulseWaveProjectileActor(config) {$/;"	function	line:4795
+customUpdate	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4804
+onDeath	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.onDeath = function () {$/;"	function	line:4827
+onSpawn	E:\development\wingmod\dist\Init.js	/^PulseWaveProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4863
+RedLaserProjectileActor	E:\development\wingmod\dist\Init.js	/^function RedLaserProjectileActor(config) {$/;"	function	line:4900
+customUpdate	E:\development\wingmod\dist\Init.js	/^RedLaserProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4909
+onDeath	E:\development\wingmod\dist\Init.js	/^RedLaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:4913
+onSpawn	E:\development\wingmod\dist\Init.js	/^RedLaserProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4918
+RingProjectileActor	E:\development\wingmod\dist\Init.js	/^function RingProjectileActor(config) {$/;"	function	line:4955
+customUpdate	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4964
+onDeath	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.onDeath = function () {$/;"	function	line:4987
+onSpawn	E:\development\wingmod\dist\Init.js	/^RingProjectileActor.prototype.onSpawn = function () {$/;"	function	line:5023
+AiImageRenderer	E:\development\wingmod\dist\Init.js	/^function AiImageRenderer() {$/;"	function	line:5058
+debugDraw	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.debugDraw = function () {$/;"	function	line:5076
+createCanvas	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.createCanvas = function () {$/;"	function	line:5082
+getImageObject	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.getImageObject = function (wallsData) {$/;"	function	line:5093
+drawImage	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.drawImage = function (wallsData) {$/;"	function	line:5105
+drawObject	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.drawObject = function (object) {$/;"	function	line:5113
+switch	E:\development\wingmod\dist\Init.js	/^        switch (object.class) {$/;"	function	line:5115
+drawBox	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.drawBox = function (boxDataObject) {$/;"	function	line:5126
+drawConvex	E:\development\wingmod\dist\Init.js	/^AiImageRenderer.prototype.drawConvex = function (convexDataObject) {$/;"	function	line:5148
+AssetManager	E:\development\wingmod\dist\Init.js	/^function AssetManager(config) {$/;"	function	line:5187
+loadAll	E:\development\wingmod\dist\Init.js	/^AssetManager.prototype.loadAll = function () {$/;"	function	line:5200
+loadModels	E:\development\wingmod\dist\Init.js	/^AssetManager.prototype.loadModels = function (resolve) {$/;"	function	line:5224
+modelsLoaded	E:\development\wingmod\dist\Init.js	/^AssetManager.prototype.modelsLoaded = function (event) {$/;"	function	line:5234
+loadChunks	E:\development\wingmod\dist\Init.js	/^AssetManager.prototype.loadChunks = function (resolve) {$/;"	function	line:5239
+chunksLoaded	E:\development\wingmod\dist\Init.js	/^AssetManager.prototype.chunksLoaded = function (event) {$/;"	function	line:5245
+ChunkLoader	E:\development\wingmod\dist\Init.js	/^function ChunkLoader() {$/;"	function	line:5277
+loadChunks	E:\development\wingmod\dist\Init.js	/^ChunkLoader.prototype.loadChunks = function (chunks) {$/;"	function	line:5288
+doneAction	E:\development\wingmod\dist\Init.js	/^ChunkLoader.prototype.doneAction = function () {$/;"	function	line:5315
+getBatch	E:\development\wingmod\dist\Init.js	/^ChunkLoader.prototype.getBatch = function () {$/;"	function	line:5319
+clearBatch	E:\development\wingmod\dist\Init.js	/^ChunkLoader.prototype.clearBatch = function () {$/;"	function	line:5323
+getModelName	E:\development\wingmod\dist\Init.js	/^ChunkLoader.prototype.getModelName = function (path) {$/;"	function	line:5327
+get	E:\development\wingmod\dist\Init.js	/^    get: function get(name) {$/;"	function	line:5343
+loadBatch	E:\development\wingmod\dist\Init.js	/^    loadBatch: function loadBatch(batch) {$/;"	function	line:5351
+addHitmap	E:\development\wingmod\dist\Init.js	/^    addHitmap: function addHitmap(name, hitmap) {$/;"	function	line:5359
+addGeometry	E:\development\wingmod\dist\Init.js	/^    addGeometry: function addGeometry(name, geometry) {$/;"	function	line:5363
+addMaterial	E:\development\wingmod\dist\Init.js	/^    addMaterial: function addMaterial(name, material) {$/;"	function	line:5367
+serializeHitmaps	E:\development\wingmod\dist\Init.js	/^    serializeHitmaps: function serializeHitmaps() {$/;"	function	line:5371
+HitmapLoader	E:\development\wingmod\dist\Init.js	/^function HitmapLoader() {$/;"	function	line:5381
+load	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.load = function (path, callback) {$/;"	function	line:5385
+jsonToFaces	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.jsonToFaces = function (json) {$/;"	function	line:5396
+isBitSet	E:\development\wingmod\dist\Init.js	/^    function isBitSet(value, position) {$/;"	function	line:5397
+addVerticesToFaces	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.addVerticesToFaces = function (vertices, faces) {$/;"	function	line:5499
+CustomModelBuilder	E:\development\wingmod\dist\Init.js	/^function CustomModelBuilder() {$/;"	function	line:5513
+configure	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.configure = function () {$/;"	function	line:5518
+loadModels	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.loadModels = function () {$/;"	function	line:5535
+getBatch	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.getBatch = function () {$/;"	function	line:5546
+clearBatch	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.clearBatch = function () {$/;"	function	line:5550
+ModelLoader	E:\development\wingmod\dist\Init.js	/^function ModelLoader() {$/;"	function	line:5568
+loadModels	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.loadModels = function (modelPaths) {$/;"	function	line:5575
+getBatch	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.getBatch = function () {$/;"	function	line:5594
+clearBatch	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.clearBatch = function () {$/;"	function	line:5598
+doneAction	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.doneAction = function () {$/;"	function	line:5602
+getModelName	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.getModelName = function (path) {$/;"	function	line:5606
+getDefaultTexturePath	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.getDefaultTexturePath = function (path) {$/;"	function	line:5612
+get	E:\development\wingmod\dist\Init.js	/^    get: function get(name) {$/;"	function	line:5625
+loadBatch	E:\development\wingmod\dist\Init.js	/^    loadBatch: function loadBatch(batch) {$/;"	function	line:5632
+addGeometry	E:\development\wingmod\dist\Init.js	/^    addGeometry: function addGeometry(name, geometry) {$/;"	function	line:5639
+addMaterial	E:\development\wingmod\dist\Init.js	/^    addMaterial: function addMaterial(name, material) {$/;"	function	line:5645
+SoundLoader	E:\development\wingmod\dist\Init.js	/^function SoundLoader(config) {$/;"	function	line:5657
+loadSounds	E:\development\wingmod\dist\Init.js	/^SoundLoader.prototype.loadSounds = function () {$/;"	function	line:5662
+FlatHud	E:\development\wingmod\dist\Init.js	/^function FlatHud(config) {$/;"	function	line:5696
+update	E:\development\wingmod\dist\Init.js	/^FlatHud.prototype.update = function () {$/;"	function	line:5705
+Hud	E:\development\wingmod\dist\Init.js	/^function Hud(config) {$/;"	function	line:5716
+makeSwitchers	E:\development\wingmod\dist\Init.js	/^Hud.prototype.makeSwitchers = function () {$/;"	function	line:5741
+update	E:\development\wingmod\dist\Init.js	/^Hud.prototype.update = function () {$/;"	function	line:5761
+onPlayerActorAppeared	E:\development\wingmod\dist\Init.js	/^Hud.prototype.onPlayerActorAppeared = function (actor) {$/;"	function	line:5775
+onInput	E:\development\wingmod\dist\Init.js	/^Hud.prototype.onInput = function (inputState) {$/;"	function	line:5779
+onWeaponSwitched	E:\development\wingmod\dist\Init.js	/^Hud.prototype.onWeaponSwitched = function (event) {$/;"	function	line:5785
+drawRadar	E:\development\wingmod\dist\Init.js	/^Hud.prototype.drawRadar = function () {$/;"	function	line:5800
+drawHealthBar	E:\development\wingmod\dist\Init.js	/^Hud.prototype.drawHealthBar = function (otherActor) {$/;"	function	line:5825
+drawCrosshairs	E:\development\wingmod\dist\Init.js	/^Hud.prototype.drawCrosshairs = function (actor) {$/;"	function	line:5849
+WeaponMesh	E:\development\wingmod\dist\Init.js	/^function WeaponMesh(config) {$/;"	function	line:5888
+setNewWeapon	E:\development\wingmod\dist\Init.js	/^WeaponMesh.prototype.setNewWeapon = function (newWeaponIndex) {$/;"	function	line:5912
+WeaponSwitcher	E:\development\wingmod\dist\Init.js	/^function WeaponSwitcher(config) {$/;"	function	line:5924
+update	E:\development\wingmod\dist\Init.js	/^WeaponSwitcher.prototype.update = function () {$/;"	function	line:5946
+handleInput	E:\development\wingmod\dist\Init.js	/^WeaponSwitcher.prototype.handleInput = function (inputState) {$/;"	function	line:5983
+switchWeaponToNext	E:\development\wingmod\dist\Init.js	/^WeaponSwitcher.prototype.switchWeaponToNext = function () {$/;"	function	line:6000
+createMeshes	E:\development\wingmod\dist\Init.js	/^WeaponSwitcher.prototype.createMeshes = function () {$/;"	function	line:6015
+ChunkMesh	E:\development\wingmod\dist\Init.js	/^function ChunkMesh(config) {$/;"	function	line:6038
+setPosition	E:\development\wingmod\dist\Init.js	/^ChunkMesh.prototype.setPosition = function (position2d) {$/;"	function	line:6057
+setRotation	E:\development\wingmod\dist\Init.js	/^ChunkMesh.prototype.setRotation = function (rotation) {$/;"	function	line:6064
+ParticleConfigBuilder	E:\development\wingmod\dist\Init.js	/^function ParticleConfigBuilder(config) {$/;"	function	line:6077
+getConfig	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.getConfig = function (configName) {$/;"	function	line:6137
+getAllConfigs	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.getAllConfigs = function () {$/;"	function	line:6141
+createPremades	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.createPremades = function () {$/;"	function	line:6145
+ParticleGenerator	E:\development\wingmod\dist\Init.js	/^function ParticleGenerator(config) {$/;"	function	line:6175
+createGeometry	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.createGeometry = function () {$/;"	function	line:6200
+create	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.create = function (config) {$/;"	function	line:6230
+deactivate	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.deactivate = function (particleId) {$/;"	function	line:6238
+update	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.update = function () {$/;"	function	line:6243
+initParticle	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.initParticle = function (particleId, config) {$/;"	function	line:6258
+updateResolutionCoefficient	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCoefficient) {$/;"	function	line:6278
+ParticleManager	E:\development\wingmod\dist\Init.js	/^function ParticleManager(config) {$/;"	function	line:6290
+createGenerators	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.createGenerators = function () {$/;"	function	line:6303
+createPremadeGenerators	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.createPremadeGenerators = function () {$/;"	function	line:6313
+getGenerator	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.getGenerator = function (typeName) {$/;"	function	line:6317
+update	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.update = function () {$/;"	function	line:6321
+createParticle	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.createParticle = function (typeName, config) {$/;"	function	line:6327
+createPremade	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.createPremade = function (premadeName, config) {$/;"	function	line:6331
+updateResolutionCoefficient	E:\development\wingmod\dist\Init.js	/^ParticleManager.prototype.updateResolutionCoefficient = function (coefficient) {$/;"	function	line:6336
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6444
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6483
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6561
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6582
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6603
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6638
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6673
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6738
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6774
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6854
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6934
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:6999
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7036
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7072
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7111
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7189
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7224
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7259
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7298
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (config) {$/;"	function	line:7376
+BaseScene	E:\development\wingmod\dist\Init.js	/^function BaseScene(config) {$/;"	function	line:7399
+add	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.add = function (object) {$/;"	function	line:7407
+update	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.update = function () {$/;"	function	line:7411
+createCamera	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.createCamera = function () {$/;"	function	line:7416
+create	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.create = function () {$/;"	function	line:7420
+createThreeScene	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.createThreeScene = function () {$/;"	function	line:7424
+addPlayerActor	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.addPlayerActor = function (actor) {};$/;"	function	line:7428
+customUpdate	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.customUpdate = function () {};$/;"	function	line:7429
+resetCamera	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.resetCamera = function () {};$/;"	function	line:7430
+doUiFlash	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.doUiFlash = function () {};$/;"	function	line:7431
+testMesh	E:\development\wingmod\dist\Init.js	/^BaseScene.prototype.testMesh = function (meshClass, scale) {$/;"	function	line:7433
+setInterval	E:\development\wingmod\dist\Init.js	/^    setInterval(function () {$/;"	function	line:7447
+FlatHudScene	E:\development\wingmod\dist\Init.js	/^function FlatHudScene(config) {$/;"	function	line:7464
+create	E:\development\wingmod\dist\Init.js	/^FlatHudScene.prototype.create = function () {$/;"	function	line:7472
+createCamera	E:\development\wingmod\dist\Init.js	/^FlatHudScene.prototype.createCamera = function () {$/;"	function	line:7476
+resetCamera	E:\development\wingmod\dist\Init.js	/^FlatHudScene.prototype.resetCamera = function () {$/;"	function	line:7488
+createStartScene	E:\development\wingmod\dist\Init.js	/^FlatHudScene.prototype.createStartScene = function () {$/;"	function	line:7493
+customUpdate	E:\development\wingmod\dist\Init.js	/^FlatHudScene.prototype.customUpdate = function () {};$/;"	function	line:7521
+GameScene	E:\development\wingmod\dist\Init.js	/^function GameScene(config) {$/;"	function	line:7534
+create	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.create = function () {$/;"	function	line:7546
+customUpdate	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.customUpdate = function () {$/;"	function	line:7589
+flashRed	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.flashRed = function () {$/;"	function	line:7602
+flashWhite	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.flashWhite = function () {$/;"	function	line:7610
+handleFlash	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.handleFlash = function () {$/;"	function	line:7618
+doUiFlash	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.doUiFlash = function (type) {$/;"	function	line:7628
+switch	E:\development\wingmod\dist\Init.js	/^    switch (type) {$/;"	function	line:7629
+createMap	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.createMap = function (layoutData) {$/;"	function	line:7638
+createCamera	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.createCamera = function () {$/;"	function	line:7651
+resetCamera	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.resetCamera = function () {$/;"	function	line:7658
+addPlayerActor	E:\development\wingmod\dist\Init.js	/^GameScene.prototype.addPlayerActor = function (actor) {$/;"	function	line:7663
+MainMenuScene	E:\development\wingmod\dist\Init.js	/^function MainMenuScene(config) {$/;"	function	line:7677
+create	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.create = function () {$/;"	function	line:7687
+createCamera	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.createCamera = function () {$/;"	function	line:7730
+resetCamera	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.resetCamera = function () {$/;"	function	line:7743
+createStartScene	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.createStartScene = function () {$/;"	function	line:7748
+customUpdate	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.customUpdate = function () {$/;"	function	line:7797
+doBob	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.doBob = function () {$/;"	function	line:7804
+doFlicker	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.doFlicker = function () {$/;"	function	line:7829
+lightPowerUp	E:\development\wingmod\dist\Init.js	/^MainMenuScene.prototype.lightPowerUp = function () {$/;"	function	line:7839
+SceneManager	E:\development\wingmod\dist\Init.js	/^function SceneManager(config) {$/;"	function	line:7861
+createSceneList	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.createSceneList = function () {$/;"	function	line:7877
+renderScene	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.renderScene = function (renderer, sceneName) {$/;"	function	line:7885
+update	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.update = function () {$/;"	function	line:7889
+makeScene	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.makeScene = function (sceneName, config) {$/;"	function	line:7895
+onMapDone	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.onMapDone = function (event) {$/;"	function	line:7913
+doUiFlash	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.doUiFlash = function (sceneName, flashConfig) {$/;"	function	line:7918
+add	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.add = function (sceneName, object) {$/;"	function	line:7923
+getThreeScene	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.getThreeScene = function (sceneName) {$/;"	function	line:7933
+resetCamera	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.resetCamera = function () {$/;"	function	line:7937
+onPlayerActorAppeared	E:\development\wingmod\dist\Init.js	/^SceneManager.prototype.onPlayerActorAppeared = function (sceneName, actor) {$/;"	function	line:7941
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:7955
+ReactUi	E:\development\wingmod\dist\Init.js	/^function ReactUi() {$/;"	function	line:7959
+render	E:\development\wingmod\dist\Init.js	/^ReactUi.prototype.render = function () {$/;"	function	line:7965
+changeMode	E:\development\wingmod\dist\Init.js	/^ReactUi.prototype.changeMode = function (newMode, context) {$/;"	function	line:7969
+switch	E:\development\wingmod\dist\Init.js	/^    switch (newMode) {$/;"	function	line:7974
+generateKey	E:\development\wingmod\dist\Init.js	/^    generateKey: function generateKey() {$/;"	function	line:7994
+multilinize	E:\development\wingmod\dist\Init.js	/^    multilinize: function multilinize(multilineString) {$/;"	function	line:7997
+Ui	E:\development\wingmod\dist\Init.js	/^function Ui(config) {$/;"	function	line:8018
+setupButtonListener	E:\development\wingmod\dist\Init.js	/^Ui.prototype.setupButtonListener = function () {$/;"	function	line:8031
+switch	E:\development\wingmod\dist\Init.js	/^        switch (data.buttonEvent) {$/;"	function	line:8035
+init	E:\development\wingmod\dist\Init.js	/^Ui.prototype.init = function () {$/;"	function	line:8055
+setAssetsLoaded	E:\development\wingmod\dist\Init.js	/^Ui.prototype.setAssetsLoaded = function (state) {$/;"	function	line:8063
+stopGame	E:\development\wingmod\dist\Init.js	/^Ui.prototype.stopGame = function (info) {$/;"	function	line:8067
+stopGameFinished	E:\development\wingmod\dist\Init.js	/^Ui.prototype.stopGameFinished = function () {$/;"	function	line:8073
+onStartButtonClick	E:\development\wingmod\dist\Init.js	/^Ui.prototype.onStartButtonClick = function () {$/;"	function	line:8079
+gotPointerLock	E:\development\wingmod\dist\Init.js	/^Ui.prototype.gotPointerLock = function () {$/;"	function	line:8086
+lostPointerLock	E:\development\wingmod\dist\Init.js	/^Ui.prototype.lostPointerLock = function () {$/;"	function	line:8091
+onShadowConfig	E:\development\wingmod\dist\Init.js	/^Ui.prototype.onShadowConfig = function (data) {$/;"	function	line:8096
+onResolutionConfig	E:\development\wingmod\dist\Init.js	/^Ui.prototype.onResolutionConfig = function (data) {$/;"	function	line:8100
+onSoundConfig	E:\development\wingmod\dist\Init.js	/^Ui.prototype.onSoundConfig = function (data) {$/;"	function	line:8104
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8113
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8113
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8119
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8121
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8123
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8125
+EndScreen	E:\development\wingmod\dist\Init.js	/^var EndScreen = function (_React$Component) {$/;"	function	line:8129
+EndScreen	E:\development\wingmod\dist\Init.js	/^    function EndScreen() {$/;"	function	line:8132
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8140
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8175
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8188
+switch	E:\development\wingmod\dist\Init.js	/^        switch (this.props.mode || 'startScreen') {$/;"	function	line:8190
+switch	E:\development\wingmod\dist\Init.js	/^        switch (this.props.mode) {$/;"	function	line:8206
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8239
+getInitialState	E:\development\wingmod\dist\Init.js	/^    getInitialState: function getInitialState() {$/;"	function	line:8247
+componentWillMount	E:\development\wingmod\dist\Init.js	/^    componentWillMount: function componentWillMount() {$/;"	function	line:8250
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8257
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8360
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8360
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8366
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8368
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8370
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8372
+StartHelp	E:\development\wingmod\dist\Init.js	/^var StartHelp = function (_React$Component) {$/;"	function	line:8376
+StartHelp	E:\development\wingmod\dist\Init.js	/^    function StartHelp() {$/;"	function	line:8379
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8387
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8510
+getInitialState	E:\development\wingmod\dist\Init.js	/^    getInitialState: function getInitialState() {$/;"	function	line:8521
+componentWillMount	E:\development\wingmod\dist\Init.js	/^    componentWillMount: function componentWillMount() {$/;"	function	line:8524
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8531
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8579
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8579
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8585
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8587
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8589
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8591
+Button	E:\development\wingmod\dist\Init.js	/^var Button = function (_React$Component) {$/;"	function	line:8595
+Button	E:\development\wingmod\dist\Init.js	/^    function Button() {$/;"	function	line:8598
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8606
+onClick	E:\development\wingmod\dist\Init.js	/^                    onClick: function onClick() {$/;"	function	line:8612
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8634
+getInitialState	E:\development\wingmod\dist\Init.js	/^    getInitialState: function getInitialState() {$/;"	function	line:8638
+componentWillReceiveProps	E:\development\wingmod\dist\Init.js	/^    componentWillReceiveProps: function componentWillReceiveProps(newProps) {$/;"	function	line:8643
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8648
+switch	E:\development\wingmod\dist\Init.js	/^            switch (this.props.blur) {$/;"	function	line:8651
+setTimeout	E:\development\wingmod\dist\Init.js	/^                    setTimeout(function () {$/;"	function	line:8656
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8686
+getInitialState	E:\development\wingmod\dist\Init.js	/^    getInitialState: function getInitialState() {$/;"	function	line:8692
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8697
+onClick	E:\development\wingmod\dist\Init.js	/^                onClick: function onClick() {$/;"	function	line:8712
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8730
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8730
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8736
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8738
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8740
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8742
+StyledText	E:\development\wingmod\dist\Init.js	/^var StyledText = function (_React$Component) {$/;"	function	line:8744
+StyledText	E:\development\wingmod\dist\Init.js	/^    function StyledText() {$/;"	function	line:8747
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8755
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8777
+getInitialState	E:\development\wingmod\dist\Init.js	/^    getInitialState: function getInitialState() {$/;"	function	line:8783
+render	E:\development\wingmod\dist\Init.js	/^    render: function render() {$/;"	function	line:8788
+onClick	E:\development\wingmod\dist\Init.js	/^                onClick: function onClick() {$/;"	function	line:8803
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8820
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8820
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8826
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8828
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8830
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8832
+Viewport	E:\development\wingmod\dist\Init.js	/^var Viewport = function (_React$Component) {$/;"	function	line:8834
+Viewport	E:\development\wingmod\dist\Init.js	/^    function Viewport() {$/;"	function	line:8837
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8845
+_createClass	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8858
+defineProperties	E:\development\wingmod\dist\Init.js	/^var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();$/;"	function	line:8858
+_interopRequireDefault	E:\development\wingmod\dist\Init.js	/^function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }$/;"	function	line:8864
+_classCallCheck	E:\development\wingmod\dist\Init.js	/^function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }$/;"	function	line:8866
+_possibleConstructorReturn	E:\development\wingmod\dist\Init.js	/^function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }$/;"	function	line:8868
+_inherits	E:\development\wingmod\dist\Init.js	/^function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }$/;"	function	line:8870
+Hud	E:\development\wingmod\dist\Init.js	/^var Hud = function (_React$Component) {$/;"	function	line:8874
+Hud	E:\development\wingmod\dist\Init.js	/^    function Hud(properties) {$/;"	function	line:8877
+setupListener	E:\development\wingmod\dist\Init.js	/^        value: function setupListener() {$/;"	function	line:8891
+render	E:\development\wingmod\dist\Init.js	/^        value: function render() {$/;"	function	line:8896
+onSetHudOpen	E:\development\wingmod\dist\Init.js	/^        value: function onSetHudOpen(keyStatus) {}$/;"	function	line:8906
+_defineProperty	E:\development\wingmod\dist\Init.js	/^function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }$/;"	function	line:8917
+ActorFactory	E:\development\wingmod\dist\Init.js	/^function ActorFactory(context, actorDependencies) {$/;"	function	line:8942
+create	E:\development\wingmod\dist\Init.js	/^ActorFactory.prototype.create = function (config) {$/;"	function	line:8967
+exports	E:\development\wingmod\dist\Init.js	/^module.exports = function (context) {$/;"	function	line:8974
+getInstance	E:\development\wingmod\dist\Init.js	/^    returnObject.getInstance = function (dependencies) {$/;"	function	line:8977
+EventEmitter	E:\development\wingmod\dist\Init.js	/^var EventEmitter = function EventEmitter() {};$/;"	function	line:9030
+on	E:\development\wingmod\dist\Init.js	/^    on: function on(type, listener, context) {$/;"	function	line:9044
+has	E:\development\wingmod\dist\Init.js	/^    has: function has(type, listener) {$/;"	function	line:9066
+off	E:\development\wingmod\dist\Init.js	/^    off: function off(type, listener) {$/;"	function	line:9091
+emit	E:\development\wingmod\dist\Init.js	/^    emit: function emit(event) {$/;"	function	line:9110
+degToRad	E:\development\wingmod\dist\Init.js	/^    degToRad: function degToRad(degrees) {$/;"	function	line:9131
+radToDeg	E:\development\wingmod\dist\Init.js	/^    radToDeg: function radToDeg(radians) {$/;"	function	line:9135
+getRandomFloat	E:\development\wingmod\dist\Init.js	/^    getRandomFloat: function getRandomFloat(min, max) {$/;"	function	line:9139
+getRandomInteger	E:\development\wingmod\dist\Init.js	/^    getRandomInteger: function getRandomInteger(min, max) {$/;"	function	line:9144
+rand	E:\development\wingmod\dist\Init.js	/^    rand: function rand(min, max) {$/;"	function	line:9149
+makeRandomColor	E:\development\wingmod\dist\Init.js	/^    makeRandomColor: function makeRandomColor() {$/;"	function	line:9153
+mixin	E:\development\wingmod\dist\Init.js	/^    mixin: function mixin(receiver, donor) {$/;"	function	line:9168
+uptrunc	E:\development\wingmod\dist\Init.js	/^    uptrunc: function uptrunc(x) {$/;"	function	line:9175
+angleToVector	E:\development\wingmod\dist\Init.js	/^    angleToVector: function angleToVector(angle, length) {$/;"	function	line:9179
+angleBetweenPointsFromCenter	E:\development\wingmod\dist\Init.js	/^    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {$/;"	function	line:9184
+angleBetweenPoints	E:\development\wingmod\dist\Init.js	/^    angleBetweenPoints: function angleBetweenPoints(p1, p2) {$/;"	function	line:9195
+pointInArc	E:\development\wingmod\dist\Init.js	/^    pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {$/;"	function	line:9201
+arcAngleDifference	E:\development\wingmod\dist\Init.js	/^    arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {$/;"	function	line:9208
+firstToUpper	E:\development\wingmod\dist\Init.js	/^    firstToUpper: function firstToUpper(string) {$/;"	function	line:9214
+rotateOffsetPoint	E:\development\wingmod\dist\Init.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radAngle) {$/;"	function	line:9218
+distanceBetweenPoints	E:\development\wingmod\dist\Init.js	/^    distanceBetweenPoints: function distanceBetweenPoints(p1x, p2x, p1y, p2y) {$/;"	function	line:9224
+pointDifference	E:\development\wingmod\dist\Init.js	/^    pointDifference: function pointDifference(p1x, p2x, p1y, p2y) {$/;"	function	line:9228
+rotateVector	E:\development\wingmod\dist\Init.js	/^    rotateVector: function rotateVector(x, y, angle) {$/;"	function	line:9232
+objToScreenPosition	E:\development\wingmod\dist\Init.js	/^    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {$/;"	function	line:9240
+extend	E:\development\wingmod\dist\Init.js	/^    Function.prototype.extend = function (oldClass) {$/;"	function	line:9256
+WorkerBus	E:\development\wingmod\dist\Init.js	/^function WorkerBus(config) {$/;"	function	line:9267
+postMessage	E:\development\wingmod\dist\Init.js	/^WorkerBus.prototype.postMessage = function (type, message) {$/;"	function	line:9279
+handleMessage	E:\development\wingmod\dist\Init.js	/^WorkerBus.prototype.handleMessage = function (message) {$/;"	function	line:9284
+e	E:\development\wingmod\dist\LogicInit.js	/^(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){$/;"	function	line:1
+i	E:\development\wingmod\dist\LogicInit.js	/^(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){$/;"	variable	line:1
+set	E:\development\wingmod\dist\LogicInit.js	/^    set     = function (descriptors, key, descriptor) {$/;"	function	line:49
+clean	E:\development\wingmod\dist\LogicInit.js	/^    clean   = function () { known = blown = null; },$/;"	function	line:62
+New	E:\development\wingmod\dist\LogicInit.js	/^    New = function (source, descriptors) {$/;"	function	line:65
+deepCopy	E:\development\wingmod\dist\LogicInit.js	/^    deepCopy = function deepCopy(source) {$/;"	function	line:71
+deepMerge	E:\development\wingmod\dist\LogicInit.js	/^    deepMerge = function (target) {$/;"	function	line:79
+shallowCopy	E:\development\wingmod\dist\LogicInit.js	/^    shallowCopy = function shallowCopy(source) {$/;"	function	line:92
+shallowMerge	E:\development\wingmod\dist\LogicInit.js	/^    shallowMerge = function () {$/;"	function	line:103
+isObject	E:\development\wingmod\dist\LogicInit.js	/^    isObject = function isObject(value) {$/;"	function	line:109
+shouldCopy	E:\development\wingmod\dist\LogicInit.js	/^    shouldCopy = function shouldCopy(value) {$/;"	function	line:113
+deepDefine	E:\development\wingmod\dist\LogicInit.js	/^    deepDefine = function deepDefine(target, source) {$/;"	function	line:123
+deepValue	E:\development\wingmod\dist\LogicInit.js	/^    deepValue = function deepValue(descriptor) {$/;"	function	line:137
+merge	E:\development\wingmod\dist\LogicInit.js	/^    merge = function merge(target) {$/;"	function	line:147
+Core	E:\development\wingmod\dist\LogicInit.js	/^function Core(worker) {$/;"	function	line:227
+makeMainComponents	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.makeMainComponents = function (worker) {$/;"	function	line:236
+initializeEventHandlers	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.initializeEventHandlers = function () {$/;"	function	line:245
+initFpsCounter	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.initFpsCounter = function () {$/;"	function	line:264
+setInterval	E:\development\wingmod\dist\LogicInit.js	/^        setInterval(function () {$/;"	function	line:269
+processGameLogic	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.processGameLogic = function () {$/;"	function	line:276
+doTick	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.doTick = function () {$/;"	function	line:282
+startGameLoop	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.startGameLoop = function () {$/;"	function	line:292
+onInputState	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onInputState = function (event) {$/;"	function	line:298
+onStart	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onStart = function () {$/;"	function	line:302
+onPause	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onPause = function () {$/;"	function	line:307
+onAiImageDone	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onAiImageDone = function (event) {$/;"	function	line:311
+onNewPlayerActor	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onNewPlayerActor = function (event) {$/;"	function	line:315
+onActorEvents	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onActorEvents = function (event) {$/;"	function	line:321
+onNewMapBodies	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onNewMapBodies = function () {$/;"	function	line:325
+onPlayerDied	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onPlayerDied = function (event) {$/;"	function	line:331
+onGameFinished	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onGameFinished = function (event) {$/;"	function	line:335
+onMapHitmapsLoaded	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onMapHitmapsLoaded = function (event) {$/;"	function	line:339
+onMapDone	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onMapDone = function (event) {$/;"	function	line:346
+onPlaySound	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onPlaySound = function (event) {$/;"	function	line:351
+onWeaponSwitched	E:\development\wingmod\dist\LogicInit.js	/^Core.prototype.onWeaponSwitched = function (event) {$/;"	function	line:355
+GameScene	E:\development\wingmod\dist\LogicInit.js	/^function GameScene(config) {$/;"	function	line:367
+fillScene	E:\development\wingmod\dist\LogicInit.js	/^GameScene.prototype.fillScene = function (mapBodies) {$/;"	function	line:378
+update	E:\development\wingmod\dist\LogicInit.js	/^GameScene.prototype.update = function () {$/;"	function	line:423
+addMapBodies	E:\development\wingmod\dist\LogicInit.js	/^GameScene.prototype.addMapBodies = function (mapBodies) {$/;"	function	line:431
+checkGameEndCondition	E:\development\wingmod\dist\LogicInit.js	/^GameScene.prototype.checkGameEndCondition = function () {$/;"	function	line:438
+GameWorld	E:\development\wingmod\dist\LogicInit.js	/^function GameWorld(config) {$/;"	function	line:449
+makeUpdateData	E:\development\wingmod\dist\LogicInit.js	/^GameWorld.prototype.makeUpdateData = function () {$/;"	function	line:477
+onCollision	E:\development\wingmod\dist\LogicInit.js	/^GameWorld.prototype.onCollision = function (collisionEvent) {$/;"	function	line:502
+countEnemies	E:\development\wingmod\dist\LogicInit.js	/^GameWorld.prototype.countEnemies = function () {$/;"	function	line:512
+prepareBodyForDeath	E:\development\wingmod\dist\LogicInit.js	/^GameWorld.prototype.prepareBodyForDeath = function (body) {$/;"	function	line:523
+cleanDeadActors	E:\development\wingmod\dist\LogicInit.js	/^GameWorld.prototype.cleanDeadActors = function () {$/;"	function	line:536
+RenderBus	E:\development\wingmod\dist\LogicInit.js	/^function RenderBus(config) {$/;"	function	line:547
+WorldAiMapExtractor	E:\development\wingmod\dist\LogicInit.js	/^function WorldAiMapExtractor(config) {$/;"	function	line:558
+getTerrainBodies	E:\development\wingmod\dist\LogicInit.js	/^WorldAiMapExtractor.prototype.getTerrainBodies = function () {$/;"	function	line:565
+extractSingleShape	E:\development\wingmod\dist\LogicInit.js	/^WorldAiMapExtractor.prototype.extractSingleShape = function (body) {$/;"	function	line:578
+switch	E:\development\wingmod\dist\LogicInit.js	/^        switch (body.shape.constructor.name) {$/;"	function	line:580
+extractShapes	E:\development\wingmod\dist\LogicInit.js	/^WorldAiMapExtractor.prototype.extractShapes = function (body) {$/;"	function	line:599
+switch	E:\development\wingmod\dist\LogicInit.js	/^            switch (shape.constructor.name) {$/;"	function	line:605
+ActorManager	E:\development\wingmod\dist\LogicInit.js	/^function ActorManager(config) {$/;"	function	line:636
+addNew	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.addNew = function (config) {$/;"	function	line:660
+update	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.update = function (inputState) {$/;"	function	line:681
+setPlayerActor	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.setPlayerActor = function (actor) {$/;"	function	line:697
+removeActorAt	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.removeActorAt = function (actorId) {$/;"	function	line:701
+actorDied	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.actorDied = function (actor) {$/;"	function	line:705
+endGame	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.endGame = function () {$/;"	function	line:710
+setTimeout	E:\development\wingmod\dist\LogicInit.js	/^    setTimeout(function () {$/;"	function	line:711
+getFirstPlayerActor	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.getFirstPlayerActor = function () {$/;"	function	line:720
+requestActorEvent	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.requestActorEvent = function (actorId, eventName, eventParams) {$/;"	function	line:724
+sendActorEvents	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.sendActorEvents = function () {$/;"	function	line:729
+playSound	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.playSound = function (config) {$/;"	function	line:739
+switchPlayerWeapon	E:\development\wingmod\dist\LogicInit.js	/^ActorManager.prototype.switchPlayerWeapon = function (weaponConfig) {$/;"	function	line:755
+BaseActor	E:\development\wingmod\dist\LogicInit.js	/^function BaseActor(config) {$/;"	function	line:769
+applyConfig	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.applyConfig = function (config) {$/;"	function	line:788
+createBody	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.createBody = function () {$/;"	function	line:794
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.update = function () {$/;"	function	line:798
+onCollision	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {$/;"	function	line:807
+sendActorEvent	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.sendActorEvent = function (eventName, eventdata) {$/;"	function	line:822
+remove	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.remove = function (actorId) {$/;"	function	line:826
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:830
+playerUpdate	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.playerUpdate = function () {};$/;"	function	line:832
+onHit	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onHit = function () {};$/;"	function	line:834
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onSpawn = function () {};$/;"	function	line:836
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onDeath = function () {};$/;"	function	line:838
+deathMain	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.deathMain = function () {$/;"	function	line:840
+processMovement	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.processMovement = function () {$/;"	function	line:845
+drawDebug	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.drawDebug = function (position) {$/;"	function	line:861
+DebugActor	E:\development\wingmod\dist\LogicInit.js	/^function DebugActor(config) {$/;"	function	line:879
+createBody	E:\development\wingmod\dist\LogicInit.js	/^DebugActor.prototype.createBody = function () {$/;"	function	line:891
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^DebugActor.prototype.onSpawn = function () {$/;"	function	line:901
+WeaponSystem	E:\development\wingmod\dist\LogicInit.js	/^function WeaponSystem(config) {$/;"	function	line:914
+shoot	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.shoot = function () {$/;"	function	line:930
+stopShooting	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.stopShooting = function () {$/;"	function	line:936
+switchWeapon	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.switchWeapon = function (weaponName) {$/;"	function	line:942
+switchWeaponByIndex	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.switchWeaponByIndex = function (weaponIndex) {$/;"	function	line:951
+update	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.update = function () {$/;"	function	line:961
+createBlaster	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.createBlaster = function () {$/;"	function	line:967
+createPlasma	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.createPlasma = function () {$/;"	function	line:974
+createPulseWave	E:\development\wingmod\dist\LogicInit.js	/^WeaponSystem.prototype.createPulseWave = function () {$/;"	function	line:981
+BaseBrain	E:\development\wingmod\dist\LogicInit.js	/^function BaseBrain(config) {$/;"	function	line:993
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.update = function () {};$/;"	function	line:1010
+getPlayerPosition	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.getPlayerPosition = function () {$/;"	function	line:1012
+getPlayerPositionWithLead	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.getPlayerPositionWithLead = function () {$/;"	function	line:1016
+isPositionInWall	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.isPositionInWall = function (position) {$/;"	function	line:1029
+castPosition	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.castPosition = function (position, imageObject) {$/;"	function	line:1039
+isWallBetween	E:\development\wingmod\dist\LogicInit.js	/^BaseBrain.prototype.isWallBetween = function (positionA, positionB) {$/;"	function	line:1043
+MookBrain	E:\development\wingmod\dist\LogicInit.js	/^function MookBrain(config) {$/;"	function	line:1071
+createWallDetectionParameters	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.createWallDetectionParameters = function () {$/;"	function	line:1092
+update	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.update = function () {$/;"	function	line:1115
+detectNearbyWallsFast	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.detectNearbyWallsFast = function () {$/;"	function	line:1145
+avoidWalls	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.avoidWalls = function (nearbyWalls) {$/;"	function	line:1187
+seesPlayerAction	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.seesPlayerAction = function () {$/;"	function	line:1205
+freeRoamActon	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.freeRoamActon = function (nearbyWalls) {$/;"	function	line:1227
+seesGotoPointAction	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.seesGotoPointAction = function (nearbyWalls) {$/;"	function	line:1247
+shootAction	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.shootAction = function () {$/;"	function	line:1273
+randomStrafeAction	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.randomStrafeAction = function () {$/;"	function	line:1279
+playCalloutSound	E:\development\wingmod\dist\LogicInit.js	/^MookBrain.prototype.playCalloutSound = function () {$/;"	function	line:1285
+BaseBody	E:\development\wingmod\dist\LogicInit.js	/^function BaseBody(config) {$/;"	function	line:1298
+createShape	E:\development\wingmod\dist\LogicInit.js	/^BaseBody.prototype.createShape = function () {$/;"	function	line:1315
+switch	E:\development\wingmod\dist\LogicInit.js	/^    switch (this.collisionType) {$/;"	function	line:1316
+initShape	E:\development\wingmod\dist\LogicInit.js	/^BaseBody.prototype.initShape = function () {$/;"	function	line:1359
+onCollision	E:\development\wingmod\dist\LogicInit.js	/^BaseBody.prototype.onCollision = function (otherBody, relativeContactPoint) {$/;"	function	line:1369
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseBody.prototype.update = function () {};$/;"	function	line:1375
+BaseWeapon	E:\development\wingmod\dist\LogicInit.js	/^function BaseWeapon(config) {$/;"	function	line:1382
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.update = function () {$/;"	function	line:1414
+shoot	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.shoot = function () {$/;"	function	line:1424
+stopShooting	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.stopShooting = function () {$/;"	function	line:1428
+processActiveWeapon	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.processActiveWeapon = function () {$/;"	function	line:1432
+switch	E:\development\wingmod\dist\LogicInit.js	/^    switch (this.firingMode) {$/;"	function	line:1433
+fireProjectile	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.fireProjectile = function (firingPointConfig) {$/;"	function	line:1447
+handleFiringSimultaneous	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.handleFiringSimultaneous = function () {$/;"	function	line:1459
+handleFiringAlternate	E:\development\wingmod\dist\LogicInit.js	/^BaseWeapon.prototype.handleFiringAlternate = function () {$/;"	function	line:1469
+Blaster	E:\development\wingmod\dist\LogicInit.js	/^function Blaster(config) {$/;"	function	line:1492
+MoltenBallThrower	E:\development\wingmod\dist\LogicInit.js	/^function MoltenBallThrower(config) {$/;"	function	line:1517
+PlasmaGun	E:\development\wingmod\dist\LogicInit.js	/^function PlasmaGun(config) {$/;"	function	line:1543
+PlasmaGun	E:\development\wingmod\dist\LogicInit.js	/^function PlasmaGun(config) {$/;"	function	line:1566
+Blaster	E:\development\wingmod\dist\LogicInit.js	/^function Blaster(config) {$/;"	function	line:1590
+Blaster	E:\development\wingmod\dist\LogicInit.js	/^function Blaster(config) {$/;"	function	line:1614
+RingBlaster	E:\development\wingmod\dist\LogicInit.js	/^function RingBlaster(config) {$/;"	function	line:1637
+MookActor	E:\development\wingmod\dist\LogicInit.js	/^function MookActor(config) {$/;"	function	line:1663
+createBrain	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.createBrain = function () {$/;"	function	line:1693
+createBody	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.createBody = function () {$/;"	function	line:1702
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.customUpdate = function () {$/;"	function	line:1706
+doBrainOrders	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.doBrainOrders = function () {$/;"	function	line:1712
+lookAtPosition	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.lookAtPosition = function (position) {$/;"	function	line:1732
+createWeapon	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.createWeapon = function () {$/;"	function	line:1745
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.onDeath = function () {$/;"	function	line:1754
+onHit	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.onHit = function () {$/;"	function	line:1769
+MookBossActor	E:\development\wingmod\dist\LogicInit.js	/^function MookBossActor(config) {$/;"	function	line:1793
+createWeapon	E:\development\wingmod\dist\LogicInit.js	/^MookBossActor.prototype.createWeapon = function () {$/;"	function	line:1818
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^MookBossActor.prototype.onDeath = function () {$/;"	function	line:1826
+OrbotActor	E:\development\wingmod\dist\LogicInit.js	/^function OrbotActor(config) {$/;"	function	line:1860
+createBrain	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.createBrain = function (config) {$/;"	function	line:1890
+createBody	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.createBody = function () {$/;"	function	line:1902
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.customUpdate = function () {$/;"	function	line:1906
+doBrainOrders	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.doBrainOrders = function () {$/;"	function	line:1912
+lookAtPosition	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.lookAtPosition = function (position) {$/;"	function	line:1932
+createWeapon	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.createWeapon = function () {$/;"	function	line:1945
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.onDeath = function () {$/;"	function	line:1953
+onHit	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.onHit = function () {$/;"	function	line:1968
+SniperActor	E:\development\wingmod\dist\LogicInit.js	/^function SniperActor(config) {$/;"	function	line:1991
+createBrain	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.createBrain = function () {$/;"	function	line:2021
+createBody	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.createBody = function () {$/;"	function	line:2033
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.customUpdate = function () {$/;"	function	line:2037
+doBrainOrders	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.doBrainOrders = function () {$/;"	function	line:2043
+lookAtPosition	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.lookAtPosition = function (position) {$/;"	function	line:2063
+createWeapon	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.createWeapon = function () {$/;"	function	line:2076
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.onDeath = function () {$/;"	function	line:2084
+onHit	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.onHit = function () {$/;"	function	line:2099
+EnemySpawnMarkerActor	E:\development\wingmod\dist\LogicInit.js	/^function EnemySpawnMarkerActor(config) {$/;"	function	line:2120
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnMarkerActor.prototype.customUpdate = function () {$/;"	function	line:2129
+createBody	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnMarkerActor.prototype.createBody = function () {$/;"	function	line:2136
+createEnemy	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnMarkerActor.prototype.createEnemy = function () {$/;"	function	line:2146
+EnemySpawnerActor	E:\development\wingmod\dist\LogicInit.js	/^function EnemySpawnerActor(config) {$/;"	function	line:2186
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.customUpdate = function () {$/;"	function	line:2202
+createEnemySpawnMarker	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {$/;"	function	line:2212
+createBody	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.createBody = function () {$/;"	function	line:2224
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.onDeath = function () {$/;"	function	line:2234
+onHit	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.onHit = function () {$/;"	function	line:2256
+MapActor	E:\development\wingmod\dist\LogicInit.js	/^function MapActor(config) {$/;"	function	line:2276
+createBody	E:\development\wingmod\dist\LogicInit.js	/^MapActor.prototype.createBody = function () {$/;"	function	line:2284
+generateShapes	E:\development\wingmod\dist\LogicInit.js	/^MapActor.prototype.generateShapes = function () {$/;"	function	line:2292
+BoomChunkActor	E:\development\wingmod\dist\LogicInit.js	/^function BoomChunkActor(config) {$/;"	function	line:2314
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^BoomChunkActor.prototype.onDeath = function () {$/;"	function	line:2326
+ChunkActor	E:\development\wingmod\dist\LogicInit.js	/^function ChunkActor(config) {$/;"	function	line:2339
+createBody	E:\development\wingmod\dist\LogicInit.js	/^ChunkActor.prototype.createBody = function () {$/;"	function	line:2354
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^ChunkActor.prototype.onSpawn = function () {$/;"	function	line:2366
+ShipActor	E:\development\wingmod\dist\LogicInit.js	/^function ShipActor(config) {$/;"	function	line:2381
+createBody	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.createBody = function () {$/;"	function	line:2419
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.customUpdate = function () {$/;"	function	line:2423
+playerUpdate	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.playerUpdate = function (inputState) {$/;"	function	line:2428
+applyLookAtRotationInput	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.applyLookAtRotationInput = function (inputState) {$/;"	function	line:2436
+applyThrustInput	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.applyThrustInput = function (inputState) {$/;"	function	line:2463
+applyWeaponInput	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.applyWeaponInput = function (inputState) {$/;"	function	line:2484
+createPrimaryWeaponSystem	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.createPrimaryWeaponSystem = function () {$/;"	function	line:2503
+createSecondaryWeaponSystem	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.createSecondaryWeaponSystem = function () {$/;"	function	line:2510
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.onDeath = function () {$/;"	function	line:2517
+onHit	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.onHit = function () {$/;"	function	line:2541
+switchWeapon	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.switchWeapon = function (weaponConfig) {$/;"	function	line:2553
+switch	E:\development\wingmod\dist\LogicInit.js	/^    switch (weaponConfig.index) {$/;"	function	line:2554
+LaserProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function LaserProjectileActor(config) {$/;"	function	line:2572
+createBody	E:\development\wingmod\dist\LogicInit.js	/^LaserProjectileActor.prototype.createBody = function () {$/;"	function	line:2599
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^LaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:2603
+MoltenProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function MoltenProjectileActor(config) {$/;"	function	line:2616
+createBody	E:\development\wingmod\dist\LogicInit.js	/^MoltenProjectileActor.prototype.createBody = function () {$/;"	function	line:2641
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^MoltenProjectileActor.prototype.onDeath = function () {$/;"	function	line:2645
+PlasmaProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function PlasmaProjectileActor(config) {$/;"	function	line:2658
+createBody	E:\development\wingmod\dist\LogicInit.js	/^PlasmaProjectileActor.prototype.createBody = function () {$/;"	function	line:2683
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^PlasmaProjectileActor.prototype.onDeath = function () {$/;"	function	line:2687
+PulseWaveProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function PulseWaveProjectileActor(config) {$/;"	function	line:2700
+createBody	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.createBody = function () {$/;"	function	line:2727
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.customUpdate = function () {$/;"	function	line:2731
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.onDeath = function () {$/;"	function	line:2736
+RedLaserProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function RedLaserProjectileActor(config) {$/;"	function	line:2749
+createBody	E:\development\wingmod\dist\LogicInit.js	/^RedLaserProjectileActor.prototype.createBody = function () {$/;"	function	line:2776
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^RedLaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:2780
+RingProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function RingProjectileActor(config) {$/;"	function	line:2793
+createBody	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.createBody = function () {$/;"	function	line:2820
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.customUpdate = function () {$/;"	function	line:2824
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.onDeath = function () {$/;"	function	line:2830
+MapAiGraphBuilder	E:\development\wingmod\dist\LogicInit.js	/^function MapAiGraphBuilder(config) {$/;"	function	line:2840
+createGraph	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphBuilder.prototype.createGraph = function () {};$/;"	function	line:2845
+createPositions	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphBuilder.prototype.createPositions = function () {};$/;"	function	line:2847
+MapBuilder	E:\development\wingmod\dist\LogicInit.js	/^function MapBuilder(config) {$/;"	function	line:2854
+createMap	E:\development\wingmod\dist\LogicInit.js	/^MapBuilder.prototype.createMap = function () {$/;"	function	line:2863
+setPrototypeChunks	E:\development\wingmod\dist\LogicInit.js	/^MapBuilder.prototype.setPrototypeChunks = function (chunks) {$/;"	function	line:2903
+MapChunk	E:\development\wingmod\dist\LogicInit.js	/^function MapChunk(config) {$/;"	function	line:2914
+createBody	E:\development\wingmod\dist\LogicInit.js	/^MapChunk.prototype.createBody = function () {$/;"	function	line:2922
+createShapes	E:\development\wingmod\dist\LogicInit.js	/^MapChunk.prototype.createShapes = function () {$/;"	function	line:2930
+MapManager	E:\development\wingmod\dist\LogicInit.js	/^function MapManager(config) {$/;"	function	line:2954
+fixFaceVerticesOrder	E:\development\wingmod\dist\LogicInit.js	/^MapManager.prototype.fixFaceVerticesOrder = function (hitmap) {$/;"	function	line:2967
+extractXZFromHitmap	E:\development\wingmod\dist\LogicInit.js	/^MapManager.prototype.extractXZFromHitmap = function (hitmap) {$/;"	function	line:2973
+loadChunkHitmaps	E:\development\wingmod\dist\LogicInit.js	/^MapManager.prototype.loadChunkHitmaps = function (hitmaps) {$/;"	function	line:2981
+createMap	E:\development\wingmod\dist\LogicInit.js	/^MapManager.prototype.createMap = function () {$/;"	function	line:2990
+createBodiesFromLayout	E:\development\wingmod\dist\LogicInit.js	/^MapManager.prototype.createBodiesFromLayout = function (layout) {$/;"	function	line:2997
+BaseActor	E:\development\wingmod\dist\LogicInit.js	/^function BaseActor(config, actorDependencies) {$/;"	function	line:3018
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.update = function (delta) {$/;"	function	line:3042
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:3058
+handleEvent	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.handleEvent = function (eventData) {$/;"	function	line:3060
+customHandleEvent	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.customHandleEvent = function (eventData) {};$/;"	function	line:3067
+updateFromLogic	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {$/;"	function	line:3069
+setPosition	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.setPosition = function (positionX, positionY) {$/;"	function	line:3079
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.createMeshes = function () {$/;"	function	line:3084
+addToScene	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.addToScene = function (scene) {$/;"	function	line:3088
+removeFromScene	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.removeFromScene = function (scene) {$/;"	function	line:3096
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onDeath = function () {};$/;"	function	line:3104
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.onSpawn = function () {};$/;"	function	line:3106
+DebugActor	E:\development\wingmod\dist\LogicInit.js	/^function DebugActor() {$/;"	function	line:3115
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^DebugActor.prototype.customUpdate = function () {$/;"	function	line:3121
+BaseMesh	E:\development\wingmod\dist\LogicInit.js	/^function BaseMesh(config) {$/;"	function	line:3142
+update	E:\development\wingmod\dist\LogicInit.js	/^BaseMesh.prototype.update = function () {$/;"	function	line:3166
+ChunkMesh	E:\development\wingmod\dist\LogicInit.js	/^function ChunkMesh(config) {$/;"	function	line:3184
+RavierMesh	E:\development\wingmod\dist\LogicInit.js	/^function RavierMesh(config) {$/;"	function	line:3206
+ShipMesh	E:\development\wingmod\dist\LogicInit.js	/^function ShipMesh(config) {$/;"	function	line:3225
+MookActor	E:\development\wingmod\dist\LogicInit.js	/^function MookActor() {$/;"	function	line:3253
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.createMeshes = function () {$/;"	function	line:3264
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.customUpdate = function () {$/;"	function	line:3275
+doBob	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.doBob = function () {$/;"	function	line:3282
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.onSpawn = function () {$/;"	function	line:3290
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.onDeath = function () {$/;"	function	line:3294
+handleDamage	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.handleDamage = function () {$/;"	function	line:3300
+drawEyes	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.drawEyes = function () {$/;"	function	line:3311
+onHit	E:\development\wingmod\dist\LogicInit.js	/^MookActor.prototype.onHit = function () {$/;"	function	line:3328
+MookBossActor	E:\development\wingmod\dist\LogicInit.js	/^function MookBossActor() {$/;"	function	line:3348
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^MookBossActor.prototype.createMeshes = function () {$/;"	function	line:3360
+OrbotActor	E:\development\wingmod\dist\LogicInit.js	/^function OrbotActor() {$/;"	function	line:3373
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.createMeshes = function () {$/;"	function	line:3384
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.customUpdate = function () {$/;"	function	line:3395
+doBob	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.doBob = function () {$/;"	function	line:3402
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.onSpawn = function () {$/;"	function	line:3410
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.onDeath = function () {$/;"	function	line:3414
+handleDamage	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.handleDamage = function () {$/;"	function	line:3420
+drawEyes	E:\development\wingmod\dist\LogicInit.js	/^OrbotActor.prototype.drawEyes = function () {$/;"	function	line:3431
+SniperActor	E:\development\wingmod\dist\LogicInit.js	/^function SniperActor() {$/;"	function	line:3452
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.createMeshes = function () {$/;"	function	line:3468
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.customUpdate = function () {$/;"	function	line:3479
+doBob	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.doBob = function () {$/;"	function	line:3486
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.onSpawn = function () {$/;"	function	line:3494
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.onDeath = function () {$/;"	function	line:3498
+handleDamage	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.handleDamage = function () {$/;"	function	line:3504
+drawEyes	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.drawEyes = function () {$/;"	function	line:3515
+onHit	E:\development\wingmod\dist\LogicInit.js	/^SniperActor.prototype.onHit = function () {$/;"	function	line:3535
+EnemySpawnMarkerActor	E:\development\wingmod\dist\LogicInit.js	/^function EnemySpawnMarkerActor(config) {$/;"	function	line:3554
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnMarkerActor.prototype.customUpdate = function () {$/;"	function	line:3561
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnMarkerActor.prototype.onDeath = function () {$/;"	function	line:3611
+EnemySpawnerActor	E:\development\wingmod\dist\LogicInit.js	/^function EnemySpawnerActor(config) {$/;"	function	line:3653
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.onSpawn = function () {$/;"	function	line:3672
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.onDeath = function () {$/;"	function	line:3676
+makeBoomRandomly	E:\development\wingmod\dist\LogicInit.js	/^    var makeBoomRandomly = function makeBoomRandomly() {$/;"	function	line:3679
+handleDamage	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.handleDamage = function (damageValue) {$/;"	function	line:3690
+createBottomMesh	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.createBottomMesh = function () {$/;"	function	line:3703
+createTopMesh	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.createTopMesh = function () {$/;"	function	line:3714
+setupMeshes	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.setupMeshes = function () {$/;"	function	line:3725
+update	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.update = function () {$/;"	function	line:3732
+addToScene	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.addToScene = function (scene) {$/;"	function	line:3745
+removeFromScene	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.removeFromScene = function (scene) {$/;"	function	line:3750
+customHandleEvent	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.customHandleEvent = function (eventData) {$/;"	function	line:3755
+doChargingAnimation	E:\development\wingmod\dist\LogicInit.js	/^EnemySpawnerActor.prototype.doChargingAnimation = function () {$/;"	function	line:3762
+MapActor	E:\development\wingmod\dist\LogicInit.js	/^function MapActor() {$/;"	function	line:3784
+BoomChunkActor	E:\development\wingmod\dist\LogicInit.js	/^function BoomChunkActor() {$/;"	function	line:3797
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^BoomChunkActor.prototype.onDeath = function () {$/;"	function	line:3803
+ChunkActor	E:\development\wingmod\dist\LogicInit.js	/^function ChunkActor() {$/;"	function	line:3816
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^ChunkActor.prototype.createMeshes = function () {$/;"	function	line:3822
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^ChunkActor.prototype.customUpdate = function () {$/;"	function	line:3826
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^ChunkActor.prototype.onDeath = function () {$/;"	function	line:3844
+ShipActor	E:\development\wingmod\dist\LogicInit.js	/^function ShipActor() {$/;"	function	line:3872
+createMeshes	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.createMeshes = function () {$/;"	function	line:3895
+switchWeapon	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.switchWeapon = function (changeConfig) {$/;"	function	line:3900
+setupWeaponMeshes	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, materialName, scales) {$/;"	function	line:3908
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.customUpdate = function () {$/;"	function	line:3932
+doBank	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.doBank = function () {$/;"	function	line:3939
+doBob	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.doBob = function () {$/;"	function	line:3943
+doEngineGlow	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.doEngineGlow = function () {$/;"	function	line:3969
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.onDeath = function () {$/;"	function	line:4034
+handleDamage	E:\development\wingmod\dist\LogicInit.js	/^ShipActor.prototype.handleDamage = function () {$/;"	function	line:4040
+LaserProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function LaserProjectileActor(config) {$/;"	function	line:4064
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^LaserProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4073
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^LaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:4077
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^LaserProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4082
+MoltenProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function MoltenProjectileActor(config) {$/;"	function	line:4119
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^MoltenProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4128
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^MoltenProjectileActor.prototype.onDeath = function () {$/;"	function	line:4132
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^MoltenProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4137
+PlasmaProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function PlasmaProjectileActor(config) {$/;"	function	line:4174
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^PlasmaProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4183
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^PlasmaProjectileActor.prototype.onDeath = function () {$/;"	function	line:4187
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^PlasmaProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4192
+PulseWaveProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function PulseWaveProjectileActor(config) {$/;"	function	line:4229
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4238
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.onDeath = function () {$/;"	function	line:4261
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^PulseWaveProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4297
+RedLaserProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function RedLaserProjectileActor(config) {$/;"	function	line:4334
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^RedLaserProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4343
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^RedLaserProjectileActor.prototype.onDeath = function () {$/;"	function	line:4347
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^RedLaserProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4352
+RingProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function RingProjectileActor(config) {$/;"	function	line:4389
+customUpdate	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.customUpdate = function () {$/;"	function	line:4398
+onDeath	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.onDeath = function () {$/;"	function	line:4421
+onSpawn	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.onSpawn = function () {$/;"	function	line:4457
+get	E:\development\wingmod\dist\LogicInit.js	/^    get: function get(name) {$/;"	function	line:4496
+loadBatch	E:\development\wingmod\dist\LogicInit.js	/^    loadBatch: function loadBatch(batch) {$/;"	function	line:4503
+addGeometry	E:\development\wingmod\dist\LogicInit.js	/^    addGeometry: function addGeometry(name, geometry) {$/;"	function	line:4510
+addMaterial	E:\development\wingmod\dist\LogicInit.js	/^    addMaterial: function addMaterial(name, material) {$/;"	function	line:4516
+_defineProperty	E:\development\wingmod\dist\LogicInit.js	/^function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }$/;"	function	line:4528
+ActorFactory	E:\development\wingmod\dist\LogicInit.js	/^function ActorFactory(context, actorDependencies) {$/;"	function	line:4553
+create	E:\development\wingmod\dist\LogicInit.js	/^ActorFactory.prototype.create = function (config) {$/;"	function	line:4578
+exports	E:\development\wingmod\dist\LogicInit.js	/^module.exports = function (context) {$/;"	function	line:4585
+getInstance	E:\development\wingmod\dist\LogicInit.js	/^    returnObject.getInstance = function (dependencies) {$/;"	function	line:4588
+EventEmitter	E:\development\wingmod\dist\LogicInit.js	/^var EventEmitter = function EventEmitter() {};$/;"	function	line:4641
+on	E:\development\wingmod\dist\LogicInit.js	/^    on: function on(type, listener, context) {$/;"	function	line:4655
+has	E:\development\wingmod\dist\LogicInit.js	/^    has: function has(type, listener) {$/;"	function	line:4677
+off	E:\development\wingmod\dist\LogicInit.js	/^    off: function off(type, listener) {$/;"	function	line:4702
+emit	E:\development\wingmod\dist\LogicInit.js	/^    emit: function emit(event) {$/;"	function	line:4721
+degToRad	E:\development\wingmod\dist\LogicInit.js	/^    degToRad: function degToRad(degrees) {$/;"	function	line:4742
+radToDeg	E:\development\wingmod\dist\LogicInit.js	/^    radToDeg: function radToDeg(radians) {$/;"	function	line:4746
+getRandomFloat	E:\development\wingmod\dist\LogicInit.js	/^    getRandomFloat: function getRandomFloat(min, max) {$/;"	function	line:4750
+getRandomInteger	E:\development\wingmod\dist\LogicInit.js	/^    getRandomInteger: function getRandomInteger(min, max) {$/;"	function	line:4755
+rand	E:\development\wingmod\dist\LogicInit.js	/^    rand: function rand(min, max) {$/;"	function	line:4760
+makeRandomColor	E:\development\wingmod\dist\LogicInit.js	/^    makeRandomColor: function makeRandomColor() {$/;"	function	line:4764
+mixin	E:\development\wingmod\dist\LogicInit.js	/^    mixin: function mixin(receiver, donor) {$/;"	function	line:4779
+uptrunc	E:\development\wingmod\dist\LogicInit.js	/^    uptrunc: function uptrunc(x) {$/;"	function	line:4786
+angleToVector	E:\development\wingmod\dist\LogicInit.js	/^    angleToVector: function angleToVector(angle, length) {$/;"	function	line:4790
+angleBetweenPointsFromCenter	E:\development\wingmod\dist\LogicInit.js	/^    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {$/;"	function	line:4795
+angleBetweenPoints	E:\development\wingmod\dist\LogicInit.js	/^    angleBetweenPoints: function angleBetweenPoints(p1, p2) {$/;"	function	line:4806
+pointInArc	E:\development\wingmod\dist\LogicInit.js	/^    pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {$/;"	function	line:4812
+arcAngleDifference	E:\development\wingmod\dist\LogicInit.js	/^    arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {$/;"	function	line:4819
+firstToUpper	E:\development\wingmod\dist\LogicInit.js	/^    firstToUpper: function firstToUpper(string) {$/;"	function	line:4825
+rotateOffsetPoint	E:\development\wingmod\dist\LogicInit.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radAngle) {$/;"	function	line:4829
+distanceBetweenPoints	E:\development\wingmod\dist\LogicInit.js	/^    distanceBetweenPoints: function distanceBetweenPoints(p1x, p2x, p1y, p2y) {$/;"	function	line:4835
+pointDifference	E:\development\wingmod\dist\LogicInit.js	/^    pointDifference: function pointDifference(p1x, p2x, p1y, p2y) {$/;"	function	line:4839
+rotateVector	E:\development\wingmod\dist\LogicInit.js	/^    rotateVector: function rotateVector(x, y, angle) {$/;"	function	line:4843
+objToScreenPosition	E:\development\wingmod\dist\LogicInit.js	/^    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {$/;"	function	line:4851
+extend	E:\development\wingmod\dist\LogicInit.js	/^    Function.prototype.extend = function (oldClass) {$/;"	function	line:4867
+WorkerBus	E:\development\wingmod\dist\LogicInit.js	/^function WorkerBus(config) {$/;"	function	line:4878
+postMessage	E:\development\wingmod\dist\LogicInit.js	/^WorkerBus.prototype.postMessage = function (type, message) {$/;"	function	line:4890
+handleMessage	E:\development\wingmod\dist\LogicInit.js	/^WorkerBus.prototype.handleMessage = function (message) {$/;"	function	line:4895
+gulp	E:\development\wingmod\gulpfile.js	/^var gulp = require('gulp');$/;"	variable	line:1
+browserify	E:\development\wingmod\gulpfile.js	/^var browserify = require('browserify');$/;"	variable	line:2
+source	E:\development\wingmod\gulpfile.js	/^var source = require('vinyl-source-stream');$/;"	variable	line:3
+watchify	E:\development\wingmod\gulpfile.js	/^var watchify = require('watchify');$/;"	variable	line:4
+fs	E:\development\wingmod\gulpfile.js	/^var fs = require('fs');$/;"	variable	line:5
+nodemon	E:\development\wingmod\gulpfile.js	/^var nodemon = require('nodemon');$/;"	variable	line:6
+SOURCE_PATH	E:\development\wingmod\gulpfile.js	/^var SOURCE_PATH = 'src';$/;"	variable	line:7
+LOG_PATH	E:\development\wingmod\gulpfile.js	/^var LOG_PATH = 'gulpLog.txt';$/;"	variable	line:8
+VERSION_PATH	E:\development\wingmod\gulpfile.js	/^var VERSION_PATH = 'version';$/;"	variable	line:9
+createIds	E:\development\wingmod\gulpfile.js	/^var createIds = [];$/;"	variable	line:11
+customOptions.transform	E:\development\wingmod\gulpfile.js	/^    transform: [$/;"	property	line:27
+pad	E:\development\wingmod\gulpfile.js	/^function pad(value) {$/;"	function	line:34
+pad	E:\development\wingmod\gulpfile.js	/^function pad(value) {$/;"	function	line:34
+createCurrentTimeString	E:\development\wingmod\gulpfile.js	/^function createCurrentTimeString(){$/;"	function	line:42
+createCurrentTimeString	E:\development\wingmod\gulpfile.js	/^function createCurrentTimeString(){$/;"	function	line:42
+onError	E:\development\wingmod\gulpfile.js	/^function onError(createInfo, message){$/;"	function	line:47
+onError	E:\development\wingmod\gulpfile.js	/^function onError(createInfo, message){$/;"	function	line:47
+onSuccess	E:\development\wingmod\gulpfile.js	/^function onSuccess(){$/;"	function	line:58
+onSuccess	E:\development\wingmod\gulpfile.js	/^function onSuccess(){$/;"	function	line:58
+rebundle	E:\development\wingmod\gulpfile.js	/^function rebundle(bundler, config){$/;"	function	line:69
+rebundle	E:\development\wingmod\gulpfile.js	/^function rebundle(bundler, config){$/;"	function	line:69
+createBundle	E:\development\wingmod\gulpfile.js	/^function createBundle(config, watching){$/;"	function	line:83
+createBundle	E:\development\wingmod\gulpfile.js	/^function createBundle(config, watching){$/;"	function	line:83
+createBundles	E:\development\wingmod\gulpfile.js	/^function createBundles(bundles, watching){$/;"	function	line:104
+createBundles	E:\development\wingmod\gulpfile.js	/^function createBundles(bundles, watching){$/;"	function	line:104
+html	E:\development\wingmod\index.html	/^<html>$/;"	function	line:2
+head	E:\development\wingmod\index.html	/^    <head>$/;"	function	line:3
+meta	E:\development\wingmod\index.html	/^        <meta http-equiv="Content-Type" content="text\/html; charset=utf-8"\/>$/;"	function	line:4
+title	E:\development\wingmod\index.html	/^        <title>Wingmod 2<\/title>$/;"	function	line:5
+meta	E:\development\wingmod\index.html	/^        <meta charset="UTF-8">$/;"	function	line:7
+meta	E:\development\wingmod\index.html	/^        <meta name="viewport" content="width=device-width, initial-scale=1.0">$/;"	function	line:8
+link	E:\development\wingmod\index.html	/^        <link rel="stylesheet" type="text\/css" href="styles.css">$/;"	function	line:10
+script	E:\development\wingmod\index.html	/^        <script src="lib\/three77.js"><\/script>$/;"	function	line:12
+script	E:\development\wingmod\index.html	/^        <script src="lib\/stats.min.js"><\/script>$/;"	function	line:13
+script	E:\development\wingmod\index.html	/^        <script src="lib\/threex.rendererstats.js"><\/script>$/;"	function	line:14
+script	E:\development\wingmod\index.html	/^        <script src="lib\/threex.loop.js"><\/script>$/;"	function	line:15
+script	E:\development\wingmod\index.html	/^        <script src="lib\/utils\/polyfills.js"><\/script>$/;"	function	line:16
+script	E:\development\wingmod\index.html	/^        <script src="lib\/p2.js"><\/script>$/;"	function	line:17
+script	E:\development\wingmod\index.html	/^        <script src="lib\/react.js"><\/script>$/;"	function	line:18
+script	E:\development\wingmod\index.html	/^        <script src="lib\/react-dom.js"><\/script>$/;"	function	line:19
+script	E:\development\wingmod\index.html	/^        <script src="lib\/soundjs-0.6.2.min.js"><\/script>$/;"	function	line:20
+script	E:\development\wingmod\index.html	/^        <script src="dist\/Init.js"><\/script>$/;"	function	line:22
+body	E:\development\wingmod\index.html	/^    <body id="gameViewport" class="gameViewport">$/;"	function	line:26
+div	E:\development\wingmod\index.html	/^      <div id="react-content" class="reactContent"><\/div>$/;"	function	line:27
+MTLLoader	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader = function( manager ) {$/;"	function	line:7
+THREE.MTLLoader	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader = function( manager ) {$/;"	class	line:7
+THREE.MTLLoader.constructor	E:\development\wingmod\lib\MTLLoader.js	/^	constructor: THREE.MTLLoader,$/;"	property	line:15
+load	E:\development\wingmod\lib\MTLLoader.js	/^	load: function ( url, onLoad, onProgress, onError ) {$/;"	function	line:17
+setBaseUrl	E:\development\wingmod\lib\MTLLoader.js	/^	setBaseUrl: function( value ) {$/;"	function	line:31
+setCrossOrigin	E:\development\wingmod\lib\MTLLoader.js	/^	setCrossOrigin: function ( value ) {$/;"	function	line:37
+setMaterialOptions	E:\development\wingmod\lib\MTLLoader.js	/^	setMaterialOptions: function ( value ) {$/;"	function	line:43
+parse	E:\development\wingmod\lib\MTLLoader.js	/^	parse: function ( text ) {$/;"	function	line:54
+delimiter_pattern	E:\development\wingmod\lib\MTLLoader.js	/^		var delimiter_pattern = \/\\s+\/;$/;"	variable	line:58
+info.name	E:\development\wingmod\lib\MTLLoader.js	/^				info = { name: value };$/;"	property	line:85
+MaterialCreator	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.MaterialCreator = function( baseUrl, options ) {$/;"	function	line:132
+THREE.MTLLoader.MaterialCreator	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.MaterialCreator = function( baseUrl, options ) {$/;"	class	line:132
+THREE.MTLLoader.MaterialCreator.constructor	E:\development\wingmod\lib\MTLLoader.js	/^	constructor: THREE.MTLLoader.MaterialCreator,$/;"	property	line:148
+setCrossOrigin	E:\development\wingmod\lib\MTLLoader.js	/^	setCrossOrigin: function ( value ) {$/;"	function	line:150
+setManager	E:\development\wingmod\lib\MTLLoader.js	/^	setManager: function ( value ) {$/;"	function	line:156
+setMaterials	E:\development\wingmod\lib\MTLLoader.js	/^	setMaterials: function( materialsInfo ) {$/;"	function	line:162
+convert	E:\development\wingmod\lib\MTLLoader.js	/^	convert: function( materialsInfo ) {$/;"	function	line:171
+switch	E:\development\wingmod\lib\MTLLoader.js	/^				switch ( lprop ) {$/;"	function	line:193
+preload	E:\development\wingmod\lib\MTLLoader.js	/^	preload: function () {$/;"	function	line:254
+getIndex	E:\development\wingmod\lib\MTLLoader.js	/^	getIndex: function( materialName ) {$/;"	function	line:264
+getAsArray	E:\development\wingmod\lib\MTLLoader.js	/^	getAsArray: function() {$/;"	function	line:270
+create	E:\development\wingmod\lib\MTLLoader.js	/^	create: function ( materialName ) {$/;"	function	line:286
+createMaterial_	E:\development\wingmod\lib\MTLLoader.js	/^	createMaterial_: function ( materialName ) {$/;"	function	line:298
+params.name	E:\development\wingmod\lib\MTLLoader.js	/^			name: materialName,$/;"	property	line:305
+params.side	E:\development\wingmod\lib\MTLLoader.js	/^			side: this.side$/;"	property	line:306
+loadTexture	E:\development\wingmod\lib\MTLLoader.js	/^	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {$/;"	function	line:399
+loader	E:\development\wingmod\lib\MTLLoader.js	/^		var loader = THREE.Loader.Handlers.get( url );$/;"	variable	line:402
+ensurePowerOfTwo_	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.ensurePowerOfTwo_ = function ( image ) {$/;"	function	line:434
+THREE.MTLLoader.ensurePowerOfTwo_	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.ensurePowerOfTwo_ = function ( image ) {$/;"	function	line:434
+nextHighestPowerOfTwo_	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.nextHighestPowerOfTwo_ = function( x ) {$/;"	function	line:452
+THREE.MTLLoader.nextHighestPowerOfTwo_	E:\development\wingmod\lib\MTLLoader.js	/^THREE.MTLLoader.nextHighestPowerOfTwo_ = function( x ) {$/;"	function	line:452
+THREE.EventDispatcher	E:\development\wingmod\lib\MTLLoader.js	/^THREE.EventDispatcher.prototype.apply( THREE.MTLLoader.prototype );$/;"	class	line:466
+THREE.EventDispatcher.apply	E:\development\wingmod\lib\MTLLoader.js	/^THREE.EventDispatcher.prototype.apply( THREE.MTLLoader.prototype );$/;"	method	line:466
+OBJLoader	E:\development\wingmod\lib\OBJLoader.js	/^THREE.OBJLoader = function ( manager ) {$/;"	function	line:5
+THREE.OBJLoader	E:\development\wingmod\lib\OBJLoader.js	/^THREE.OBJLoader = function ( manager ) {$/;"	class	line:5
+THREE.OBJLoader.constructor	E:\development\wingmod\lib\OBJLoader.js	/^	constructor: THREE.OBJLoader,$/;"	property	line:13
+load	E:\development\wingmod\lib\OBJLoader.js	/^	load: function ( url, onLoad, onProgress, onError ) {$/;"	function	line:15
+setCrossOrigin	E:\development\wingmod\lib\OBJLoader.js	/^	setCrossOrigin: function ( value ) {$/;"	function	line:29
+parse	E:\development\wingmod\lib\OBJLoader.js	/^	parse: function ( text ) {$/;"	function	line:35
+object	E:\development\wingmod\lib\OBJLoader.js	/^		var object, objects = [];$/;"	variable	line:39
+geometry	E:\development\wingmod\lib\OBJLoader.js	/^		var geometry, material;$/;"	variable	line:40
+parseVertexIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseVertexIndex( value ) {$/;"	function	line:42
+parseVertexIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseVertexIndex( value ) {$/;"	function	line:42
+parseNormalIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseNormalIndex( value ) {$/;"	function	line:50
+parseNormalIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseNormalIndex( value ) {$/;"	function	line:50
+parseUVIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseUVIndex( value ) {$/;"	function	line:58
+parseUVIndex	E:\development\wingmod\lib\OBJLoader.js	/^		function parseUVIndex( value ) {$/;"	function	line:58
+addVertex	E:\development\wingmod\lib\OBJLoader.js	/^		function addVertex( a, b, c ) {$/;"	function	line:66
+addVertex	E:\development\wingmod\lib\OBJLoader.js	/^		function addVertex( a, b, c ) {$/;"	function	line:66
+addNormal	E:\development\wingmod\lib\OBJLoader.js	/^		function addNormal( a, b, c ) {$/;"	function	line:76
+addNormal	E:\development\wingmod\lib\OBJLoader.js	/^		function addNormal( a, b, c ) {$/;"	function	line:76
+addUV	E:\development\wingmod\lib\OBJLoader.js	/^		function addUV( a, b, c ) {$/;"	function	line:86
+addUV	E:\development\wingmod\lib\OBJLoader.js	/^		function addUV( a, b, c ) {$/;"	function	line:86
+addFace	E:\development\wingmod\lib\OBJLoader.js	/^		function addFace( a, b, c, d,  ua, ub, uc, ud, na, nb, nc, nd ) {$/;"	function	line:96
+addFace	E:\development\wingmod\lib\OBJLoader.js	/^		function addFace( a, b, c, d,  ua, ub, uc, ud, na, nb, nc, nd ) {$/;"	function	line:96
+geometry.vertices	E:\development\wingmod\lib\OBJLoader.js	/^				vertices: [],$/;"	property	line:165
+material.name	E:\development\wingmod\lib\OBJLoader.js	/^				name: ''$/;"	property	line:171
+object.name	E:\development\wingmod\lib\OBJLoader.js	/^				name: '',$/;"	property	line:175
+object.geometry	E:\development\wingmod\lib\OBJLoader.js	/^				geometry: geometry,$/;"	property	line:176
+object.material	E:\development\wingmod\lib\OBJLoader.js	/^				material: material$/;"	property	line:177
+vertices	E:\development\wingmod\lib\OBJLoader.js	/^		var vertices = [];$/;"	variable	line:184
+normals	E:\development\wingmod\lib\OBJLoader.js	/^		var normals = [];$/;"	variable	line:185
+uvs	E:\development\wingmod\lib\OBJLoader.js	/^		var uvs = [];$/;"	variable	line:186
+vertex_pattern	E:\development\wingmod\lib\OBJLoader.js	/^		var vertex_pattern = \/v( +[\\d|\\.|\\+|\\-|e|E]+)( +[\\d|\\.|\\+|\\-|e|E]+)( +[\\d|\\.|\\+|\\-|e|E]+)\/;$/;"	variable	line:190
+normal_pattern	E:\development\wingmod\lib\OBJLoader.js	/^		var normal_pattern = \/vn( +[\\d|\\.|\\+|\\-|e|E]+)( +[\\d|\\.|\\+|\\-|e|E]+)( +[\\d|\\.|\\+|\\-|e|E]+)\/;$/;"	variable	line:194
+uv_pattern	E:\development\wingmod\lib\OBJLoader.js	/^		var uv_pattern = \/vt( +[\\d|\\.|\\+|\\-|e|E]+)( +[\\d|\\.|\\+|\\-|e|E]+)\/;$/;"	variable	line:198
+face_pattern1	E:\development\wingmod\lib\OBJLoader.js	/^		var face_pattern1 = \/f( +-?\\d+)( +-?\\d+)( +-?\\d+)( +-?\\d+)?\/;$/;"	variable	line:202
+face_pattern2	E:\development\wingmod\lib\OBJLoader.js	/^		var face_pattern2 = \/f( +(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+))?\/;$/;"	variable	line:206
+face_pattern3	E:\development\wingmod\lib\OBJLoader.js	/^		var face_pattern3 = \/f( +(-?\\d+)\\\/(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+)\\\/(-?\\d+))( +(-?\\d+)\\\/(-?\\d+)\\\/(-?\\d+))?\/;$/;"	variable	line:210
+face_pattern4	E:\development\wingmod\lib\OBJLoader.js	/^		var face_pattern4 = \/f( +(-?\\d+)\\\/\\\/(-?\\d+))( +(-?\\d+)\\\/\\\/(-?\\d+))( +(-?\\d+)\\\/\\\/(-?\\d+))( +(-?\\d+)\\\/\\\/(-?\\d+))?\/;$/;"	variable	line:214
+lines	E:\development\wingmod\lib\OBJLoader.js	/^		var lines = text.split( '\\n' );$/;"	variable	line:218
+geometry.vertices	E:\development\wingmod\lib\OBJLoader.js	/^					vertices: [],$/;"	property	line:300
+material.name	E:\development\wingmod\lib\OBJLoader.js	/^					name: ''$/;"	property	line:306
+object.name	E:\development\wingmod\lib\OBJLoader.js	/^					name: line.substring( 2 ).trim(),$/;"	property	line:310
+OBJMTLLoader	E:\development\wingmod\lib\OBJMTLLoader.js	/^THREE.OBJMTLLoader = function ( manager ) {$/;"	function	line:8
+THREE.OBJMTLLoader	E:\development\wingmod\lib\OBJMTLLoader.js	/^THREE.OBJMTLLoader = function ( manager ) {$/;"	class	line:8
+THREE.OBJMTLLoader.constructor	E:\development\wingmod\lib\OBJMTLLoader.js	/^	constructor: THREE.OBJMTLLoader,$/;"	property	line:16
+load	E:\development\wingmod\lib\OBJMTLLoader.js	/^	load: function ( url, mtlurl, onLoad, onProgress, onError ) {$/;"	function	line:18
+setCrossOrigin	E:\development\wingmod\lib\OBJMTLLoader.js	/^	setCrossOrigin: function ( value ) {$/;"	function	line:60
+parse	E:\development\wingmod\lib\OBJMTLLoader.js	/^	parse: function ( data, mtllibCallback ) {$/;"	function	line:73
+vector	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function vector( x, y, z ) {$/;"	function	line:75
+uv	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function uv( u, v ) {$/;"	function	line:81
+uv	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function uv( u, v ) {$/;"	function	line:81
+face3	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function face3( a, b, c, normals ) {$/;"	function	line:87
+face3	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function face3( a, b, c, normals ) {$/;"	function	line:87
+face_offset	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var face_offset = 0;$/;"	variable	line:93
+meshN	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function meshN( meshName, materialName ) {$/;"	function	line:95
+meshN	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function meshN( meshName, materialName ) {$/;"	function	line:95
+object	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var object = group;$/;"	variable	line:126
+vertices	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var vertices = [];$/;"	variable	line:132
+normals	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var normals = [];$/;"	variable	line:133
+uvs	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var uvs = [];$/;"	variable	line:134
+add_face	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function add_face( a, b, c, normals_inds ) {$/;"	function	line:136
+add_face	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function add_face( a, b, c, normals_inds ) {$/;"	function	line:136
+add_uvs	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function add_uvs( a, b, c ) {$/;"	function	line:163
+add_uvs	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function add_uvs( a, b, c ) {$/;"	function	line:163
+handle_face_line	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function handle_face_line( faces, uvs, normals_inds ) {$/;"	function	line:173
+handle_face_line	E:\development\wingmod\lib\OBJMTLLoader.js	/^		function handle_face_line( faces, uvs, normals_inds ) {$/;"	function	line:173
+vertex_pattern	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var vertex_pattern = \/v( +[\\d|\\.|\\+|\\-|e]+)( +[\\d|\\.|\\+|\\-|e]+)( +[\\d|\\.|\\+|\\-|e]+)\/;$/;"	variable	line:213
+normal_pattern	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var normal_pattern = \/vn( +[\\d|\\.|\\+|\\-|e]+)( +[\\d|\\.|\\+|\\-|e]+)( +[\\d|\\.|\\+|\\-|e]+)\/;$/;"	variable	line:217
+uv_pattern	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var uv_pattern = \/vt( +[\\d|\\.|\\+|\\-|e]+)( +[\\d|\\.|\\+|\\-|e]+)\/;$/;"	variable	line:221
+face_pattern1	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var face_pattern1 = \/f( +\\d+)( +\\d+)( +\\d+)( +\\d+)?\/;$/;"	variable	line:225
+face_pattern2	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var face_pattern2 = \/f( +(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+))?\/;$/;"	variable	line:229
+face_pattern3	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var face_pattern3 = \/f( +(\\d+)\\\/(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+)\\\/(\\d+))( +(\\d+)\\\/(\\d+)\\\/(\\d+))?\/;$/;"	variable	line:233
+face_pattern4	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var face_pattern4 = \/f( +(\\d+)\\\/\\\/(\\d+))( +(\\d+)\\\/\\\/(\\d+))( +(\\d+)\\\/\\\/(\\d+))( +(\\d+)\\\/\\\/(\\d+))?\/;$/;"	variable	line:237
+lines	E:\development\wingmod\lib\OBJMTLLoader.js	/^		var lines = data.split( "\\n" );$/;"	variable	line:241
+THREE.EventDispatcher	E:\development\wingmod\lib\OBJMTLLoader.js	/^THREE.EventDispatcher.prototype.apply( THREE.OBJMTLLoader.prototype );$/;"	class	line:374
+THREE.EventDispatcher.apply	E:\development\wingmod\lib\OBJMTLLoader.js	/^THREE.EventDispatcher.prototype.apply( THREE.OBJMTLLoader.prototype );$/;"	method	line:374
+e	E:\development\wingmod\lib\p2.js	/^(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.p2 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){$/;"	function	line:1
+Line	E:\development\wingmod\lib\p2.js	/^function Line(){};$/;"	function	line:10
+lineInt	E:\development\wingmod\lib\p2.js	/^Line.lineInt = function(l1,l2,precision){$/;"	function	line:21
+segmentsIntersect	E:\development\wingmod\lib\p2.js	/^Line.segmentsIntersect = function(p1, p2, q1, q2){$/;"	function	line:48
+Point	E:\development\wingmod\lib\p2.js	/^function Point(){};$/;"	function	line:72
+area	E:\development\wingmod\lib\p2.js	/^Point.area = function(a,b,c){$/;"	function	line:83
+left	E:\development\wingmod\lib\p2.js	/^Point.left = function(a,b,c){$/;"	function	line:87
+leftOn	E:\development\wingmod\lib\p2.js	/^Point.leftOn = function(a,b,c) {$/;"	function	line:91
+right	E:\development\wingmod\lib\p2.js	/^Point.right = function(a,b,c) {$/;"	function	line:95
+rightOn	E:\development\wingmod\lib\p2.js	/^Point.rightOn = function(a,b,c) {$/;"	function	line:99
+collinear	E:\development\wingmod\lib\p2.js	/^Point.collinear = function(a,b,c,thresholdAngle) {$/;"	function	line:115
+sqdist	E:\development\wingmod\lib\p2.js	/^Point.sqdist = function(a,b){$/;"	function	line:135
+Polygon	E:\development\wingmod\lib\p2.js	/^function Polygon(){$/;"	function	line:153
+at	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.at = function(i){$/;"	function	line:169
+first	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.first = function(){$/;"	function	line:180
+last	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.last = function(){$/;"	function	line:189
+clear	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.clear = function(){$/;"	function	line:198
+append	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.append = function(poly,from,to){$/;"	function	line:210
+makeCCW	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.makeCCW = function(){$/;"	function	line:227
+reverse	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.reverse = function(){$/;"	function	line:248
+isReflex	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.isReflex = function(i){$/;"	function	line:262
+canSee	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.canSee = function(a,b) {$/;"	function	line:276
+copy	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.copy = function(i,j,targetPoly){$/;"	function	line:309
+getCutEdges	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.getCutEdges = function() {$/;"	function	line:337
+decomp	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.decomp = function(){$/;"	function	line:369
+slice	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.slice = function(cutEdges){$/;"	function	line:383
+isSimple	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.isSimple = function(){$/;"	function	line:428
+getIntersectionPoint	E:\development\wingmod\lib\p2.js	/^function getIntersectionPoint(p1, p2, q1, q2, delta){$/;"	function	line:449
+quickDecomp	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.quickDecomp = function(result,reflexVertices,steinerPoints,delta,maxlevel,level){$/;"	function	line:476
+removeCollinearPoints	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.removeCollinearPoints = function(precision){$/;"	function	line:624
+Scalar	E:\development\wingmod\lib\p2.js	/^function Scalar(){}$/;"	function	line:644
+eq	E:\development\wingmod\lib\p2.js	/^Scalar.eq = function(a,b,precision){$/;"	function	line:655
+AABB	E:\development\wingmod\lib\p2.js	/^function AABB(options){$/;"	function	line:679
+setFromPoints	E:\development\wingmod\lib\p2.js	/^AABB.prototype.setFromPoints = function(points, position, angle, skinSize){$/;"	function	line:707
+copy	E:\development\wingmod\lib\p2.js	/^AABB.prototype.copy = function(aabb){$/;"	function	line:764
+extend	E:\development\wingmod\lib\p2.js	/^AABB.prototype.extend = function(aabb){$/;"	function	line:774
+overlaps	E:\development\wingmod\lib\p2.js	/^AABB.prototype.overlaps = function(aabb){$/;"	function	line:801
+containsPoint	E:\development\wingmod\lib\p2.js	/^AABB.prototype.containsPoint = function(point){$/;"	function	line:821
+overlapsRay	E:\development\wingmod\lib\p2.js	/^AABB.prototype.overlapsRay = function(ray){$/;"	function	line:833
+Broadphase	E:\development\wingmod\lib\p2.js	/^function Broadphase(type){$/;"	function	line:876
+setWorld	E:\development\wingmod\lib\p2.js	/^Broadphase.prototype.setWorld = function(world){$/;"	function	line:921
+getCollisionPairs	E:\development\wingmod\lib\p2.js	/^Broadphase.prototype.getCollisionPairs = function(\/*world*\/){};$/;"	function	line:931
+boundingRadiusCheck	E:\development\wingmod\lib\p2.js	/^Broadphase.boundingRadiusCheck = function(bodyA, bodyB){$/;"	function	line:940
+aabbCheck	E:\development\wingmod\lib\p2.js	/^Broadphase.aabbCheck = function(bodyA, bodyB){$/;"	function	line:953
+boundingVolumeCheck	E:\development\wingmod\lib\p2.js	/^Broadphase.prototype.boundingVolumeCheck = function(bodyA, bodyB){$/;"	function	line:964
+switch	E:\development\wingmod\lib\p2.js	/^    switch(this.boundingVolumeType){$/;"	function	line:967
+canCollide	E:\development\wingmod\lib\p2.js	/^Broadphase.canCollide = function(bodyA, bodyB){$/;"	function	line:987
+aabbQuery	E:\development\wingmod\lib\p2.js	/^Broadphase.prototype.aabbQuery = function(\/*world, aabb, result*\/){$/;"	function	line:1034
+NaiveBroadphase	E:\development\wingmod\lib\p2.js	/^function NaiveBroadphase(){$/;"	function	line:1050
+getCollisionPairs	E:\development\wingmod\lib\p2.js	/^NaiveBroadphase.prototype.getCollisionPairs = function(world){$/;"	function	line:1062
+aabbQuery	E:\development\wingmod\lib\p2.js	/^NaiveBroadphase.prototype.aabbQuery = function(world, aabb, result){$/;"	function	line:1091
+Narrowphase	E:\development\wingmod\lib\p2.js	/^function Narrowphase(){$/;"	function	line:1155
+bodiesOverlap	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.bodiesOverlap = function(bodyA, bodyB, checkCollisionMasks){$/;"	function	line:1243
+collidedLastStep	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.collidedLastStep = function(bodyA, bodyB){$/;"	function	line:1289
+reset	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.reset = function(){$/;"	function	line:1299
+createContactEquation	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.createContactEquation = function(bodyA, bodyB, shapeA, shapeB){$/;"	function	line:1331
+createFrictionEquation	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.createFrictionEquation = function(bodyA, bodyB, shapeA, shapeB){$/;"	function	line:1358
+createFrictionFromContact	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.createFrictionFromContact = function(c){$/;"	function	line:1384
+createFrictionFromAverage	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.createFrictionFromAverage = function(numContacts){$/;"	function	line:1394
+convexLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexLine = function($/;"	function	line:1438
+lineBox	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.lineBox = function($/;"	function	line:1472
+setConvexToCapsuleShapeMiddle	E:\development\wingmod\lib\p2.js	/^function setConvexToCapsuleShapeMiddle(convexShape, capsuleShape){$/;"	function	line:1491
+convexCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexCapsule = function($/;"	function	line:1518
+lineCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.lineCapsule = function($/;"	function	line:1568
+capsuleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj, justTest){$/;"	function	line:1604
+lineLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.lineLine = function($/;"	function	line:1707
+planeLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, planeAngle,$/;"	function	line:1739
+particleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.particleCapsule = function($/;"	function	line:1831
+circleLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleLine = function($/;"	function	line:1861
+circleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj, justTest){$/;"	function	line:2027
+circleConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleConvex = function($/;"	function	line:2048
+pointInConvex	E:\development\wingmod\lib\p2.js	/^function pointInConvex(worldPoint,convexShape,convexOffset,convexAngle){$/;"	function	line:2231
+pointInConvexLocal	E:\development\wingmod\lib\p2.js	/^function pointInConvexLocal(localPoint,convexShape){$/;"	function	line:2265
+particleConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.particleConvex = function($/;"	function	line:2311
+circleCircle	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleCircle = function($/;"	function	line:2428
+addSub	E:\development\wingmod\lib\p2.js	/^function addSub(out, a, b, c){$/;"	function	line:2478
+planeConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeConvex = function($/;"	function	line:2499
+particlePlane	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.particlePlane = function($/;"	function	line:2592
+circleParticle	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleParticle = function($/;"	function	line:2655
+planeCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeCapsule = function($/;"	function	line:2719
+circlePlane	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circlePlane = function($/;"	function	line:2786
+convexConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTest, precision ){$/;"	function	line:2863
+projectConvexOntoAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.projectConvexOntoAxis = function(convexShape, convexOffset, convexAngle, worldAxis, result){$/;"	function	line:3038
+findSeparatingAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.findSeparatingAxis = function(c1,offset1,angle1,c2,offset2,angle2,sepAxis){$/;"	function	line:3093
+getClosestEdge	E:\development\wingmod\lib\p2.js	/^Narrowphase.getClosestEdge = function(c,angle,axis,flip){$/;"	function	line:3248
+circleHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleHeightfield = function( circleBody,circleShape,circlePos,circleAngle,$/;"	function	line:3289
+convexHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexHeightfield = function( convexBody,convexShape,convexPos,convexAngle,$/;"	function	line:3469
+Ray	E:\development\wingmod\lib\p2.js	/^function Ray(options){$/;"	function	line:3556
+update	E:\development\wingmod\lib\p2.js	/^Ray.prototype.update = function(){$/;"	function	line:3649
+intersectBodies	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectBodies = function (result, bodies) {$/;"	function	line:3663
+intersectBody	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectBody = function (result, body) {$/;"	function	line:3681
+intersectShape	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectShape = function(result, shape, angle, position, body){$/;"	function	line:3728
+getAABB	E:\development\wingmod\lib\p2.js	/^Ray.prototype.getAABB = function(result){$/;"	function	line:3750
+reportIntersection	E:\development\wingmod\lib\p2.js	/^Ray.prototype.reportIntersection = function(result, fraction, normal, faceIndex){$/;"	function	line:3773
+switch	E:\development\wingmod\lib\p2.js	/^    switch(this.mode){$/;"	function	line:3782
+distanceFromIntersectionSquared	E:\development\wingmod\lib\p2.js	/^function distanceFromIntersectionSquared(from, direction, position) {$/;"	function	line:3825
+RaycastResult	E:\development\wingmod\lib\p2.js	/^function RaycastResult(){$/;"	function	line:3850
+reset	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.reset = function () {$/;"	function	line:3896
+getHitDistance	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.getHitDistance = function (ray) {$/;"	function	line:3910
+hasHit	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.hasHit = function () {$/;"	function	line:3918
+getHitPoint	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.getHitPoint = function (out, ray) {$/;"	function	line:3928
+stop	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.stop = function(){$/;"	function	line:3936
+shouldStop	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.shouldStop = function(ray){$/;"	function	line:3946
+set	E:\development\wingmod\lib\p2.js	/^RaycastResult.prototype.set = function($/;"	function	line:3959
+SAPBroadphase	E:\development\wingmod\lib\p2.js	/^function SAPBroadphase(){$/;"	function	line:3985
+_addBodyHandler	E:\development\wingmod\lib\p2.js	/^    this._addBodyHandler = function(e){$/;"	function	line:4003
+_removeBodyHandler	E:\development\wingmod\lib\p2.js	/^    this._removeBodyHandler = function(e){$/;"	function	line:4007
+setWorld	E:\development\wingmod\lib\p2.js	/^SAPBroadphase.prototype.setWorld = function(world){$/;"	function	line:4023
+sortAxisList	E:\development\wingmod\lib\p2.js	/^SAPBroadphase.sortAxisList = function(a, axisIndex){$/;"	function	line:4048
+sortList	E:\development\wingmod\lib\p2.js	/^SAPBroadphase.prototype.sortList = function(){$/;"	function	line:4063
+getCollisionPairs	E:\development\wingmod\lib\p2.js	/^SAPBroadphase.prototype.getCollisionPairs = function(\/*world*\/){$/;"	function	line:4077
+aabbQuery	E:\development\wingmod\lib\p2.js	/^SAPBroadphase.prototype.aabbQuery = function(world, aabb, result){$/;"	function	line:4127
+Constraint	E:\development\wingmod\lib\p2.js	/^function Constraint(bodyA, bodyB, type, options){$/;"	function	line:4164
+update	E:\development\wingmod\lib\p2.js	/^Constraint.prototype.update = function(){$/;"	function	line:4222
+setStiffness	E:\development\wingmod\lib\p2.js	/^Constraint.prototype.setStiffness = function(stiffness){$/;"	function	line:4261
+setRelaxation	E:\development\wingmod\lib\p2.js	/^Constraint.prototype.setRelaxation = function(relaxation){$/;"	function	line:4275
+DistanceConstraint	E:\development\wingmod\lib\p2.js	/^function DistanceConstraint(bodyA,bodyB,options){$/;"	function	line:4324
+computeGq	E:\development\wingmod\lib\p2.js	/^    normal.computeGq = function(){$/;"	function	line:4410
+update	E:\development\wingmod\lib\p2.js	/^DistanceConstraint.prototype.update = function(){$/;"	function	line:4471
+setMaxForce	E:\development\wingmod\lib\p2.js	/^DistanceConstraint.prototype.setMaxForce = function(maxForce){$/;"	function	line:4537
+getMaxForce	E:\development\wingmod\lib\p2.js	/^DistanceConstraint.prototype.getMaxForce = function(){$/;"	function	line:4548
+GearConstraint	E:\development\wingmod\lib\p2.js	/^function GearConstraint(bodyA, bodyB, options){$/;"	function	line:4584
+update	E:\development\wingmod\lib\p2.js	/^GearConstraint.prototype.update = function(){$/;"	function	line:4620
+setMaxTorque	E:\development\wingmod\lib\p2.js	/^GearConstraint.prototype.setMaxTorque = function(torque){$/;"	function	line:4634
+getMaxTorque	E:\development\wingmod\lib\p2.js	/^GearConstraint.prototype.getMaxTorque = function(){$/;"	function	line:4643
+LockConstraint	E:\development\wingmod\lib\p2.js	/^function LockConstraint(bodyA, bodyB, options){$/;"	function	line:4672
+computeGq	E:\development\wingmod\lib\p2.js	/^    x.computeGq = function(){$/;"	function	line:4708
+computeGq	E:\development\wingmod\lib\p2.js	/^    y.computeGq = function(){$/;"	function	line:4714
+computeGq	E:\development\wingmod\lib\p2.js	/^    rot.computeGq = function(){$/;"	function	line:4722
+setMaxForce	E:\development\wingmod\lib\p2.js	/^LockConstraint.prototype.setMaxForce = function(force){$/;"	function	line:4768
+getMaxForce	E:\development\wingmod\lib\p2.js	/^LockConstraint.prototype.getMaxForce = function(){$/;"	function	line:4781
+update	E:\development\wingmod\lib\p2.js	/^LockConstraint.prototype.update = function(){$/;"	function	line:4790
+PrismaticConstraint	E:\development\wingmod\lib\p2.js	/^function PrismaticConstraint(bodyA, bodyB, options){$/;"	function	line:4849
+computeGq	E:\development\wingmod\lib\p2.js	/^    trans.computeGq = function(){$/;"	function	line:4905
+updateJacobian	E:\development\wingmod\lib\p2.js	/^    trans.updateJacobian = function(){$/;"	function	line:4909
+computeGq	E:\development\wingmod\lib\p2.js	/^    motorEquation.computeGq = function(){ return 0; };$/;"	function	line:5004
+computeGW	E:\development\wingmod\lib\p2.js	/^    motorEquation.computeGW = function(){$/;"	function	line:5005
+update	E:\development\wingmod\lib\p2.js	/^PrismaticConstraint.prototype.update = function(){$/;"	function	line:5031
+enableMotor	E:\development\wingmod\lib\p2.js	/^PrismaticConstraint.prototype.enableMotor = function(){$/;"	function	line:5128
+disableMotor	E:\development\wingmod\lib\p2.js	/^PrismaticConstraint.prototype.disableMotor = function(){$/;"	function	line:5140
+setLimits	E:\development\wingmod\lib\p2.js	/^PrismaticConstraint.prototype.setLimits = function (lower, upper) {$/;"	function	line:5155
+RevoluteConstraint	E:\development\wingmod\lib\p2.js	/^function RevoluteConstraint(bodyA, bodyB, options){$/;"	function	line:5224
+computeGq	E:\development\wingmod\lib\p2.js	/^    x.computeGq = function(){$/;"	function	line:5272
+computeGq	E:\development\wingmod\lib\p2.js	/^    y.computeGq = function(){$/;"	function	line:5281
+setLimits	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.setLimits = function (lower, upper) {$/;"	function	line:5351
+update	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.update = function(){$/;"	function	line:5357
+get	E:\development\wingmod\lib\p2.js	/^        get: function() {$/;"	function	line:5427
+set	E:\development\wingmod\lib\p2.js	/^        set: function(value){$/;"	function	line:5430
+get	E:\development\wingmod\lib\p2.js	/^        get: function() {$/;"	function	line:5439
+set	E:\development\wingmod\lib\p2.js	/^        set: function(value){$/;"	function	line:5442
+get	E:\development\wingmod\lib\p2.js	/^        get: function() {$/;"	function	line:5451
+set	E:\development\wingmod\lib\p2.js	/^        set: function(value){$/;"	function	line:5454
+enableMotor	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.enableMotor = function(){$/;"	function	line:5467
+disableMotor	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.disableMotor = function(){$/;"	function	line:5476
+motorIsEnabled	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.motorIsEnabled = function(){$/;"	function	line:5486
+setMotorSpeed	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.setMotorSpeed = function(speed){$/;"	function	line:5496
+getMotorSpeed	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.getMotorSpeed = function(){$/;"	function	line:5506
+AngleLockEquation	E:\development\wingmod\lib\p2.js	/^function AngleLockEquation(bodyA, bodyB, options){$/;"	function	line:5527
+computeGq	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.computeGq = function(){$/;"	function	line:5545
+setRatio	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.setRatio = function(ratio){$/;"	function	line:5554
+setMaxTorque	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.setMaxTorque = function(torque){$/;"	function	line:5566
+ContactEquation	E:\development\wingmod\lib\p2.js	/^function ContactEquation(bodyA, bodyB){$/;"	function	line:5586
+computeB	E:\development\wingmod\lib\p2.js	/^ContactEquation.prototype.computeB = function(a,b,h){$/;"	function	line:5642
+addSubSub	E:\development\wingmod\lib\p2.js	/^function addSubSub(out, a, b, c, d){$/;"	function	line:5685
+getVelocityAlongNormal	E:\development\wingmod\lib\p2.js	/^ContactEquation.prototype.getVelocityAlongNormal = function(){$/;"	function	line:5699
+Equation	E:\development\wingmod\lib\p2.js	/^function Equation(bodyA, bodyB, minForce, maxForce){$/;"	function	line:5726
+update	E:\development\wingmod\lib\p2.js	/^    update: function(){$/;"	function	line:5843
+gmult	E:\development\wingmod\lib\p2.js	/^    gmult: function(G,vi,wi,vj,wj){$/;"	function	line:5860
+computeB	E:\development\wingmod\lib\p2.js	/^    computeB: function(a,b,h){$/;"	function	line:5874
+computeGq	E:\development\wingmod\lib\p2.js	/^    computeGq: function(){$/;"	function	line:5887
+computeGW	E:\development\wingmod\lib\p2.js	/^    computeGW: function(){$/;"	function	line:5902
+computeGWlambda	E:\development\wingmod\lib\p2.js	/^    computeGWlambda: function(){$/;"	function	line:5918
+computeGiMf	E:\development\wingmod\lib\p2.js	/^    computeGiMf: function(){$/;"	function	line:5934
+computeGiMGt	E:\development\wingmod\lib\p2.js	/^    computeGiMGt: function(){$/;"	function	line:5960
+addToWlambda	E:\development\wingmod\lib\p2.js	/^    addToWlambda: function(deltalambda){$/;"	function	line:5982
+computeInvC	E:\development\wingmod\lib\p2.js	/^    computeInvC: function(eps){$/;"	function	line:6006
+addToVLambda	E:\development\wingmod\lib\p2.js	/^function addToVLambda(vlambda, Gx, Gy, invMass, deltalambda, massMultiplier){$/;"	function	line:6012
+FrictionEquation	E:\development\wingmod\lib\p2.js	/^function FrictionEquation(bodyA, bodyB, slipForce){$/;"	function	line:6032
+setSlipForce	E:\development\wingmod\lib\p2.js	/^FrictionEquation.prototype.setSlipForce = function(slipForce){$/;"	function	line:6095
+getSlipForce	E:\development\wingmod\lib\p2.js	/^FrictionEquation.prototype.getSlipForce = function(){$/;"	function	line:6105
+computeB	E:\development\wingmod\lib\p2.js	/^FrictionEquation.prototype.computeB = function(a,b,h){$/;"	function	line:6109
+RotationalLockEquation	E:\development\wingmod\lib\p2.js	/^function RotationalLockEquation(bodyA, bodyB, options){$/;"	function	line:6149
+computeGq	E:\development\wingmod\lib\p2.js	/^RotationalLockEquation.prototype.computeGq = function(){$/;"	function	line:6169
+RotationalVelocityEquation	E:\development\wingmod\lib\p2.js	/^function RotationalVelocityEquation(bodyA, bodyB){$/;"	function	line:6189
+computeB	E:\development\wingmod\lib\p2.js	/^RotationalVelocityEquation.prototype.computeB = function(a,b,h){$/;"	function	line:6196
+EventEmitter	E:\development\wingmod\lib\p2.js	/^var EventEmitter = function () {};$/;"	function	line:6214
+on	E:\development\wingmod\lib\p2.js	/^    on: function ( type, listener, context ) {$/;"	function	line:6228
+has	E:\development\wingmod\lib\p2.js	/^    has: function ( type, listener ) {$/;"	function	line:6250
+off	E:\development\wingmod\lib\p2.js	/^    off: function ( type, listener ) {$/;"	function	line:6275
+emit	E:\development\wingmod\lib\p2.js	/^    emit: function ( event ) {$/;"	function	line:6294
+ContactMaterial	E:\development\wingmod\lib\p2.js	/^function ContactMaterial(materialA, materialB, options){$/;"	function	line:6333
+Material	E:\development\wingmod\lib\p2.js	/^function Material(id){$/;"	function	line:6432
+IsSimple	E:\development\wingmod\lib\p2.js	/^    PolyK.IsSimple = function(p)$/;"	function	line:6482
+IsConvex	E:\development\wingmod\lib\p2.js	/^    PolyK.IsConvex = function(p)$/;"	function	line:6514
+GetArea	E:\development\wingmod\lib\p2.js	/^    PolyK.GetArea = function(p)$/;"	function	line:6525
+GetAABB	E:\development\wingmod\lib\p2.js	/^    PolyK.GetAABB = function(p)$/;"	function	line:6536
+Triangulate	E:\development\wingmod\lib\p2.js	/^    PolyK.Triangulate = function(p)$/;"	function	line:6553
+ContainsPoint	E:\development\wingmod\lib\p2.js	/^    PolyK.ContainsPoint = function(p, px, py)$/;"	function	line:6597
+Slice	E:\development\wingmod\lib\p2.js	/^    PolyK.Slice = function(p, ax, ay, bx, by)$/;"	function	line:6617
+comp	E:\development\wingmod\lib\p2.js	/^        var comp = function(u,v) {return PolyK._P.dist(a,u) - PolyK._P.dist(a,v); }$/;"	function	line:6641
+Raycast	E:\development\wingmod\lib\p2.js	/^    PolyK.Raycast = function(p, x, y, dx, dy, isc)$/;"	function	line:6688
+ClosestEdge	E:\development\wingmod\lib\p2.js	/^    PolyK.ClosestEdge = function(p, x, y, isc)$/;"	function	line:6715
+_pointLineDist	E:\development\wingmod\lib\p2.js	/^    PolyK._pointLineDist = function(p, a, b, edge, isc)$/;"	function	line:6742
+_updateISC	E:\development\wingmod\lib\p2.js	/^    PolyK._updateISC = function(dx, dy, a1, b1, b2, c, edge, isc)$/;"	function	line:6782
+_getPoints	E:\development\wingmod\lib\p2.js	/^    PolyK._getPoints = function(ps, ind0, ind1)$/;"	function	line:6800
+_firstWithFlag	E:\development\wingmod\lib\p2.js	/^    PolyK._firstWithFlag = function(ps, ind)$/;"	function	line:6809
+_PointInTriangle	E:\development\wingmod\lib\p2.js	/^    PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)$/;"	function	line:6819
+_RayLineIntersection	E:\development\wingmod\lib\p2.js	/^    PolyK._RayLineIntersection = function(a1, a2, b1, b2, c)$/;"	function	line:6842
+_GetLineIntersection	E:\development\wingmod\lib\p2.js	/^    PolyK._GetLineIntersection = function(a1, a2, b1, b2, c)$/;"	function	line:6864
+_InRect	E:\development\wingmod\lib\p2.js	/^    PolyK._InRect = function(a, b, c)$/;"	function	line:6883
+_convex	E:\development\wingmod\lib\p2.js	/^    PolyK._convex = function(ax, ay, bx, by, cx, cy)$/;"	function	line:6894
+_P	E:\development\wingmod\lib\p2.js	/^    PolyK._P = function(x,y)$/;"	function	line:6899
+toString	E:\development\wingmod\lib\p2.js	/^    PolyK._P.prototype.toString = function()$/;"	function	line:6905
+dist	E:\development\wingmod\lib\p2.js	/^    PolyK._P.dist = function(a,b)$/;"	function	line:6909
+crossLength	E:\development\wingmod\lib\p2.js	/^vec2.crossLength = function(a,b){$/;"	function	line:6962
+crossVZ	E:\development\wingmod\lib\p2.js	/^vec2.crossVZ = function(out, vec, zcomp){$/;"	function	line:6975
+crossZV	E:\development\wingmod\lib\p2.js	/^vec2.crossZV = function(out, zcomp, vec){$/;"	function	line:6990
+rotate	E:\development\wingmod\lib\p2.js	/^vec2.rotate = function(out,a,angle){$/;"	function	line:7004
+rotate90cw	E:\development\wingmod\lib\p2.js	/^vec2.rotate90cw = function(out, a) {$/;"	function	line:7026
+toLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toLocalFrame = function(out, worldPoint, framePosition, frameAngle){$/;"	function	line:7041
+toGlobalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toGlobalFrame = function(out, localPoint, framePosition, frameAngle){$/;"	function	line:7058
+vectorToLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.vectorToLocalFrame = function(out, worldVector, frameAngle){$/;"	function	line:7076
+centroid	E:\development\wingmod\lib\p2.js	/^vec2.centroid = function(out, a, b, c){$/;"	function	line:7104
+create	E:\development\wingmod\lib\p2.js	/^vec2.create = function() {$/;"	function	line:7117
+clone	E:\development\wingmod\lib\p2.js	/^vec2.clone = function(a) {$/;"	function	line:7131
+fromValues	E:\development\wingmod\lib\p2.js	/^vec2.fromValues = function(x, y) {$/;"	function	line:7146
+copy	E:\development\wingmod\lib\p2.js	/^vec2.copy = function(out, a) {$/;"	function	line:7161
+set	E:\development\wingmod\lib\p2.js	/^vec2.set = function(out, x, y) {$/;"	function	line:7176
+add	E:\development\wingmod\lib\p2.js	/^vec2.add = function(out, a, b) {$/;"	function	line:7191
+subtract	E:\development\wingmod\lib\p2.js	/^vec2.subtract = function(out, a, b) {$/;"	function	line:7206
+multiply	E:\development\wingmod\lib\p2.js	/^vec2.multiply = function(out, a, b) {$/;"	function	line:7228
+divide	E:\development\wingmod\lib\p2.js	/^vec2.divide = function(out, a, b) {$/;"	function	line:7250
+scale	E:\development\wingmod\lib\p2.js	/^vec2.scale = function(out, a, b) {$/;"	function	line:7272
+distance	E:\development\wingmod\lib\p2.js	/^vec2.distance = function(a, b) {$/;"	function	line:7286
+squaredDistance	E:\development\wingmod\lib\p2.js	/^vec2.squaredDistance = function(a, b) {$/;"	function	line:7307
+length	E:\development\wingmod\lib\p2.js	/^vec2.length = function (a) {$/;"	function	line:7327
+squaredLength	E:\development\wingmod\lib\p2.js	/^vec2.squaredLength = function (a) {$/;"	function	line:7347
+negate	E:\development\wingmod\lib\p2.js	/^vec2.negate = function(out, a) {$/;"	function	line:7368
+normalize	E:\development\wingmod\lib\p2.js	/^vec2.normalize = function(out, a) {$/;"	function	line:7382
+dot	E:\development\wingmod\lib\p2.js	/^vec2.dot = function (a, b) {$/;"	function	line:7403
+str	E:\development\wingmod\lib\p2.js	/^vec2.str = function (a) {$/;"	function	line:7414
+lerp	E:\development\wingmod\lib\p2.js	/^vec2.lerp = function (out, a, b, t) {$/;"	function	line:7427
+reflect	E:\development\wingmod\lib\p2.js	/^vec2.reflect = function(out, vector, normal){$/;"	function	line:7443
+getLineSegmentsIntersection	E:\development\wingmod\lib\p2.js	/^vec2.getLineSegmentsIntersection = function(out, p0, p1, p2, p3) {$/;"	function	line:7460
+getLineSegmentsIntersectionFraction	E:\development\wingmod\lib\p2.js	/^vec2.getLineSegmentsIntersectionFraction = function(p0, p1, p2, p3) {$/;"	function	line:7481
+Body	E:\development\wingmod\lib\p2.js	/^function Body(options){$/;"	function	line:7552
+normalizeAngle	E:\development\wingmod\lib\p2.js	/^     *     function normalizeAngle(angle){$/;"	function	line:7684
+updateSolveMassProperties	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateSolveMassProperties = function(){$/;"	function	line:7939
+setDensity	E:\development\wingmod\lib\p2.js	/^Body.prototype.setDensity = function(density) {$/;"	function	line:7954
+getArea	E:\development\wingmod\lib\p2.js	/^Body.prototype.getArea = function() {$/;"	function	line:7965
+getAABB	E:\development\wingmod\lib\p2.js	/^Body.prototype.getAABB = function(){$/;"	function	line:7978
+updateAABB	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateAABB = function() {$/;"	function	line:7992
+updateBoundingRadius	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateBoundingRadius = function(){$/;"	function	line:8022
+addShape	E:\development\wingmod\lib\p2.js	/^Body.prototype.addShape = function(shape, offset, angle){$/;"	function	line:8062
+removeShape	E:\development\wingmod\lib\p2.js	/^Body.prototype.removeShape = function(shape){$/;"	function	line:8090
+updateMassProperties	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateMassProperties = function(){$/;"	function	line:8113
+applyForce	E:\development\wingmod\lib\p2.js	/^Body.prototype.applyForce = function(force, relativePoint){$/;"	function	line:8160
+applyForceLocal	E:\development\wingmod\lib\p2.js	/^Body.prototype.applyForceLocal = function(localForce, localPoint){$/;"	function	line:8184
+applyImpulse	E:\development\wingmod\lib\p2.js	/^Body.prototype.applyImpulse = function(impulseVector, relativePoint){$/;"	function	line:8200
+applyImpulseLocal	E:\development\wingmod\lib\p2.js	/^Body.prototype.applyImpulseLocal = function(localImpulse, localPoint){$/;"	function	line:8232
+toLocalFrame	E:\development\wingmod\lib\p2.js	/^Body.prototype.toLocalFrame = function(out, worldPoint){$/;"	function	line:8247
+toWorldFrame	E:\development\wingmod\lib\p2.js	/^Body.prototype.toWorldFrame = function(out, localPoint){$/;"	function	line:8257
+vectorToLocalFrame	E:\development\wingmod\lib\p2.js	/^Body.prototype.vectorToLocalFrame = function(out, worldVector){$/;"	function	line:8267
+vectorToWorldFrame	E:\development\wingmod\lib\p2.js	/^Body.prototype.vectorToWorldFrame = function(out, localVector){$/;"	function	line:8277
+fromPolygon	E:\development\wingmod\lib\p2.js	/^Body.prototype.fromPolygon = function(path,options){$/;"	function	line:8291
+adjustCenterOfMass	E:\development\wingmod\lib\p2.js	/^Body.prototype.adj

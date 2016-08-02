@@ -100,7 +100,7 @@ WeaponSwitcher.prototype.createMeshes = function(){
             weaponModels: this.weapons
         });
         meshes.push(mesh);
-        this.sceneManager.getThreeScene().add(mesh);
+        this.sceneManager.getCoreActiveScene().threeScene.add(mesh);
     }
 
     return meshes;

@@ -16,7 +16,7 @@ function GameScene(config) {
 
 GameScene.extend(BaseScene);
 
-GameScene.prototype.build = function() {
+GameScene.prototype.create = function() {
     this.initialColor = {
         r: Utils.rand(100,100)/100,
         g: Utils.rand(100,100)/100,
@@ -108,7 +108,7 @@ GameScene.prototype.doUiFlash = function(type){
     }
 };
 
-GameScene.prototype.buildMap = function(layoutData){
+GameScene.prototype.createMap = function(layoutData){
     for (let i = 0, l = layoutData.length; i < l; i++) {
         var config = layoutData[i];
         var chunk = new ChunkMesh({
@@ -121,7 +121,7 @@ GameScene.prototype.buildMap = function(layoutData){
     }
 };
 
-GameScene.prototype.buildCamera = function(){
+GameScene.prototype.createCamera = function(){
     var camera = new Camera({inputListener: this.inputListener});
     camera.position.z = 800;
     camera.setMovementZ(80, 20);
@@ -133,8 +133,9 @@ GameScene.prototype.resetCamera = function(){
     this.camera.updateProjectionMatrix();
 };
 
-GameScene.prototype.addPlayerActor = function(actor){
+GameScene.prototype.onPlayerActorAppeared = function(actor){
     this.camera.actor = actor;
+    this.actor = actor;
 };
 
 module.exports = GameScene;

@@ -21,33 +21,38 @@ function Core(config){
     this.ui = config.ui;
     this.logicWorker = config.logicWorker;
     this.viewportElement = document.getElementById('viewport');
+    this.activeScene = '';
 
     this.renderTicks = 0;
 }
 
 Core.prototype.init = function(){
-    this.makeMainComponents();
-    this.initEventHandlers();
-    this.renderStats = this.makeRenderStatsWatcher();
-    this.stats = this.makeStatsWatcher();
-    this.startTime = Date.now();
-    this.attachToDom(this.renderer, this.stats, this.renderStats);
+    this.assetManager = new AssetManager();
     this.assetManager.loadAll();
+
+    this.createMainComponents();
+    this.initEventHandlers();
+    this.renderStats = this.createRenderStatsWatcher();
+    this.stats = this.createStatsWatcher();
+    this.startTime = Date.now();
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
+
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
-Core.prototype.makeMainComponents = function(){
+Core.prototype.createMainComponents = function(){
     this.configManager = new ConfigManager();
-    this.renderer = this.makeRenderer();
+    this.renderer = this.createRenderer();
     this.inputListener = new InputListener({renderer: this.renderer});
-    this.sceneManager = new SceneManager();
+    this.sceneManager = new SceneManager({renderer: this.renderer, core: this});
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
     this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager});
-    this.assetManager = new AssetManager();
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -57,7 +62,7 @@ Core.prototype.initEventHandlers = function(){
     this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
-    this.logicBus.on('mapDone', this.sceneManager.onMapDone.bind(this.sceneManager));
+    this.logicBus.on('mapDone', this.onMapDone.bind(this));
     this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
     this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
@@ -79,7 +84,7 @@ Core.prototype.initEventHandlers = function(){
     this.hud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
 
-Core.prototype.makeRenderStatsWatcher = function(){
+Core.prototype.createRenderStatsWatcher = function(){
     var stats = new THREEx.RendererStats();
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.top = 0;
@@ -87,7 +92,7 @@ Core.prototype.makeRenderStatsWatcher = function(){
     return stats;
 };
 
-Core.prototype.makeStatsWatcher = function(){
+Core.prototype.createStatsWatcher = function(){
     var stats = new Stats();
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.left = '100px';
@@ -95,14 +100,16 @@ Core.prototype.makeStatsWatcher = function(){
     return stats;
 };
 
-Core.prototype.attachToDom = function(renderer, stats, renderStats){
-    document.body.appendChild( stats.domElement );
-    document.body.appendChild( renderStats.domElement );
+Core.prototype.attachToDom = function(object){
+    document.body.appendChild( object.domElement );
+};
+
+Core.prototype.attachRendererToDom = function(renderer){
     this.viewportElement.appendChild( renderer.domElement );
     this.autoResize();
 };
 
-Core.prototype.makeRenderer = function() {
+Core.prototype.createRenderer = function() {
     var config = this.configManager.config;
     var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
     var renderer = new THREE.WebGLRenderer({antialias: false, canvas: exisitngDomElement});
@@ -131,12 +138,22 @@ Core.prototype.resetRenderer = function(){
 };
 
 Core.prototype.resetCamera = function(){
-    this.sceneManager.resetCamera();
+    this.sceneManager.get(this.activeScene).resetCamera();
+};
+
+Core.prototype.getActiveScene = function(){
+    return this.activeScene;
 };
 
 Core.prototype.onAssetsLoaded = function(){
     console.log("assets loaded");
-    this.sceneManager.makeScene('mainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.activeScene = 'MainMenuScene';
+    this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.sceneManager.createScene('FlatHudScene');
+    this.particleManager.buildGenerators();
+
+    console.log("core building scenes", this.scene);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -167,7 +184,7 @@ Core.prototype.render = function(){
     this.particleManager.update();
     this.sceneManager.update();
     this.renderTicks++;
-    this.sceneManager.render(this.renderer);
+    this.sceneManager.render(this.activeScene);
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -188,7 +205,7 @@ Core.prototype.onPlayerActorAppeared = function(event){
     actor.inputListener = this.inputListener;
 
     this.hud.onPlayerActorAppeared(actor);
-    this.sceneManager.onPlayerActorAppeared(actor);
+    this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
 };
 
 Core.prototype.onUpdateActors = function(event){
@@ -225,14 +242,14 @@ Core.prototype.onActorEvents = function(event){
 };
 
 Core.prototype.onRequestUiFlash = function(event){
-    this.sceneManager.doUiFlash(event.data);
+    this.sceneManager.get(this.activeScene).doUiFlash(event.data);
 };
 
 Core.prototype.onStartGame = function(event){
     if (!this.running) {
         this.running = true;
         this.logicBus.postMessage('startGame', {});
-        this.sceneManager.makeScene('gameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+        this.activeScene = 'GameScene';
     }
 };
 
@@ -269,13 +286,16 @@ Core.prototype.onSoundConfig = function(event){
 
 Core.prototype.rebuildRenderer = function(){
     var config = this.configManager.config;
-    this.particleManager.updateResolutionCoefficient(config.resolution);
-    this.renderer.setPixelRatio(config.resolution);
-
     this.viewportElement.removeChild( this.renderer.domElement );
-    this.renderer = this.makeRenderer();
+    this.renderer = this.createRenderer();
 
-    this.attachToDom(this.renderer, this.stats, this.renderStats);
+    this.renderer.setPixelRatio(config.resolution);
+    this.particleManager.updateResolutionCoefficient(config.resolution);
+    this.sceneManager.renderer = this.renderer;
+
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
 };
 
 Core.prototype.onPlaySound = function(event){
@@ -294,6 +314,10 @@ Core.prototype.onHud = function(event){
 
 Core.prototype.onWeaponSwitched = function(event){
     this.logicBus.postMessage('weaponSwitched', event.data);
+};
+
+Core.prototype.onMapDone = function(event){
+    this.sceneManager.get('GameScene').createMap(event.data);
 };
 
 module.exports = Core;

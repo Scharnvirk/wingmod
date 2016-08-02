@@ -616,7 +616,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":2,"renderer/Core":39,"renderer/ui/Ui":110,"shared/Constants":124,"shared/EventEmitter":125,"shared/Utils":126}],6:[function(require,module,exports){
+},{"domready":2,"renderer/Core":39,"renderer/ui/Ui":111,"shared/Constants":125,"shared/EventEmitter":126,"shared/Utils":127}],6:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("shared/ActorFactory")('logic');
@@ -725,7 +725,7 @@ BaseActor.prototype.drawDebug = function (position) {
 
 module.exports = BaseActor;
 
-},{"shared/ActorFactory":123}],7:[function(require,module,exports){
+},{"shared/ActorFactory":124}],7:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -1363,7 +1363,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],14:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],14:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1389,7 +1389,7 @@ MoltenBallThrower.extend(BaseWeapon);
 
 module.exports = MoltenBallThrower;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],15:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],15:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1412,7 +1412,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],16:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],16:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1436,7 +1436,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],17:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],17:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1460,7 +1460,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],18:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],18:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1483,7 +1483,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],19:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],19:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -1505,7 +1505,7 @@ RingBlaster.extend(BaseWeapon);
 
 module.exports = RingBlaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":123}],20:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":12,"shared/ActorFactory":124}],20:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1635,7 +1635,7 @@ MookActor.prototype.onHit = function () {
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/MoltenBallThrower":14,"logic/actor/component/weapon/RedBlaster":17,"shared/ActorFactory":123}],21:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/MoltenBallThrower":14,"logic/actor/component/weapon/RedBlaster":17,"shared/ActorFactory":124}],21:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1703,7 +1703,7 @@ MookBossActor.prototype.onDeath = function () {
 
 module.exports = MookBossActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RedSuperBlaster":18,"logic/actor/enemy/MookActor":20,"shared/ActorFactory":123}],22:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RedSuperBlaster":18,"logic/actor/enemy/MookActor":20,"shared/ActorFactory":124}],22:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1834,7 +1834,7 @@ OrbotActor.prototype.onHit = function () {
 
 module.exports = OrbotActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RingBlaster":19,"shared/ActorFactory":123}],23:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RingBlaster":19,"shared/ActorFactory":124}],23:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -1965,7 +1965,7 @@ SniperActor.prototype.onHit = function () {
 
 module.exports = SniperActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RedBlaster":17,"shared/ActorFactory":123}],24:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/ai/MookBrain":10,"logic/actor/component/body/BaseBody":11,"logic/actor/component/weapon/RedBlaster":17,"shared/ActorFactory":124}],24:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -2031,7 +2031,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":123}],25:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":124}],25:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -2122,7 +2122,7 @@ EnemySpawnerActor.prototype.onHit = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":123}],26:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":124}],26:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2418,7 +2418,7 @@ ShipActor.prototype.switchWeapon = function (weaponConfig) {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":6,"logic/actor/component/WeaponSystem":8,"logic/actor/component/ai/BaseBrain":9,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":123}],30:[function(require,module,exports){
+},{"logic/actor/BaseActor":6,"logic/actor/component/WeaponSystem":8,"logic/actor/component/ai/BaseBrain":9,"logic/actor/component/body/BaseBody":11,"shared/ActorFactory":124}],30:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -2945,33 +2945,38 @@ function Core(config) {
     this.ui = config.ui;
     this.logicWorker = config.logicWorker;
     this.viewportElement = document.getElementById('viewport');
+    this.activeScene = '';
 
     this.renderTicks = 0;
 }
 
 Core.prototype.init = function () {
-    this.makeMainComponents();
-    this.initEventHandlers();
-    this.renderStats = this.makeRenderStatsWatcher();
-    this.stats = this.makeStatsWatcher();
-    this.startTime = Date.now();
-    this.attachToDom(this.renderer, this.stats, this.renderStats);
+    this.assetManager = new AssetManager();
     this.assetManager.loadAll();
+
+    this.createMainComponents();
+    this.initEventHandlers();
+    this.renderStats = this.createRenderStatsWatcher();
+    this.stats = this.createStatsWatcher();
+    this.startTime = Date.now();
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
+
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
-Core.prototype.makeMainComponents = function () {
+Core.prototype.createMainComponents = function () {
     this.configManager = new ConfigManager();
-    this.renderer = this.makeRenderer();
+    this.renderer = this.createRenderer();
     this.inputListener = new InputListener({ renderer: this.renderer });
-    this.sceneManager = new SceneManager();
+    this.sceneManager = new SceneManager({ renderer: this.renderer, core: this });
     this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ sceneManager: this.sceneManager, particleManager: this.particleManager });
     this.logicBus = new LogicBus({ worker: this.logicWorker });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager });
-    this.assetManager = new AssetManager();
 };
 
 Core.prototype.initEventHandlers = function () {
@@ -2981,7 +2986,7 @@ Core.prototype.initEventHandlers = function () {
     this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
     this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
-    this.logicBus.on('mapDone', this.sceneManager.onMapDone.bind(this.sceneManager));
+    this.logicBus.on('mapDone', this.onMapDone.bind(this));
     this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
     this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
@@ -3003,7 +3008,7 @@ Core.prototype.initEventHandlers = function () {
     this.hud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
 
-Core.prototype.makeRenderStatsWatcher = function () {
+Core.prototype.createRenderStatsWatcher = function () {
     var stats = new THREEx.RendererStats();
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.top = 0;
@@ -3011,7 +3016,7 @@ Core.prototype.makeRenderStatsWatcher = function () {
     return stats;
 };
 
-Core.prototype.makeStatsWatcher = function () {
+Core.prototype.createStatsWatcher = function () {
     var stats = new Stats();
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.left = '100px';
@@ -3019,14 +3024,16 @@ Core.prototype.makeStatsWatcher = function () {
     return stats;
 };
 
-Core.prototype.attachToDom = function (renderer, stats, renderStats) {
-    document.body.appendChild(stats.domElement);
-    document.body.appendChild(renderStats.domElement);
+Core.prototype.attachToDom = function (object) {
+    document.body.appendChild(object.domElement);
+};
+
+Core.prototype.attachRendererToDom = function (renderer) {
     this.viewportElement.appendChild(renderer.domElement);
     this.autoResize();
 };
 
-Core.prototype.makeRenderer = function () {
+Core.prototype.createRenderer = function () {
     var config = this.configManager.config;
     var exisitngDomElement = this.renderer ? this.renderer.domElement : undefined;
     var renderer = new THREE.WebGLRenderer({ antialias: false, canvas: exisitngDomElement });
@@ -3057,12 +3064,22 @@ Core.prototype.resetRenderer = function () {
 };
 
 Core.prototype.resetCamera = function () {
-    this.sceneManager.resetCamera();
+    this.sceneManager.get(this.activeScene).resetCamera();
+};
+
+Core.prototype.getActiveScene = function () {
+    return this.activeScene;
 };
 
 Core.prototype.onAssetsLoaded = function () {
     console.log("assets loaded");
-    this.sceneManager.makeScene('mainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.activeScene = 'MainMenuScene';
+    this.sceneManager.createScene('MainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.sceneManager.createScene('GameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.sceneManager.createScene('FlatHudScene');
+    this.particleManager.buildGenerators();
+
+    console.log("core building scenes", this.scene);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -3093,7 +3110,7 @@ Core.prototype.render = function () {
     this.particleManager.update();
     this.sceneManager.update();
     this.renderTicks++;
-    this.sceneManager.render(this.renderer);
+    this.sceneManager.render(this.activeScene);
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -3114,7 +3131,7 @@ Core.prototype.onPlayerActorAppeared = function (event) {
     actor.inputListener = this.inputListener;
 
     this.hud.onPlayerActorAppeared(actor);
-    this.sceneManager.onPlayerActorAppeared(actor);
+    this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
 };
 
 Core.prototype.onUpdateActors = function (event) {
@@ -3151,14 +3168,14 @@ Core.prototype.onActorEvents = function (event) {
 };
 
 Core.prototype.onRequestUiFlash = function (event) {
-    this.sceneManager.doUiFlash(event.data);
+    this.sceneManager.get(this.activeScene).doUiFlash(event.data);
 };
 
 Core.prototype.onStartGame = function (event) {
     if (!this.running) {
         this.running = true;
         this.logicBus.postMessage('startGame', {});
-        this.sceneManager.makeScene('gameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+        this.activeScene = 'GameScene';
     }
 };
 
@@ -3195,13 +3212,16 @@ Core.prototype.onSoundConfig = function (event) {
 
 Core.prototype.rebuildRenderer = function () {
     var config = this.configManager.config;
-    this.particleManager.updateResolutionCoefficient(config.resolution);
-    this.renderer.setPixelRatio(config.resolution);
-
     this.viewportElement.removeChild(this.renderer.domElement);
-    this.renderer = this.makeRenderer();
+    this.renderer = this.createRenderer();
 
-    this.attachToDom(this.renderer, this.stats, this.renderStats);
+    this.renderer.setPixelRatio(config.resolution);
+    this.particleManager.updateResolutionCoefficient(config.resolution);
+    this.sceneManager.renderer = this.renderer;
+
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
 };
 
 Core.prototype.onPlaySound = function (event) {
@@ -3222,9 +3242,13 @@ Core.prototype.onWeaponSwitched = function (event) {
     this.logicBus.postMessage('weaponSwitched', event.data);
 };
 
+Core.prototype.onMapDone = function (event) {
+    this.sceneManager.get('GameScene').createMap(event.data);
+};
+
 module.exports = Core;
 
-},{"renderer/ConfigManager":37,"renderer/ControlsHandler":38,"renderer/InputListener":40,"renderer/LogicBus":41,"renderer/actor/ActorManager":42,"renderer/ai/AiImageRenderer":65,"renderer/assetManagement/assetManager.js":66,"renderer/assetManagement/level/ChunkStore":69,"renderer/gameUi/Hud":76,"renderer/particleSystem/ParticleManager":82,"renderer/scene/SceneManager":107}],40:[function(require,module,exports){
+},{"renderer/ConfigManager":37,"renderer/ControlsHandler":38,"renderer/InputListener":40,"renderer/LogicBus":41,"renderer/actor/ActorManager":42,"renderer/ai/AiImageRenderer":65,"renderer/assetManagement/assetManager.js":66,"renderer/assetManagement/level/ChunkStore":69,"renderer/gameUi/Hud":76,"renderer/particleSystem/ParticleManager":82,"renderer/scene/SceneManager":108}],40:[function(require,module,exports){
 'use strict';
 
 function InputListener(config) {
@@ -3432,7 +3456,7 @@ LogicBus.extend(WorkerBus);
 
 module.exports = WorkerBus;
 
-},{"shared/WorkerBus":127}],42:[function(require,module,exports){
+},{"shared/WorkerBus":128}],42:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require("shared/ActorFactory")('renderer');
@@ -3440,17 +3464,15 @@ var ActorFactory = require("shared/ActorFactory")('renderer');
 function ActorManager(config) {
     config = config || {};
     this.storage = Object.create(null);
+    this.enemies = Object.create(null);
+
     this.scene = null;
     this.framerate = config.framerate || 60;
 
-    this.enemies = Object.create(null);
-
-    this.DELTA_SMOOTHNESS = 0;
-
     Object.assign(this, config);
 
-    if (!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
     if (!this.particleManager) throw new Error('No particleManager for Renderer ActorManager!');
+    if (!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
 
     this.factory = config.factory || ActorFactory.getInstance({ particleManager: this.particleManager });
     this.currentPhysicsTime = Date.now();
@@ -3518,7 +3540,7 @@ ActorManager.prototype.createActor = function (config) {
     }
 
     this.storage[config.actorId] = actor;
-    actor.addToScene(this.sceneManager.getThreeScene());
+    actor.addToScene(this.sceneManager.getCoreActiveScene().threeScene);
     actor.onSpawn();
 };
 
@@ -3534,7 +3556,7 @@ ActorManager.prototype.deleteActor = function (actorId, positionX, positionY) {
         actor.setPosition(positionX, positionY);
         actor.onDeath();
 
-        actor.removeFromScene(this.sceneManager.getThreeScene());
+        actor.removeFromScene(this.sceneManager.getCoreActiveScene().threeScene);
     }
     delete this.storage[actorId];
 };
@@ -3567,7 +3589,7 @@ ActorManager.prototype.requestUiFlash = function (flashType) {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":123}],43:[function(require,module,exports){
+},{"shared/ActorFactory":124}],43:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -3782,13 +3804,7 @@ function ShipMesh(config) {
     this.angleOffset = Math.PI;
 
     config = config || {};
-    //onfig.geometry = ModelStore.get('drone').geometry;
-    //config.material = ModelStore.get('drone').material;
     Object.assign(this, config);
-
-    // this.scale.x = 1.2;
-    // this.scale.y = 1.2;
-    // this.scale.z = 1.2;
 
     this.castShadow = true;
     this.receiveShadow = true;
@@ -4502,23 +4518,6 @@ ShipActor.prototype.doBob = function () {
     } else {
         this.speedZ += 0.002;
     }
-    //
-    // for (var i = 0, l = this.meshes.length; i < l; i++){
-    //     this.meshes[i].rotation.y += this.speedY;
-    //     this.meshes[i].rotation.x += this.speedX;
-    // }
-    //
-    // if (this.shipMesh.rotation.y > 0){
-    //     this.speedY -= 0.00012;
-    // } else {
-    //     this.speedY += 0.00012;
-    // }
-    //
-    // if (this.shipMesh.rotation.x > 0){
-    //     this.speedX -= 0.00009;
-    // } else {
-    //     this.speedX += 0.00009;
-    // }
 };
 
 ShipActor.prototype.doEngineGlow = function () {
@@ -5995,7 +5994,7 @@ WeaponSwitcher.prototype.createMeshes = function () {
             weaponModels: this.weapons
         });
         meshes.push(mesh);
-        this.sceneManager.getThreeScene().add(mesh);
+        this.sceneManager.getCoreActiveScene().threeScene.add(mesh);
     }
 
     return meshes;
@@ -6262,13 +6261,12 @@ function ParticleManager(config) {
     config = config || {};
     Object.assign(this, config);
 
-    if (!this.sceneManager) throw new Error('No sceneManager specified for ParticleManager!');
-
     this.configBuilder = new ParticleConfigBuilder(config);
     this.configs = this.configBuilder.getAllConfigs();
     this.generators = {};
-    this.buildGenerators();
     this.premades = this.buildPremadeGenerators();
+
+    if (!this.sceneManager) throw new Error('No sceneManager for Renderer ParticleManager!');
 }
 
 ParticleManager.prototype.buildGenerators = function () {
@@ -6277,7 +6275,7 @@ ParticleManager.prototype.buildGenerators = function () {
     Object.keys(this.configs).forEach(function (configName) {
         var generator = new ParticleGenerator(_this.configs[configName]);
         _this.generators[configName] = generator;
-        _this.sceneManager.add(generator);
+        _this.sceneManager.get('GameScene').add(generator);
     });
 };
 
@@ -7370,8 +7368,12 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 function BaseScene(config) {
     Object.assign(this, config);
 
-    this.camera = this.buildCamera();
-    this.threeScene = this.buildThreeScene(this.camera);
+    if (!this.renderer) {
+        throw new Error('No renderer specified for a Scene!');
+    }
+
+    this.camera = this.createCamera();
+    this.threeScene = this.createThreeScene(this.camera);
     this.threeScene.add(this.camera);
 }
 
@@ -7384,15 +7386,15 @@ BaseScene.prototype.update = function () {
     this.customUpdate();
 };
 
-BaseScene.prototype.buildCamera = function () {
+BaseScene.prototype.createCamera = function () {
     throw new Error('Attempting to use default (empty) camera constructor for Scene!');
 };
 
-BaseScene.prototype.build = function () {
-    throw new Error('Attempting to use default (empty) build function for Scene!');
+BaseScene.prototype.create = function () {
+    throw new Error('Attempting to use default (empty) create function for Scene!');
 };
 
-BaseScene.prototype.buildThreeScene = function () {
+BaseScene.prototype.createThreeScene = function () {
     return new THREE.Scene();
 };
 
@@ -7427,6 +7429,75 @@ module.exports = BaseScene;
 },{"renderer/actor/component/mesh/BaseMesh":45,"renderer/assetManagement/model/ModelStore":74}],105:[function(require,module,exports){
 "use strict";
 
+var BaseScene = require("renderer/scene/BaseScene");
+var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var Camera = require("renderer/Camera");
+
+function FlatHudScene(config) {
+    Object.assign(this, config);
+    BaseScene.apply(this, arguments);
+    this.timer = 0;
+}
+
+FlatHudScene.extend(BaseScene);
+
+FlatHudScene.prototype.create = function () {
+    this.createStartScene();
+};
+
+FlatHudScene.prototype.createCamera = function () {
+    var camera = new Camera({ inputListener: {} });
+    camera.position.y = -50;
+    camera.position.z = 15;
+    camera.position.x = 10;
+
+    camera.rotation.x = 1.1;
+    camera.rotation.z = 0.15;
+
+    return camera;
+};
+
+FlatHudScene.prototype.resetCamera = function () {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+};
+
+FlatHudScene.prototype.createStartScene = function () {
+    var shipMesh = new BaseMesh({
+        geometry: ModelStore.get('ravier').geometry,
+        material: ModelStore.get('hud').material
+    });
+
+    var scale = 4;
+    shipMesh.scale.x = scale;
+    shipMesh.scale.y = scale;
+    shipMesh.scale.z = scale;
+    shipMesh.castShadow = true;
+    shipMesh.receiveShadow = true;
+    shipMesh.rotation.z = Utils.degToRad(-120);
+
+    shipMesh.position.z = 4;
+    shipMesh.speedZ = 0.03;
+    shipMesh.speedY = 0.0025;
+    shipMesh.speedX = 0.002;
+
+    this.shipMesh = shipMesh;
+
+    this.threeScene.add(shipMesh);
+
+    this.ambientLight = new THREE.AmbientLight(0x505050, 1);
+
+    this.threeScene.add(this.ambientLight);
+};
+
+FlatHudScene.prototype.customUpdate = function () {};
+
+module.exports = FlatHudScene;
+
+},{"renderer/Camera":36,"renderer/actor/component/mesh/BaseMesh":45,"renderer/assetManagement/model/ModelStore":74,"renderer/scene/BaseScene":104}],106:[function(require,module,exports){
+"use strict";
+
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var ChunkMesh = require("renderer/map/ChunkMesh");
@@ -7445,7 +7516,7 @@ function GameScene(config) {
 
 GameScene.extend(BaseScene);
 
-GameScene.prototype.build = function () {
+GameScene.prototype.create = function () {
     this.initialColor = {
         r: Utils.rand(100, 100) / 100,
         g: Utils.rand(100, 100) / 100,
@@ -7537,7 +7608,7 @@ GameScene.prototype.doUiFlash = function (type) {
     }
 };
 
-GameScene.prototype.buildMap = function (layoutData) {
+GameScene.prototype.createMap = function (layoutData) {
     for (var i = 0, l = layoutData.length; i < l; i++) {
         var config = layoutData[i];
         var chunk = new ChunkMesh({
@@ -7550,7 +7621,7 @@ GameScene.prototype.buildMap = function (layoutData) {
     }
 };
 
-GameScene.prototype.buildCamera = function () {
+GameScene.prototype.createCamera = function () {
     var camera = new Camera({ inputListener: this.inputListener });
     camera.position.z = 800;
     camera.setMovementZ(80, 20);
@@ -7562,13 +7633,14 @@ GameScene.prototype.resetCamera = function () {
     this.camera.updateProjectionMatrix();
 };
 
-GameScene.prototype.addPlayerActor = function (actor) {
+GameScene.prototype.onPlayerActorAppeared = function (actor) {
     this.camera.actor = actor;
+    this.actor = actor;
 };
 
 module.exports = GameScene;
 
-},{"renderer/Camera":36,"renderer/assetManagement/level/ChunkStore":69,"renderer/assetManagement/model/ModelStore":74,"renderer/map/ChunkMesh":79,"renderer/scene/BaseScene":104}],106:[function(require,module,exports){
+},{"renderer/Camera":36,"renderer/assetManagement/level/ChunkStore":69,"renderer/assetManagement/model/ModelStore":74,"renderer/map/ChunkMesh":79,"renderer/scene/BaseScene":104}],107:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -7586,7 +7658,7 @@ function MainMenuScene(config) {
 
 MainMenuScene.extend(BaseScene);
 
-MainMenuScene.prototype.build = function () {
+MainMenuScene.prototype.create = function () {
     this.initialColor = {
         r: Utils.rand(100, 100) / 100,
         g: Utils.rand(100, 100) / 100,
@@ -7626,10 +7698,10 @@ MainMenuScene.prototype.build = function () {
 
     this.threeScene.add(this.ambientLight);
 
-    this.buildStartScene();
+    this.createStartScene();
 };
 
-MainMenuScene.prototype.buildCamera = function () {
+MainMenuScene.prototype.createCamera = function () {
     var camera = new Camera({ inputListener: this.inputListener });
     camera.position.y = -50;
     camera.position.z = 15;
@@ -7647,7 +7719,7 @@ MainMenuScene.prototype.resetCamera = function () {
     this.camera.updateProjectionMatrix();
 };
 
-MainMenuScene.prototype.buildStartScene = function () {
+MainMenuScene.prototype.createStartScene = function () {
 
     this.sceneMaterial = ModelStore.get('startmenu').material;
 
@@ -7753,97 +7825,84 @@ MainMenuScene.prototype.lightPowerUp = function () {
 
 module.exports = MainMenuScene;
 
-},{"renderer/Camera":36,"renderer/actor/component/mesh/BaseMesh":45,"renderer/assetManagement/model/ModelStore":74,"renderer/scene/BaseScene":104}],107:[function(require,module,exports){
+},{"renderer/Camera":36,"renderer/actor/component/mesh/BaseMesh":45,"renderer/assetManagement/model/ModelStore":74,"renderer/scene/BaseScene":104}],108:[function(require,module,exports){
 "use strict";
 
+var BaseScene = require("renderer/scene/BaseScene");
 var GameScene = require("renderer/scene/GameScene");
 var MainMenuScene = require("renderer/scene/MainMenuScene");
+var FlatHudScene = require("renderer/scene/FlatHudScene");
 
 function SceneManager(config) {
     Object.assign(this, config);
+
+    if (!this.renderer) {
+        throw new Error('No renderer specified for SceneManager!');
+    }
+    if (!this.core) {
+        throw new Error('No core specified for SceneManager!');
+    }
+
+    this.knownSceneClasses = {
+        'GameScene': GameScene,
+        'MainMenuScene': MainMenuScene,
+        'FlatHudScene': FlatHudScene
+    };
+
+    this.activeScenes = {};
     EventEmitter.apply(this, arguments);
-    this.activeScene = null;
-    this.sceneList = this.buildSceneList();
-
-    this.threeObjects = [];
-
-    this.storedMapData = null;
 }
 
 SceneManager.extend(EventEmitter);
 
-SceneManager.prototype.buildSceneList = function () {
-    return {
-        'gameScene': GameScene,
-        'mainMenuScene': MainMenuScene
-    };
+SceneManager.prototype.render = function (sceneName) {
+    if (!this.activeScenes[sceneName]) {
+        throw new Error("No such scene for render: " + sceneName);
+    }
+
+    this.renderer.render(this.activeScenes[sceneName].threeScene, this.activeScenes[sceneName].camera);
+};
+
+SceneManager.prototype.createScene = function (sceneName, config) {
+    if (!this.knownSceneClasses[sceneName]) {
+        throw new Error("No such scene for createScene: " + sceneName);
+    }
+
+    var configWithRenderer = Object.assign(config || {}, { renderer: this.renderer });
+    var newScene = new this.knownSceneClasses[sceneName](configWithRenderer);
+    newScene.create();
+
+    this.activeScenes[sceneName] = newScene;
 };
 
 SceneManager.prototype.update = function () {
-    if (this.activeScene) {
-        this.activeScene.update();
+    for (var sceneName in this.activeScenes) {
+        this.activeScenes[sceneName].update();
     }
 };
 
-SceneManager.prototype.makeScene = function (sceneName, config) {
-    var _this = this;
-
-    if (!this.sceneList[sceneName]) throw new Error('No such scene: ' + sceneName);
-
-    this.activeScene = new this.sceneList[sceneName](config);
-    this.activeScene.build();
-
-    if (this.storedMapData) {
-        this.activeScene.buildMap(this.storedMapData);
+SceneManager.prototype.addObjectToScene = function (sceneName, object) {
+    if (!this.activeScenes[sceneName]) {
+        throw new Error("No such scene for addObjectToScene: " + sceneName);
     }
-
-    this.threeObjects.forEach(function (objectToAdd) {
-        _this.activeScene.add(objectToAdd);
-    });
+    this.activeScenes[sceneName].add(object);
 };
 
-SceneManager.prototype.onMapDone = function (event) {
-    this.storedMapData = event.data;
+SceneManager.prototype.get = function (sceneName) {
+    return this.activeScenes[sceneName];
 };
 
-SceneManager.prototype.doUiFlash = function (flashConfig) {
-    this.activeScene.doUiFlash(flashConfig);
+SceneManager.prototype.destroyScene = function (sceneName) {
+    this.activeScenes[sceneName] = null;
 };
 
-SceneManager.prototype.add = function (object) {
-    if (!this.activeScene) {
-        this.threeObjects.push(object);
-    } else {
-        this.activeScene.add(object);
-    }
-};
-
-SceneManager.prototype.getThreeScene = function () {
-    return this.activeScene.threeScene;
-};
-
-SceneManager.prototype.resetCamera = function () {
-    if (this.activeScene) {
-        this.activeScene.resetCamera();
-    }
-};
-
-SceneManager.prototype.render = function (renderer) {
-    if (this.activeScene) {
-        renderer.render(this.activeScene.threeScene, this.activeScene.camera);
-    }
-};
-
-SceneManager.prototype.onPlayerActorAppeared = function (actor) {
-    if (this.activeScene) {
-        this.activeScene.addPlayerActor(actor);
-        this.activeScene.actor = actor;
-    }
+SceneManager.prototype.getCoreActiveScene = function () {
+    return this.activeScenes[this.core.activeScene];
 };
 
 module.exports = SceneManager;
 
-},{"renderer/scene/GameScene":105,"renderer/scene/MainMenuScene":106}],108:[function(require,module,exports){
+},{"renderer/scene/BaseScene":104,"renderer/scene/FlatHudScene":105,"renderer/scene/GameScene":106,"renderer/scene/MainMenuScene":107}],109:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -7884,7 +7943,7 @@ module.exports = ReactUi;
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/
 
-},{"classnames":1,"renderer/ui/component/InitialView":112}],109:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/InitialView":113}],110:[function(require,module,exports){
 'use strict';
 
 var ReactUtils = {
@@ -7906,7 +7965,7 @@ var ReactUtils = {
 
 module.exports = ReactUtils;
 
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
@@ -8005,7 +8064,7 @@ Ui.prototype.onSoundConfig = function (data) {
 
 module.exports = Ui;
 
-},{"pubsub-js":3,"renderer/Core":39,"renderer/ui/ReactUi":108}],111:[function(require,module,exports){
+},{"pubsub-js":3,"renderer/Core":39,"renderer/ui/ReactUi":109}],112:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8063,7 +8122,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":1,"renderer/ui/component/base/StyledText":119}],112:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/StyledText":120}],113:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8127,7 +8186,7 @@ var InitialView = React.createClass({
 
 module.exports = InitialView;
 
-},{"classnames":1,"renderer/ui/ReactUtils":109,"renderer/ui/component/EndScreen":111,"renderer/ui/component/StartHelp":114,"renderer/ui/component/StartScreen":115,"renderer/ui/component/base/FullScreenEffect":117,"renderer/ui/component/base/Viewport":121,"renderer/ui/component/hud/Hud":122}],113:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/ReactUtils":110,"renderer/ui/component/EndScreen":112,"renderer/ui/component/StartHelp":115,"renderer/ui/component/StartScreen":116,"renderer/ui/component/base/FullScreenEffect":118,"renderer/ui/component/base/Viewport":122,"renderer/ui/component/hud/Hud":123}],114:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8252,7 +8311,7 @@ var SettingsMenu = React.createClass({
 
 module.exports = SettingsMenu;
 
-},{"classnames":1,"renderer/ui/component/base/OptionButton":118,"renderer/ui/component/base/StyledText":119,"renderer/ui/component/base/ToggleButton":120}],114:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/OptionButton":119,"renderer/ui/component/base/StyledText":120,"renderer/ui/component/base/ToggleButton":121}],115:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8398,7 +8457,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":1,"renderer/ui/component/base/StyledText":119}],115:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/component/base/StyledText":120}],116:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8471,7 +8530,7 @@ var StartScreen = React.createClass({
 
 module.exports = StartScreen;
 
-},{"classnames":1,"renderer/ui/ReactUtils":109,"renderer/ui/component/SettingsMenu":113,"renderer/ui/component/base/Button":116,"renderer/ui/component/base/StyledText":119}],116:[function(require,module,exports){
+},{"classnames":1,"renderer/ui/ReactUtils":110,"renderer/ui/component/SettingsMenu":114,"renderer/ui/component/base/Button":117,"renderer/ui/component/base/StyledText":120}],117:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8522,7 +8581,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":1,"pubsub-js":3}],117:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],118:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8574,7 +8633,7 @@ var FullScreenEffect = React.createClass({
 
 module.exports = FullScreenEffect;
 
-},{"classnames":1}],118:[function(require,module,exports){
+},{"classnames":1}],119:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8622,7 +8681,7 @@ var OptionButton = React.createClass({
 
 module.exports = OptionButton;
 
-},{"classnames":1,"pubsub-js":3}],119:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],120:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8665,7 +8724,7 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":1}],120:[function(require,module,exports){
+},{"classnames":1}],121:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -8712,7 +8771,7 @@ var ToggleButton = React.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":1,"pubsub-js":3}],121:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],122:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8750,7 +8809,7 @@ var Viewport = function (_React$Component) {
 
 module.exports = Viewport;
 
-},{"classnames":1}],122:[function(require,module,exports){
+},{"classnames":1}],123:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8809,7 +8868,7 @@ var Hud = function (_React$Component) {
 
 module.exports = Hud;
 
-},{"classnames":1,"pubsub-js":3}],123:[function(require,module,exports){
+},{"classnames":1,"pubsub-js":3}],124:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -8883,7 +8942,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":7,"logic/actor/enemy/MookActor":20,"logic/actor/enemy/MookBossActor":21,"logic/actor/enemy/OrbotActor":22,"logic/actor/enemy/SniperActor":23,"logic/actor/map/EnemySpawnMarkerActor":24,"logic/actor/map/EnemySpawnerActor":25,"logic/actor/map/MapActor":26,"logic/actor/object/BoomChunkActor":27,"logic/actor/object/ChunkActor":28,"logic/actor/player/ShipActor":29,"logic/actor/projectile/LaserProjectileActor":30,"logic/actor/projectile/MoltenProjectileActor":31,"logic/actor/projectile/PlasmaProjectileActor":32,"logic/actor/projectile/PulseWaveProjectileActor":33,"logic/actor/projectile/RedLaserProjectileActor":34,"logic/actor/projectile/RingProjectileActor":35,"renderer/actor/DebugActor":44,"renderer/actor/enemy/MookActor":49,"renderer/actor/enemy/MookBossActor":50,"renderer/actor/enemy/OrbotActor":51,"renderer/actor/enemy/SniperActor":52,"renderer/actor/map/EnemySpawnMarkerActor":53,"renderer/actor/map/EnemySpawnerActor":54,"renderer/actor/map/MapActor":55,"renderer/actor/object/BoomChunkActor":56,"renderer/actor/object/ChunkActor":57,"renderer/actor/player/ShipActor":58,"renderer/actor/projectile/LaserProjectileActor":59,"renderer/actor/projectile/MoltenProjectileActor":60,"renderer/actor/projectile/PlasmaProjectileActor":61,"renderer/actor/projectile/PulseWaveProjectileActor":62,"renderer/actor/projectile/RedLaserProjectileActor":63,"renderer/actor/projectile/RingProjectileActor":64}],124:[function(require,module,exports){
+},{"logic/actor/DebugActor":7,"logic/actor/enemy/MookActor":20,"logic/actor/enemy/MookBossActor":21,"logic/actor/enemy/OrbotActor":22,"logic/actor/enemy/SniperActor":23,"logic/actor/map/EnemySpawnMarkerActor":24,"logic/actor/map/EnemySpawnerActor":25,"logic/actor/map/MapActor":26,"logic/actor/object/BoomChunkActor":27,"logic/actor/object/ChunkActor":28,"logic/actor/player/ShipActor":29,"logic/actor/projectile/LaserProjectileActor":30,"logic/actor/projectile/MoltenProjectileActor":31,"logic/actor/projectile/PlasmaProjectileActor":32,"logic/actor/projectile/PulseWaveProjectileActor":33,"logic/actor/projectile/RedLaserProjectileActor":34,"logic/actor/projectile/RingProjectileActor":35,"renderer/actor/DebugActor":44,"renderer/actor/enemy/MookActor":49,"renderer/actor/enemy/MookBossActor":50,"renderer/actor/enemy/OrbotActor":51,"renderer/actor/enemy/SniperActor":52,"renderer/actor/map/EnemySpawnMarkerActor":53,"renderer/actor/map/EnemySpawnerActor":54,"renderer/actor/map/MapActor":55,"renderer/actor/object/BoomChunkActor":56,"renderer/actor/object/ChunkActor":57,"renderer/actor/player/ShipActor":58,"renderer/actor/projectile/LaserProjectileActor":59,"renderer/actor/projectile/MoltenProjectileActor":60,"renderer/actor/projectile/PlasmaProjectileActor":61,"renderer/actor/projectile/PulseWaveProjectileActor":62,"renderer/actor/projectile/RedLaserProjectileActor":63,"renderer/actor/projectile/RingProjectileActor":64}],125:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -8917,7 +8976,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],125:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 "use strict";
 
 /**
@@ -9022,7 +9081,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],126:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -9133,6 +9192,20 @@ var Utils = {
             nx = cos * x + sin * y,
             ny = cos * y - sin * x;
         return [nx, ny];
+    },
+
+    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {
+        var vector = new THREE.Vector3();
+        var canvas = renderer.domElement;
+
+        vector.set(object.position[0], object.position[1], object.positionZ);
+
+        vector.project(camera);
+
+        vector.x = Math.round((vector.x + 1) * canvas.width / 2);
+        vector.y = Math.round((-vector.y + 1) * canvas.height / 2);
+
+        return [vector.x, vector.y];
     }
 };
 
@@ -9145,7 +9218,7 @@ if (!Function.prototype.extend) {
 
 module.exports = Utils;
 
-},{}],127:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {

@@ -1,0 +1,21 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BaseActor	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^var BaseActor = require("logic\/actor\/BaseActor");$/;"	variable	line:1
+BaseBody	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^var BaseBody = require("logic\/actor\/component\/body\/BaseBody");$/;"	variable	line:2
+ActorFactory	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^var ActorFactory = require("shared\/ActorFactory")('logic');$/;"	variable	line:3
+EnemySpawnerActor	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^function EnemySpawnerActor(config){$/;"	function	line:5
+EnemySpawnerActor	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^function EnemySpawnerActor(config){$/;"	class	line:5
+customUpdate	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.customUpdate = function(){$/;"	function	line:21
+EnemySpawnerActor.customUpdate	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.customUpdate = function(){$/;"	method	line:21
+createEnemySpawnMarker	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){$/;"	function	line:31
+EnemySpawnerActor.createEnemySpawnMarker	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){$/;"	method	line:31
+createBody	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.createBody = function(){$/;"	function	line:43
+EnemySpawnerActor.createBody	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.createBody = function(){$/;"	method	line:43
+onDeath	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.onDeath = function(){$/;"	function	line:56
+EnemySpawnerActor.onDeath	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.onDeath = function(){$/;"	method	line:56
+onHit	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.onHit = function(){$/;"	function	line:78
+EnemySpawnerActor.onHit	E:\development\wingmod\src\logic\actor\map\EnemySpawnerActor.js	/^EnemySpawnerActor.prototype.onHit = function(){$/;"	method	line:78

@@ -80,24 +80,7 @@ ShipActor.prototype.doBob = function(){
         this.speedZ -= 0.002;
     } else {
         this.speedZ += 0.002;
-    }
-    //
-    // for (var i = 0, l = this.meshes.length; i < l; i++){
-    //     this.meshes[i].rotation.y += this.speedY;
-    //     this.meshes[i].rotation.x += this.speedX;
-    // }
-    //
-    // if (this.shipMesh.rotation.y > 0){
-    //     this.speedY -= 0.00012;
-    // } else {
-    //     this.speedY += 0.00012;
-    // }
-    //
-    // if (this.shipMesh.rotation.x > 0){
-    //     this.speedX -= 0.00009;
-    // } else {
-    //     this.speedX += 0.00009;
-    // }
+    }    
 };
 
 ShipActor.prototype.doEngineGlow = function(){
