@@ -115,7 +115,6 @@ var Utils = {
         var canvas = renderer.domElement;
 
         vector.set( object.position[0], object.position[1], object.positionZ );
-
         vector.project( camera );
 
         vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );

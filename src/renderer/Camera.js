@@ -17,7 +17,7 @@ function Camera(config){
     this.rotation.reorder('ZXY');
 
     this.position.z = 0;
-    this.rotation.x = 1.0;
+    this.rotation.x = 0;
     this.rotation.y = 0;
 
     this.zOffset = 60;

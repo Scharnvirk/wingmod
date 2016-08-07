@@ -7,13 +7,13 @@ function WeaponSwitcher(config){
     this.visible = false;
     this.itemRotation = 0;
     this.position = [0,0];
-    this.angle = 0;
 
     this.weapons = ['plasmagun', 'lasgun', 'pulsewavegun'];
     this.moveCounter = 0;
     this.weaponsToDisplay = 5;
     this.currentWeapon = Math.floor(this.weaponsToDisplay / 2); //the middle one
-    this.meshDistance = 6;
+    this.meshDistance = 24;
+    this.angleSpeed = 3;
     this.hidePassed = true;
     EventEmitter.apply(this, arguments);
 
@@ -23,29 +23,27 @@ function WeaponSwitcher(config){
 WeaponSwitcher.extend(EventEmitter);
 
 WeaponSwitcher.prototype.update = function(){
-    this.itemRotation += 1;
     if(!this.meshes){
         this.meshes = this.createMeshes();
     }
 
-    var switcherOffsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.angle * -1);
     this.meshes.forEach(mesh => {
-        var meshOffsetVector = Utils.rotateVector(mesh.positionOffset[0], mesh.positionOffset[1], this.angle * -1);
-        var scale = (((this.weaponsToDisplay * this.meshDistance) - 1.5 * Math.abs(mesh.positionOffset[1])) / (this.weaponsToDisplay * this.meshDistance)) * 1.5;
+        var offsetPosition = Utils.angleToVector(this.angle + Utils.degToRad(mesh.angleDistance), 15);
+        var scale = (((this.weaponsToDisplay * this.meshDistance) - 1.5 * Math.abs(mesh.angleDistance)) / (this.weaponsToDisplay * this.meshDistance)) * 1.5;
         scale = scale > 0 ? scale : 0.2;
-        mesh.position.x = this.position[0] + meshOffsetVector[0] + switcherOffsetVector[0];
-        mesh.position.y = this.position[1] + meshOffsetVector[1] + switcherOffsetVector[1];
-        mesh.rotation.z = this.angle + Utils.degToRad(this.itemRotation);
+        mesh.position.x = this.position[0] + offsetPosition[0];
+        mesh.position.y = this.position[1] + offsetPosition[1];
+        mesh.rotation.z = Utils.degToRad(mesh.angleDistance);
         mesh.scale.x = scale;
         mesh.scale.y = scale;
         mesh.scale.z = scale;
 
         if (this.moveCounter > 0) {
-            mesh.positionOffset[1] --;
+            mesh.angleDistance -= this.angleSpeed;
         }
 
-        if (mesh.positionOffset[1] <= -(this.weaponsToDisplay - Math.floor(this.weaponsToDisplay / 2)) * this.meshDistance) {
-            mesh.positionOffset[1] += this.weaponsToDisplay * this.meshDistance;
+        if (mesh.angleDistance <= -(this.weaponsToDisplay - Math.floor(this.weaponsToDisplay / 2)) * this.meshDistance) {
+            mesh.angleDistance += this.weaponsToDisplay * this.meshDistance;
             var newWeaponIndex = (this.currentWeapon + Math.floor(this.weaponsToDisplay / 2)) % this.weapons.length;
             mesh.weaponIndex = newWeaponIndex;
             mesh.setNewWeapon(newWeaponIndex);
@@ -76,7 +74,7 @@ WeaponSwitcher.prototype.handleInput = function(inputState){
 WeaponSwitcher.prototype.switchWeaponToNext = function(){
     var oldWeapon = this.weapons[this.currentWeapon];
     this.currentWeapon ++;
-    this.moveCounter = this.meshDistance;
+    this.moveCounter = this.meshDistance / this.angleSpeed;
 
     if (this.currentWeapon >= this.weapons.length) {
         this.currentWeapon = 0;
@@ -93,14 +91,14 @@ WeaponSwitcher.prototype.createMeshes = function(){
     var meshes = [];
 
     for (let i = 0; i < this.weaponsToDisplay; i++){
-        var offset = [0, (-parseInt(this.weaponsToDisplay/2) + i) * this.meshDistance];
+        var offset = (-parseInt(this.weaponsToDisplay/2) + i) * this.meshDistance;
         var mesh = new WeaponMesh({
-            positionOffset: offset,
+            angleDistance: offset,
             weaponIndex: i % this.weapons.length,
             weaponModels: this.weapons
         });
         meshes.push(mesh);
-        this.sceneManager.getCoreActiveScene().threeScene.add(mesh);
+        this.sceneManager.get('FlatHudScene').threeScene.add(mesh);
     }
 
     return meshes;

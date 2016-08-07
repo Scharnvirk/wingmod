@@ -13,7 +13,8 @@ var ModelList = {
         '/models/lasgun.json',
         '/models/plasmagun.json',
         '/models/pulsewavegun.json',
-        '/models/hudMaterial.json'
+        '/models/hudMaterial.json',
+        '/models/flatHudMaterial.json'
     ]
 };
 

@@ -1,0 +1,24 @@
+{
+  "normals":[],
+  "vertices":[],
+  "faces":[],
+  "uvs":[],
+  "materials": [{
+    "colorEmissive": [1,0,0],
+    "transparent": true,
+    "colorDiffuse": [1,1,1],
+    "blending": "NormalBlending",
+    "colorSpecular": [0.25,0.25,0.25],
+    "opacity": 1,
+    "shading": "phong",
+    "wireframe": true,
+    "DbgColor": 15658734,
+    "specularCoef": 20,
+    "visible": true,
+    "DbgIndex": 0,
+    "depthTest": false,
+    "DbgName": "Material.001",
+    "mapDiffuse": "chunk.png",
+    "mapBump": "chunk.png"
+  }]
+}

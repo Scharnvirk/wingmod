@@ -8,6 +8,7 @@ var SceneManager = require("renderer/scene/SceneManager");
 var AssetManager = require("renderer/assetManagement/assetManager.js");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 var Hud = require("renderer/gameUi/Hud");
+var FlatHud = require("renderer/gameUi/FlatHud");
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 
 function Core(config){
@@ -52,7 +53,8 @@ Core.prototype.createMainComponents = function(){
     this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
-    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager});
+    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager, renderer: this.renderer});
+    this.flatHud = new FlatHud({sceneManager: this.sceneManager});
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -117,6 +119,7 @@ Core.prototype.createRenderer = function() {
     renderer.setSize(this.WIDTH, this.HEIGHT);
     renderer.shadowMap.enabled = !!config.shadow;
     renderer.shadowMap.type = config.shadow;
+    renderer.autoClear = false;
     return renderer;
 };
 
@@ -139,6 +142,7 @@ Core.prototype.resetRenderer = function(){
 
 Core.prototype.resetCamera = function(){
     this.sceneManager.get(this.activeScene).resetCamera();
+    this.sceneManager.get('FlatHudScene').resetCamera();
 };
 
 Core.prototype.getActiveScene = function(){
@@ -152,8 +156,6 @@ Core.prototype.onAssetsLoaded = function(){
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('FlatHudScene');
     this.particleManager.buildGenerators();
-
-    console.log("core building scenes", this.scene);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -185,6 +187,8 @@ Core.prototype.render = function(){
     this.sceneManager.update();
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
+    this.flatHud.update();
+    this.hud.flatHudUpdate();
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -205,6 +209,7 @@ Core.prototype.onPlayerActorAppeared = function(event){
     actor.inputListener = this.inputListener;
 
     this.hud.onPlayerActorAppeared(actor);
+    this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
 };
 

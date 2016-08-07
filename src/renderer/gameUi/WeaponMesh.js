@@ -7,6 +7,7 @@ function WeaponMesh(config){
 
     config.angleOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
+    config.angle = config.angle || 0;
 
     Object.assign(this, config);
 
@@ -20,7 +21,6 @@ function WeaponMesh(config){
     this.scale.x = config.scale || 1;
     this.scale.y = config.scale || 1;
     this.scale.z = config.scale || 1;
-    this.position.z = Constants.DEFAULT_POSITION_Z;
 }
 
 WeaponMesh.extend(BaseMesh);

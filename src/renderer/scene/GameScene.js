@@ -125,6 +125,7 @@ GameScene.prototype.createCamera = function(){
     var camera = new Camera({inputListener: this.inputListener});
     camera.position.z = 800;
     camera.setMovementZ(80, 20);
+    camera.rotation.x = 1;
     return camera;
 };
 
