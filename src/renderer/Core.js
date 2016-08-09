@@ -53,8 +53,8 @@ Core.prototype.createMainComponents = function(){
     this.logicBus = new LogicBus({worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
-    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager, sceneManager: this.sceneManager, renderer: this.renderer});
-    this.flatHud = new FlatHud({sceneManager: this.sceneManager});
+    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
+    this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -76,14 +76,14 @@ Core.prototype.initEventHandlers = function(){
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
 
-    this.controlsHandler.on('hud', this.onHud.bind(this));
+    this.controlsHandler.on('hud', this.onFlatHud.bind(this));
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
 
     this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
-    this.hud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
+    this.flatHud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
 
 Core.prototype.createRenderStatsWatcher = function(){
@@ -156,6 +156,7 @@ Core.prototype.onAssetsLoaded = function(){
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('FlatHudScene');
     this.particleManager.buildGenerators();
+    this.particleManager.updateResolutionCoefficient(this.configManager.config.resolution);
 
     setInterval(this.onEachSecond.bind(this), 1000);
 
@@ -188,7 +189,6 @@ Core.prototype.render = function(){
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
     this.flatHud.update();
-    this.hud.flatHudUpdate();
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -293,6 +293,7 @@ Core.prototype.rebuildRenderer = function(){
     var config = this.configManager.config;
     this.viewportElement.removeChild( this.renderer.domElement );
     this.renderer = this.createRenderer();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
 
     this.renderer.setPixelRatio(config.resolution);
     this.particleManager.updateResolutionCoefficient(config.resolution);
@@ -313,8 +314,8 @@ Core.prototype.onPlaySound = function(event){
     }
 };
 
-Core.prototype.onHud = function(event){
-    this.hud.onInput(event.data);
+Core.prototype.onFlatHud = function(event){
+    this.flatHud.onInput(event.data);
 };
 
 Core.prototype.onWeaponSwitched = function(event){

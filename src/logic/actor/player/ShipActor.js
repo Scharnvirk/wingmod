@@ -10,13 +10,13 @@ function ShipActor(config){
     Object.assign(this, config);
 
     this.applyConfig({
-        acceleration: 600,
+        acceleration: 1000,
         turnSpeed: 6,
         hp: 30,
         bodyConfig: {
             actor: this,
             mass: 4,
-            damping: 0.8,
+            damping: 0.85,
             angularDamping: 0,
             inertia: 10,
             radius: 7,

@@ -7,8 +7,8 @@ function OrbotActor(){
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 4;
-    this.hp = 4;
+    this.initialHp = 3;
+    this.hp = 3;
 }
 
 OrbotActor.extend(BaseActor);

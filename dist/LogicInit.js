@@ -1547,7 +1547,7 @@ function PlasmaGun(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 10;
+    this.cooldown = 14;
     this.velocity = 230;
     this.sound = 'plasmashot3';
     this.volume = 0.5;
@@ -1570,7 +1570,7 @@ function PlasmaGun(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 6;
+    this.cooldown = 5;
     this.velocity = 460;
     this.sound = 'laser_charged';
     this.firingMode = 'alternate';
@@ -1668,7 +1668,7 @@ function MookActor(config) {
     this.applyConfig({
         acceleration: 140,
         turnSpeed: 2,
-        hp: 8,
+        hp: 6,
         bodyConfig: {
             actor: this,
             mass: 4,
@@ -1865,7 +1865,7 @@ function OrbotActor(config) {
     this.applyConfig({
         acceleration: 150,
         turnSpeed: 4,
-        hp: 4,
+        hp: 3,
         bodyConfig: {
             actor: this,
             mass: 2,
@@ -1996,7 +1996,7 @@ function SniperActor(config) {
     this.applyConfig({
         acceleration: 90,
         turnSpeed: 0.8,
-        hp: 16,
+        hp: 12,
         bodyConfig: {
             actor: this,
             mass: 8,
@@ -2204,7 +2204,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         this.spawnDelay--;
     } else {
         if (Utils.rand(Math.min(this.timer / 60, this.spawnRate), this.spawnRate) === this.spawnRate) {
-            // this.createEnemySpawnMarker();
+            this.createEnemySpawnMarker();
         }
     }
 };
@@ -2384,13 +2384,13 @@ function ShipActor(config) {
     Object.assign(this, config);
 
     this.applyConfig({
-        acceleration: 600,
+        acceleration: 1000,
         turnSpeed: 6,
         hp: 30,
         bodyConfig: {
             actor: this,
             mass: 4,
-            damping: 0.8,
+            damping: 0.85,
             angularDamping: 0,
             inertia: 10,
             radius: 7,
@@ -3249,8 +3249,8 @@ function MookActor() {
     this.speedZ = Utils.rand(35, 45) / 1000;
     this.bobSpeed = Utils.rand(18, 22) / 10000;
 
-    this.initialHp = 8;
-    this.hp = 8;
+    this.initialHp = 6;
+    this.hp = 6;
 }
 
 MookActor.extend(BaseActor);
@@ -3369,8 +3369,8 @@ function OrbotActor() {
     this.speedZ = Utils.rand(35, 45) / 1000;
     this.bobSpeed = Utils.rand(18, 22) / 10000;
 
-    this.initialHp = 4;
-    this.hp = 4;
+    this.initialHp = 3;
+    this.hp = 3;
 }
 
 OrbotActor.extend(BaseActor);
@@ -3448,8 +3448,8 @@ function SniperActor() {
     this.speedZ = Utils.rand(35, 45) / 1000;
     this.bobSpeed = Utils.rand(18, 22) / 10000;
 
-    this.initialHp = 16;
-    this.hp = 16;
+    this.initialHp = 12;
+    this.hp = 12;
 
     this.eyeAngle = 0;
     this.eyeSpeed = 3;

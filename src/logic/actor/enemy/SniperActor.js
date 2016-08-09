@@ -12,7 +12,7 @@ function SniperActor(config){
     this.applyConfig({
         acceleration: 90,
         turnSpeed: 0.8,
-        hp: 16,
+        hp: 12,
         bodyConfig: {
             actor: this,
             mass: 8,

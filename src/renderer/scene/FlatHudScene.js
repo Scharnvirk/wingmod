@@ -3,6 +3,7 @@ var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var FlatHudCamera = require("renderer/gameUi/FlatHudCamera");
 
+
 function FlatHudScene(config){
     Object.assign(this, config);
     BaseScene.apply(this, arguments);
@@ -39,10 +40,12 @@ FlatHudScene.prototype.resetCamera = function(){
     this.camera.updateProjectionMatrix();
 };
 
-FlatHudScene.prototype.createStartScene = function(){
+FlatHudScene.prototype.redraw = function(textSprite){
+    textSprite.drawMessage(Math.random().toString(36).substring(7));
 };
 
-FlatHudScene.prototype.customUpdate = function(){
-};
+FlatHudScene.prototype.createStartScene = function(){};
+
+FlatHudScene.prototype.customUpdate = function(){};
 
 module.exports = FlatHudScene;

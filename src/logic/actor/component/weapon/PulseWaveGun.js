@@ -8,7 +8,7 @@ function PlasmaGun(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 6;
+    this.cooldown = 5;
     this.velocity = 460;
     this.sound = 'laser_charged';
     this.firingMode = 'alternate';

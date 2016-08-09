@@ -7,8 +7,8 @@ function SniperActor(){
     this.speedZ = Utils.rand(35,45)/1000;
     this.bobSpeed = Utils.rand(18,22)/10000;
 
-    this.initialHp = 16;
-    this.hp = 16;
+    this.initialHp = 12;
+    this.hp = 12;
 
     this.eyeAngle = 0;
     this.eyeSpeed = 3;

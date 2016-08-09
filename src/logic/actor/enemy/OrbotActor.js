@@ -12,7 +12,7 @@ function OrbotActor(config){
     this.applyConfig({
         acceleration: 150,
         turnSpeed: 4,
-        hp: 4,
+        hp: 3,
         bodyConfig: {
             actor: this,
             mass: 2,

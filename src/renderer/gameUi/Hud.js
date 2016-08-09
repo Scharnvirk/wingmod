@@ -1,52 +1,15 @@
-var WeaponSwitcher = require("renderer/gameUi/WeaponSwitcher");
-
 function Hud(config){
     Object.assign(this, config);
 
     if(!this.actorManager) throw new Error('No actorManager defined for Hud!');
     if(!this.particleManager) throw new Error('No particleManager defined for Hud!');
-    if(!this.sceneManager) throw new Error('No sceneManager defined for Hud!');
-    if(!this.renderer) throw new Error('No renderer defined for Hud!');
-
-    this.switchers = [];
 
     this.defaultHpBarCount = 10;
-    this.activationKey = 'shift';
-    this.switchersConfig = [
-        {
-            angle: Utils.degToRad(90),
-            // positionOffset: [-10, 0],
-            switchKey: 'mouseLeft'
-        }, {
-            angle: Utils.degToRad(-90),
-            // positionOffset: [10, 0],
-            switchKey: 'mouseRight'
-        }
-    ];
 
-    this.switchers = this.makeSwitchers();
     EventEmitter.apply(this, arguments);
 }
 
 Hud.extend(EventEmitter);
-
-Hud.prototype.makeSwitchers = function(){
-    var switcherIndex = 0;
-    var switchers = [];
-    this.switchersConfig.forEach(switcherConfig => {
-        switcherConfig.sceneManager = this.sceneManager;
-        switcherConfig.activationKey = this.activationKey;
-        switcherConfig.index = switcherIndex;
-
-        var switcher = new WeaponSwitcher(switcherConfig);
-
-        switcher.on('weaponSwitched', this.onWeaponSwitched.bind(this));
-
-        switchers.push(switcher);
-        switcherIndex ++;
-    });
-    return switchers;
-};
 
 Hud.prototype.update = function(){
     if(this.actor && !this.actor.dead){
@@ -55,50 +18,9 @@ Hud.prototype.update = function(){
     }
 };
 
-Hud.prototype.flatHudUpdate = function(){
-    if(this.actor && !this.actor.dead){
-        var gameSceneCamera = this.sceneManager.get('GameScene').camera;
-        var hudSceneCamera = this.sceneManager.get('FlatHudScene').camera;
-        var actorPosition = Utils.objToScreenPosition(this.actor, this.renderer, gameSceneCamera);
-        var coefficient = hudSceneCamera.viewWidth / document.documentElement.clientWidth;
-        var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
-
-        //todo: find out why objToScreenPosition returns invalid position (left down corner of the ship?)
-        this.switchers.forEach(switcher => {
-            switcher.position = [0, positionY + 10];
-            switcher.update();
-        });
-    }
-};
-
 Hud.prototype.onPlayerActorAppeared = function(actor){
     this.actor = actor;
 };
-
-Hud.prototype.onInput = function(inputState){
-    this.switchers.forEach(switcher => {
-        switcher.handleInput(inputState);
-    });
-};
-
-Hud.prototype.onWeaponSwitched = function(event){
-    var changeConfig = {
-        weapon: event.data.weapon,
-        index: event.index
-    };
-
-    if (this.actor && !this.actor.dead){
-        this.actor.switchWeapon(changeConfig);
-    }
-
-    this.emit(
-        {
-            type: 'weaponSwitched',
-            data: changeConfig
-        }
-    );
-};
-
 
 Hud.prototype.drawRadar = function(){
     for (let enemyId in this.actorManager.enemies ){

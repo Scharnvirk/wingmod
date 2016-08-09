@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'Oswald-Regular';
-    src: url('fonts/Oswald-Regular.ttf'); /*URL to font*/
+    src: url('fonts/Oswald-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Ethnocentric';
-    src: url('fonts/Ethnocentric.ttf'); /*URL to font*/
+    src: url('fonts/Ethnocentric.ttf');
 }
 
 @keyframes buttonHover {

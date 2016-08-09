@@ -13,7 +13,7 @@ function MookActor(config){
     this.applyConfig({
         acceleration: 140,
         turnSpeed: 2,
-        hp: 8,
+        hp: 6,
         bodyConfig: {
             actor: this,
             mass: 4,
