@@ -10,10 +10,10 @@ function FlatHud(config){
     this.activationKey = 'shift';
     this.switchersConfig = [
         {
-            angle: Utils.degToRad(90),
+            rotation: Utils.degToRad(90),
             switchKey: 'mouseLeft'
         }, {
-            angle: Utils.degToRad(-90),
+            rotation: Utils.degToRad(-90),
             switchKey: 'mouseRight'
         }
     ];
@@ -42,7 +42,7 @@ FlatHud.prototype.update = function(){
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(switcher => {
-            var offsetPosition = Utils.angleToVector(switcher.angle, 30);
+            var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
             var textSprite = this.weaponTextSprites[switcher.index];
             textSprite.position.x = offsetPosition[0];
             textSprite.position.y = positionY + offsetPosition[1];

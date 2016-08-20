@@ -11,7 +11,7 @@ module.exports = function(config){
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0,1) / 10,
-            particleAngle: Utils.rand(0,360),
+            particleRotation: Utils.rand(0,360),
             speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
@@ -27,7 +27,7 @@ module.exports = function(config){
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -41,7 +41,7 @@ module.exports = function(config){
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -55,7 +55,7 @@ module.exports = function(config){
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };

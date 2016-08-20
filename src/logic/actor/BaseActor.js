@@ -13,7 +13,7 @@ function BaseActor(config){
 
     this.thrust = 0;
     this.horizontalThrust = 0;
-    this.rotationForce = 0;
+    this.angleForce = 0;
 
     this.timer = 0;
     this.customParams = {};
@@ -79,8 +79,8 @@ BaseActor.prototype.deathMain = function(){
 };
 
 BaseActor.prototype.processMovement = function(){
-    if(this.rotationForce !== 0){
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+    if(this.angleForce !== 0){
+        this.body.angularVelocity = this.angleForce * this.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }

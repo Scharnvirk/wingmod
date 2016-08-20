@@ -3,7 +3,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function ShipMesh(config){
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     Object.assign(this, config);

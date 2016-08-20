@@ -10,7 +10,7 @@ function SniperActor(){
     this.initialHp = 12;
     this.hp = 12;
 
-    this.eyeAngle = 0;
+    this.eyeRotation = 0;
     this.eyeSpeed = 3;
     this.eyeEdge = 50;
     this.eyeGoingRight = true;
@@ -67,21 +67,21 @@ SniperActor.prototype.handleDamage = function(){
 
 
 SniperActor.prototype.drawEyes = function(){
-    if (this.eyeAngle > this.eyeEdge){
+    if (this.eyeRotation > this.eyeEdge){
         this.eyeGoingRight = false;
     }
 
-    if (this.eyeAngle < -this.eyeEdge){
+    if (this.eyeRotation < -this.eyeEdge){
         this.eyeGoingRight = true;
     }
 
-    this.eyeAngle += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
+    this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
     this.particleManager.createPremade('PurpleEye', {
         position: this.position,
         positionZ: this.positionZ - 7.4,
-        angle: this.angle,
-        angleOffset: this.eyeAngle,
+        rotation: this.rotation,
+        rotationOffset: this.eyeRotation,
         distance: 2.3
     });
 };
@@ -92,7 +92,7 @@ SniperActor.prototype.onHit = function(){
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }

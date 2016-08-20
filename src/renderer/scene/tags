@@ -278,7 +278,7 @@ update	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.update = functi
 customUpdate	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:3624
 handleEvent	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.handleEvent = function (eventData) {$/;"	function	line:3626
 customHandleEvent	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.customHandleEvent = function (eventData) {};$/;"	function	line:3633
-updateFromLogic	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {$/;"	function	line:3635
+updateFromLogic	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, rotation) {$/;"	function	line:3635
 setPosition	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.setPosition = function (positionX, positionY) {$/;"	function	line:3645
 createMeshes	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.createMeshes = function () {$/;"	function	line:3650
 addToScene	E:\development\wingmod\dist\Init.js	/^BaseActor.prototype.addToScene = function (scene) {$/;"	function	line:3654
@@ -658,16 +658,16 @@ rand	E:\development\wingmod\dist\Init.js	/^    rand: function rand(min, max) {$/
 makeRandomColor	E:\development\wingmod\dist\Init.js	/^    makeRandomColor: function makeRandomColor() {$/;"	function	line:9153
 mixin	E:\development\wingmod\dist\Init.js	/^    mixin: function mixin(receiver, donor) {$/;"	function	line:9168
 uptrunc	E:\development\wingmod\dist\Init.js	/^    uptrunc: function uptrunc(x) {$/;"	function	line:9175
-angleToVector	E:\development\wingmod\dist\Init.js	/^    angleToVector: function angleToVector(angle, length) {$/;"	function	line:9179
-angleBetweenPointsFromCenter	E:\development\wingmod\dist\Init.js	/^    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {$/;"	function	line:9184
-angleBetweenPoints	E:\development\wingmod\dist\Init.js	/^    angleBetweenPoints: function angleBetweenPoints(p1, p2) {$/;"	function	line:9195
-pointInArc	E:\development\wingmod\dist\Init.js	/^    pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {$/;"	function	line:9201
-arcAngleDifference	E:\development\wingmod\dist\Init.js	/^    arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {$/;"	function	line:9208
+rotationToVector	E:\development\wingmod\dist\Init.js	/^    rotationToVector: function rotationToVector(rotation, length) {$/;"	function	line:9179
+rotationBetweenPointsFromCenter	E:\development\wingmod\dist\Init.js	/^    rotationBetweenPointsFromCenter: function rotationBetweenPointsFromCenter(p1, p2) {$/;"	function	line:9184
+rotationBetweenPoints	E:\development\wingmod\dist\Init.js	/^    rotationBetweenPoints: function rotationBetweenPoints(p1, p2) {$/;"	function	line:9195
+pointInArc	E:\development\wingmod\dist\Init.js	/^    pointInArc: function pointInArc(p1, p2, p1LookRotation, p1ArcRotation) {$/;"	function	line:9201
+arcRotationDifference	E:\development\wingmod\dist\Init.js	/^    arcRotationDifference: function arcRotationDifference(p1, p2, p1LookRotation) {$/;"	function	line:9208
 firstToUpper	E:\development\wingmod\dist\Init.js	/^    firstToUpper: function firstToUpper(string) {$/;"	function	line:9214
-rotateOffsetPoint	E:\development\wingmod\dist\Init.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radAngle) {$/;"	function	line:9218
+rotateOffsetPoint	E:\development\wingmod\dist\Init.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radRotation) {$/;"	function	line:9218
 distanceBetweenPoints	E:\development\wingmod\dist\Init.js	/^    distanceBetweenPoints: function distanceBetweenPoints(p1x, p2x, p1y, p2y) {$/;"	function	line:9224
 pointDifference	E:\development\wingmod\dist\Init.js	/^    pointDifference: function pointDifference(p1x, p2x, p1y, p2y) {$/;"	function	line:9228
-rotateVector	E:\development\wingmod\dist\Init.js	/^    rotateVector: function rotateVector(x, y, angle) {$/;"	function	line:9232
+rotateVector	E:\development\wingmod\dist\Init.js	/^    rotateVector: function rotateVector(x, y, rotation) {$/;"	function	line:9232
 objToScreenPosition	E:\development\wingmod\dist\Init.js	/^    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {$/;"	function	line:9240
 extend	E:\development\wingmod\dist\Init.js	/^    Function.prototype.extend = function (oldClass) {$/;"	function	line:9256
 WorkerBus	E:\development\wingmod\dist\Init.js	/^function WorkerBus(config) {$/;"	function	line:9267
@@ -907,7 +907,7 @@ update	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.update = f
 customUpdate	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.customUpdate = function () {};$/;"	function	line:3058
 handleEvent	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.handleEvent = function (eventData) {$/;"	function	line:3060
 customHandleEvent	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.customHandleEvent = function (eventData) {};$/;"	function	line:3067
-updateFromLogic	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {$/;"	function	line:3069
+updateFromLogic	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.updateFromLogic = function (positionX, positionY, rotation) {$/;"	function	line:3069
 setPosition	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.setPosition = function (positionX, positionY) {$/;"	function	line:3079
 createMeshes	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.createMeshes = function () {$/;"	function	line:3084
 addToScene	E:\development\wingmod\dist\LogicInit.js	/^BaseActor.prototype.addToScene = function (scene) {$/;"	function	line:3088
@@ -1028,16 +1028,16 @@ rand	E:\development\wingmod\dist\LogicInit.js	/^    rand: function rand(min, max
 makeRandomColor	E:\development\wingmod\dist\LogicInit.js	/^    makeRandomColor: function makeRandomColor() {$/;"	function	line:4764
 mixin	E:\development\wingmod\dist\LogicInit.js	/^    mixin: function mixin(receiver, donor) {$/;"	function	line:4779
 uptrunc	E:\development\wingmod\dist\LogicInit.js	/^    uptrunc: function uptrunc(x) {$/;"	function	line:4786
-angleToVector	E:\development\wingmod\dist\LogicInit.js	/^    angleToVector: function angleToVector(angle, length) {$/;"	function	line:4790
-angleBetweenPointsFromCenter	E:\development\wingmod\dist\LogicInit.js	/^    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {$/;"	function	line:4795
-angleBetweenPoints	E:\development\wingmod\dist\LogicInit.js	/^    angleBetweenPoints: function angleBetweenPoints(p1, p2) {$/;"	function	line:4806
-pointInArc	E:\development\wingmod\dist\LogicInit.js	/^    pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {$/;"	function	line:4812
-arcAngleDifference	E:\development\wingmod\dist\LogicInit.js	/^    arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {$/;"	function	line:4819
+rotationToVector	E:\development\wingmod\dist\LogicInit.js	/^    rotationToVector: function rotationToVector(rotation, length) {$/;"	function	line:4790
+rotationBetweenPointsFromCenter	E:\development\wingmod\dist\LogicInit.js	/^    rotationBetweenPointsFromCenter: function rotationBetweenPointsFromCenter(p1, p2) {$/;"	function	line:4795
+rotationBetweenPoints	E:\development\wingmod\dist\LogicInit.js	/^    rotationBetweenPoints: function rotationBetweenPoints(p1, p2) {$/;"	function	line:4806
+pointInArc	E:\development\wingmod\dist\LogicInit.js	/^    pointInArc: function pointInArc(p1, p2, p1LookRotation, p1ArcRotation) {$/;"	function	line:4812
+arcRotationDifference	E:\development\wingmod\dist\LogicInit.js	/^    arcRotationDifference: function arcRotationDifference(p1, p2, p1LookRotation) {$/;"	function	line:4819
 firstToUpper	E:\development\wingmod\dist\LogicInit.js	/^    firstToUpper: function firstToUpper(string) {$/;"	function	line:4825
-rotateOffsetPoint	E:\development\wingmod\dist\LogicInit.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radAngle) {$/;"	function	line:4829
+rotateOffsetPoint	E:\development\wingmod\dist\LogicInit.js	/^    rotateOffsetPoint: function rotateOffsetPoint(centerX, centerY, pointX, pointY, radRotation) {$/;"	function	line:4829
 distanceBetweenPoints	E:\development\wingmod\dist\LogicInit.js	/^    distanceBetweenPoints: function distanceBetweenPoints(p1x, p2x, p1y, p2y) {$/;"	function	line:4835
 pointDifference	E:\development\wingmod\dist\LogicInit.js	/^    pointDifference: function pointDifference(p1x, p2x, p1y, p2y) {$/;"	function	line:4839
-rotateVector	E:\development\wingmod\dist\LogicInit.js	/^    rotateVector: function rotateVector(x, y, angle) {$/;"	function	line:4843
+rotateVector	E:\development\wingmod\dist\LogicInit.js	/^    rotateVector: function rotateVector(x, y, rotation) {$/;"	function	line:4843
 objToScreenPosition	E:\development\wingmod\dist\LogicInit.js	/^    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {$/;"	function	line:4851
 extend	E:\development\wingmod\dist\LogicInit.js	/^    Function.prototype.extend = function (oldClass) {$/;"	function	line:4867
 WorkerBus	E:\development\wingmod\dist\LogicInit.js	/^function WorkerBus(config) {$/;"	function	line:4878
@@ -1205,7 +1205,7 @@ left	E:\development\wingmod\lib\p2.js	/^Point.left = function(a,b,c){$/;"	functi
 leftOn	E:\development\wingmod\lib\p2.js	/^Point.leftOn = function(a,b,c) {$/;"	function	line:91
 right	E:\development\wingmod\lib\p2.js	/^Point.right = function(a,b,c) {$/;"	function	line:95
 rightOn	E:\development\wingmod\lib\p2.js	/^Point.rightOn = function(a,b,c) {$/;"	function	line:99
-collinear	E:\development\wingmod\lib\p2.js	/^Point.collinear = function(a,b,c,thresholdAngle) {$/;"	function	line:115
+collinear	E:\development\wingmod\lib\p2.js	/^Point.collinear = function(a,b,c,thresholdRotation) {$/;"	function	line:115
 sqdist	E:\development\wingmod\lib\p2.js	/^Point.sqdist = function(a,b){$/;"	function	line:135
 Polygon	E:\development\wingmod\lib\p2.js	/^function Polygon(){$/;"	function	line:153
 at	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.at = function(i){$/;"	function	line:169
@@ -1228,7 +1228,7 @@ removeCollinearPoints	E:\development\wingmod\lib\p2.js	/^Polygon.prototype.remov
 Scalar	E:\development\wingmod\lib\p2.js	/^function Scalar(){}$/;"	function	line:644
 eq	E:\development\wingmod\lib\p2.js	/^Scalar.eq = function(a,b,precision){$/;"	function	line:655
 AABB	E:\development\wingmod\lib\p2.js	/^function AABB(options){$/;"	function	line:679
-setFromPoints	E:\development\wingmod\lib\p2.js	/^AABB.prototype.setFromPoints = function(points, position, angle, skinSize){$/;"	function	line:707
+setFromPoints	E:\development\wingmod\lib\p2.js	/^AABB.prototype.setFromPoints = function(points, position, rotation, skinSize){$/;"	function	line:707
 copy	E:\development\wingmod\lib\p2.js	/^AABB.prototype.copy = function(aabb){$/;"	function	line:764
 extend	E:\development\wingmod\lib\p2.js	/^AABB.prototype.extend = function(aabb){$/;"	function	line:774
 overlaps	E:\development\wingmod\lib\p2.js	/^AABB.prototype.overlaps = function(aabb){$/;"	function	line:801
@@ -1261,12 +1261,12 @@ convexCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexCap
 lineCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.lineCapsule = function($/;"	function	line:1568
 capsuleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj, justTest){$/;"	function	line:1604
 lineLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.lineLine = function($/;"	function	line:1707
-planeLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, planeAngle,$/;"	function	line:1739
+planeLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, planeRotation,$/;"	function	line:1739
 particleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.particleCapsule = function($/;"	function	line:1831
 circleLine	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleLine = function($/;"	function	line:1861
 circleCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj, justTest){$/;"	function	line:2027
 circleConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleConvex = function($/;"	function	line:2048
-pointInConvex	E:\development\wingmod\lib\p2.js	/^function pointInConvex(worldPoint,convexShape,convexOffset,convexAngle){$/;"	function	line:2231
+pointInConvex	E:\development\wingmod\lib\p2.js	/^function pointInConvex(worldPoint,convexShape,convexOffset,convexRotation){$/;"	function	line:2231
 pointInConvexLocal	E:\development\wingmod\lib\p2.js	/^function pointInConvexLocal(localPoint,convexShape){$/;"	function	line:2265
 particleConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.particleConvex = function($/;"	function	line:2311
 circleCircle	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleCircle = function($/;"	function	line:2428
@@ -1277,16 +1277,16 @@ circleParticle	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circlePa
 planeCapsule	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.planeCapsule = function($/;"	function	line:2719
 circlePlane	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circlePlane = function($/;"	function	line:2786
 convexConvex	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTest, precision ){$/;"	function	line:2863
-projectConvexOntoAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.projectConvexOntoAxis = function(convexShape, convexOffset, convexAngle, worldAxis, result){$/;"	function	line:3038
-findSeparatingAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.findSeparatingAxis = function(c1,offset1,angle1,c2,offset2,angle2,sepAxis){$/;"	function	line:3093
-getClosestEdge	E:\development\wingmod\lib\p2.js	/^Narrowphase.getClosestEdge = function(c,angle,axis,flip){$/;"	function	line:3248
-circleHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleHeightfield = function( circleBody,circleShape,circlePos,circleAngle,$/;"	function	line:3289
-convexHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexHeightfield = function( convexBody,convexShape,convexPos,convexAngle,$/;"	function	line:3469
+projectConvexOntoAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.projectConvexOntoAxis = function(convexShape, convexOffset, convexRotation, worldAxis, result){$/;"	function	line:3038
+findSeparatingAxis	E:\development\wingmod\lib\p2.js	/^Narrowphase.findSeparatingAxis = function(c1,offset1,rotation1,c2,offset2,rotation2,sepAxis){$/;"	function	line:3093
+getClosestEdge	E:\development\wingmod\lib\p2.js	/^Narrowphase.getClosestEdge = function(c,rotation,axis,flip){$/;"	function	line:3248
+circleHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.circleHeightfield = function( circleBody,circleShape,circlePos,circleRotation,$/;"	function	line:3289
+convexHeightfield	E:\development\wingmod\lib\p2.js	/^Narrowphase.prototype.convexHeightfield = function( convexBody,convexShape,convexPos,convexRotation,$/;"	function	line:3469
 Ray	E:\development\wingmod\lib\p2.js	/^function Ray(options){$/;"	function	line:3556
 update	E:\development\wingmod\lib\p2.js	/^Ray.prototype.update = function(){$/;"	function	line:3649
 intersectBodies	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectBodies = function (result, bodies) {$/;"	function	line:3663
 intersectBody	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectBody = function (result, body) {$/;"	function	line:3681
-intersectShape	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectShape = function(result, shape, angle, position, body){$/;"	function	line:3728
+intersectShape	E:\development\wingmod\lib\p2.js	/^Ray.prototype.intersectShape = function(result, shape, rotation, position, body){$/;"	function	line:3728
 getAABB	E:\development\wingmod\lib\p2.js	/^Ray.prototype.getAABB = function(result){$/;"	function	line:3750
 reportIntersection	E:\development\wingmod\lib\p2.js	/^Ray.prototype.reportIntersection = function(result, fraction, normal, faceIndex){$/;"	function	line:3773
 switch	E:\development\wingmod\lib\p2.js	/^    switch(this.mode){$/;"	function	line:3782
@@ -1352,10 +1352,10 @@ disableMotor	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.dis
 motorIsEnabled	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.motorIsEnabled = function(){$/;"	function	line:5486
 setMotorSpeed	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.setMotorSpeed = function(speed){$/;"	function	line:5496
 getMotorSpeed	E:\development\wingmod\lib\p2.js	/^RevoluteConstraint.prototype.getMotorSpeed = function(){$/;"	function	line:5506
-AngleLockEquation	E:\development\wingmod\lib\p2.js	/^function AngleLockEquation(bodyA, bodyB, options){$/;"	function	line:5527
-computeGq	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.computeGq = function(){$/;"	function	line:5545
-setRatio	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.setRatio = function(ratio){$/;"	function	line:5554
-setMaxTorque	E:\development\wingmod\lib\p2.js	/^AngleLockEquation.prototype.setMaxTorque = function(torque){$/;"	function	line:5566
+RotationLockEquation	E:\development\wingmod\lib\p2.js	/^function RotationLockEquation(bodyA, bodyB, options){$/;"	function	line:5527
+computeGq	E:\development\wingmod\lib\p2.js	/^RotationLockEquation.prototype.computeGq = function(){$/;"	function	line:5545
+setRatio	E:\development\wingmod\lib\p2.js	/^RotationLockEquation.prototype.setRatio = function(ratio){$/;"	function	line:5554
+setMaxTorque	E:\development\wingmod\lib\p2.js	/^RotationLockEquation.prototype.setMaxTorque = function(torque){$/;"	function	line:5566
 ContactEquation	E:\development\wingmod\lib\p2.js	/^function ContactEquation(bodyA, bodyB){$/;"	function	line:5586
 computeB	E:\development\wingmod\lib\p2.js	/^ContactEquation.prototype.computeB = function(a,b,h){$/;"	function	line:5642
 addSubSub	E:\development\wingmod\lib\p2.js	/^function addSubSub(out, a, b, c, d){$/;"	function	line:5685
@@ -1401,7 +1401,7 @@ _pointLineDist	E:\development\wingmod\lib\p2.js	/^    PolyK._pointLineDist = fun
 _updateISC	E:\development\wingmod\lib\p2.js	/^    PolyK._updateISC = function(dx, dy, a1, b1, b2, c, edge, isc)$/;"	function	line:6782
 _getPoints	E:\development\wingmod\lib\p2.js	/^    PolyK._getPoints = function(ps, ind0, ind1)$/;"	function	line:6800
 _firstWithFlag	E:\development\wingmod\lib\p2.js	/^    PolyK._firstWithFlag = function(ps, ind)$/;"	function	line:6809
-_PointInTriangle	E:\development\wingmod\lib\p2.js	/^    PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)$/;"	function	line:6819
+_PointInTrirotation	E:\development\wingmod\lib\p2.js	/^    PolyK._PointInTrirotation = function(px, py, ax, ay, bx, by, cx, cy)$/;"	function	line:6819
 _RayLineIntersection	E:\development\wingmod\lib\p2.js	/^    PolyK._RayLineIntersection = function(a1, a2, b1, b2, c)$/;"	function	line:6842
 _GetLineIntersection	E:\development\wingmod\lib\p2.js	/^    PolyK._GetLineIntersection = function(a1, a2, b1, b2, c)$/;"	function	line:6864
 _InRect	E:\development\wingmod\lib\p2.js	/^    PolyK._InRect = function(a, b, c)$/;"	function	line:6883
@@ -1412,11 +1412,11 @@ dist	E:\development\wingmod\lib\p2.js	/^    PolyK._P.dist = function(a,b)$/;"	fu
 crossLength	E:\development\wingmod\lib\p2.js	/^vec2.crossLength = function(a,b){$/;"	function	line:6962
 crossVZ	E:\development\wingmod\lib\p2.js	/^vec2.crossVZ = function(out, vec, zcomp){$/;"	function	line:6975
 crossZV	E:\development\wingmod\lib\p2.js	/^vec2.crossZV = function(out, zcomp, vec){$/;"	function	line:6990
-rotate	E:\development\wingmod\lib\p2.js	/^vec2.rotate = function(out,a,angle){$/;"	function	line:7004
+rotate	E:\development\wingmod\lib\p2.js	/^vec2.rotate = function(out,a,rotation){$/;"	function	line:7004
 rotate90cw	E:\development\wingmod\lib\p2.js	/^vec2.rotate90cw = function(out, a) {$/;"	function	line:7026
-toLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toLocalFrame = function(out, worldPoint, framePosition, frameAngle){$/;"	function	line:7041
-toGlobalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toGlobalFrame = function(out, localPoint, framePosition, frameAngle){$/;"	function	line:7058
-vectorToLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.vectorToLocalFrame = function(out, worldVector, frameAngle){$/;"	function	line:7076
+toLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toLocalFrame = function(out, worldPoint, framePosition, frameRotation){$/;"	function	line:7041
+toGlobalFrame	E:\development\wingmod\lib\p2.js	/^vec2.toGlobalFrame = function(out, localPoint, framePosition, frameRotation){$/;"	function	line:7058
+vectorToLocalFrame	E:\development\wingmod\lib\p2.js	/^vec2.vectorToLocalFrame = function(out, worldVector, frameRotation){$/;"	function	line:7076
 centroid	E:\development\wingmod\lib\p2.js	/^vec2.centroid = function(out, a, b, c){$/;"	function	line:7104
 create	E:\development\wingmod\lib\p2.js	/^vec2.create = function() {$/;"	function	line:7117
 clone	E:\development\wingmod\lib\p2.js	/^vec2.clone = function(a) {$/;"	function	line:7131
@@ -1441,14 +1441,14 @@ reflect	E:\development\wingmod\lib\p2.js	/^vec2.reflect = function(out, vector, 
 getLineSegmentsIntersection	E:\development\wingmod\lib\p2.js	/^vec2.getLineSegmentsIntersection = function(out, p0, p1, p2, p3) {$/;"	function	line:7460
 getLineSegmentsIntersectionFraction	E:\development\wingmod\lib\p2.js	/^vec2.getLineSegmentsIntersectionFraction = function(p0, p1, p2, p3) {$/;"	function	line:7481
 Body	E:\development\wingmod\lib\p2.js	/^function Body(options){$/;"	function	line:7552
-normalizeAngle	E:\development\wingmod\lib\p2.js	/^     *     function normalizeAngle(angle){$/;"	function	line:7684
+normalizeRotation	E:\development\wingmod\lib\p2.js	/^     *     function normalizeRotation(rotation){$/;"	function	line:7684
 updateSolveMassProperties	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateSolveMassProperties = function(){$/;"	function	line:7939
 setDensity	E:\development\wingmod\lib\p2.js	/^Body.prototype.setDensity = function(density) {$/;"	function	line:7954
 getArea	E:\development\wingmod\lib\p2.js	/^Body.prototype.getArea = function() {$/;"	function	line:7965
 getAABB	E:\development\wingmod\lib\p2.js	/^Body.prototype.getAABB = function(){$/;"	function	line:7978
 updateAABB	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateAABB = function() {$/;"	function	line:7992
 updateBoundingRadius	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateBoundingRadius = function(){$/;"	function	line:8022
-addShape	E:\development\wingmod\lib\p2.js	/^Body.prototype.addShape = function(shape, offset, angle){$/;"	function	line:8062
+addShape	E:\development\wingmod\lib\p2.js	/^Body.prototype.addShape = function(shape, offset, rotation){$/;"	function	line:8062
 removeShape	E:\development\wingmod\lib\p2.js	/^Body.prototype.removeShape = function(shape){$/;"	function	line:8090
 updateMassProperties	E:\development\wingmod\lib\p2.js	/^Body.prototype.updateMassProperties = function(){$/;"	function	line:8113
 applyForce	E:\development\wingmod\lib\p2.js	/^Body.prototype.applyForce = function(force, relativePoint){$/;"	function	line:8160

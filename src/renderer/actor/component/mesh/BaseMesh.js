@@ -6,7 +6,7 @@ function BaseMesh(config){
     config = config || {};
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
-    this.angleOffset = 0;
+    this.rotationOffset = 0;
     this.positionZOffset = 0;
     this.positionOffset = [0,0];
 
@@ -24,11 +24,11 @@ BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function(){
     if(this.actor){
-        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.angle * -1);
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.rotation * -1);
         this.position.x = this.actor.position[0] + offsetVector[0];
         this.position.y = this.actor.position[1] + offsetVector[1];
         this.position.z = this.actor.positionZ + this.positionZOffset;
-        this.rotation.z = this.actor.angle + this.angleOffset;
+        this.rotation.z = this.actor.rotation + this.rotationOffset;
     }
 };
 

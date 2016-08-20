@@ -12,7 +12,7 @@ function InputListener(config){
     EventEmitter.apply(this, arguments);
 
     this.inputState = Object.create(null);
-    this.inputState.mouseAngle = 0;
+    this.inputState.mouseRotation = 0;
 
     this.keys = {
         81: 'q',
@@ -57,7 +57,7 @@ function InputListener(config){
     };
 
     this.mouseMove = function (event) {
-        this.inputState.mouseAngle -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
+        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
         this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 

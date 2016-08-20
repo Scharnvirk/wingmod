@@ -116,7 +116,9 @@ GameScene.prototype.createMap = function(layoutData){
             material: ChunkStore.get(config.name).material
         });
         chunk.setPosition(config.position);
-        chunk.setRotation(config.rotation);
+
+        //layout data comes from logic, thus it requires "angle" instead of "rotation"
+        chunk.setRotation(config.angle);
         this.threeScene.add(chunk);
     }
 };

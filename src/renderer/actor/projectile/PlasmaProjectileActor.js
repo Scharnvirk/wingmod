@@ -10,11 +10,11 @@ function PlasmaProjectileActor(config){
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function(){
-    this.particleManager.createPremade('GreenTrail', {position: this.position, angle: this.angle});
+    this.particleManager.createPremade('GreenTrail', {position: this.position, rotation: this.rotation});
 };
 
 PlasmaProjectileActor.prototype.onDeath = function(){
-    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -5);
     this.particleManager.createPremade('GreenBoomTiny', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
@@ -29,7 +29,7 @@ PlasmaProjectileActor.prototype.onSpawn = function(){
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -43,7 +43,7 @@ PlasmaProjectileActor.prototype.onSpawn = function(){
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 10
     });
 };

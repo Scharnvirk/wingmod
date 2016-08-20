@@ -65,15 +65,15 @@ MookActor.prototype.drawEyes = function(){
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 15,
+        rotation: this.rotation,
+        rotationOffset: 15,
         distance: 3.5
     });
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 345,
+        rotation: this.rotation,
+        rotationOffset: 345,
         distance: 3.5
     });
 };
@@ -84,7 +84,7 @@ MookActor.prototype.onHit = function(){
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }

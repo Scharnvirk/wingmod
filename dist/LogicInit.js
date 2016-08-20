@@ -779,7 +779,7 @@ function BaseActor(config) {
 
     this.thrust = 0;
     this.horizontalThrust = 0;
-    this.rotationForce = 0;
+    this.angleForce = 0;
 
     this.timer = 0;
     this.customParams = {};
@@ -843,8 +843,8 @@ BaseActor.prototype.deathMain = function () {
 };
 
 BaseActor.prototype.processMovement = function () {
-    if (this.rotationForce !== 0) {
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+    if (this.angleForce !== 0) {
+        this.body.angularVelocity = this.angleForce * this.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }
@@ -899,7 +899,7 @@ DebugActor.prototype.createBody = function () {
 };
 
 DebugActor.prototype.onSpawn = function () {
-    this.rotationForce = Utils.rand(-15, 15);
+    this.angleForce = Utils.rand(-15, 15);
 };
 
 module.exports = DebugActor;
@@ -1713,10 +1713,10 @@ MookActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -1734,11 +1734,11 @@ MookActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -1913,10 +1913,10 @@ OrbotActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -1934,11 +1934,11 @@ OrbotActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -2044,10 +2044,10 @@ SniperActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -2065,11 +2065,11 @@ SniperActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -2364,7 +2364,7 @@ ChunkActor.prototype.createBody = function () {
 };
 
 ChunkActor.prototype.onSpawn = function () {
-    this.rotationForce = Utils.rand(-15, 15);
+    this.angleForce = Utils.rand(-15, 15);
 };
 
 module.exports = ChunkActor;
@@ -2428,32 +2428,32 @@ ShipActor.prototype.customUpdate = function () {
 ShipActor.prototype.playerUpdate = function (inputState) {
     if (inputState) {
         this.applyThrustInput(inputState);
-        this.applyLookAtRotationInput(inputState);
+        this.applyLookAtAngleInput(inputState);
         this.applyWeaponInput(inputState);
     }
 };
 
-ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
-    this.rotationForce = 0;
+ShipActor.prototype.applyLookAtAngleInput = function (inputState) {
+    this.angleForce = 0;
 
-    var lookTarget = Utils.angleToVector(inputState.mouseAngle, 1);
+    var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 
     if (inputState.q) {
-        this.rotationForce = 1;
+        this.angleForce = 1;
     }
 
     if (inputState.e) {
-        this.rotationForce = -1;
+        this.angleForce = -1;
     }
 
     this.lastInputStateX = inputState.lookX;
@@ -2866,35 +2866,35 @@ MapBuilder.prototype.buildMap = function () {
     this.mapLayout = [{
         name: 'chunk_HangarEndcap_1',
         position: [-1, 1],
-        rotation: 0
+        angle: 0
     }, {
         name: 'chunk_HangarEndcap_1',
         position: [0, 1],
-        rotation: 0
+        angle: 0
     }, {
         name: 'chunk_HangarStraight_SideSmall_1',
         position: [-1, 0],
-        rotation: 180
+        angle: 180
     }, {
         name: 'chunk_HangarStraight_SideSmall_1',
         position: [0, 0],
-        rotation: 0
+        angle: 0
     }, {
         name: 'chunk_HangarStraight_SideSmall_1',
         position: [-1, -1],
-        rotation: 180
+        angle: 180
     }, {
         name: 'chunk_HangarStraight_SideSmall_1',
         position: [0, -1],
-        rotation: 0
+        angle: 0
     }, {
         name: 'chunk_HangarEndcap_1',
         position: [-1, -2],
-        rotation: 180
+        angle: 180
     }, {
         name: 'chunk_HangarEndcap_1',
         position: [0, -2],
-        rotation: 180
+        angle: 180
     }];
 
     return this.mapLayout;
@@ -3003,7 +3003,7 @@ MapManager.prototype.buildBodiesFromLayout = function (layout) {
         var newChunk = cloner.deep.copy(_this.chunkPrototypes[chunkConfig.name]);
         newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
         newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
-        newChunk.body.angle = Utils.degToRad(chunkConfig.rotation);
+        newChunk.body.angle = Utils.degToRad(chunkConfig.angle);
         bodies.push(newChunk.body);
     });
 
@@ -3024,11 +3024,11 @@ function BaseActor(config, actorDependencies) {
     this.logicPosition = new Float32Array([this.position[0], this.position[1]]);
     this.logicPreviousPosition = new Float32Array([this.position[0], this.position[1]]);
 
-    this.angle = config.angle || 0;
-    this.logicAngle = this.angle;
-    this.logicPreviousAngle = this.angle;
+    this.rotation = config.rotation || 0;
+    this.logicRotation = this.rotation;
+    this.logicPreviousRotation = this.rotation;
 
-    this.updateFromLogic(config.positionX, config.positionY, config.angle);
+    this.updateFromLogic(config.positionX, config.positionY, config.rotation);
 
     this.meshes = this.createMeshes() || [];
 
@@ -3044,7 +3044,7 @@ BaseActor.prototype.update = function (delta) {
 
     this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
-    this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
+    this.rotation = this.logicPreviousRotation + delta * (this.logicRotation - this.logicPreviousRotation);
 
     if (this.meshes) {
         for (var i = 0, l = this.meshes.length; i < l; i++) {
@@ -3066,14 +3066,14 @@ BaseActor.prototype.handleEvent = function (eventData) {
 
 BaseActor.prototype.customHandleEvent = function (eventData) {};
 
-BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
+BaseActor.prototype.updateFromLogic = function (positionX, positionY, rotation) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
     this.logicPreviousPosition[1] = this.logicPosition[1];
-    this.logicPreviousAngle = this.logicAngle;
+    this.logicPreviousRotation = this.logicRotation;
 
     this.logicPosition[0] = positionX || 0;
     this.logicPosition[1] = positionY || 0;
-    this.logicAngle = angle || 0;
+    this.logicRotation = rotation || 0;
 };
 
 BaseActor.prototype.setPosition = function (positionX, positionY) {
@@ -3129,7 +3129,7 @@ DebugActor.prototype.customUpdate = function () {
         alpha: 1,
         alphaMultiplier: 0.75,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 5
     });
 };
@@ -3147,7 +3147,7 @@ function BaseMesh(config) {
     config = config || {};
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
-    this.angleOffset = 0;
+    this.rotationOffset = 0;
     this.positionZOffset = 0;
     this.positionOffset = [0, 0];
 
@@ -3165,11 +3165,11 @@ BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function () {
     if (this.actor) {
-        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.angle * -1);
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.rotation * -1);
         this.position.x = this.actor.position[0] + offsetVector[0];
         this.position.y = this.actor.position[1] + offsetVector[1];
         this.position.z = this.actor.positionZ + this.positionZOffset;
-        this.rotation.z = this.actor.angle + this.angleOffset;
+        this.rotation.z = this.actor.rotation + this.rotationOffset;
     }
 };
 
@@ -3183,7 +3183,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function ChunkMesh(config) {
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     config.geometry = ModelStore.get('chunk').geometry;
@@ -3224,7 +3224,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     Object.assign(this, config);
@@ -3306,15 +3306,15 @@ MookActor.prototype.drawEyes = function () {
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 15,
+        rotation: this.rotation,
+        rotationOffset: 15,
         distance: 3.5
     });
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 345,
+        rotation: this.rotation,
+        rotationOffset: 345,
         distance: 3.5
     });
 };
@@ -3325,7 +3325,7 @@ MookActor.prototype.onHit = function () {
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }
@@ -3427,8 +3427,8 @@ OrbotActor.prototype.drawEyes = function () {
         this.particleManager.createPremade('RedEyeBig', {
             position: this.position,
             positionZ: this.positionZ - 8.2,
-            angle: this.angle,
-            angleOffset: 0,
+            rotation: this.rotation,
+            rotationOffset: 0,
             distance: 1.65
         });
     }
@@ -3451,7 +3451,7 @@ function SniperActor() {
     this.initialHp = 12;
     this.hp = 12;
 
-    this.eyeAngle = 0;
+    this.eyeRotation = 0;
     this.eyeSpeed = 3;
     this.eyeEdge = 50;
     this.eyeGoingRight = true;
@@ -3507,21 +3507,21 @@ SniperActor.prototype.handleDamage = function () {
 };
 
 SniperActor.prototype.drawEyes = function () {
-    if (this.eyeAngle > this.eyeEdge) {
+    if (this.eyeRotation > this.eyeEdge) {
         this.eyeGoingRight = false;
     }
 
-    if (this.eyeAngle < -this.eyeEdge) {
+    if (this.eyeRotation < -this.eyeEdge) {
         this.eyeGoingRight = true;
     }
 
-    this.eyeAngle += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
+    this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
     this.particleManager.createPremade('PurpleEye', {
         position: this.position,
         positionZ: this.positionZ - 7.4,
-        angle: this.angle,
-        angleOffset: this.eyeAngle,
+        rotation: this.rotation,
+        rotationOffset: this.eyeRotation,
         distance: 2.3
     });
 };
@@ -3532,7 +3532,7 @@ SniperActor.prototype.onHit = function () {
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }
@@ -3563,7 +3563,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 2
     });
 
@@ -3577,13 +3577,13 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 2
     });
 
     for (var i = 0; i < this.timer / 15; i++) {
-        var angle = Utils.rand(0, 360);
-        var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
+        var rotation = Utils.rand(0, 360);
+        var offsetPosition = Utils.rotationToVector(rotation, Utils.rand(20, 30));
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -3594,7 +3594,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             alpha: 0.2,
             alphaMultiplier: 1.2,
             particleVelocity: -(Utils.rand(this.timer / 15, this.timer / 10) / 10),
-            particleAngle: angle,
+            particleRotation: rotation,
             speedZ: Utils.rand(-40, 40) / 100,
             lifeTime: 12,
             spriteNumber: 2
@@ -3615,7 +3615,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             alpha: 0.25,
             alphaMultiplier: 0.7,
             particleVelocity: 2,
-            particleAngle: 360 / pointCount * i,
+            particleRotation: 360 / pointCount * i,
             lifeTime: 5
         });
 
@@ -3629,7 +3629,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             alpha: 0.25,
             alphaMultiplier: 0.7,
             particleVelocity: 2,
-            particleAngle: 360 / pointCount * i,
+            particleRotation: 360 / pointCount * i,
             lifeTime: 5
         });
     }
@@ -3683,7 +3683,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
 
 EnemySpawnerActor.prototype.handleDamage = function (damageValue) {
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
-    var offsetPosition = Utils.angleToVector(this.angle, -12);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -12);
     var position = [this.position[0] + offsetPosition[0] + Utils.rand(-8, 8), this.position[1] + offsetPosition[1] + Utils.rand(-8, 8)];
     if (damageRandomValue > 20) {
         this.particleManager.createPremade('SmokePuffSmall', { position: position });
@@ -3829,7 +3829,7 @@ ChunkActor.prototype.customUpdate = function () {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 60
         });
     }
@@ -3847,7 +3847,7 @@ ChunkActor.prototype.onDeath = function () {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 60
         });
     }
@@ -3916,7 +3916,7 @@ ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, mate
             scaleZ: scales[2] || defaultScale,
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
-            angleOffset: Utils.degToRad(-90),
+            rotationOffset: Utils.degToRad(-90),
             positionZOffset: this.weaponSetLocations[slotNumber][i][2],
             positionOffset: [this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
         });
@@ -3931,7 +3931,7 @@ ShipActor.prototype.customUpdate = function () {
 };
 
 ShipActor.prototype.doBank = function () {
-    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousRotation - this.rotation) * 50);
 };
 
 ShipActor.prototype.doBob = function () {
@@ -3949,15 +3949,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 15,
+                rotation: this.rotation,
+                rotationOffset: 15,
                 distance: -5.8
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 345,
+                rotation: this.rotation,
+                rotationOffset: 345,
                 distance: -5.8
             });
         }
@@ -3966,15 +3966,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 40,
+                rotation: this.rotation,
+                rotationOffset: 40,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 170,
+                rotation: this.rotation,
+                rotationOffset: 170,
                 distance: -6
             });
         }
@@ -3983,15 +3983,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 320,
+                rotation: this.rotation,
+                rotationOffset: 320,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 190,
+                rotation: this.rotation,
+                rotationOffset: 190,
                 distance: -6
             });
         }
@@ -4000,8 +4000,8 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 180,
+                rotation: this.rotation,
+                rotationOffset: 180,
                 distance: -7
             });
         }
@@ -4048,11 +4048,11 @@ function LaserProjectileActor(config) {
 LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('BlueLaserTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('BlueLaserTrail', { position: this.position, rotation: this.rotation });
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('BlueSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4067,7 +4067,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4081,7 +4081,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4103,11 +4103,11 @@ function MoltenProjectileActor(config) {
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('OrangeTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('OrangeTrail', { position: this.position, rotation: this.rotation });
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('OrangeBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4122,7 +4122,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4136,7 +4136,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         alpha: 0.6,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 10
     });
 };
@@ -4158,11 +4158,11 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('GreenTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('GreenTrail', { position: this.position, rotation: this.rotation });
 };
 
 PlasmaProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -5);
     this.particleManager.createPremade('GreenBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4177,7 +4177,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4191,7 +4191,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 10
     });
 };
@@ -4218,7 +4218,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
     var edgeOffset = ringSections / 2;
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
-        offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 3);
+        offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240 / ringSections * i) + this.rotation, 1 + this.timer / 3);
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
@@ -4229,7 +4229,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 30,
             alphaMultiplier: 0.4,
             particleVelocity: 1,
-            particleAngle: this.angle,
+            particleRotation: this.rotation,
             lifeTime: 2
         });
     }
@@ -4248,7 +4248,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             alpha: Utils.rand(3, 10) / 10 - this.timer / 30,
             alphaMultiplier: 0.7,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -4264,7 +4264,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             alpha: 1 - this.timer / 30,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 15) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -4282,7 +4282,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4296,7 +4296,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4318,11 +4318,11 @@ function RedLaserProjectileActor(config) {
 RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('PurpleLaserTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('PurpleLaserTrail', { position: this.position, rotation: this.rotation });
 };
 
 RedLaserProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('PurpleSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4337,7 +4337,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4351,7 +4351,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4378,7 +4378,7 @@ RingProjectileActor.prototype.customUpdate = function () {
     var edgeOffset = ringSections / 2;
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
-        offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 10);
+        offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240 / ringSections * i) + this.rotation, 1 + this.timer / 10);
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
@@ -4389,7 +4389,7 @@ RingProjectileActor.prototype.customUpdate = function () {
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 100,
             alphaMultiplier: 0.4,
             particleVelocity: 1,
-            particleAngle: this.angle,
+            particleRotation: this.rotation,
             lifeTime: 3
         });
     }
@@ -4408,7 +4408,7 @@ RingProjectileActor.prototype.onDeath = function () {
             alpha: Utils.rand(3, 10) / 10 - this.timer / 100,
             alphaMultiplier: 0.7,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -4424,7 +4424,7 @@ RingProjectileActor.prototype.onDeath = function () {
             alpha: 1 - this.timer / 100,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 15) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -4442,7 +4442,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4456,7 +4456,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4764,39 +4764,39 @@ var Utils = {
         return x < 0 ? Math.floor(x) : Math.ceil(x);
     },
 
-    angleToVector: function angleToVector(angle, length) {
+    rotationToVector: function rotationToVector(rotation, length) {
         length = length || 0;
-        return [Math.sin(angle) * -1 * length, Math.cos(angle) * length];
+        return [Math.sin(rotation) * -1 * length, Math.cos(rotation) * length];
     },
 
-    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {
-        var angle = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
+    rotationBetweenPointsFromCenter: function rotationBetweenPointsFromCenter(p1, p2) {
+        var rotation = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
 
-        angle = angle * 360 / (2 * Math.PI);
+        rotation = rotation * 360 / (2 * Math.PI);
 
-        if (angle < 0) {
-            angle = angle + 360;
+        if (rotation < 0) {
+            rotation = rotation + 360;
         }
-        return angle;
+        return rotation;
     },
 
-    angleBetweenPoints: function angleBetweenPoints(p1, p2) {
-        var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
-        angle -= Math.PI / 2;
-        return angle % (Math.PI * 2);
+    rotationBetweenPoints: function rotationBetweenPoints(p1, p2) {
+        var rotation = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+        rotation -= Math.PI / 2;
+        return rotation % (Math.PI * 2);
     },
 
     pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI * 2);
-        var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
-        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference - Math.PI * 2) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference + Math.PI * 2) < this.degToRad(p1ArcAngle);
+        var rotationDifference = normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
+        return Math.abs(rotationDifference) < this.degToRad(p1ArcAngle) || Math.abs(rotationDifference - Math.PI * 2) < this.degToRad(p1ArcAngle) || Math.abs(rotationDifference + Math.PI * 2) < this.degToRad(p1ArcAngle);
     },
 
     arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI * 2);
-        return normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
+        return normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
     },
 
     firstToUpper: function firstToUpper(string) {
@@ -4817,9 +4817,9 @@ var Utils = {
         return [p1x >= 0 && p2x >= 0 || p1x < 0 && p2x < 0 ? p1x - p2x : p1x + p2x * -1, p1y >= 0 && p2y >= 0 || p1y < 0 && p2y < 0 ? p1y - p2y : p1y + p2y * -1];
     },
 
-    rotateVector: function rotateVector(x, y, angle) {
-        var cos = Math.cos(angle),
-            sin = Math.sin(angle),
+    rotateVector: function rotateVector(x, y, rotation) {
+        var cos = Math.cos(rotation),
+            sin = Math.sin(rotation),
             nx = cos * x + sin * y,
             ny = cos * y - sin * x;
         return [nx, ny];
@@ -4836,6 +4836,15 @@ var Utils = {
         vector.y = Math.round((-vector.y + 1) * canvas.height / 2);
 
         return [vector.x, vector.y];
+    },
+
+    //proxies for p2.js - it uses "angle" as angle, while three.js uses "rotation"
+    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {
+        return this.rotationBetweenPointsFromCenter(p1, p2);
+    },
+
+    angleToVector: function angleToVector(rotation, length) {
+        return this.rotationToVector(rotation, length);
     }
 };
 

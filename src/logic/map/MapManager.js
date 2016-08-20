@@ -50,7 +50,7 @@ MapManager.prototype.buildBodiesFromLayout = function(layout){
         var newChunk = cloner.deep.copy(this.chunkPrototypes[chunkConfig.name]);
         newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
         newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
-        newChunk.body.angle = Utils.degToRad(chunkConfig.rotation);
+        newChunk.body.angle = Utils.degToRad(chunkConfig.angle);
         bodies.push(newChunk.body);
     });
 

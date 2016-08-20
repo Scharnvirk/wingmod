@@ -11,11 +11,11 @@ function RedLaserProjectileActor(config){
 RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.customUpdate = function(){
-    this.particleManager.createPremade('PurpleLaserTrail', {position: this.position, angle: this.angle});
+    this.particleManager.createPremade('PurpleLaserTrail', {position: this.position, rotation: this.rotation});
 };
 
 RedLaserProjectileActor.prototype.onDeath = function(){
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('PurpleSparks', {position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]]});
 };
 
@@ -30,7 +30,7 @@ RedLaserProjectileActor.prototype.onSpawn = function(){
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -44,7 +44,7 @@ RedLaserProjectileActor.prototype.onSpawn = function(){
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };

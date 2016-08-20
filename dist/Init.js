@@ -634,7 +634,7 @@ function BaseActor(config) {
 
     this.thrust = 0;
     this.horizontalThrust = 0;
-    this.rotationForce = 0;
+    this.angleForce = 0;
 
     this.timer = 0;
     this.customParams = {};
@@ -698,8 +698,8 @@ BaseActor.prototype.deathMain = function () {
 };
 
 BaseActor.prototype.processMovement = function () {
-    if (this.rotationForce !== 0) {
-        this.body.angularVelocity = this.rotationForce * this.turnSpeed;
+    if (this.angleForce !== 0) {
+        this.body.angularVelocity = this.angleForce * this.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }
@@ -754,7 +754,7 @@ DebugActor.prototype.createBody = function () {
 };
 
 DebugActor.prototype.onSpawn = function () {
-    this.rotationForce = Utils.rand(-15, 15);
+    this.angleForce = Utils.rand(-15, 15);
 };
 
 module.exports = DebugActor;
@@ -1568,10 +1568,10 @@ MookActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -1589,11 +1589,11 @@ MookActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -1768,10 +1768,10 @@ OrbotActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -1789,11 +1789,11 @@ OrbotActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -1899,10 +1899,10 @@ SniperActor.prototype.doBrainOrders = function () {
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -1920,11 +1920,11 @@ SniperActor.prototype.lookAtPosition = function (position) {
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 };
 
@@ -2219,7 +2219,7 @@ ChunkActor.prototype.createBody = function () {
 };
 
 ChunkActor.prototype.onSpawn = function () {
-    this.rotationForce = Utils.rand(-15, 15);
+    this.angleForce = Utils.rand(-15, 15);
 };
 
 module.exports = ChunkActor;
@@ -2283,32 +2283,32 @@ ShipActor.prototype.customUpdate = function () {
 ShipActor.prototype.playerUpdate = function (inputState) {
     if (inputState) {
         this.applyThrustInput(inputState);
-        this.applyLookAtRotationInput(inputState);
+        this.applyLookAtAngleInput(inputState);
         this.applyWeaponInput(inputState);
     }
 };
 
-ShipActor.prototype.applyLookAtRotationInput = function (inputState) {
-    this.rotationForce = 0;
+ShipActor.prototype.applyLookAtAngleInput = function (inputState) {
+    this.angleForce = 0;
 
-    var lookTarget = Utils.angleToVector(inputState.mouseAngle, 1);
+    var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle / this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle / this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360 - angle) / this.stepAngle, 1);
+        this.angleForce = Math.min((360 - angle) / this.stepAngle, 1);
     }
 
     if (inputState.q) {
-        this.rotationForce = 1;
+        this.angleForce = 1;
     }
 
     if (inputState.e) {
-        this.rotationForce = -1;
+        this.angleForce = -1;
     }
 
     this.lastInputStateX = inputState.lookX;
@@ -2723,9 +2723,9 @@ Camera.prototype.update = function () {
     var inputState = this.inputListener.inputState;
 
     if (this.actor) {
-        var offsetPosition = Utils.angleToVector(this.actor.angle, -this.zOffset);
+        var offsetPosition = Utils.rotationToVector(this.actor.rotation, -this.zOffset);
 
-        this.rotation.z = this.actor.angle;
+        this.rotation.z = this.actor.rotation;
 
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];
@@ -3279,7 +3279,7 @@ function InputListener(config) {
     EventEmitter.apply(this, arguments);
 
     this.inputState = Object.create(null);
-    this.inputState.mouseAngle = 0;
+    this.inputState.mouseRotation = 0;
 
     this.keys = {
         81: 'q',
@@ -3324,7 +3324,7 @@ function InputListener(config) {
     };
 
     this.mouseMove = function (event) {
-        this.inputState.mouseAngle -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
+        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
         this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
@@ -3510,7 +3510,7 @@ transferArray[i*5] = body.actorId;
 transferArray[i*5+1] = body.classId;
 transferArray[i*5+2] = body.position[0];
 transferArray[i*5+3] = body.position[1];
-transferArray[i*5+4] = body.angle;
+transferArray[i*5+4] = body.rotation;
 */
 ActorManager.prototype.updateFromLogic = function (messageObject) {
     this.lastPhysicsTime = this.currentPhysicsTime;
@@ -3527,7 +3527,7 @@ ActorManager.prototype.updateFromLogic = function (messageObject) {
                     classId: dataArray[i * 5 + 1],
                     positionX: dataArray[i * 5 + 2],
                     positionY: dataArray[i * 5 + 3],
-                    angle: dataArray[i * 5 + 4]
+                    rotation: dataArray[i * 5 + 4]
                 });
             }
         } else {
@@ -3615,11 +3615,11 @@ function BaseActor(config, actorDependencies) {
     this.logicPosition = new Float32Array([this.position[0], this.position[1]]);
     this.logicPreviousPosition = new Float32Array([this.position[0], this.position[1]]);
 
-    this.angle = config.angle || 0;
-    this.logicAngle = this.angle;
-    this.logicPreviousAngle = this.angle;
+    this.rotation = config.rotation || 0;
+    this.logicRotation = this.rotation;
+    this.logicPreviousRotation = this.rotation;
 
-    this.updateFromLogic(config.positionX, config.positionY, config.angle);
+    this.updateFromLogic(config.positionX, config.positionY, config.rotation);
 
     this.meshes = this.createMeshes() || [];
 
@@ -3635,7 +3635,7 @@ BaseActor.prototype.update = function (delta) {
 
     this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
-    this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
+    this.rotation = this.logicPreviousRotation + delta * (this.logicRotation - this.logicPreviousRotation);
 
     if (this.meshes) {
         for (var i = 0, l = this.meshes.length; i < l; i++) {
@@ -3657,14 +3657,14 @@ BaseActor.prototype.handleEvent = function (eventData) {
 
 BaseActor.prototype.customHandleEvent = function (eventData) {};
 
-BaseActor.prototype.updateFromLogic = function (positionX, positionY, angle) {
+BaseActor.prototype.updateFromLogic = function (positionX, positionY, rotation) {
     this.logicPreviousPosition[0] = this.logicPosition[0];
     this.logicPreviousPosition[1] = this.logicPosition[1];
-    this.logicPreviousAngle = this.logicAngle;
+    this.logicPreviousRotation = this.logicRotation;
 
     this.logicPosition[0] = positionX || 0;
     this.logicPosition[1] = positionY || 0;
-    this.logicAngle = angle || 0;
+    this.logicRotation = rotation || 0;
 };
 
 BaseActor.prototype.setPosition = function (positionX, positionY) {
@@ -3720,7 +3720,7 @@ DebugActor.prototype.customUpdate = function () {
         alpha: 1,
         alphaMultiplier: 0.75,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 5
     });
 };
@@ -3738,7 +3738,7 @@ function BaseMesh(config) {
     config = config || {};
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
-    this.angleOffset = 0;
+    this.rotationOffset = 0;
     this.positionZOffset = 0;
     this.positionOffset = [0, 0];
 
@@ -3756,11 +3756,11 @@ BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function () {
     if (this.actor) {
-        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.angle * -1);
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.rotation * -1);
         this.position.x = this.actor.position[0] + offsetVector[0];
         this.position.y = this.actor.position[1] + offsetVector[1];
         this.position.z = this.actor.positionZ + this.positionZOffset;
-        this.rotation.z = this.actor.angle + this.angleOffset;
+        this.rotation.z = this.actor.rotation + this.rotationOffset;
     }
 };
 
@@ -3774,7 +3774,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function ChunkMesh(config) {
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     config.geometry = ModelStore.get('chunk').geometry;
@@ -3815,7 +3815,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     Object.assign(this, config);
@@ -3897,15 +3897,15 @@ MookActor.prototype.drawEyes = function () {
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 15,
+        rotation: this.rotation,
+        rotationOffset: 15,
         distance: 3.5
     });
     this.particleManager.createPremade('RedEye', {
         position: this.position,
         positionZ: this.positionZ - 8.7,
-        angle: this.angle,
-        angleOffset: 345,
+        rotation: this.rotation,
+        rotationOffset: 345,
         distance: 3.5
     });
 };
@@ -3916,7 +3916,7 @@ MookActor.prototype.onHit = function () {
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }
@@ -4018,8 +4018,8 @@ OrbotActor.prototype.drawEyes = function () {
         this.particleManager.createPremade('RedEyeBig', {
             position: this.position,
             positionZ: this.positionZ - 8.2,
-            angle: this.angle,
-            angleOffset: 0,
+            rotation: this.rotation,
+            rotationOffset: 0,
             distance: 1.65
         });
     }
@@ -4042,7 +4042,7 @@ function SniperActor() {
     this.initialHp = 12;
     this.hp = 12;
 
-    this.eyeAngle = 0;
+    this.eyeRotation = 0;
     this.eyeSpeed = 3;
     this.eyeEdge = 50;
     this.eyeGoingRight = true;
@@ -4098,21 +4098,21 @@ SniperActor.prototype.handleDamage = function () {
 };
 
 SniperActor.prototype.drawEyes = function () {
-    if (this.eyeAngle > this.eyeEdge) {
+    if (this.eyeRotation > this.eyeEdge) {
         this.eyeGoingRight = false;
     }
 
-    if (this.eyeAngle < -this.eyeEdge) {
+    if (this.eyeRotation < -this.eyeEdge) {
         this.eyeGoingRight = true;
     }
 
-    this.eyeAngle += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
+    this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
     this.particleManager.createPremade('PurpleEye', {
         position: this.position,
         positionZ: this.positionZ - 7.4,
-        angle: this.angle,
-        angleOffset: this.eyeAngle,
+        rotation: this.rotation,
+        rotationOffset: this.eyeRotation,
         distance: 2.3
     });
 };
@@ -4123,7 +4123,7 @@ SniperActor.prototype.onHit = function () {
             classId: ActorFactory.CHUNK,
             positionX: this.body.position[0],
             positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
+            rotation: Utils.rand(0, 360),
             velocity: Utils.rand(50, 100)
         });
     }
@@ -4154,7 +4154,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 2
     });
 
@@ -4168,13 +4168,13 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 2
     });
 
     for (var i = 0; i < this.timer / 15; i++) {
-        var angle = Utils.rand(0, 360);
-        var offsetPosition = Utils.angleToVector(angle, Utils.rand(20, 30));
+        var rotation = Utils.rand(0, 360);
+        var offsetPosition = Utils.rotationToVector(rotation, Utils.rand(20, 30));
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPosition[0],
             positionY: this.position[1] + offsetPosition[1],
@@ -4185,7 +4185,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             alpha: 0.2,
             alphaMultiplier: 1.2,
             particleVelocity: -(Utils.rand(this.timer / 15, this.timer / 10) / 10),
-            particleAngle: angle,
+            particleRotation: rotation,
             speedZ: Utils.rand(-40, 40) / 100,
             lifeTime: 12,
             spriteNumber: 2
@@ -4206,7 +4206,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             alpha: 0.25,
             alphaMultiplier: 0.7,
             particleVelocity: 2,
-            particleAngle: 360 / pointCount * i,
+            particleRotation: 360 / pointCount * i,
             lifeTime: 5
         });
 
@@ -4220,7 +4220,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
             alpha: 0.25,
             alphaMultiplier: 0.7,
             particleVelocity: 2,
-            particleAngle: 360 / pointCount * i,
+            particleRotation: 360 / pointCount * i,
             lifeTime: 5
         });
     }
@@ -4274,7 +4274,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
 
 EnemySpawnerActor.prototype.handleDamage = function (damageValue) {
     var damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
-    var offsetPosition = Utils.angleToVector(this.angle, -12);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -12);
     var position = [this.position[0] + offsetPosition[0] + Utils.rand(-8, 8), this.position[1] + offsetPosition[1] + Utils.rand(-8, 8)];
     if (damageRandomValue > 20) {
         this.particleManager.createPremade('SmokePuffSmall', { position: position });
@@ -4420,7 +4420,7 @@ ChunkActor.prototype.customUpdate = function () {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 60
         });
     }
@@ -4438,7 +4438,7 @@ ChunkActor.prototype.onDeath = function () {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 60
         });
     }
@@ -4507,7 +4507,7 @@ ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, mate
             scaleZ: scales[2] || defaultScale,
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
-            angleOffset: Utils.degToRad(-90),
+            rotationOffset: Utils.degToRad(-90),
             positionZOffset: this.weaponSetLocations[slotNumber][i][2],
             positionOffset: [this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
         });
@@ -4522,7 +4522,7 @@ ShipActor.prototype.customUpdate = function () {
 };
 
 ShipActor.prototype.doBank = function () {
-    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousRotation - this.rotation) * 50);
 };
 
 ShipActor.prototype.doBob = function () {
@@ -4540,15 +4540,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 15,
+                rotation: this.rotation,
+                rotationOffset: 15,
                 distance: -5.8
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 345,
+                rotation: this.rotation,
+                rotationOffset: 345,
                 distance: -5.8
             });
         }
@@ -4557,15 +4557,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 40,
+                rotation: this.rotation,
+                rotationOffset: 40,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 170,
+                rotation: this.rotation,
+                rotationOffset: 170,
                 distance: -6
             });
         }
@@ -4574,15 +4574,15 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 320,
+                rotation: this.rotation,
+                rotationOffset: 320,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 190,
+                rotation: this.rotation,
+                rotationOffset: 190,
                 distance: -6
             });
         }
@@ -4591,8 +4591,8 @@ ShipActor.prototype.doEngineGlow = function () {
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 180,
+                rotation: this.rotation,
+                rotationOffset: 180,
                 distance: -7
             });
         }
@@ -4639,11 +4639,11 @@ function LaserProjectileActor(config) {
 LaserProjectileActor.extend(BaseActor);
 
 LaserProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('BlueLaserTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('BlueLaserTrail', { position: this.position, rotation: this.rotation });
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('BlueSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4658,7 +4658,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4672,7 +4672,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4694,11 +4694,11 @@ function MoltenProjectileActor(config) {
 MoltenProjectileActor.extend(BaseActor);
 
 MoltenProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('OrangeTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('OrangeTrail', { position: this.position, rotation: this.rotation });
 };
 
 MoltenProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('OrangeBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4713,7 +4713,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4727,7 +4727,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
         alpha: 0.6,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 10
     });
 };
@@ -4749,11 +4749,11 @@ function PlasmaProjectileActor(config) {
 PlasmaProjectileActor.extend(BaseActor);
 
 PlasmaProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('GreenTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('GreenTrail', { position: this.position, rotation: this.rotation });
 };
 
 PlasmaProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -5);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -5);
     this.particleManager.createPremade('GreenBoomTiny', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4768,7 +4768,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4782,7 +4782,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 10
     });
 };
@@ -4809,7 +4809,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
     var edgeOffset = ringSections / 2;
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
-        offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 3);
+        offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240 / ringSections * i) + this.rotation, 1 + this.timer / 3);
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
@@ -4820,7 +4820,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 30,
             alphaMultiplier: 0.4,
             particleVelocity: 1,
-            particleAngle: this.angle,
+            particleRotation: this.rotation,
             lifeTime: 2
         });
     }
@@ -4839,7 +4839,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             alpha: Utils.rand(3, 10) / 10 - this.timer / 30,
             alphaMultiplier: 0.7,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -4855,7 +4855,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             alpha: 1 - this.timer / 30,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 15) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -4873,7 +4873,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4887,7 +4887,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4909,11 +4909,11 @@ function RedLaserProjectileActor(config) {
 RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.customUpdate = function () {
-    this.particleManager.createPremade('PurpleLaserTrail', { position: this.position, angle: this.angle });
+    this.particleManager.createPremade('PurpleLaserTrail', { position: this.position, rotation: this.rotation });
 };
 
 RedLaserProjectileActor.prototype.onDeath = function () {
-    var offsetPosition = Utils.angleToVector(this.angle, -3);
+    var offsetPosition = Utils.rotationToVector(this.rotation, -3);
     this.particleManager.createPremade('PurpleSparks', { position: [this.position[0] + offsetPosition[0], this.position[1] + offsetPosition[1]] });
 };
 
@@ -4928,7 +4928,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         alpha: 0.8,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -4942,7 +4942,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -4969,7 +4969,7 @@ RingProjectileActor.prototype.customUpdate = function () {
     var edgeOffset = ringSections / 2;
 
     for (var i = -ringSections / 2; i < ringSections / 2; i++) {
-        offsetPositionZ = Utils.angleToVector(Utils.degToRad(240 / ringSections * i) + this.angle, 1 + this.timer / 10);
+        offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240 / ringSections * i) + this.rotation, 1 + this.timer / 10);
         this.particleManager.createParticle('particleAdd', {
             positionX: this.position[0] + offsetPositionZ[0],
             positionY: this.position[1] + offsetPositionZ[1],
@@ -4980,7 +4980,7 @@ RingProjectileActor.prototype.customUpdate = function () {
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 100,
             alphaMultiplier: 0.4,
             particleVelocity: 1,
-            particleAngle: this.angle,
+            particleRotation: this.rotation,
             lifeTime: 3
         });
     }
@@ -4999,7 +4999,7 @@ RingProjectileActor.prototype.onDeath = function () {
             alpha: Utils.rand(3, 10) / 10 - this.timer / 100,
             alphaMultiplier: 0.7,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -5015,7 +5015,7 @@ RingProjectileActor.prototype.onDeath = function () {
             alpha: 1 - this.timer / 100,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 15) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -5033,7 +5033,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -5047,7 +5047,7 @@ RingProjectileActor.prototype.onSpawn = function () {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };
@@ -5129,14 +5129,14 @@ AiImageRenderer.prototype.drawBox = function (boxDataObject) {
     var objectsPosition = boxDataObject.position;
     var halfWidth = boxDataObject.width / 2 * this.lengthMultiplierX;
     var halfHeight = boxDataObject.height / 2 * this.lengthMultiplierY;
-    var angle = boxDataObject.angle;
+    var rotation = boxDataObject.rotation;
     objectsPosition[0] = objectsPosition[0] * this.lengthMultiplierX + this.centerX;
     objectsPosition[1] = objectsPosition[1] * this.lengthMultiplierY + this.centerY;
 
-    var bottomLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] - halfHeight, angle);
-    var topLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] + halfHeight, angle);
-    var topRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] + halfHeight, angle);
-    var bottomRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] - halfHeight, angle);
+    var bottomLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] - halfHeight, rotation);
+    var topLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] + halfHeight, rotation);
+    var topRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] + halfHeight, rotation);
+    var bottomRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] - halfHeight, rotation);
 
     var dc = this.drawContext;
     dc.moveTo(bottomLeft[0], bottomLeft[1]);
@@ -5155,7 +5155,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
     pos[1] *= this.lengthMultiplierY;
 
     dc.translate(pos[0], pos[1]);
-    dc.rotate(convexDataObject.angle);
+    dc.rotate(convexDataObject.rotation);
 
     dc.moveTo(convexDataObject.vertices[0][0] * this.lengthMultiplierX, convexDataObject.vertices[0][1] * this.lengthMultiplierY);
     for (var i = 1; i < convexDataObject.vertices.length; i++) {
@@ -5165,7 +5165,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
     dc.closePath();
     dc.fill();
 
-    dc.rotate(-convexDataObject.angle);
+    dc.rotate(-convexDataObject.rotation);
     dc.translate(-pos[0], -pos[1]);
 };
 
@@ -5763,10 +5763,10 @@ function FlatHud(config) {
 
     this.activationKey = 'shift';
     this.switchersConfig = [{
-        angle: Utils.degToRad(90),
+        rotation: Utils.degToRad(90),
         switchKey: 'mouseLeft'
     }, {
-        angle: Utils.degToRad(-90),
+        rotation: Utils.degToRad(-90),
         switchKey: 'mouseRight'
     }];
 
@@ -5796,7 +5796,7 @@ FlatHud.prototype.update = function () {
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(function (switcher) {
-            var offsetPosition = Utils.angleToVector(switcher.angle, 30);
+            var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
             var textSprite = _this.weaponTextSprites[switcher.index];
             textSprite.position.x = offsetPosition[0];
             textSprite.position.y = positionY + offsetPosition[1];
@@ -5964,8 +5964,8 @@ Hud.prototype.onPlayerActorAppeared = function (actor) {
 Hud.prototype.drawRadar = function () {
     for (var enemyId in this.actorManager.enemies) {
         var enemyActor = this.actorManager.enemies[enemyId];
-        var angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);
-        var offsetPosition = Utils.angleToVector(angle + Math.PI, 12);
+        var rotation = Utils.rotationBetweenPoints(enemyActor.position, this.actor.position);
+        var offsetPosition = Utils.rotationToVector(rotation + Math.PI, 12);
 
         this.drawHealthBar(enemyActor);
 
@@ -5980,7 +5980,7 @@ Hud.prototype.drawRadar = function () {
             alpha: 1,
             alphaMultiplier: 1,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -5990,8 +5990,8 @@ Hud.prototype.drawHealthBar = function (otherActor) {
     var hpPercentage = otherActor.hp / otherActor.initialHp;
     var hpBarCount = otherActor.hpBarCount || this.defaultHpBarCount;
     for (var i = 0; i < hpBarCount; i++) {
-        var angle = otherActor !== this.actor ? Utils.angleBetweenPoints(otherActor.position, this.actor.position) : this.actor.angle;
-        var offsetPosition = Utils.angleToVector(angle + Utils.degToRad(hpBarCount / 2 * 3) - Utils.degToRad(i * 3) + Math.PI, 8);
+        var rotation = otherActor !== this.actor ? Utils.rotationBetweenPoints(otherActor.position, this.actor.position) : this.actor.rotation;
+        var offsetPosition = Utils.rotationToVector(rotation + Utils.degToRad(hpBarCount / 2 * 3) - Utils.degToRad(i * 3) + Math.PI, 8);
         this.particleManager.createParticle('particleAddHUD', {
             positionX: otherActor.position[0] + offsetPosition[0],
             positionY: otherActor.position[1] + offsetPosition[1],
@@ -6003,7 +6003,7 @@ Hud.prototype.drawHealthBar = function (otherActor) {
             alpha: 1,
             alphaMultiplier: 1,
             particleVelocity: 0,
-            particleAngle: angle,
+            particleRotation: rotation,
             lifeTime: 1,
             spriteNumber: 3
         });
@@ -6014,29 +6014,29 @@ Hud.prototype.drawCrosshairs = function (actor) {
     this.particleManager.createPremade('CrosshairBlue', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: 9,
+        rotation: actor.rotation,
+        rotationOffset: 9,
         distance: 20
     });
     this.particleManager.createPremade('CrosshairBlue', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: -9,
+        rotation: actor.rotation,
+        rotationOffset: -9,
         distance: 20
     });
     this.particleManager.createPremade('CrosshairGreen', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: 18,
+        rotation: actor.rotation,
+        rotationOffset: 18,
         distance: 16
     });
     this.particleManager.createPremade('CrosshairGreen', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: -18,
+        rotation: actor.rotation,
+        rotationOffset: -18,
         distance: 16
     });
 };
@@ -6103,9 +6103,9 @@ function WeaponMesh(config) {
     BaseMesh.apply(this, arguments);
     config = config || {};
 
-    config.angleOffset = Math.PI;
+    config.rotationOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
-    config.angle = config.angle || 0;
+    config.rotation = config.rotation || 0;
 
     Object.assign(this, config);
 
@@ -6148,7 +6148,7 @@ function WeaponSwitcher(config) {
     this.weaponsToDisplay = 5;
     this.currentWeapon = Math.floor(this.weaponsToDisplay / 2); //the middle one
     this.meshDistance = 24;
-    this.angleSpeed = 3;
+    this.rotationSpeed = 3;
     this.hidePassed = true;
     EventEmitter.apply(this, arguments);
 
@@ -6165,22 +6165,22 @@ WeaponSwitcher.prototype.update = function () {
     }
 
     this.meshes.forEach(function (mesh) {
-        var offsetPosition = Utils.angleToVector(_this.angle + Utils.degToRad(mesh.angleDistance), 15);
-        var scale = (_this.weaponsToDisplay * _this.meshDistance - 1.5 * Math.abs(mesh.angleDistance)) / (_this.weaponsToDisplay * _this.meshDistance) * 1.5;
+        var offsetPosition = Utils.rotationToVector(_this.rotation + Utils.degToRad(mesh.rotationDistance), 15);
+        var scale = (_this.weaponsToDisplay * _this.meshDistance - 1.5 * Math.abs(mesh.rotationDistance)) / (_this.weaponsToDisplay * _this.meshDistance) * 1.5;
         scale = scale > 0 ? scale : 0.2;
         mesh.position.x = _this.position[0] + offsetPosition[0];
         mesh.position.y = _this.position[1] + offsetPosition[1];
-        mesh.rotation.z = Utils.degToRad(mesh.angleDistance);
+        mesh.rotation.z = Utils.degToRad(mesh.rotationDistance);
         mesh.scale.x = scale;
         mesh.scale.y = scale;
         mesh.scale.z = scale;
 
         if (_this.moveCounter > 0) {
-            mesh.angleDistance -= _this.angleSpeed;
+            mesh.rotationDistance -= _this.rotationSpeed;
         }
 
-        if (mesh.angleDistance <= -(_this.weaponsToDisplay - Math.floor(_this.weaponsToDisplay / 2)) * _this.meshDistance) {
-            mesh.angleDistance += _this.weaponsToDisplay * _this.meshDistance;
+        if (mesh.rotationDistance <= -(_this.weaponsToDisplay - Math.floor(_this.weaponsToDisplay / 2)) * _this.meshDistance) {
+            mesh.rotationDistance += _this.weaponsToDisplay * _this.meshDistance;
             var newWeaponIndex = (_this.currentWeapon + Math.floor(_this.weaponsToDisplay / 2)) % _this.weapons.length;
             mesh.weaponIndex = newWeaponIndex;
             mesh.setNewWeapon(newWeaponIndex);
@@ -6212,7 +6212,7 @@ WeaponSwitcher.prototype.handleInput = function (inputState) {
 WeaponSwitcher.prototype.switchWeaponToNext = function () {
     var oldWeapon = this.weapons[this.currentWeapon];
     this.currentWeapon++;
-    this.moveCounter = this.meshDistance / this.angleSpeed;
+    this.moveCounter = this.meshDistance / this.rotationSpeed;
 
     if (this.currentWeapon >= this.weapons.length) {
         this.currentWeapon = 0;
@@ -6231,7 +6231,7 @@ WeaponSwitcher.prototype.createMeshes = function () {
     for (var i = 0; i < this.weaponsToDisplay; i++) {
         var offset = (-parseInt(this.weaponsToDisplay / 2) + i) * this.meshDistance;
         var mesh = new WeaponMesh({
-            angleDistance: offset,
+            rotationDistance: offset,
             weaponIndex: i % this.weapons.length,
             weaponModels: this.weapons
         });
@@ -6469,7 +6469,7 @@ ParticleGenerator.prototype.update = function () {
 
 ParticleGenerator.prototype.initParticle = function (particleId, config) {
     var particle3 = particleId * 3;
-    var offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
+    var offsetPosition = Utils.rotationToVector(config.particleRotation, config.particleVelocity);
     this.positionHandle[particle3] = config.positionX;
     this.positionHandle[particle3 + 1] = config.positionY;
     this.positionHandle[particle3 + 2] = config.positionZ || 0;
@@ -6654,7 +6654,7 @@ module.exports = ParticleShaders;
 
 module.exports = function (config) {
     for (var i = 0; i < 44; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
@@ -6665,13 +6665,13 @@ module.exports = function (config) {
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
 
     for (var _i = 0; _i < 15; _i++) {
-        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
+        var _offsetPosition = Utils.rotationToVector(config.rotation, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
@@ -6682,7 +6682,7 @@ module.exports = function (config) {
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
@@ -6703,7 +6703,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 8) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -6719,7 +6719,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -6733,7 +6733,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.9,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 60
     });
 
@@ -6747,7 +6747,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -6761,7 +6761,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };
@@ -6781,7 +6781,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1,
         spriteNumber: 1
     });
@@ -6802,7 +6802,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1,
         spriteNumber: 1
     });
@@ -6823,7 +6823,7 @@ module.exports = function (config) {
         alpha: 0.4,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 
@@ -6838,7 +6838,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };
@@ -6858,7 +6858,7 @@ module.exports = function (config) {
         alpha: 0.4,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 
@@ -6873,7 +6873,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };
@@ -6894,7 +6894,7 @@ module.exports = function (config) {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
@@ -6910,7 +6910,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -6924,7 +6924,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -6938,7 +6938,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };
@@ -6948,7 +6948,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 5; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 0.7);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.7);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
@@ -6959,7 +6959,7 @@ module.exports = function (config) {
             alpha: 1 - 0.19 * i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
@@ -6974,7 +6974,7 @@ module.exports = function (config) {
         alpha: 0.5,
         alphaMultiplier: 0.6,
         particleVelocity: 1,
-        particleAngle: config.angle,
+        particleRotation: config.rotation,
         lifeTime: 2
     });
 };
@@ -6994,7 +6994,7 @@ module.exports = function (config) {
             alpha: Utils.rand(0, 3) / 10 + 0.3,
             alphaMultiplier: 0.95,
             particleVelocity: Utils.rand(0, 4) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 120
         });
     }
@@ -7010,7 +7010,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(1, 20) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 50)
         });
@@ -7026,7 +7026,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 
@@ -7040,7 +7040,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 80
     });
 
@@ -7054,7 +7054,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 80
     });
 };
@@ -7074,7 +7074,7 @@ module.exports = function (config) {
             alpha: Utils.rand(0, 3) / 10 + 0.3,
             alphaMultiplier: 0.95,
             particleVelocity: Utils.rand(0, 4) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             lifeTime: 120
         });
     }
@@ -7090,7 +7090,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(1, 20) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 50)
         });
@@ -7106,7 +7106,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 
@@ -7120,7 +7120,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 80
     });
 
@@ -7134,7 +7134,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.95,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 80
     });
 };
@@ -7155,7 +7155,7 @@ module.exports = function (config) {
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0, 1) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-10, 10) / 100,
             lifeTime: 60
         });
@@ -7171,7 +7171,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -7185,7 +7185,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -7199,7 +7199,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };
@@ -7209,7 +7209,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 3; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
@@ -7220,7 +7220,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1,
             spriteNumber: 2
         });
@@ -7236,7 +7236,7 @@ module.exports = function (config) {
         alpha: 0.8,
         alphaMultiplier: 0.6,
         particleVelocity: 1,
-        particleAngle: config.angle,
+        particleRotation: config.rotation,
         lifeTime: 1
     });
 };
@@ -7256,7 +7256,7 @@ module.exports = function (config) {
         alpha: 0.2,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1,
         spriteNumber: 3
     });
@@ -7272,7 +7272,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };
@@ -7282,7 +7282,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 15; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
@@ -7293,13 +7293,13 @@ module.exports = function (config) {
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
 
     for (var _i = 0; _i < 5; _i++) {
-        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
+        var _offsetPosition = Utils.rotationToVector(config.rotation, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
@@ -7310,7 +7310,7 @@ module.exports = function (config) {
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
@@ -7331,7 +7331,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 8) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -7347,7 +7347,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -7361,7 +7361,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.9,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 60
     });
 
@@ -7375,7 +7375,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -7389,7 +7389,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };
@@ -7409,7 +7409,7 @@ module.exports = function (config) {
         alpha: 0.3,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 
@@ -7424,7 +7424,7 @@ module.exports = function (config) {
         alpha: 0.8,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };
@@ -7444,7 +7444,7 @@ module.exports = function (config) {
         alpha: 0.3,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 
@@ -7459,7 +7459,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };
@@ -7469,7 +7469,7 @@ module.exports = function (config) {
 
 module.exports = function (config) {
     for (var i = 0; i < 15; i++) {
-        var offsetPosition = Utils.angleToVector(config.angle, -i * 0.6);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
@@ -7480,13 +7480,13 @@ module.exports = function (config) {
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
 
     for (var _i = 0; _i < 5; _i++) {
-        var _offsetPosition = Utils.angleToVector(config.angle, -_i * 1.8);
+        var _offsetPosition = Utils.rotationToVector(config.rotation, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
@@ -7497,7 +7497,7 @@ module.exports = function (config) {
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
             particleVelocity: 2,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
@@ -7518,7 +7518,7 @@ module.exports = function (config) {
             alpha: 1,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 8) / 10,
-            particleAngle: Utils.rand(0, 360),
+            particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10, 20)
         });
@@ -7534,7 +7534,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 10
     });
 
@@ -7548,7 +7548,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.9,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 60
     });
 
@@ -7562,7 +7562,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 15
     });
 
@@ -7576,7 +7576,7 @@ module.exports = function (config) {
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 20
     });
 };
@@ -7595,7 +7595,7 @@ module.exports = function (config) {
         alpha: Utils.rand(0, 3) / 10 + 0.1,
         alphaMultiplier: 0.95,
         particleVelocity: Utils.rand(0, 10) / 100,
-        particleAngle: Utils.rand(0, 360),
+        particleRotation: Utils.rand(0, 360),
         speedZ: Utils.rand(0, 10) / 100,
         lifeTime: 120
     });
@@ -7843,7 +7843,9 @@ GameScene.prototype.createMap = function (layoutData) {
             material: ChunkStore.get(config.name).material
         });
         chunk.setPosition(config.position);
-        chunk.setRotation(config.rotation);
+
+        //layout data comes from logic, thus it requires "angle" instead of "rotation"
+        chunk.setRotation(config.angle);
         this.threeScene.add(chunk);
     }
 };
@@ -9355,39 +9357,39 @@ var Utils = {
         return x < 0 ? Math.floor(x) : Math.ceil(x);
     },
 
-    angleToVector: function angleToVector(angle, length) {
+    rotationToVector: function rotationToVector(rotation, length) {
         length = length || 0;
-        return [Math.sin(angle) * -1 * length, Math.cos(angle) * length];
+        return [Math.sin(rotation) * -1 * length, Math.cos(rotation) * length];
     },
 
-    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {
-        var angle = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
+    rotationBetweenPointsFromCenter: function rotationBetweenPointsFromCenter(p1, p2) {
+        var rotation = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
 
-        angle = angle * 360 / (2 * Math.PI);
+        rotation = rotation * 360 / (2 * Math.PI);
 
-        if (angle < 0) {
-            angle = angle + 360;
+        if (rotation < 0) {
+            rotation = rotation + 360;
         }
-        return angle;
+        return rotation;
     },
 
-    angleBetweenPoints: function angleBetweenPoints(p1, p2) {
-        var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
-        angle -= Math.PI / 2;
-        return angle % (Math.PI * 2);
+    rotationBetweenPoints: function rotationBetweenPoints(p1, p2) {
+        var rotation = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+        rotation -= Math.PI / 2;
+        return rotation % (Math.PI * 2);
     },
 
     pointInArc: function pointInArc(p1, p2, p1LookAngle, p1ArcAngle) {
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI * 2);
-        var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
-        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference - Math.PI * 2) < this.degToRad(p1ArcAngle) || Math.abs(angleDifference + Math.PI * 2) < this.degToRad(p1ArcAngle);
+        var rotationDifference = normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
+        return Math.abs(rotationDifference) < this.degToRad(p1ArcAngle) || Math.abs(rotationDifference - Math.PI * 2) < this.degToRad(p1ArcAngle) || Math.abs(rotationDifference + Math.PI * 2) < this.degToRad(p1ArcAngle);
     },
 
     arcAngleDifference: function arcAngleDifference(p1, p2, p1LookAngle) {
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI * 2);
-        return normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
+        return normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
     },
 
     firstToUpper: function firstToUpper(string) {
@@ -9408,9 +9410,9 @@ var Utils = {
         return [p1x >= 0 && p2x >= 0 || p1x < 0 && p2x < 0 ? p1x - p2x : p1x + p2x * -1, p1y >= 0 && p2y >= 0 || p1y < 0 && p2y < 0 ? p1y - p2y : p1y + p2y * -1];
     },
 
-    rotateVector: function rotateVector(x, y, angle) {
-        var cos = Math.cos(angle),
-            sin = Math.sin(angle),
+    rotateVector: function rotateVector(x, y, rotation) {
+        var cos = Math.cos(rotation),
+            sin = Math.sin(rotation),
             nx = cos * x + sin * y,
             ny = cos * y - sin * x;
         return [nx, ny];
@@ -9427,6 +9429,15 @@ var Utils = {
         vector.y = Math.round((-vector.y + 1) * canvas.height / 2);
 
         return [vector.x, vector.y];
+    },
+
+    //proxies for p2.js - it uses "angle" as angle, while three.js uses "rotation"
+    angleBetweenPointsFromCenter: function angleBetweenPointsFromCenter(p1, p2) {
+        return this.rotationBetweenPointsFromCenter(p1, p2);
+    },
+
+    angleToVector: function angleToVector(rotation, length) {
+        return this.rotationToVector(rotation, length);
     }
 };
 

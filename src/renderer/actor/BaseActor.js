@@ -7,11 +7,11 @@ function BaseActor(config, actorDependencies){
     this.logicPosition = new Float32Array([this.position[0],this.position[1]]);
     this.logicPreviousPosition = new Float32Array([this.position[0],this.position[1]]);
 
-    this.angle = config.angle || 0;
-    this.logicAngle = this.angle;
-    this.logicPreviousAngle = this.angle;
+    this.rotation = config.rotation || 0;
+    this.logicRotation = this.rotation;
+    this.logicPreviousRotation = this.rotation;
 
-    this.updateFromLogic(config.positionX, config.positionY, config.angle);
+    this.updateFromLogic(config.positionX, config.positionY, config.rotation);
 
     this.meshes = this.createMeshes() || [];
 
@@ -27,7 +27,7 @@ BaseActor.prototype.update = function(delta){
 
     this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
     this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
-    this.angle = this.logicPreviousAngle + delta * (this.logicAngle - this.logicPreviousAngle);
+    this.rotation = this.logicPreviousRotation + delta * (this.logicRotation - this.logicPreviousRotation);
 
     if (this.meshes) {
         for(var i = 0, l = this.meshes.length; i < l; i++){
@@ -49,14 +49,14 @@ BaseActor.prototype.handleEvent = function(eventData){
 
 BaseActor.prototype.customHandleEvent = function(eventData){};
 
-BaseActor.prototype.updateFromLogic = function(positionX, positionY, angle){
+BaseActor.prototype.updateFromLogic = function(positionX, positionY, rotation){
     this.logicPreviousPosition[0] = this.logicPosition[0];
     this.logicPreviousPosition[1] = this.logicPosition[1];
-    this.logicPreviousAngle = this.logicAngle;
+    this.logicPreviousRotation = this.logicRotation;
 
     this.logicPosition[0] = positionX || 0;
     this.logicPosition[1] = positionY || 0;
-    this.logicAngle = angle || 0;
+    this.logicRotation = rotation || 0;
 };
 
 BaseActor.prototype.setPosition = function(positionX, positionY){

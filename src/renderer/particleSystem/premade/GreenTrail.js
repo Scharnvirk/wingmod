@@ -1,6 +1,6 @@
 module.exports = function(config){
     for(let i = 0; i < 5; i++){
-        var offsetPosition = Utils.angleToVector(config.angle, -i*0.7);
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i*0.7);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
@@ -11,7 +11,7 @@ module.exports = function(config){
             alpha: 1-0.19*i,
             alphaMultiplier: 0.8,
             particleVelocity: 1,
-            particleAngle: config.angle,
+            particleRotation: config.rotation,
             lifeTime: 1
         });
     }
@@ -26,7 +26,7 @@ module.exports = function(config){
         alpha: 0.5,
         alphaMultiplier: 0.6,
         particleVelocity: 1,
-        particleAngle: config.angle,
+        particleRotation: config.rotation,
         lifeTime: 2
     });
 };

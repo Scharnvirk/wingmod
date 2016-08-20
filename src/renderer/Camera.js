@@ -29,9 +29,9 @@ Camera.prototype.update = function(){
     let inputState = this.inputListener.inputState;
 
     if(this.actor){
-        let offsetPosition = Utils.angleToVector(this.actor.angle, -this.zOffset);
+        let offsetPosition = Utils.rotationToVector(this.actor.rotation, -this.zOffset);
 
-        this.rotation.z = this.actor.angle;
+        this.rotation.z = this.actor.rotation;
 
         this.position.x = this.actor.position[0] + offsetPosition[0];
         this.position.y = this.actor.position[1] + offsetPosition[1];

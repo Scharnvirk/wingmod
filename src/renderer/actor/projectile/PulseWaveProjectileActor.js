@@ -16,7 +16,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function(){
     var edgeOffset = ringSections / 2;
 
     for (let i = -ringSections/2; i < ringSections/2; i ++){
-      offsetPositionZ = Utils.angleToVector(Utils.degToRad(240/ringSections * i) + this.angle, 1 + this.timer/3);
+      offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240/ringSections * i) + this.rotation, 1 + this.timer/3);
       this.particleManager.createParticle('particleAdd', {
           positionX: this.position[0] + offsetPositionZ[0],
           positionY: this.position[1] + offsetPositionZ[1],
@@ -27,7 +27,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function(){
           alpha: 2 - 2/edgeOffset * Math.abs(i) - this.timer/30,
           alphaMultiplier: 0.4,
           particleVelocity: 1,
-          particleAngle: this.angle,
+          particleRotation: this.rotation,
           lifeTime: 2
       });
    }
@@ -46,7 +46,7 @@ PulseWaveProjectileActor.prototype.onDeath = function(){
             alpha: (Utils.rand(3,10) / 10) - this.timer/30 ,
             alphaMultiplier: 0.7,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -62,7 +62,7 @@ PulseWaveProjectileActor.prototype.onDeath = function(){
             alpha: 1 - this.timer/30,
             alphaMultiplier: 0.94,
             particleVelocity: Utils.rand(5, 15) / 10,
-            particleAngle: Utils.rand(0,360),
+            particleRotation: Utils.rand(0,360),
             speedZ: Utils.rand(-50, 50) / 100,
             lifeTime: Utils.rand(10,20)
         });
@@ -80,7 +80,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function(){
         alpha: 1,
         alphaMultiplier: 0.2,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 1
     });
 
@@ -94,7 +94,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function(){
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleAngle: this.angle,
+        particleRotation: this.rotation,
         lifeTime: 3
     });
 };

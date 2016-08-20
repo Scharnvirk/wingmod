@@ -61,10 +61,10 @@ OrbotActor.prototype.doBrainOrders = function(){
     if (this.brain.orders.lookAtPosition) {
         this.lookAtPosition(this.brain.orders.lookAtPosition);
         if (this.brain.orders.turn !== 0) {
-            this.rotationForce = this.brain.orders.turn;
+            this.angleForce = this.brain.orders.turn;
         }
     } else {
-        this.rotationForce = this.brain.orders.turn;
+        this.angleForce = this.brain.orders.turn;
     }
 
     this.thrust = this.brain.orders.thrust;
@@ -82,11 +82,11 @@ OrbotActor.prototype.lookAtPosition = function(position){
     var angle =  Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - this.body.position[0], position[1] - this.body.position[1]]);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle/this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
+        this.angleForce = Math.min((360-angle)/this.stepAngle, 1);
     }
 };
 

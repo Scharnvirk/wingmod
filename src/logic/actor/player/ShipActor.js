@@ -54,32 +54,32 @@ ShipActor.prototype.customUpdate = function(){
 ShipActor.prototype.playerUpdate = function(inputState){
     if(inputState){
         this.applyThrustInput(inputState);
-        this.applyLookAtRotationInput(inputState);
+        this.applyLookAtAngleInput(inputState);
         this.applyWeaponInput(inputState);
     }
 };
 
-ShipActor.prototype.applyLookAtRotationInput = function(inputState){
-    this.rotationForce = 0;
+ShipActor.prototype.applyLookAtAngleInput = function(inputState){
+    this.angleForce = 0;
 
-    var lookTarget = Utils.angleToVector(inputState.mouseAngle,1);
+    var lookTarget = Utils.angleToVector(inputState.mouseRotation,1);
     var angleVector = Utils.angleToVector(this.body.angle, 1);
     var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
     if (angle < 180 && angle > 0) {
-        this.rotationForce = Math.min(angle/this.stepAngle, 1) * -1;
+        this.angleForce = Math.min(angle/this.stepAngle, 1) * -1;
     }
 
     if (angle >= 180 && angle < 360) {
-        this.rotationForce = Math.min((360-angle)/this.stepAngle, 1);
+        this.angleForce = Math.min((360-angle)/this.stepAngle, 1);
     }
 
     if (inputState.q) {
-        this.rotationForce = 1;
+        this.angleForce = 1;
     }
 
     if (inputState.e) {
-        this.rotationForce = -1;
+        this.angleForce = -1;
     }
 
     this.lastInputStateX = inputState.lookX;

@@ -25,8 +25,8 @@ Hud.prototype.onPlayerActorAppeared = function(actor){
 Hud.prototype.drawRadar = function(){
     for (let enemyId in this.actorManager.enemies ){
         let enemyActor = this.actorManager.enemies[enemyId];
-        let angle = Utils.angleBetweenPoints(enemyActor.position, this.actor.position);
-        let offsetPosition = Utils.angleToVector(angle + Math.PI, 12);
+        let rotation = Utils.rotationBetweenPoints(enemyActor.position, this.actor.position);
+        let offsetPosition = Utils.rotationToVector(rotation + Math.PI, 12);
 
         this.drawHealthBar(enemyActor);
 
@@ -41,7 +41,7 @@ Hud.prototype.drawRadar = function(){
             alpha: 1,
             alphaMultiplier: 1,
             particleVelocity: 0,
-            particleAngle: 0,
+            particleRotation: 0,
             lifeTime: 1
         });
     }
@@ -51,8 +51,8 @@ Hud.prototype.drawHealthBar = function(otherActor){
     var hpPercentage = otherActor.hp / otherActor.initialHp;
     var hpBarCount = otherActor.hpBarCount || this.defaultHpBarCount;
     for (let i = 0; i < hpBarCount; i++){
-        let angle = (otherActor !== this.actor) ? Utils.angleBetweenPoints(otherActor.position, this.actor.position) : this.actor.angle;
-        let offsetPosition = Utils.angleToVector(angle + Utils.degToRad(hpBarCount/2*3) - Utils.degToRad(i*3) + Math.PI, 8);
+        let rotation = (otherActor !== this.actor) ? Utils.rotationBetweenPoints(otherActor.position, this.actor.position) : this.actor.rotation;
+        let offsetPosition = Utils.rotationToVector(rotation + Utils.degToRad(hpBarCount/2*3) - Utils.degToRad(i*3) + Math.PI, 8);
         this.particleManager.createParticle('particleAddHUD', {
             positionX: otherActor.position[0] + offsetPosition[0],
             positionY: otherActor.position[1] + offsetPosition[1],
@@ -64,7 +64,7 @@ Hud.prototype.drawHealthBar = function(otherActor){
             alpha: 1,
             alphaMultiplier: 1,
             particleVelocity: 0,
-            particleAngle: angle,
+            particleRotation: rotation,
             lifeTime: 1,
             spriteNumber: 3
         });
@@ -75,29 +75,29 @@ Hud.prototype.drawCrosshairs = function(actor){
     this.particleManager.createPremade('CrosshairBlue', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: 9,
+        rotation: actor.rotation,
+        rotationOffset: 9,
         distance: 20
     });
     this.particleManager.createPremade('CrosshairBlue', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: -9,
+        rotation: actor.rotation,
+        rotationOffset: -9,
         distance: 20
     });
     this.particleManager.createPremade('CrosshairGreen', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: 18,
+        rotation: actor.rotation,
+        rotationOffset: 18,
         distance: 16
     });
     this.particleManager.createPremade('CrosshairGreen', {
         position: actor.position,
         positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        angle: actor.angle,
-        angleOffset: -18,
+        rotation: actor.rotation,
+        rotationOffset: -18,
         distance: 16
     });
 };

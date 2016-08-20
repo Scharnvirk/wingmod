@@ -5,9 +5,9 @@ function WeaponMesh(config){
     BaseMesh.apply(this, arguments);
     config = config || {};
 
-    config.angleOffset = Math.PI;
+    config.rotationOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
-    config.angle = config.angle || 0;
+    config.rotation = config.rotation || 0;
 
     Object.assign(this, config);
 

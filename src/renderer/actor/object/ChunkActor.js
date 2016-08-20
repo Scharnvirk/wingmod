@@ -23,7 +23,7 @@ ChunkActor.prototype.customUpdate = function(){
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0,1) / 10,
-            particleAngle: Utils.rand(0,360),
+            particleRotation: Utils.rand(0,360),
             lifeTime: 60
         });
     }
@@ -41,7 +41,7 @@ ChunkActor.prototype.onDeath = function(){
             alpha: 0.6,
             alphaMultiplier: 0.9,
             particleVelocity: Utils.rand(0,1) / 10,
-            particleAngle: Utils.rand(0,360),
+            particleRotation: Utils.rand(0,360),
             lifeTime: 60
         });
     }

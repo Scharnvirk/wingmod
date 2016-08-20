@@ -9,7 +9,7 @@ module.exports = function(config){
         alpha: Utils.rand(0,3)/10 + 0.1,
         alphaMultiplier: 0.95,
         particleVelocity: Utils.rand(0,10) / 100,
-        particleAngle: Utils.rand(0,360),
+        particleRotation: Utils.rand(0,360),
         speedZ: Utils.rand(0,10) / 100,
         lifeTime: 120
     });

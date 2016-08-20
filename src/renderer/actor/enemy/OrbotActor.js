@@ -65,8 +65,8 @@ OrbotActor.prototype.drawEyes = function(){
         this.particleManager.createPremade('RedEyeBig', {
             position: this.position,
             positionZ: this.positionZ - 8.2,
-            angle: this.angle,
-            angleOffset: 0,
+            rotation: this.rotation,
+            rotationOffset: 0,
             distance: 1.65
         });
     }

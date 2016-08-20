@@ -17,7 +17,7 @@ DebugActor.prototype.customUpdate = function(){
         alpha: 1,
         alphaMultiplier: 0.75,
         particleVelocity: 0,
-        particleAngle: 0,
+        particleRotation: 0,
         lifeTime: 5
     });
 };

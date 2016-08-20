@@ -3,7 +3,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function WallMesh(config){
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     config.geometry = new THREE.BoxGeometry(800,2,30,30);

@@ -71,14 +71,14 @@ AiImageRenderer.prototype.drawBox = function(boxDataObject){
     let objectsPosition = boxDataObject.position;
     let halfWidth = (boxDataObject.width / 2) * this.lengthMultiplierX;
     let halfHeight = (boxDataObject.height / 2) * this.lengthMultiplierY;
-    let angle = boxDataObject.angle;
+    let rotation = boxDataObject.rotation;
     objectsPosition[0] = objectsPosition[0] * this.lengthMultiplierX + this.centerX;
     objectsPosition[1] = objectsPosition[1] * this.lengthMultiplierY + this.centerY;
 
-    let bottomLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] - halfHeight, angle);
-    let topLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] + halfHeight, angle);
-    let topRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] + halfHeight, angle);
-    let bottomRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] - halfHeight, angle);
+    let bottomLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] - halfHeight, rotation);
+    let topLeft = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] - halfWidth, objectsPosition[1] + halfHeight, rotation);
+    let topRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] + halfHeight, rotation);
+    let bottomRight = Utils.rotateOffsetPoint(objectsPosition[0], objectsPosition[1], objectsPosition[0] + halfWidth, objectsPosition[1] - halfHeight, rotation);
 
     let dc = this.drawContext;
     dc.moveTo(bottomLeft[0], bottomLeft[1]);
@@ -97,7 +97,7 @@ AiImageRenderer.prototype.drawConvex = function(convexDataObject){
     pos[1] *= this.lengthMultiplierY;
 
     dc.translate(pos[0], pos[1]);
-    dc.rotate(convexDataObject.angle);
+    dc.rotate(convexDataObject.rotation);
 
     dc.moveTo(
         convexDataObject.vertices[0][0] * this.lengthMultiplierX,
@@ -113,7 +113,7 @@ AiImageRenderer.prototype.drawConvex = function(convexDataObject){
     dc.closePath();
     dc.fill();
 
-    dc.rotate(-convexDataObject.angle);
+    dc.rotate(-convexDataObject.rotation);
     dc.translate(-pos[0], -pos[1]);
 };
 

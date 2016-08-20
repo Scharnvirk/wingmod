@@ -24,7 +24,7 @@ DebugActor.prototype.createBody = function(){
 };
 
 DebugActor.prototype.onSpawn = function(){
-    this.rotationForce = Utils.rand(-15,15);
+    this.angleForce = Utils.rand(-15,15);
 };
 
 module.exports = DebugActor;

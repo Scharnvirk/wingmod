@@ -10,7 +10,7 @@ module.exports = function(config){
         alpha: 0.3,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 
@@ -25,7 +25,7 @@ module.exports = function(config){
         alpha: 0.8,
         alphaMultiplier: 1,
         particleVelocity: config.distance,
-        particleAngle: config.angle + Utils.degToRad(config.angleOffset),
+        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
         lifeTime: 1
     });
 };

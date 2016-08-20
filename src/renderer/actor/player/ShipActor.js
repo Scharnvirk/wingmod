@@ -56,7 +56,7 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
             scaleZ: scales[2] || defaultScale,
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
-            angleOffset: Utils.degToRad(-90),
+            rotationOffset: Utils.degToRad(-90),
             positionZOffset: this.weaponSetLocations[slotNumber][i][2],
             positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
         });
@@ -71,7 +71,7 @@ ShipActor.prototype.customUpdate = function(){
 };
 
 ShipActor.prototype.doBank = function(){
-    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousAngle - this.angle) * 50);
+    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousRotation - this.rotation) * 50);
 };
 
 ShipActor.prototype.doBob = function(){
@@ -89,15 +89,15 @@ ShipActor.prototype.doEngineGlow = function(){
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 15,
+                rotation: this.rotation,
+                rotationOffset: 15,
                 distance: -5.8
             });
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 345,
+                rotation: this.rotation,
+                rotationOffset: 345,
                 distance: -5.8
             });
         }
@@ -106,15 +106,15 @@ ShipActor.prototype.doEngineGlow = function(){
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 40,
+                rotation: this.rotation,
+                rotationOffset: 40,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 170,
+                rotation: this.rotation,
+                rotationOffset: 170,
                 distance: -6
             });
         }
@@ -123,15 +123,15 @@ ShipActor.prototype.doEngineGlow = function(){
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 320,
+                rotation: this.rotation,
+                rotationOffset: 320,
                 distance: -4
             });
             this.particleManager.createPremade('EngineGlowSmall', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 190,
+                rotation: this.rotation,
+                rotationOffset: 190,
                 distance: -6
             });
         }
@@ -140,8 +140,8 @@ ShipActor.prototype.doEngineGlow = function(){
             this.particleManager.createPremade('EngineGlowMedium', {
                 position: this.position,
                 positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                angle: this.angle,
-                angleOffset: 180,
+                rotation: this.rotation,
+                rotationOffset: 180,
                 distance: -7
             });
         }

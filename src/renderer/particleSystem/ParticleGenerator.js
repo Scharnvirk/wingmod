@@ -84,7 +84,7 @@ ParticleGenerator.prototype.update = function(){
 
 ParticleGenerator.prototype.initParticle = function(particleId, config){
     let particle3 = particleId * 3;
-    let offsetPosition = Utils.angleToVector(config.particleAngle, config.particleVelocity);
+    let offsetPosition = Utils.rotationToVector(config.particleRotation, config.particleVelocity);
     this.positionHandle[particle3] = config.positionX;
     this.positionHandle[particle3 + 1] = config.positionY;
     this.positionHandle[particle3 + 2] = config.positionZ || 0;

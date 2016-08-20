@@ -14,45 +14,45 @@ MapBuilder.prototype.buildMap = function(){
         {
             name: 'chunk_HangarEndcap_1',
             position: [-1,1],
-            rotation: 0
+            angle: 0
         },
         {
             name: 'chunk_HangarEndcap_1',
             position: [0,1],
-            rotation: 0
+            angle: 0
         },
 
         {
             name: 'chunk_HangarStraight_SideSmall_1',
             position: [-1,0],
-            rotation: 180
+            angle: 180
         },
         {
             name: 'chunk_HangarStraight_SideSmall_1',
             position: [0,0],
-            rotation: 0
+            angle: 0
         },
 
         {
             name: 'chunk_HangarStraight_SideSmall_1',
             position: [-1,-1],
-            rotation: 180
+            angle: 180
         },
         {
             name: 'chunk_HangarStraight_SideSmall_1',
             position: [0,-1],
-            rotation: 0
+            angle: 0
         },
 
         {
             name: 'chunk_HangarEndcap_1',
             position: [-1,-2],
-            rotation: 180
+            angle: 180
         },
         {
             name: 'chunk_HangarEndcap_1',
             position: [0,-2],
-            rotation: 180
+            angle: 180
         },
     ];
 

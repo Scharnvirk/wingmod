@@ -44,41 +44,41 @@ var Utils = {
         return x < 0 ? Math.floor(x) : Math.ceil(x);
     },
 
-    angleToVector: function(angle, length){
+    rotationToVector: function(rotation, length){
         length = length || 0;
-        return [(Math.sin(angle) * -1) * length, Math.cos(angle) * length];
+        return [(Math.sin(rotation) * -1) * length, Math.cos(rotation) * length];
     },
 
-    angleBetweenPointsFromCenter: function(p1, p2){
-        var angle = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
+    rotationBetweenPointsFromCenter: function(p1, p2){
+        var rotation = Math.atan2(p1[1], p1[0]) - Math.atan2(p2[1], p2[0]);
 
-        angle = angle * 360 / (2*Math.PI);
+        rotation = rotation * 360 / (2*Math.PI);
 
-        if (angle < 0){
-            angle = angle + 360;
+        if (rotation < 0){
+            rotation = rotation + 360;
         }
-        return angle;
+        return rotation;
     },
 
-    angleBetweenPoints: function(p1, p2){
-        var angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
-        angle -= Math.PI/2;
-        return angle % (Math.PI*2);
+    rotationBetweenPoints: function(p1, p2){
+        var rotation = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
+        rotation -= Math.PI/2;
+        return rotation % (Math.PI*2);
     },
 
     pointInArc: function(p1, p2, p1LookAngle, p1ArcAngle){
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI*2);
-        var angleDifference = normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
-        return Math.abs(angleDifference) < this.degToRad(p1ArcAngle) ||
-            Math.abs(angleDifference - (Math.PI*2)) < this.degToRad(p1ArcAngle) ||
-            Math.abs(angleDifference + (Math.PI*2)) < this.degToRad(p1ArcAngle);
+        var rotationDifference = normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
+        return Math.abs(rotationDifference) < this.degToRad(p1ArcAngle) ||
+            Math.abs(rotationDifference - (Math.PI*2)) < this.degToRad(p1ArcAngle) ||
+            Math.abs(rotationDifference + (Math.PI*2)) < this.degToRad(p1ArcAngle);
     },
 
     arcAngleDifference: function(p1, p2, p1LookAngle){
-        var angleToP2 = this.angleBetweenPoints(p1, p2);
+        var rotationToP2 = this.rotationBetweenPoints(p1, p2);
         var normalizedAngle = p1LookAngle % (Math.PI*2);
-        return normalizedAngle >= 0 && angleToP2 >= 0 || normalizedAngle < 0 && angleToP2 < 0 ? normalizedAngle - angleToP2 : normalizedAngle + angleToP2 * -1;
+        return normalizedAngle >= 0 && rotationToP2 >= 0 || normalizedAngle < 0 && rotationToP2 < 0 ? normalizedAngle - rotationToP2 : normalizedAngle + rotationToP2 * -1;
     },
 
     firstToUpper: function(string) {
@@ -102,9 +102,9 @@ var Utils = {
         ];
     },
 
-    rotateVector: function(x, y, angle) {
-        var cos = Math.cos(angle),
-            sin = Math.sin(angle),
+    rotateVector: function(x, y, rotation) {
+        var cos = Math.cos(rotation),
+            sin = Math.sin(rotation),
             nx = (cos * x) + (sin * y),
             ny = (cos * y) - (sin * x);
         return [nx, ny];
@@ -121,6 +121,16 @@ var Utils = {
         vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 );
 
         return [vector.x, vector.y];
+    },
+
+
+    //proxies for p2.js - it uses "angle" as angle, while three.js uses "rotation"
+    angleBetweenPointsFromCenter: function(p1, p2){
+        return this.rotationBetweenPointsFromCenter(p1, p2);
+    },
+
+    angleToVector: function(rotation, length){
+        return this.rotationToVector(rotation, length);
     }
 };
 

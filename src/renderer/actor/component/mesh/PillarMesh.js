@@ -3,7 +3,7 @@ var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
 function PillarMesh(config){
     BaseMesh.apply(this, arguments);
-    this.angleOffset = Math.PI;
+    this.rotationOffset = Math.PI;
 
     config = config || {};
     config.geometry = new THREE.BoxGeometry(20,20,20,50);

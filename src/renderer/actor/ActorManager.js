@@ -35,7 +35,7 @@ transferArray[i*5] = body.actorId;
 transferArray[i*5+1] = body.classId;
 transferArray[i*5+2] = body.position[0];
 transferArray[i*5+3] = body.position[1];
-transferArray[i*5+4] = body.angle;
+transferArray[i*5+4] = body.rotation;
 */
 ActorManager.prototype.updateFromLogic = function(messageObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
@@ -52,7 +52,7 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
                     classId: dataArray[i*5+1],
                     positionX: dataArray[i*5+2],
                     positionY: dataArray[i*5+3],
-                    angle: dataArray[i*5+4]
+                    rotation: dataArray[i*5+4]
                 });
             }
         } else {
