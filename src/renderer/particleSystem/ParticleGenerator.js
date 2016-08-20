@@ -73,33 +73,33 @@ ParticleGenerator.prototype.update = function(){
     this.material.uniforms.time.value = this.tick;
     this.material.uniforms.pixelRatio = Math.round(window.devicePixelRatio*10)/10 || 0.1;
 
-    this.geometry.attributes.position.needsUpdate = true;
-    this.geometry.attributes.speed.needsUpdate = true;
-    this.geometry.attributes.alpha.needsUpdate = true;
-    this.geometry.attributes.color.needsUpdate = true;
-    this.geometry.attributes.configs.needsUpdate = true;
+    // this.geometry.attributes.position.needsUpdate = true;
+    // this.geometry.attributes.speed.needsUpdate = true;
+    // this.geometry.attributes.alpha.needsUpdate = true;
+    // this.geometry.attributes.color.needsUpdate = true;
+    // this.geometry.attributes.configs.needsUpdate = true;
 
     this.frameResolution = this.resolutionCoefficient * 1/(window.devicePixelRatio);
 };
 
 ParticleGenerator.prototype.initParticle = function(particleId, config){
-    let particle3 = particleId * 3;
-    let offsetPosition = Utils.rotationToVector(config.particleRotation, config.particleVelocity);
-    this.positionHandle[particle3] = config.positionX;
-    this.positionHandle[particle3 + 1] = config.positionY;
-    this.positionHandle[particle3 + 2] = config.positionZ || 0;
-    this.colorHandle[particle3] = config.colorR;
-    this.colorHandle[particle3 + 1] = config.colorG;
-    this.colorHandle[particle3 + 2] = config.colorB;
-    this.alphaHandle[particleId * 2] = config.alpha;
-    this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
-    this.speedHandle[particle3] = offsetPosition[0];
-    this.speedHandle[particle3 + 1] = offsetPosition[1];
-    this.speedHandle[particle3 + 2] = config.speedZ || 0;
-    this.configsHandle[particleId * 4] = config.scale * this.frameResolution;
-    this.configsHandle[particleId * 4 + 1] = this.tick;
-    this.configsHandle[particleId * 4 + 2] = config.lifeTime;
-    this.configsHandle[particleId * 4 + 3] = config.spriteNumber || 0;
+    // let particle3 = particleId * 3;
+    // let offsetPosition = Utils.rotationToVector(config.particleRotation, config.particleVelocity);
+    // this.positionHandle[particle3] = config.positionX;
+    // this.positionHandle[particle3 + 1] = config.positionY;
+    // this.positionHandle[particle3 + 2] = config.positionZ || 0;
+    // this.colorHandle[particle3] = config.colorR;
+    // this.colorHandle[particle3 + 1] = config.colorG;
+    // this.colorHandle[particle3 + 2] = config.colorB;
+    // this.alphaHandle[particleId * 2] = config.alpha;
+    // this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
+    // this.speedHandle[particle3] = offsetPosition[0];
+    // this.speedHandle[particle3 + 1] = offsetPosition[1];
+    // this.speedHandle[particle3 + 2] = config.speedZ || 0;
+    // this.configsHandle[particleId * 4] = config.scale * this.frameResolution;
+    // this.configsHandle[particleId * 4 + 1] = this.tick;
+    // this.configsHandle[particleId * 4 + 2] = config.lifeTime;
+    // this.configsHandle[particleId * 4 + 3] = config.spriteNumber || 0;
 };
 
 ParticleGenerator.prototype.updateResolutionCoefficient = function(resolutionCoefficient){

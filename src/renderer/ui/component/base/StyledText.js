@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import React from 'react';
 
 class StyledText extends React.Component {
     render() {

@@ -2,7 +2,7 @@ var ModelLoader = require("renderer/assetManagement/model/ModelLoader");
 var ModelList = require("renderer/assetManagement/model/ModelList");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 
-var CustomModelBuilder = require("renderer/assetManagement/model/CustomModelBuilder");
+var CustomModelCreator = require("renderer/assetManagement/model/CustomModelCreator");
 
 var ChunkLoader = require("renderer/assetManagement/level/ChunkLoader");
 var ChunkList = require("renderer/assetManagement/level/ChunkList");
@@ -50,9 +50,9 @@ AssetManager.prototype.loadModels = function(resolve){
     this.modelLoader.on('loaded', resolve);
     this.modelLoader.loadModels(ModelList.models);
 
-    this.customModelBuilder = new CustomModelBuilder();
-    this.customModelBuilder.loadModels();
-    ModelStore.loadBatch(this.customModelBuilder.getBatch());
+    this.customModelCreator = new CustomModelCreator();
+    this.customModelCreator.loadModels();
+    ModelStore.loadBatch(this.customModelCreator.getBatch());
 };
 
 AssetManager.prototype.modelsLoaded = function(event){

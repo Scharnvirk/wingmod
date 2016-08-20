@@ -1,3 +1,5 @@
+import React from 'react';
+
 var ReactUtils = {
     currentKey: 0,
     generateKey: function(){

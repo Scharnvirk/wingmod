@@ -1,14 +1,14 @@
-function MapBuilder(config){
+function MapCreator(config){
     EventEmitter.apply(this, arguments);
     this.chunkPrototypes = {};
 
     this.mapLayout = [];
 }
 
-MapBuilder.extend(EventEmitter);
+MapCreator.extend(EventEmitter);
 
-MapBuilder.prototype.buildMap = function(){
-    if(Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map builder has no chunks yet and is not ready!');
+MapCreator.prototype.createMap = function(){
+    if(Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map createer has no chunks yet and is not ready!');
 
     this.mapLayout = [
         {
@@ -59,10 +59,10 @@ MapBuilder.prototype.buildMap = function(){
     return this.mapLayout;
 };
 
-MapBuilder.prototype.setPrototypeChunks = function(chunks){
+MapCreator.prototype.setPrototypeChunks = function(chunks){
     this.chunkPrototypes = chunks;
 };
 
 
 
-module.exports = MapBuilder;
+module.exports = MapCreator;

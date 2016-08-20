@@ -1,4 +1,6 @@
 import classnames from 'classnames';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 var InitialView = require('renderer/ui/component/InitialView');
 

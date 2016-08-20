@@ -1,6 +1,5 @@
 {
   "name": "Wingmod2",
-  "version": "0.25.0",
   "description": "The Wingmod project",
   "license": "GPL-3.0",
   "devDependencies": {
@@ -28,6 +27,8 @@
     "fsp": "^0.1.2",
     "promise": "~7.1.1",
     "pubsub-js": "^1.5.3",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
     "readable-stream": "^2.0.5",
     "signals": "^1.0.0",
     "sprintf": "^0.1.5",

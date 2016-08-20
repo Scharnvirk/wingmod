@@ -409,11 +409,11 @@ load	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.load = functio
 jsonToFaces	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.jsonToFaces = function (json) {$/;"	function	line:5396
 isBitSet	E:\development\wingmod\dist\Init.js	/^    function isBitSet(value, position) {$/;"	function	line:5397
 addVerticesToFaces	E:\development\wingmod\dist\Init.js	/^HitmapLoader.prototype.addVerticesToFaces = function (vertices, faces) {$/;"	function	line:5499
-CustomModelBuilder	E:\development\wingmod\dist\Init.js	/^function CustomModelBuilder() {$/;"	function	line:5513
-configure	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.configure = function () {$/;"	function	line:5518
-loadModels	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.loadModels = function () {$/;"	function	line:5535
-getBatch	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.getBatch = function () {$/;"	function	line:5546
-clearBatch	E:\development\wingmod\dist\Init.js	/^CustomModelBuilder.prototype.clearBatch = function () {$/;"	function	line:5550
+CustomModelCreator	E:\development\wingmod\dist\Init.js	/^function CustomModelCreator() {$/;"	function	line:5513
+configure	E:\development\wingmod\dist\Init.js	/^CustomModelCreator.prototype.configure = function () {$/;"	function	line:5518
+loadModels	E:\development\wingmod\dist\Init.js	/^CustomModelCreator.prototype.loadModels = function () {$/;"	function	line:5535
+getBatch	E:\development\wingmod\dist\Init.js	/^CustomModelCreator.prototype.getBatch = function () {$/;"	function	line:5546
+clearBatch	E:\development\wingmod\dist\Init.js	/^CustomModelCreator.prototype.clearBatch = function () {$/;"	function	line:5550
 ModelLoader	E:\development\wingmod\dist\Init.js	/^function ModelLoader() {$/;"	function	line:5568
 loadModels	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.loadModels = function (modelPaths) {$/;"	function	line:5575
 getBatch	E:\development\wingmod\dist\Init.js	/^ModelLoader.prototype.getBatch = function () {$/;"	function	line:5594
@@ -448,10 +448,10 @@ createMeshes	E:\development\wingmod\dist\Init.js	/^WeaponSwitcher.prototype.crea
 ChunkMesh	E:\development\wingmod\dist\Init.js	/^function ChunkMesh(config) {$/;"	function	line:6038
 setPosition	E:\development\wingmod\dist\Init.js	/^ChunkMesh.prototype.setPosition = function (position2d) {$/;"	function	line:6057
 setRotation	E:\development\wingmod\dist\Init.js	/^ChunkMesh.prototype.setRotation = function (rotation) {$/;"	function	line:6064
-ParticleConfigBuilder	E:\development\wingmod\dist\Init.js	/^function ParticleConfigBuilder(config) {$/;"	function	line:6077
-getConfig	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.getConfig = function (configName) {$/;"	function	line:6137
-getAllConfigs	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.getAllConfigs = function () {$/;"	function	line:6141
-createPremades	E:\development\wingmod\dist\Init.js	/^ParticleConfigBuilder.prototype.createPremades = function () {$/;"	function	line:6145
+ParticleConfigCreator	E:\development\wingmod\dist\Init.js	/^function ParticleConfigCreator(config) {$/;"	function	line:6077
+getConfig	E:\development\wingmod\dist\Init.js	/^ParticleConfigCreator.prototype.getConfig = function (configName) {$/;"	function	line:6137
+getAllConfigs	E:\development\wingmod\dist\Init.js	/^ParticleConfigCreator.prototype.getAllConfigs = function () {$/;"	function	line:6141
+createPremades	E:\development\wingmod\dist\Init.js	/^ParticleConfigCreator.prototype.createPremades = function () {$/;"	function	line:6145
 ParticleGenerator	E:\development\wingmod\dist\Init.js	/^function ParticleGenerator(config) {$/;"	function	line:6175
 createGeometry	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.createGeometry = function () {$/;"	function	line:6200
 create	E:\development\wingmod\dist\Init.js	/^ParticleGenerator.prototype.create = function (config) {$/;"	function	line:6230
@@ -887,12 +887,12 @@ RingProjectileActor	E:\development\wingmod\dist\LogicInit.js	/^function RingProj
 createBody	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.createBody = function () {$/;"	function	line:2820
 customUpdate	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.customUpdate = function () {$/;"	function	line:2824
 onDeath	E:\development\wingmod\dist\LogicInit.js	/^RingProjectileActor.prototype.onDeath = function () {$/;"	function	line:2830
-MapAiGraphBuilder	E:\development\wingmod\dist\LogicInit.js	/^function MapAiGraphBuilder(config) {$/;"	function	line:2840
-createGraph	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphBuilder.prototype.createGraph = function () {};$/;"	function	line:2845
-createPositions	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphBuilder.prototype.createPositions = function () {};$/;"	function	line:2847
-MapBuilder	E:\development\wingmod\dist\LogicInit.js	/^function MapBuilder(config) {$/;"	function	line:2854
-createMap	E:\development\wingmod\dist\LogicInit.js	/^MapBuilder.prototype.createMap = function () {$/;"	function	line:2863
-setPrototypeChunks	E:\development\wingmod\dist\LogicInit.js	/^MapBuilder.prototype.setPrototypeChunks = function (chunks) {$/;"	function	line:2903
+MapAiGraphCreator	E:\development\wingmod\dist\LogicInit.js	/^function MapAiGraphCreator(config) {$/;"	function	line:2840
+createGraph	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphCreator.prototype.createGraph = function () {};$/;"	function	line:2845
+createPositions	E:\development\wingmod\dist\LogicInit.js	/^MapAiGraphCreator.prototype.createPositions = function () {};$/;"	function	line:2847
+MapCreator	E:\development\wingmod\dist\LogicInit.js	/^function MapCreator(config) {$/;"	function	line:2854
+createMap	E:\development\wingmod\dist\LogicInit.js	/^MapCreator.prototype.createMap = function () {$/;"	function	line:2863
+setPrototypeChunks	E:\development\wingmod\dist\LogicInit.js	/^MapCreator.prototype.setPrototypeChunks = function (chunks) {$/;"	function	line:2903
 MapChunk	E:\development\wingmod\dist\LogicInit.js	/^function MapChunk(config) {$/;"	function	line:2914
 createBody	E:\development\wingmod\dist\LogicInit.js	/^MapChunk.prototype.createBody = function () {$/;"	function	line:2922
 createShapes	E:\development\wingmod\dist\LogicInit.js	/^MapChunk.prototype.createShapes = function () {$/;"	function	line:2930

@@ -1,4 +1,6 @@
 import classnames from 'classnames';
+import React from 'react';
+
 var PubSub = require('pubsub-js');
 
 var ToggleButton = React.createClass({

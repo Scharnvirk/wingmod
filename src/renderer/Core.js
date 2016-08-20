@@ -163,7 +163,7 @@ Core.prototype.onAssetsLoaded = function(){
     this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('FlatHudScene');
-    this.particleManager.buildGenerators();
+    this.particleManager.createGenerators();
     this.particleManager.updateResolutionCoefficient(this.configManager.config.resolution);
 
     setInterval(this.onEachSecond.bind(this), 1000);
@@ -285,19 +285,19 @@ Core.prototype.onLostPointerLock = function(event){
 
 Core.prototype.onShadowConfig = function(event){
     this.configManager.saveShadow(event.value);
-    this.rebuildRenderer();
+    this.recreateRenderer();
 };
 
 Core.prototype.onResolutionConfig = function(event){
     this.configManager.saveResolution(event.value);
-    this.rebuildRenderer();
+    this.recreateRenderer();
 };
 
 Core.prototype.onSoundConfig = function(event){
     this.configManager.saveSoundVolume(event.value);
 };
 
-Core.prototype.rebuildRenderer = function(){
+Core.prototype.recreateRenderer = function(){
     var config = this.configManager.config;
     this.viewportElement.removeChild( this.renderer.domElement );
     this.renderer = this.createRenderer();
@@ -319,6 +319,7 @@ Core.prototype.onPlaySound = function(event){
     var finalVolume = config.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
     if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
+        console.log('playing sound');
     }
 };
 

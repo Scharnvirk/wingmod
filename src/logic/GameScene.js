@@ -16,10 +16,19 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
+        positionX: -200,
         positionY: 0,
         angle: 0
     });
+
+    for (var i = 0; i < 250; i++){
+        this.actorManager.addNew({
+            classId: ActorFactory.MOOK,
+            positionX: Utils.rand(-10, 10),
+            positionY: Utils.rand(-10, 10),
+            angle: 0
+        });
+    }
 
     this.emit({
         type: 'newPlayerActor',

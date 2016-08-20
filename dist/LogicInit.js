@@ -340,7 +340,7 @@ Core.prototype.onMapHitmapsLoaded = function (event) {
     if (!event.data.hitmaps) throw new Error('No hitmap data received on onMapHitmapsLoaded event!');
     var hitmaps = JSON.parse(event.data.hitmaps);
     this.mapManager.loadChunkHitmaps(hitmaps);
-    this.mapManager.buildMap();
+    this.mapManager.createMap();
 };
 
 Core.prototype.onMapDone = function (event) {
@@ -379,10 +379,19 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: 0,
+        positionX: -200,
         positionY: 0,
         angle: 0
     });
+
+    for (var i = 0; i < 250; i++) {
+        this.actorManager.addNew({
+            classId: ActorFactory.MOOK,
+            positionX: Utils.rand(-10, 10),
+            positionY: Utils.rand(-10, 10),
+            angle: 0
+        });
+    }
 
     this.emit({
         type: 'newPlayerActor',
@@ -2386,7 +2395,7 @@ function ShipActor(config) {
     this.applyConfig({
         acceleration: 1000,
         turnSpeed: 6,
-        hp: 30,
+        hp: 3000,
         bodyConfig: {
             actor: this,
             mass: 4,
@@ -2837,31 +2846,68 @@ module.exports = RingProjectileActor;
 },{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":14}],39:[function(require,module,exports){
 "use strict";
 
-function MapAiGraphBuilder(config) {
+function MapAiGraphCreator(config) {
     this.graph = {};
     this.positions = {};
 }
 
-MapAiGraphBuilder.prototype.buildGraph = function () {};
+MapAiGraphCreator.prototype.createGraph = function () {};
 
-MapAiGraphBuilder.prototype.buildPositions = function () {};
+MapAiGraphCreator.prototype.createPositions = function () {};
 
-module.exports = MapAiGraphBuilder;
+module.exports = MapAiGraphCreator;
 
 },{}],40:[function(require,module,exports){
+"use strict";
+
+var BaseBody = require("logic/actor/component/body/BaseBody");
+
+function MapChunk(config) {
+    if (!config.hitmap) throw new Error("no hitmap specified for a MapChunk!");
+
+    Object.assign(this, config);
+
+    this.body = this.createBody();
+}
+
+MapChunk.prototype.createBody = function () {
+    return new BaseBody({
+        position: [0, 0],
+        shape: this.createShapes(),
+        mass: 0
+    });
+};
+
+MapChunk.prototype.createShapes = function () {
+    var multiShape = [];
+
+    for (var i = 0, l = this.hitmap.length; i < l; i++) {
+        multiShape.push(new p2.Convex({
+            vertices: this.hitmap[i],
+            collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
+            collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+        }));
+    }
+
+    return multiShape;
+};
+
+module.exports = MapChunk;
+
+},{"logic/actor/component/body/BaseBody":14}],41:[function(require,module,exports){
 'use strict';
 
-function MapBuilder(config) {
+function MapCreator(config) {
     EventEmitter.apply(this, arguments);
     this.chunkPrototypes = {};
 
     this.mapLayout = [];
 }
 
-MapBuilder.extend(EventEmitter);
+MapCreator.extend(EventEmitter);
 
-MapBuilder.prototype.buildMap = function () {
-    if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map builder has no chunks yet and is not ready!');
+MapCreator.prototype.createMap = function () {
+    if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map createer has no chunks yet and is not ready!');
 
     this.mapLayout = [{
         name: 'chunk_HangarEndcap_1',
@@ -2900,55 +2946,18 @@ MapBuilder.prototype.buildMap = function () {
     return this.mapLayout;
 };
 
-MapBuilder.prototype.setPrototypeChunks = function (chunks) {
+MapCreator.prototype.setPrototypeChunks = function (chunks) {
     this.chunkPrototypes = chunks;
 };
 
-module.exports = MapBuilder;
+module.exports = MapCreator;
 
-},{}],41:[function(require,module,exports){
-"use strict";
-
-var BaseBody = require("logic/actor/component/body/BaseBody");
-
-function MapChunk(config) {
-    if (!config.hitmap) throw new Error("no hitmap specified for a MapChunk!");
-
-    Object.assign(this, config);
-
-    this.body = this.createBody();
-}
-
-MapChunk.prototype.createBody = function () {
-    return new BaseBody({
-        position: [0, 0],
-        shape: this.createShapes(),
-        mass: 0
-    });
-};
-
-MapChunk.prototype.createShapes = function () {
-    var multiShape = [];
-
-    for (var i = 0, l = this.hitmap.length; i < l; i++) {
-        multiShape.push(new p2.Convex({
-            vertices: this.hitmap[i],
-            collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
-            collisionMask: Constants.COLLISION_GROUPS.OBJECT | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE
-        }));
-    }
-
-    return multiShape;
-};
-
-module.exports = MapChunk;
-
-},{"logic/actor/component/body/BaseBody":14}],42:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 "use strict";
 
 var MapChunk = require("logic/map/MapChunk");
-var MapBuilder = require("logic/map/MapBuilder");
-var MapAiGraphBuilder = require("logic/map/MapAiGraphBuilder");
+var MapCreator = require("logic/map/MapCreator");
+var MapAiGraphCreator = require("logic/map/MapAiGraphCreator");
 var cloner = require("cloner");
 
 function MapManager(config) {
@@ -2956,8 +2965,8 @@ function MapManager(config) {
 
     this.chunkPrototypes = {};
     this.mapBodies = [];
-    this.mapBuilder = new MapBuilder();
-    this.graphBuilder = new MapAiGraphBuilder();
+    this.mapCreator = new MapCreator();
+    this.graphCreator = new MapAiGraphCreator();
 
     EventEmitter.bind(this, arguments);
 }
@@ -2984,17 +2993,17 @@ MapManager.prototype.loadChunkHitmaps = function (hitmaps) {
             hitmap: this.fixFaceVerticesOrder(this.extractXZFromHitmap(hitmaps[hitmapName]))
         });
     }
-    this.mapBuilder.setPrototypeChunks(this.chunkPrototypes);
+    this.mapCreator.setPrototypeChunks(this.chunkPrototypes);
 };
 
-MapManager.prototype.buildMap = function () {
-    var mapLayout = this.mapBuilder.buildMap();
-    var bodies = this.buildBodiesFromLayout(mapLayout);
-    var mapAiGraph = this.graphBuilder.buildGraph();
+MapManager.prototype.createMap = function () {
+    var mapLayout = this.mapCreator.createMap();
+    var bodies = this.createBodiesFromLayout(mapLayout);
+    var mapAiGraph = this.graphCreator.createGraph();
     this.emit({ type: 'mapDone', data: { bodies: bodies, layout: mapLayout, mapAiGraph: mapAiGraph } });
 };
 
-MapManager.prototype.buildBodiesFromLayout = function (layout) {
+MapManager.prototype.createBodiesFromLayout = function (layout) {
     var _this = this;
 
     var bodies = [];
@@ -3012,7 +3021,7 @@ MapManager.prototype.buildBodiesFromLayout = function (layout) {
 
 module.exports = MapManager;
 
-},{"cloner":1,"logic/map/MapAiGraphBuilder":39,"logic/map/MapBuilder":40,"logic/map/MapChunk":41}],43:[function(require,module,exports){
+},{"cloner":1,"logic/map/MapAiGraphCreator":39,"logic/map/MapChunk":40,"logic/map/MapCreator":41}],43:[function(require,module,exports){
 "use strict";
 
 function BaseActor(config, actorDependencies) {
@@ -3261,8 +3270,8 @@ MookActor.prototype.createMeshes = function () {
         scaleX: 1.2,
         scaleY: 1.2,
         scaleZ: 1.2,
-        geometry: ModelStore.get('drone').geometry,
-        material: ModelStore.get('drone').material
+        geometry: ModelStore.get('ravier').geometry,
+        material: ModelStore.get('ravier').material
     })];
 };
 

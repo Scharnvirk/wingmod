@@ -7,7 +7,7 @@ function WeaponMesh(config){
 
     config.rotationOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
-    config.rotation = config.rotation || 0;
+    // config.rotation = config.rotation || 0;
 
     Object.assign(this, config);
 

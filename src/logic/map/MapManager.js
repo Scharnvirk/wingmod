@@ -1,6 +1,6 @@
 var MapChunk = require("logic/map/MapChunk");
-var MapBuilder = require("logic/map/MapBuilder");
-var MapAiGraphBuilder = require("logic/map/MapAiGraphBuilder");
+var MapCreator = require("logic/map/MapCreator");
+var MapAiGraphCreator = require("logic/map/MapAiGraphCreator");
 var cloner = require("cloner");
 
 function MapManager(config){
@@ -8,8 +8,8 @@ function MapManager(config){
 
     this.chunkPrototypes = {};
     this.mapBodies = [];
-    this.mapBuilder = new MapBuilder();
-    this.graphBuilder = new MapAiGraphBuilder();
+    this.mapCreator = new MapCreator();
+    this.graphCreator = new MapAiGraphCreator();
 
     EventEmitter.bind(this, arguments);
 }
@@ -33,17 +33,17 @@ MapManager.prototype.loadChunkHitmaps = function(hitmaps){
             hitmap: this.fixFaceVerticesOrder(this.extractXZFromHitmap(hitmaps[hitmapName]))
         });
     }
-    this.mapBuilder.setPrototypeChunks(this.chunkPrototypes);
+    this.mapCreator.setPrototypeChunks(this.chunkPrototypes);
 };
 
-MapManager.prototype.buildMap = function(){
-    var mapLayout = this.mapBuilder.buildMap();
-    var bodies = this.buildBodiesFromLayout(mapLayout);
-    var mapAiGraph = this.graphBuilder.buildGraph();
+MapManager.prototype.createMap = function(){
+    var mapLayout = this.mapCreator.createMap();
+    var bodies = this.createBodiesFromLayout(mapLayout);
+    var mapAiGraph = this.graphCreator.createGraph();
     this.emit({type: 'mapDone', data: {bodies: bodies, layout: mapLayout, mapAiGraph: mapAiGraph}});
 };
 
-MapManager.prototype.buildBodiesFromLayout = function(layout){
+MapManager.prototype.createBodiesFromLayout = function(layout){
     var bodies = [];
 
     layout.forEach(chunkConfig => {

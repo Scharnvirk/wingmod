@@ -12,7 +12,7 @@ function ShipActor(config){
     this.applyConfig({
         acceleration: 1000,
         turnSpeed: 6,
-        hp: 30,
+        hp: 3000,
         bodyConfig: {
             actor: this,
             mass: 4,

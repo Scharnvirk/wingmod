@@ -1,6 +1,6 @@
 var ParticleShaders = require("renderer/particleSystem/ParticleShaders");
 
-function ParticleConfigBuilder(config){
+function ParticleConfigCreator(config){
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial( {
              uniforms: {
@@ -60,15 +60,15 @@ function ParticleConfigBuilder(config){
     };
 }
 
-ParticleConfigBuilder.prototype.getConfig = function(configName){
+ParticleConfigCreator.prototype.getConfig = function(configName){
     return this.particleGeneratorConfig[configName];
 };
 
-ParticleConfigBuilder.prototype.getAllConfigs = function(){
+ParticleConfigCreator.prototype.getAllConfigs = function(){
     return this.particleGeneratorConfig;
 };
 
-ParticleConfigBuilder.prototype.buildPremades = function(){
+ParticleConfigCreator.prototype.createPremades = function(){
     return {
         BlueSparks: require("renderer/particleSystem/premade/BlueSparks"),
         BlueLaserTrail: require("renderer/particleSystem/premade/BlueLaserTrail"),
@@ -93,4 +93,4 @@ ParticleConfigBuilder.prototype.buildPremades = function(){
     };
 };
 
-module.exports = ParticleConfigBuilder;
+module.exports = ParticleConfigCreator;

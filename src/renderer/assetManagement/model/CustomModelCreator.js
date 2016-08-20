@@ -1,9 +1,9 @@
-function CustomModelBuilder(){
+function CustomModelCreator(){
     this.batch = {};
     this.configuration = this.configure();
 }
 
-CustomModelBuilder.prototype.configure = function(){
+CustomModelCreator.prototype.configure = function(){
     return {
         'chunk': {
             material: new THREE.MeshPhongMaterial({
@@ -20,7 +20,7 @@ CustomModelBuilder.prototype.configure = function(){
     };
 };
 
-CustomModelBuilder.prototype.loadModels = function(){
+CustomModelCreator.prototype.loadModels = function(){
     Object.keys(this.configuration).forEach(modelName => {
         this.batch[modelName] = {
             geometry: this.configuration[modelName].geometry,
@@ -29,12 +29,12 @@ CustomModelBuilder.prototype.loadModels = function(){
     });
 };
 
-CustomModelBuilder.prototype.getBatch = function(){
+CustomModelCreator.prototype.getBatch = function(){
     return this.batch;
 };
 
-CustomModelBuilder.prototype.clearBatch = function(){
+CustomModelCreator.prototype.clearBatch = function(){
     this.batch = {};
 };
 
-module.exports = CustomModelBuilder;
+module.exports = CustomModelCreator;

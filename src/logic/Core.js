@@ -119,7 +119,7 @@ Core.prototype.onMapHitmapsLoaded = function(event){
     if(!event.data.hitmaps) throw new Error('No hitmap data received on onMapHitmapsLoaded event!');
     var hitmaps = JSON.parse(event.data.hitmaps);
     this.mapManager.loadChunkHitmaps(hitmaps);
-    this.mapManager.buildMap();
+    this.mapManager.createMap();
 };
 
 Core.prototype.onMapDone = function(event){

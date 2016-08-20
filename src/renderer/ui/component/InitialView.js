@@ -1,4 +1,6 @@
 import classnames from 'classnames';
+import React from 'react';
+
 
 var StartScreen = require('renderer/ui/component/StartScreen');
 var EndScreen = require('renderer/ui/component/EndScreen');

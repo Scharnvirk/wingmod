@@ -1,4 +1,6 @@
 import classnames from 'classnames';
+import React from 'react';
+
 
 var StyledText = require('renderer/ui/component/base/StyledText');
 
