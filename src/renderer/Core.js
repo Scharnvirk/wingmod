@@ -8,6 +8,7 @@ var SceneManager = require("renderer/scene/SceneManager");
 var AssetManager = require("renderer/assetManagement/assetManager.js");
 var AiImageRenderer = require("renderer/ai/AiImageRenderer");
 var Hud = require("renderer/gameUi/Hud");
+var CanvasHud = require("renderer/gameUi/CanvasHud");
 var FlatHud = require("renderer/gameUi/FlatHud");
 var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
 
@@ -22,6 +23,7 @@ function Core(config){
     this.ui = config.ui;
     this.logicWorker = config.logicWorker;
     this.viewportElement = document.getElementById('viewport');
+    this.canvasElement = document.getElementById('hudCanvas');
     this.activeScene = '';
 
     this.renderTicks = 0;
@@ -55,6 +57,7 @@ Core.prototype.createMainComponents = function(){
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
+    this.canvasHud = new CanvasHud({canvasElement: this.canvasElement, autoWidth: true});
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -127,6 +130,7 @@ Core.prototype.autoResize = function() {
     var callback = () => {
         this.resetRenderer();
         this.resetCamera();
+        this.resetHud();
     };
     window.addEventListener('resize', callback, false);
     return {
@@ -143,6 +147,10 @@ Core.prototype.resetRenderer = function(){
 Core.prototype.resetCamera = function(){
     this.sceneManager.get(this.activeScene).resetCamera();
     this.sceneManager.get('FlatHudScene').resetCamera();
+};
+
+Core.prototype.resetHud = function(){
+    this.canvasHud.resize();
 };
 
 Core.prototype.getActiveScene = function(){

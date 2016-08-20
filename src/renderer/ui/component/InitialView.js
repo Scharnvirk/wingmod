@@ -5,7 +5,7 @@ var EndScreen = require('renderer/ui/component/EndScreen');
 var StartHelp = require('renderer/ui/component/StartHelp');
 var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
-var Hud = require('renderer/ui/component/hud/Hud');
+var HudCanvas = require('renderer/ui/component/base/HudCanvas');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
@@ -41,6 +41,7 @@ var InitialView = React.createClass({
         }
 
         return <div>
+            <HudCanvas height={100}/>
             <FullScreenEffect blur={blurState}>
                 <Viewport/>
             </FullScreenEffect>

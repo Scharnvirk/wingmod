@@ -2204,7 +2204,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         this.spawnDelay--;
     } else {
         if (Utils.rand(Math.min(this.timer / 60, this.spawnRate), this.spawnRate) === this.spawnRate) {
-            this.createEnemySpawnMarker();
+            //this.createEnemySpawnMarker();
         }
     }
 };

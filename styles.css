@@ -300,3 +300,8 @@
   height: 10%;
   font-size: 50%;
 }
+
+.hud{
+  position: fixed;
+  z-index: 1
+}
