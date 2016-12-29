@@ -1,13 +1,13 @@
 import classnames from 'classnames';
 import React from 'react';
 
-
 var StartScreen = require('renderer/ui/component/StartScreen');
 var EndScreen = require('renderer/ui/component/EndScreen');
 var StartHelp = require('renderer/ui/component/StartHelp');
 var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
-var HudCanvas = require('renderer/ui/component/base/HudCanvas');
+var AmmoTileContainer = require('renderer/ui/component/hud/AmmoTileContainer');
+var WeaponInfoContainer = require('renderer/ui/component/hud/WeaponInfoContainer');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
@@ -43,10 +43,11 @@ var InitialView = React.createClass({
         }
 
         return <div>
-            <HudCanvas height={100}/>
             <FullScreenEffect blur={blurState}>
-                <Viewport/>
+                <Viewport>
+                </Viewport>
             </FullScreenEffect>
+
             {UIcontent}
         </div>;
     }

@@ -1,4 +1,5 @@
 var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseStateChangeHandler = require("logic/actor/component/stateChangeHandler/BaseStateChangeHandler");
 
 function BaseActor(config){
     Object.assign(this, config);
@@ -16,7 +17,15 @@ function BaseActor(config){
     this.angleForce = 0;
 
     this.timer = 0;
-    this.customParams = {};
+    this.id = this.id || config.id;
+
+    this.props = this.props || {};
+
+    this.stateChangeHandler = this.createStateHandler();
+
+    if (this.props.isPlayer){
+        this.manager.attachPlayer(this);
+    }
 }
 
 BaseActor.prototype.applyConfig = function(config){
@@ -29,9 +38,13 @@ BaseActor.prototype.createBody = function(){
     return null;
 };
 
+BaseActor.prototype.createStateHandler = function(){
+    return new BaseStateChangeHandler({actor: this, initialState: Object.assign({},this.props)});
+};
+
 BaseActor.prototype.update = function(){
     this.timer ++;
-    if(this.timer > this.timeout){
+    if(this.timer > this.props.timeout){
         this.deathMain();
     }
     this.customUpdate();
@@ -39,26 +52,15 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
-    if(otherActor && this.hp != Infinity && otherActor.damage > 0){
-        this.hp -= otherActor.damage;
-        this.sendActorEvent('currentHp', this.hp);
-        this.onHit();
-    }
-
-    if (this.hp <= 0 || this.removeOnHit){
-        if (this.collisionFixesPosition) {
-            this.body.position = relativeContactPoint;
-        }
-        this.deathMain();
-    }
+    this.stateChangeHandler.onCollision(otherActor, relativeContactPoint);
 };
 
-BaseActor.prototype.sendActorEvent = function(eventName, eventdata){
-    this.manager.requestActorEvent(this.body.actorId, eventName, eventdata);
+BaseActor.prototype.notifyManagerOfStateChange = function(newState){
+    this.manager.notifyOfActorChangedState(this.id, newState);
 };
 
-BaseActor.prototype.remove = function(actorId){
-    this.manager.removeActorAt(actorId);
+BaseActor.prototype.remove = function(){
+    this.manager.removeActorAt(this.id);
 };
 
 BaseActor.prototype.customUpdate = function(){};
@@ -69,28 +71,29 @@ BaseActor.prototype.onHit = function(){};
 
 BaseActor.prototype.onSpawn = function(){};
 
-BaseActor.prototype.onDeath = function(){
+BaseActor.prototype.onDeath = function(){};
 
-};
-
-BaseActor.prototype.deathMain = function(){
+BaseActor.prototype.deathMain = function(relativeContactPoint){
+    if (this.props.collisionFixesPosition) {
+        this.body.position = relativeContactPoint;
+    }
     this.manager.actorDied(this);
     this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function(){
     if(this.angleForce !== 0){
-        this.body.angularVelocity = this.angleForce * this.turnSpeed;
+        this.body.angularVelocity = this.angleForce * this.props.turnSpeed;
     } else {
         this.body.angularVelocity = 0;
     }
 
     if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+        this.body.applyForceLocal([0, this.thrust * this.props.acceleration]);
     }
 
     if(this.horizontalThrust !== 0){
-        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
+        this.body.applyForceLocal([this.horizontalThrust * this.props.acceleration, 0]);
     }
 };
 

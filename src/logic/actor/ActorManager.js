@@ -7,9 +7,10 @@ function ActorManager(config){
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
-    this.actorEventsToSend = {};
     this.aiImage = null;
     this.aiGraph = {};
+
+    this.actorStatesChanged = {};
 
     this.enemiesKilled = 0;
 
@@ -33,7 +34,8 @@ ActorManager.prototype.addNew = function(config){
     var actor = this.factory.create(
         Object.assign(config, {
             manager: this,
-            world: this.world
+            world: this.world,
+            id: this.currentId
         })
     );
 
@@ -60,11 +62,11 @@ ActorManager.prototype.update = function(inputState){
         this.storage[actorId].update();
     }
 
-    this.sendActorEvents();
+    this.sendActorStateChanges();
 };
 
-ActorManager.prototype.setPlayerActor = function(actor){
-    this.playerActors.push(actor.body.actorId);
+ActorManager.prototype.attachPlayer = function(actor){
+    this.playerActors.push(actor.id);
 };
 
 ActorManager.prototype.removeActorAt = function(actorId){
@@ -86,22 +88,21 @@ ActorManager.prototype.endGame = function(){
     });
 };
 
-ActorManager.prototype.getFirstPlayerActor = function(){
+ActorManager.prototype.getFirstPlayerActor = function(){ //wyleci
     return this.storage[this.playerActors[0]];
 };
 
-ActorManager.prototype.requestActorEvent = function(actorId, eventName, eventParams){
-    this.actorEventsToSend[actorId] = this.actorEventsToSend[actorId] || {};
-    this.actorEventsToSend[actorId][eventName] = eventParams;
+ActorManager.prototype.notifyOfActorChangedState = function(actorId, newState){
+    this.actorStatesChanged[actorId] = newState;
 };
 
-ActorManager.prototype.sendActorEvents = function(){
-    if (Object.keys(this.actorEventsToSend).length > 0){
+ActorManager.prototype.sendActorStateChanges = function(){
+    if (Object.keys(this.actorStatesChanged).length > 0){
         this.emit({
-            type: 'actorEvents',
-            data: this.actorEventsToSend
+            type: 'actorStateChange',
+            data: this.actorStatesChanged
         });
-        this.actorEventsToSend = {};
+        this.actorStatesChanged = {};
     }
 };
 
@@ -127,7 +128,7 @@ ActorManager.prototype.playSound = function(config){
     }
 };
 
-ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){
+ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){ //wyleci
     var playerActor = this.getFirstPlayerActor();
     if (playerActor){
         playerActor.switchWeapon(weaponConfig);

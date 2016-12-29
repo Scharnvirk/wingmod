@@ -114,7 +114,7 @@ var Utils = {
         var vector = new THREE.Vector3();
         var canvas = renderer.domElement;
 
-        vector.set( object.position[0], object.position[1], object.positionZ );
+        vector.set( object.position[0], object.position[1], Constants.DEFAULT_POSITION_Z );
         vector.project( camera );
 
         vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );

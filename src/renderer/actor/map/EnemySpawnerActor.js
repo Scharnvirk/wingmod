@@ -22,11 +22,11 @@ function EnemySpawnerActor(config){
 EnemySpawnerActor.extend(BaseActor);
 
 EnemySpawnerActor.prototype.onSpawn = function(){
-    this.manager.newEnemy(this.actorId);
+    // this.manager.newEnemy(this.actorId);
 };
 
 EnemySpawnerActor.prototype.onDeath = function(){
-    this.manager.enemyDestroyed(this.actorId);
+    // this.manager.enemyDestroyed(this.actorId);
 
     var makeBoomRandomly = function(){
         let position = [this.position[0] + Utils.rand(-5,5), this.position[1] + Utils.rand(-5,5)];
@@ -93,7 +93,7 @@ EnemySpawnerActor.prototype.update = function(){
 
     this.doChargingAnimation();
 
-    this.customUpdate();
+    // this.customUpdate();
 
     this.handleDamage();
 };

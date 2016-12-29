@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
 
-
 var FullScreenEffect = React.createClass({
     getInitialState(){
         return {
@@ -26,7 +25,7 @@ var FullScreenEffect = React.createClass({
                     setTimeout(function(){
                         this.setState({noEffects: true});
                     }.bind(this),2000);
-                    blur = 'fadeout';
+                    blur = '';
                     break;
                 case 'on':
                     blur = 'blur';

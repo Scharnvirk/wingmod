@@ -3,30 +3,18 @@ var BaseBrain = require("logic/actor/component/ai/BaseBrain");
 var BaseActor = require("logic/actor/BaseActor");
 var WeaponSystem = require("logic/actor/component/WeaponSystem");
 var ActorFactory = require("shared/ActorFactory")('logic');
+var ActorConfig = require("shared/ActorConfig");
 
 function ShipActor(config){
     config = config || [];
 
     Object.assign(this, config);
 
-    this.applyConfig({
-        acceleration: 1000,
-        turnSpeed: 6,
-        hp: 3000,
-        bodyConfig: {
-            actor: this,
-            mass: 4,
-            damping: 0.85,
-            angularDamping: 0,
-            inertia: 10,
-            radius: 7,
-            collisionType: 'playerShip'
-        }
-    });
+    this.applyConfig(ActorConfig.SHIP);
 
     this.hudModifier = 'shift';
 
-    this.stepAngle = Utils.radToDeg(this.turnSpeed / Constants.LOGIC_REFRESH_RATE);
+    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;

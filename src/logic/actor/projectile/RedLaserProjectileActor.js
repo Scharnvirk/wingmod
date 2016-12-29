@@ -1,40 +1,18 @@
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var BaseActor = require("logic/actor/BaseActor");
+var ActorConfig = require("shared/ActorConfig");
 
 function RedLaserProjectileActor(config){
     config = config || [];
-
     Object.assign(this, config);
-
-    this.applyConfig({
-        hp: 1,
-        damage: 4,
-        removeOnHit: true,
-        timeout: 120,
-        bodyConfig: {
-            radius: 1,
-            mass: 0.5,
-            ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'enemyProjectile',
-            actor: this
-        }
-    });
-
+    this.applyConfig(ActorConfig.REDLASERPROJECTILE);
     BaseActor.apply(this, arguments);
-
-    this.collisionFixesPosition = true;
 }
 
 RedLaserProjectileActor.extend(BaseActor);
 
 RedLaserProjectileActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
-};
-
-RedLaserProjectileActor.prototype.onDeath = function(){
-    this.body.dead = true;
-    this.manager.playSound({sounds: ['matterhit3'], actor: this});
 };
 
 module.exports = RedLaserProjectileActor;

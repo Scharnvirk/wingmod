@@ -52,7 +52,8 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
                     classId: dataArray[i*5+1],
                     positionX: dataArray[i*5+2],
                     positionY: dataArray[i*5+3],
-                    rotation: dataArray[i*5+4]
+                    rotation: dataArray[i*5+4],
+                    manager: this
                 });
             }
         } else {
@@ -68,30 +69,22 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
 
 ActorManager.prototype.createActor = function(config){
     var actor = this.factory.create(config);
-    actor.actorId = config.actorId;
-    actor.manager = this;
-
-    if(this.actorRequestingPlayer && this.actorRequestingPlayer === config.actorId){
-        this.emit({
-            type: 'playerActorAppeared',
-            data: actor
-        });
-    }
 
     this.storage[config.actorId] = actor;
     actor.addToScene(this.sceneManager.getCoreActiveScene().threeScene);
     actor.onSpawn();
 };
 
-ActorManager.prototype.attachPlayer = function(messageObject){
-    if (!this.storage[messageObject.actorId]){
-        this.actorRequestingPlayer = messageObject.actorId;
-    }
+ActorManager.prototype.attachPlayer = function(actor){
+    this.emit({
+        type: 'playerActorAppeared',
+        data: actor
+    });
 };
 
 ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
     var actor = this.storage[actorId];
-    if(actor){
+    if (actor){
         actor.setPosition(positionX, positionY);
         actor.onDeath();
 
@@ -100,26 +93,24 @@ ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
     delete this.storage[actorId];
 };
 
-ActorManager.prototype.handleActorEvents = function(messageObject){
-    var actorData = messageObject.actorData;
-
-    for (let actorId in actorData ){
+ActorManager.prototype.handleActorStateChange = function(newActorStates){
+    Object.keys(newActorStates).forEach(actorId => {
         let actor = this.storage[actorId];
         if (actor){
-            actor.handleEvent(actorData[actorId]);
+            actor.handleStateChange(newActorStates[actorId]);
         }
-    }
+    });
 };
-
-ActorManager.prototype.newEnemy = function(actorId){
-    this.enemies[actorId] = this.storage[actorId];
-};
-
-ActorManager.prototype.enemyDestroyed = function(actorId){
-    delete this.enemies[actorId];
-};
-
-ActorManager.prototype.requestUiFlash = function(flashType){
+//
+// ActorManager.prototype.newEnemy = function(actorId){ //wyleci
+//     this.enemies[actorId] = this.storage[actorId];
+// };
+//
+// ActorManager.prototype.enemyDestroyed = function(actorId){ //wyleci
+//     delete this.enemies[actorId];
+// };
+//
+ActorManager.prototype.requestUiFlash = function(flashType){ //wyleci (tez w handlerze stanu agenta ma byc)
     this.emit({
         type:'requestUiFlash',
         data: flashType

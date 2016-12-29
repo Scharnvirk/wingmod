@@ -1,19 +1,14 @@
 var BaseActor = require("logic/actor/BaseActor");
 var BaseBody = require("logic/actor/component/body/BaseBody");
 var ActorFactory = require("shared/ActorFactory")('logic');
+var ActorConfig = require("shared/ActorConfig");
 
 function EnemySpawnerActor(config){
-    Object.assign(this, config);
+
+    this.applyConfig(ActorConfig.ENEMYSPAWNER);
     BaseActor.apply(this, arguments);
-
+    Object.assign(this, config);
     this.spawnDelay = 0;
-
-    this.spawnRate = 240;
-
-    this.applyConfig({
-        hp: 350,
-        removeOnHit: false
-    });
 }
 
 EnemySpawnerActor.extend(BaseActor);
@@ -22,14 +17,14 @@ EnemySpawnerActor.prototype.customUpdate = function(){
     if (this.spawnDelay > 0){
         this.spawnDelay -- ;
     } else {
-        if ( Utils.rand( Math.min(this.timer/60, this.spawnRate), this.spawnRate) === this.spawnRate ){
-            //this.createEnemySpawnMarker();
+        if ( Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate ){
+            // this.createEnemySpawnMarker();
         }
     }
 };
 
 EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
-    this.spawnDelay = this.spawnRate;
+    this.spawnDelay = this.props.spawnRate;
     this.manager.addNew({
         classId: ActorFactory.ENEMYSPAWNMARKER,
         positionX: this.body.position[0],
@@ -37,7 +32,7 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
         angle: 0,
         velocity: 0
     });
-    this.sendActorEvent('newSpawnDelay', this.spawnRate);
+    this.sendActorEvent('newSpawnDelay', this.props.spawnRate);
 };
 
 EnemySpawnerActor.prototype.createBody = function(){

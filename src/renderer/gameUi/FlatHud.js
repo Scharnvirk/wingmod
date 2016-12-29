@@ -18,14 +18,14 @@ function FlatHud(config){
         }
     ];
 
-    this.weaponNames = {
-        'lasgun': 'BURST LASER',
-        'plasmagun': 'PLASMA CANNON',
-        'pulsewavegun': 'PULSE WAVE GUN'
-    };
+    // this.weaponNames = {
+    //     'lasgun': 'BURST LASER',
+    //     'plasmagun': 'PLASMA CANNON',
+    //     'pulsewavegun': 'PULSE WAVE GUN'
+    // };
 
     this.switchers = this.createSwitchers();
-    this.weaponTextSprites = this.createWeaponTextSprites();
+    // this.weaponTextSprites = this.createWeaponTextSprites();
     this.hudActive = false;
 
     EventEmitter.apply(this, arguments);
@@ -43,9 +43,9 @@ FlatHud.prototype.update = function(){
 
         this.switchers.forEach(switcher => {
             var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
-            var textSprite = this.weaponTextSprites[switcher.index];
-            textSprite.position.x = offsetPosition[0];
-            textSprite.position.y = positionY + offsetPosition[1];
+            // var textSprite = this.weaponTextSprites[switcher.index];
+            // textSprite.position.x = offsetPosition[0];
+            // textSprite.position.y = positionY + offsetPosition[1];
 
             switcher.position = [0, positionY];
             switcher.update();
@@ -57,9 +57,9 @@ FlatHud.prototype.update = function(){
 
 FlatHud.prototype.onPlayerActorAppeared = function(actor){
     this.actor = actor;
-    this.weaponTextSprites.forEach(textSprite => {
-        this.sceneManager.get('FlatHudScene').threeScene.add(textSprite);
-    });
+    // this.weaponTextSprites.forEach(textSprite => {
+    //     this.sceneManager.get('FlatHudScene').threeScene.add(textSprite);
+    // });
 };
 
 FlatHud.prototype.createSwitchers = function(){
@@ -90,9 +90,9 @@ FlatHud.prototype.onInput = function(inputState){
         switcher.handleInput(inputState);
     });
 
-    this.weaponTextSprites.forEach(textSprite => {
-        textSprite.visible = this.hudActive;
-    });
+    // this.weaponTextSprites.forEach(textSprite => {
+    //     textSprite.visible = this.hudActive;
+    // });
 };
 
 FlatHud.prototype.onWeaponSwitched = function(event){
@@ -105,7 +105,7 @@ FlatHud.prototype.onWeaponSwitched = function(event){
         this.actor.switchWeapon(changeConfig);
     }
 
-    this.drawWeaponName(event.index, event.data.weapon);
+    // this.drawWeaponName(event.index, event.data.weapon);
 
     this.emit(
         {

@@ -13,7 +13,6 @@ function ChunkMesh(config){
     this.castShadow = true;
 }
 
-
 ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;

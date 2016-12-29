@@ -12,6 +12,16 @@ function ParticleConfigCreator(config){
              transparent: true,
              depthWrite: false
         }),
+        symbolsAlpha: new THREE.ShaderMaterial( {
+             uniforms: {
+                 map: { type: 't', value: new THREE.TextureLoader().load( window.location.href + "gfx/symbols.png" )},
+                 time: { type: "f", value: 72.0 },
+             },
+             vertexShader: ParticleShaders.symbolVertexShader,
+             fragmentShader: ParticleShaders.symbolFragmentShader,
+             transparent: true,
+             depthWrite: false
+        }),
         particleAdd: new THREE.ShaderMaterial( {
              uniforms: {
                  map: { type: "t", value: new THREE.TextureLoader().load( window.location.href + "gfx/shaderSpriteAdd.png" )},
@@ -22,7 +32,7 @@ function ParticleConfigCreator(config){
              fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
              blending: THREE.AdditiveBlending,
              transparent: true,
-             depthWrite: false,
+             depthWrite: false
         }),
         particleAddHUD: new THREE.ShaderMaterial( {
              uniforms: {
@@ -34,7 +44,7 @@ function ParticleConfigCreator(config){
              fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
              blending: THREE.AdditiveBlending,
              transparent: true,
-             depthTest: false,
+             depthTest: false
         })
     };
 
@@ -43,19 +53,34 @@ function ParticleConfigCreator(config){
             material: this.particleMaterialConfig.smokePuffAlpha,
             maxParticles: 1000,
             positionZ: 10,
-            resolutionCoefficient: config.resolutionCoefficient
+            resolutionCoefficient: config.resolutionCoefficient,
+            scene: 'GameScene',
+            generator: 'ParticleGenerator'
         },
         particleAdd: {
             material: this.particleMaterialConfig.particleAdd,
             maxParticles: 8000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient,
+            scene: 'GameScene',
+            generator: 'ParticleGenerator'
         },
         particleAddHUD: {
             material: this.particleMaterialConfig.particleAddHUD,
             maxParticles: 500,
             positionZ: 20,
             resolutionCoefficient: config.resolutionCoefficient,
+            scene: 'GameScene',
+            generator: 'ParticleGenerator'
+        },
+        symbolsAlphaHUD: {
+            material: this.particleMaterialConfig.symbolsAlpha,
+            maxParticles: 1000,
+            positionZ: 10,
+            resolutionCoefficient: config.resolutionCoefficient,
+            autoUpdate: false,
+            scene: 'FlatHudScene',
+            generator: 'FlatHudParticleGenerator'
         }
     };
 }

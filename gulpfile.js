@@ -119,7 +119,7 @@ gulp.task('watch', function(){
     nodemon({
         script: 'server.js',
         ext: 'js',
-        watch: ['dist/']
+        watch: ['dist/', 'styles.css', 'index.html']
     });
     createBundles(sources, true);
 });

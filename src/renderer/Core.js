@@ -62,19 +62,18 @@ Core.prototype.createMainComponents = function(){
 
 Core.prototype.initEventHandlers = function(){
     this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
-    this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
     this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
     this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
     this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
+    this.logicBus.on('actorStateChange', this.onActorStateChange.bind(this));
     this.logicBus.on('mapDone', this.onMapDone.bind(this));
     this.logicBus.on('playSound', this.onPlaySound.bind(this));
 
-    this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
     this.ui.on('startGame', this.onStartGame.bind(this));
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
     this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
+    this.ui.on('requestPointerLock', this.onRequestPointerLock.bind(this));
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
@@ -130,7 +129,6 @@ Core.prototype.autoResize = function() {
     var callback = () => {
         this.resetRenderer();
         this.resetCamera();
-        this.resetHud();
     };
     window.addEventListener('resize', callback, false);
     return {
@@ -211,11 +209,11 @@ Core.prototype.getAiImageObject = function(wallsData){
     return this.aiImageRenderer.getImageObject(wallsData);
 };
 
-//todo: something better for injecting that actor?
+//todo: something better for injecting that actor? //will have it soon //mwahhahahahah
 Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
     actor.inputListener = this.inputListener;
-
+    //
     this.hud.onPlayerActorAppeared(actor);
     this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
@@ -224,11 +222,11 @@ Core.prototype.onPlayerActorAppeared = function(event){
 Core.prototype.onUpdateActors = function(event){
     this.actorManager.updateFromLogic(event.data);
 };
-
-Core.prototype.onAttachPlayer = function(event){
-    console.log('attach player');
-    this.actorManager.attachPlayer(event.data);
-};
+//
+// Core.prototype.onAttachPlayer = function(event){
+//     console.log('attach player');
+//     this.actorManager.attachPlayer(event.data);
+// };
 
 Core.prototype.onGameEnded = function(event){
     this.gameEnded = true;
@@ -249,9 +247,13 @@ Core.prototype.onGameFinished = function(event){
 Core.prototype.onGetAiImage = function(event){
     this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
 };
+//
+// Core.prototype.onActorEvents = function(event){
+//     this.actorManager.handleActorEvents(event.data);
+// };
 
-Core.prototype.onActorEvents = function(event){
-    this.actorManager.handleActorEvents(event.data);
+Core.prototype.onActorStateChange = function(event){
+    this.actorManager.handleActorStateChange(event.data);
 };
 
 Core.prototype.onRequestUiFlash = function(event){
@@ -264,10 +266,7 @@ Core.prototype.onStartGame = function(event){
         this.logicBus.postMessage('startGame', {});
         this.activeScene = 'GameScene';
     }
-};
-
-Core.prototype.onGetPointerLock = function(event){
-    this.inputListener.acquirePointerLock();
+    PubSub.publish('reactHudShow');
 };
 
 Core.prototype.onGotPointerLock = function(event){
@@ -295,6 +294,10 @@ Core.prototype.onResolutionConfig = function(event){
 
 Core.prototype.onSoundConfig = function(event){
     this.configManager.saveSoundVolume(event.value);
+};
+
+Core.prototype.onRequestPointerLock = function(event){
+    this.inputListener.requestPointerLock();
 };
 
 Core.prototype.recreateRenderer = function(){

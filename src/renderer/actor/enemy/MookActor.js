@@ -19,8 +19,8 @@ MookActor.prototype.createMeshes = function(){
         scaleX: 1.2,
         scaleY: 1.2,
         scaleZ: 1.2,
-        geometry: ModelStore.get('ravier').geometry,
-        material: ModelStore.get('ravier').material
+        geometry: ModelStore.get('drone').geometry,
+        material: ModelStore.get('drone').material
     })];
 };
 

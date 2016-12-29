@@ -2,17 +2,12 @@ var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
 var ModelStore = require("renderer/assetManagement/model/ModelStore");
 var BaseActor = require("renderer/actor/BaseActor");
+var ActorConfig = require("shared/ActorConfig");
 
 function ShipActor(){
+    this.applyConfig(ActorConfig.SHIP);
     BaseActor.apply(this, arguments);
     this.count = 0;
-    this.speedZ = 0.04;
-
-    //todo: generic config holder
-    this.initialHp = 30;
-    this.hp = 30;
-    this.lastHp = this.hp;
-    this.hpBarCount = 20;
 
     this.speedZ = 0.04;
     this.speedY = 0.0025;
@@ -80,7 +75,7 @@ ShipActor.prototype.doBob = function(){
         this.speedZ -= 0.002;
     } else {
         this.speedZ += 0.002;
-    }    
+    }
 };
 
 ShipActor.prototype.doEngineGlow = function(){

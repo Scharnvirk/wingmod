@@ -54,10 +54,10 @@
 
 @keyframes fadeout {
     from {
-      opacity: 0;
+      opacity: 1;
     }
     to {
-      opacity: 1;
+      opacity: 0;
     }
 }
 
@@ -89,6 +89,8 @@
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
   user-select: none;
 }
 
@@ -304,4 +306,8 @@
 .hud{
   position: fixed;
   z-index: 1
+}
+
+.canvasHud{
+  position: absolute;
 }

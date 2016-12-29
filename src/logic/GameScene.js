@@ -16,24 +16,24 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     var playerActor = this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: -200,
+        positionX: 0,
         positionY: 0,
         angle: 0
     });
 
-    for (var i = 0; i < 250; i++){
+    for (var i = 0; i < 0; i++){
         this.actorManager.addNew({
-            classId: ActorFactory.MOOK,
-            positionX: Utils.rand(-10, 10),
-            positionY: Utils.rand(-10, 10),
+            classId: ActorFactory.DEBUG,
+            positionX: Utils.rand(-100, 100),
+            positionY: Utils.rand(-100, 100),
             angle: 0
         });
     }
-
-    this.emit({
-        type: 'newPlayerActor',
-        data: playerActor
-    });
+    //
+    // this.emit({
+    //     type: 'newPlayerActor',
+    //     data: playerActor
+    // });
 
     this.addMapBodies(mapBodies);
 

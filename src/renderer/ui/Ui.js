@@ -63,18 +63,19 @@ Ui.prototype.stopGameFinished = function(){
 
 Ui.prototype.onStartButtonClick = function(){
     if(this.assetsLoaded){
-        this.emit({type: 'getPointerLock'});
         this.reactUi.changeMode('helpScreen');
+        this.emit({type: 'requestPointerLock'});
     }
 };
 
 Ui.prototype.gotPointerLock = function(){
-    this.emit({type: 'startGame'});
-    this.reactUi.changeMode('running');
+    let newMode = this.reactUi.changeMode('running');
+    if (newMode === 'running') {
+        this.emit({type: 'startGame'});
+    }
 };
 
 Ui.prototype.lostPointerLock = function(){
-    this.emit({type: 'getPointerLock'});
     this.reactUi.changeMode('helpScreen');
 };
 

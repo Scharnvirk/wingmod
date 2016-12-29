@@ -7,6 +7,7 @@ var SettingsMenu = require('renderer/ui/component/SettingsMenu');
 var Button = require('renderer/ui/component/base/Button');
 var ReactUtils = require('renderer/ui/ReactUtils');
 
+
 var bottomText = ReactUtils.multilinize(
     'Wingmod 2 is a little experimental project aimed at learning'+
     '\nand experimenting with various web technologies.\n'+
@@ -22,6 +23,7 @@ var StartScreen = React.createClass({
         return { assetsLoaded: false };
     },
     componentWillMount() {
+        console.log("assetsLoadedPubsub", PubSub);
         PubSub.subscribe( 'assetsLoaded', (msg, data) => {
             this.setState({assetsLoaded: true});
         });
@@ -30,6 +32,7 @@ var StartScreen = React.createClass({
         var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
+
         return <div>
             <div
                 className = { classnames('class', ['bottomCenter', 'verticalSpacing']) }
@@ -45,7 +48,6 @@ var StartScreen = React.createClass({
             <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
                 <span className={'textDark'} >{versionText}</span>
             </StyledText>
-
         </div>;
     }
 });

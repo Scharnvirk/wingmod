@@ -7,7 +7,7 @@ function DebugActor(config){
     Object.assign(this, config);
 
     this.applyConfig({
-        timeout: config.timeout || 5
+        // timeout: config.timeout || 5
     });
 }
 
@@ -24,7 +24,7 @@ DebugActor.prototype.createBody = function(){
 };
 
 DebugActor.prototype.onSpawn = function(){
-    this.angleForce = Utils.rand(-15,15);
+    // this.angleForce = Utils.rand(-15,15);
 };
 
 module.exports = DebugActor;

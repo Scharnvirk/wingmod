@@ -25,7 +25,7 @@ Core.prototype.makeMainComponents = function(worker){
 
 Core.prototype.initializeEventHandlers = function(){
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
-    this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
+    // this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
     this.renderBus.on('pause', this.onPause.bind(this));
@@ -37,7 +37,7 @@ Core.prototype.initializeEventHandlers = function(){
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
-    this.actorManager.on('actorEvents', this.onActorEvents.bind(this));
+    this.actorManager.on('actorStateChange', this.onActorStateChange.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
     this.actorManager.on('playSound', this.onPlaySound.bind(this));
 };
@@ -90,15 +90,15 @@ Core.prototype.onPause = function(){
 Core.prototype.onAiImageDone = function(event){
     this.actorManager.aiImage = event.data;
 };
+//
+// Core.prototype.onNewPlayerActor = function(event){
+//     var playerActor = event.data;
+//     this.actorManager.setPlayerActor(playerActor);
+//     this.renderBus.postMessage('attachPlayer', {actorId: playerActor.body.actorId});
+// };
 
-Core.prototype.onNewPlayerActor = function(event){
-    var playerActor = event.data;
-    this.actorManager.setPlayerActor(playerActor);
-    this.renderBus.postMessage('attachPlayer', {actorId: playerActor.body.actorId});
-};
-
-Core.prototype.onActorEvents = function(event){
-    this.renderBus.postMessage('actorEvents', {actorData: event.data});
+Core.prototype.onActorStateChange = function(event){
+    this.renderBus.postMessage('actorStateChange', {data: event.data});
 };
 
 Core.prototype.onNewMapBodies = function(){

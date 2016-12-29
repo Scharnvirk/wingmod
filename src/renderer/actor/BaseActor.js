@@ -1,7 +1,12 @@
+var BaseStateChangeHandler = require("renderer/actor/component/stateChangeHandler/BaseStateChangeHandler");
+
 function BaseActor(config, actorDependencies){
     Object.assign(this, actorDependencies);
 
+    this.manager = config.manager;
+
     this.positionZ = 10;
+    this.actorId = config.actorId;
 
     this.position = new Float32Array([config.positionX || 0, config.positionY || 0]);
     this.logicPosition = new Float32Array([this.position[0],this.position[1]]);
@@ -15,12 +20,21 @@ function BaseActor(config, actorDependencies){
 
     this.meshes = this.createMeshes() || [];
 
-    this.initialHp = Infinity;
-    this.hp = Infinity;
-
     this.timer = 0;
-    this.customParams = {};
+    this.stateChangeHandler = this.createStateHandler();
+
+    this.props = this.props || {};
+
+    if (this.props.isPlayer){
+        this.manager.attachPlayer(this);
+    }
 }
+
+BaseActor.prototype.applyConfig = function(config){
+    for (let property in config){
+        this[property] = this[property] || config[property];
+    }
+};
 
 BaseActor.prototype.update = function(delta){
     this.timer ++;
@@ -40,15 +54,6 @@ BaseActor.prototype.update = function(delta){
 
 BaseActor.prototype.customUpdate = function(){};
 
-BaseActor.prototype.handleEvent = function(eventData){
-    if (eventData.currentHp){
-        this.hp = eventData.currentHp;
-    }
-    this.customHandleEvent(eventData);
-};
-
-BaseActor.prototype.customHandleEvent = function(eventData){};
-
 BaseActor.prototype.updateFromLogic = function(positionX, positionY, rotation){
     this.logicPreviousPosition[0] = this.logicPosition[0];
     this.logicPreviousPosition[1] = this.logicPosition[1];
@@ -64,8 +69,16 @@ BaseActor.prototype.setPosition = function(positionX, positionY){
     this.position[1] = positionY || 0;
 };
 
+BaseActor.prototype.createStateHandler = function(){
+    return new BaseStateChangeHandler({actor: this});
+};
+
 BaseActor.prototype.createMeshes = function(){
     return [];
+};
+
+BaseActor.prototype.handleStateChange = function(newState){
+    this.stateChangeHandler.update(newState);
 };
 
 BaseActor.prototype.addToScene = function(scene){
@@ -84,7 +97,12 @@ BaseActor.prototype.removeFromScene = function(scene){
     }
 };
 
-BaseActor.prototype.onDeath = function(){};
+BaseActor.prototype.onDeath = function(){
+    this.body.dead = this.props.removeOnHit;
+    if(this.props.soundsOnDeath){
+        this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
+    }
+};
 
 BaseActor.prototype.onSpawn = function(){};
 
