@@ -1,12 +1,14 @@
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function MookActor(){
+    this.applyConfig(ActorConfig.MOOK);
     BaseActor.apply(this, arguments);    
 }
 

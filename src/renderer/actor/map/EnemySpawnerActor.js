@@ -1,10 +1,12 @@
 var BaseActor = require('renderer/actor/BaseActor');
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function EnemySpawnerActor(config){
+    this.applyConfig(ActorConfig.ENEMYSPAWNER);
     Object.apply(this, config);
     BaseActor.apply(this, arguments);
 
@@ -35,7 +37,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
 };
 
 EnemySpawnerActor.prototype.showDamage = function(){
-    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.initialHp);
+    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.hp);
 
     let offsetPosition = this.getOffsetPosition(-12);
     let actorPosition = this.getPosition();
@@ -50,7 +52,7 @@ EnemySpawnerActor.prototype.showDamage = function(){
     }
 
     if (damageRandomValue > 50 && Utils.rand(0,100) > 90){
-        this.createPremadeParticle({premadeName: 'BlueSparks', position: position});
+        this.createPremade({premadeName: 'BlueSparks', position: position});
     }
 };
 
@@ -102,24 +104,17 @@ EnemySpawnerActor.prototype.removeFromScene = function(scene){
     scene.remove(this.topMesh);
 };
 
-// EnemySpawnerActor.prototype.customHandleEvent = function(eventData){
-//     if(eventData.newSpawnDelay){
-//         this.spawnDelay = eventData.newSpawnDelay;
-//         this.maxSpawnDelay = eventData.newSpawnDelay;
-//     }
-// };
-
 EnemySpawnerActor.prototype.doChargingAnimation = function(){
-    if (this.spawnDelay > 0) {
-        this.spawnDelay --;
-        if(this.rotationSpeed < 0.2){
+    if (this.state.spawnDelay > 0) {
+        this.state.spawnDelay --;
+        if (this.rotationSpeed < 0.2) {
             this.rotationSpeed += 0.0015;
         }
     } else {
         this.rotationSpeed *= 0.98;
 
     }
-    var intensity = this.spawnDelay > 0 ? (1 - this.spawnDelay / this.maxSpawnDelay) : 0;
+    var intensity = this.state.spawnDelay > 0 ? (1 - this.state.spawnDelay / this.props.spawnRate) : 0;
     this.bottomMesh.material.emissiveIntensity = intensity;
     this.topMesh.material.emissiveIntensity = intensity;
     this.topMesh.rotation.y += this.rotationSpeed;

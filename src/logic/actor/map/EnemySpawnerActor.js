@@ -4,10 +4,10 @@ var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 
 function EnemySpawnerActor(config){
-
+    Object.assign(this, config);
     this.applyConfig(ActorConfig.ENEMYSPAWNER);
     BaseActor.apply(this, arguments);
-    Object.assign(this, config);
+    
     this.state.spawnDelay = 0;
 }
 

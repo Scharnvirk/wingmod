@@ -48,7 +48,7 @@ Hud.prototype.drawRadar = function(){
 };
 
 Hud.prototype.drawHealthBar = function(otherActor){
-    var hpPercentage = otherActor.hp / otherActor.initialHp;
+    var hpPercentage = otherActor.hp / otherActor.hp;
     var hpBarCount = otherActor.hpBarCount || this.defaultHpBarCount;
     for (let i = 0; i < hpBarCount; i++){
         let rotation = (otherActor !== this.actor) ? Utils.rotationBetweenPoints(otherActor.position, this.actor.position) : this.actor.rotation;

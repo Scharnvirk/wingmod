@@ -47,6 +47,10 @@ BaseActor.prototype.setMeshAt = function(mesh, index){
     this._meshes[index] = mesh;
 };
 
+BaseActor.prototype.setState = function(newState){
+    this.state = Object.assign(this.state, newState);
+};
+
 BaseActor.prototype.getMeshAt = function(index){
     return this._meshes[index];
 };
@@ -85,7 +89,6 @@ BaseActor.prototype.update = function(delta){
 BaseActor.prototype.requestUiFlash = function(options){
     this._manager.requestUiFlash(options);
 };
-
 
 BaseActor.prototype.createStateHandler = function(){
     return new BaseStateChangeHandler({actor: this});

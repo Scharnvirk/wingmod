@@ -6,7 +6,7 @@ function BaseStateChangeHandler(config){
 }
 
 BaseStateChangeHandler.prototype.update = function(newState){
-    this.actor.updateState(newState);
+    this.actor.setState(newState);
     this.customUpdate();
 };
 

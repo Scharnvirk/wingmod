@@ -244,14 +244,14 @@ Core.prototype.onGetAiImage = function(event){
 };
 
 Core.prototype.onActorStateChange = function(event){
-    this.actorManager.handleActorStateChange(event.data);
+    this.actorManager.handleActorStateChange(event.data.data);
 };
 
 Core.prototype.onRequestUiFlash = function(event){
     this.sceneManager.get(this.activeScene).doUiFlash(event.data);
 };
 
-Core.prototype.onStartGame = function(event){
+Core.prototype.onStartGame = function(){
     if (!this.running) {
         this.running = true;
         this.logicBus.postMessage('startGame', {});
@@ -260,14 +260,14 @@ Core.prototype.onStartGame = function(event){
     PubSub.publish('reactHudShow');
 };
 
-Core.prototype.onGotPointerLock = function(event){
+Core.prototype.onGotPointerLock = function(){
     //TODO: game state machine
     if(!this.gameEnded){
         this.ui.gotPointerLock();
     }
 };
 
-Core.prototype.onLostPointerLock = function(event){
+Core.prototype.onLostPointerLock = function(){
     if(!this.gameEnded){
         this.ui.lostPointerLock();
     }

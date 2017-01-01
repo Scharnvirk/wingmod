@@ -2044,10 +2044,10 @@ var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 
 function EnemySpawnerActor(config) {
-
+    Object.assign(this, config);
     this.applyConfig(ActorConfig.ENEMYSPAWNER);
     BaseActor.apply(this, arguments);
-    Object.assign(this, config);
+
     this.state.spawnDelay = 0;
 }
 
@@ -2796,6 +2796,10 @@ BaseActor.prototype.setMeshAt = function (mesh, index) {
     this._meshes[index] = mesh;
 };
 
+BaseActor.prototype.setState = function (newState) {
+    this.state = Object.assign(this.state, newState);
+};
+
 BaseActor.prototype.getMeshAt = function (index) {
     return this._meshes[index];
 };
@@ -2932,7 +2936,6 @@ function BaseMesh(config) {
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
     this.rotationOffset = 0;
-    // this.positionZOffset = 0;
     this.positionOffset = [0, 0, 0];
 
     Object.assign(this, config);
@@ -3033,7 +3036,7 @@ function BaseStateChangeHandler(config) {
 }
 
 BaseStateChangeHandler.prototype.update = function (newState) {
-    this.actor.updateState(newState);
+    this.actor.setState(newState);
     this.customUpdate();
 };
 
@@ -3047,12 +3050,14 @@ module.exports = BaseStateChangeHandler;
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function MookActor() {
+    this.applyConfig(ActorConfig.MOOK);
     BaseActor.apply(this, arguments);
 }
 
@@ -3103,18 +3108,20 @@ MookActor.prototype.drawEyes = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68}],51:[function(require,module,exports){
+},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68,"shared/ActorConfig":69}],51:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function OrbotActor() {
+    this.applyConfig(ActorConfig.ORBOT);
     BaseActor.apply(this, arguments);
 }
 
@@ -3161,18 +3168,20 @@ OrbotActor.prototype.drawEyes = function () {
 
 module.exports = OrbotActor;
 
-},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68}],52:[function(require,module,exports){
+},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68,"shared/ActorConfig":69}],52:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function SniperActor() {
+    this.applyConfig(ActorConfig.SNIPER);
     BaseActor.apply(this, arguments);
     this.eyeRotation = 0;
     this.eyeSpeed = 3;
@@ -3231,7 +3240,7 @@ SniperActor.prototype.drawEyes = function () {
 
 module.exports = SniperActor;
 
-},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68}],53:[function(require,module,exports){
+},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/ShipMesh":48,"renderer/actor/mixin/BobMixin":56,"renderer/actor/mixin/ParticleMixin":57,"renderer/actor/mixin/ShowDamageMixin":58,"renderer/assetManagement/model/ModelStore":68,"shared/ActorConfig":69}],53:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -3329,10 +3338,12 @@ module.exports = EnemySpawnMarkerActor;
 var BaseActor = require('renderer/actor/BaseActor');
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function EnemySpawnerActor(config) {
+    this.applyConfig(ActorConfig.ENEMYSPAWNER);
     Object.apply(this, config);
     BaseActor.apply(this, arguments);
 
@@ -3363,7 +3374,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
 };
 
 EnemySpawnerActor.prototype.showDamage = function () {
-    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.initialHp);
+    var damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.hp);
 
     var offsetPosition = this.getOffsetPosition(-12);
     var actorPosition = this.getPosition();
@@ -3375,7 +3386,7 @@ EnemySpawnerActor.prototype.showDamage = function () {
     }
 
     if (damageRandomValue > 50 && Utils.rand(0, 100) > 90) {
-        this.createPremadeParticle({ premadeName: 'BlueSparks', position: position });
+        this.createPremade({ premadeName: 'BlueSparks', position: position });
     }
 };
 
@@ -3427,23 +3438,16 @@ EnemySpawnerActor.prototype.removeFromScene = function (scene) {
     scene.remove(this.topMesh);
 };
 
-// EnemySpawnerActor.prototype.customHandleEvent = function(eventData){
-//     if(eventData.newSpawnDelay){
-//         this.spawnDelay = eventData.newSpawnDelay;
-//         this.maxSpawnDelay = eventData.newSpawnDelay;
-//     }
-// };
-
 EnemySpawnerActor.prototype.doChargingAnimation = function () {
-    if (this.spawnDelay > 0) {
-        this.spawnDelay--;
+    if (this.state.spawnDelay > 0) {
+        this.state.spawnDelay--;
         if (this.rotationSpeed < 0.2) {
             this.rotationSpeed += 0.0015;
         }
     } else {
         this.rotationSpeed *= 0.98;
     }
-    var intensity = this.spawnDelay > 0 ? 1 - this.spawnDelay / this.maxSpawnDelay : 0;
+    var intensity = this.state.spawnDelay > 0 ? 1 - this.state.spawnDelay / this.props.spawnRate : 0;
     this.bottomMesh.material.emissiveIntensity = intensity;
     this.topMesh.material.emissiveIntensity = intensity;
     this.topMesh.rotation.y += this.rotationSpeed;
@@ -3451,7 +3455,7 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/BaseMesh":45,"renderer/actor/mixin/ParticleMixin":57,"renderer/assetManagement/model/ModelStore":68}],55:[function(require,module,exports){
+},{"renderer/actor/BaseActor":43,"renderer/actor/component/mesh/BaseMesh":45,"renderer/actor/mixin/ParticleMixin":57,"renderer/assetManagement/model/ModelStore":68,"shared/ActorConfig":69}],55:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -3538,13 +3542,13 @@ var ShowDamageMixin = {
             }
         }
 
-        var damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.initialHp);
+        var damageRandomValue = Utils.rand(0, 100) - 100 * (this.state.hp / this.props.hp);
         if (damageRandomValue > 20) {
-            this.createPremadeParticle({ premadeName: 'SmokePuffSmall' });
+            this.createPremade({ premadeName: 'SmokePuffSmall' });
         }
 
         if (damageRandomValue > 50 && Utils.rand(0, 100) > 95) {
-            this.createPremadeParticle({ premadeName: 'BlueSparks' });
+            this.createPremade({ premadeName: 'BlueSparks' });
         }
 
         this._lastHp = this.state.hp;

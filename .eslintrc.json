@@ -41,6 +41,8 @@
         "Constants": false,
         "p2": false,
         "PubSub": false,
-        "THREE": false
+        "THREE": false,
+        "THREEx": false,
+        "createjs": false
     }
 }

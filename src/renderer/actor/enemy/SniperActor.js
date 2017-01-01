@@ -1,12 +1,14 @@
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function SniperActor(){
+    this.applyConfig(ActorConfig.SNIPER);
     BaseActor.apply(this, arguments);
     this.eyeRotation = 0;
     this.eyeSpeed = 3;
