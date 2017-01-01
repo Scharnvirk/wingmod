@@ -67,8 +67,7 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
             rotationOffset: Utils.degToRad(-90),
-            positionZOffset: this.weaponSetLocations[slotNumber][i][2],
-            positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
+            positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1], this.weaponSetLocations[slotNumber][i][2]]
         });
 
         this.setMeshAt(mesh, meshIndexLocation);
@@ -77,17 +76,18 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
 
 
 ShipActor.prototype.doEngineGlow = function(){
+    let positionZ = this.getPosition()[2] - Constants.DEFAULT_POSITION_Z;
     if(this.inputListener){
         if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 15,
                 distance: -5.8
             });
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 345,
                 distance: -5.8
             });
@@ -96,13 +96,13 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.a && !this.inputListener.inputState.d){
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 40,
                 distance: -4
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 170,
                 distance: -6
             });
@@ -111,13 +111,13 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.d){
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 320,
                 distance: -4
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 190,
                 distance: -6
             });
@@ -126,7 +126,7 @@ ShipActor.prototype.doEngineGlow = function(){
         if(this.inputListener.inputState.s){
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 180,
                 distance: -7
             });

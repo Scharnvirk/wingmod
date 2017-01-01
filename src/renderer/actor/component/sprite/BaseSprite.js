@@ -13,6 +13,6 @@ BaseSprite.prototype.update = function(){
     if (this.actor) {
         this.position.x = position[0];
         this.position.y = position[1];
-        this.position.z = this.actor._positionZ;
+        this.position.z = position[2];
     }
 };

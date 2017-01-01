@@ -2758,8 +2758,6 @@ function BaseActor(config, actorDependencies) {
     this._manager = config.manager;
     this._particleManager = actorDependencies.particleManager;
 
-    this._positionZ = 10;
-
     this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);
     this._logicPosition = new Float32Array([this._position[0], this._position[1]]);
     this._logicPreviousPosition = new Float32Array([this._position[0], this._position[1]]);
@@ -2934,8 +2932,8 @@ function BaseMesh(config) {
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
     this.rotationOffset = 0;
-    this.positionZOffset = 0;
-    this.positionOffset = [0, 0];
+    // this.positionZOffset = 0;
+    this.positionOffset = [0, 0, 0];
 
     Object.assign(this, config);
 
@@ -2956,7 +2954,7 @@ BaseMesh.prototype.update = function () {
         var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], rotation * -1);
         this.position.x = position[0] + offsetVector[0];
         this.position.y = position[1] + offsetVector[1];
-        this.position.z = this.actor._positionZ + this.positionZOffset;
+        this.position.z = position[2] + this.positionOffset[2];
         this.rotation.z = rotation + this.rotationOffset;
     }
 };
@@ -3088,15 +3086,16 @@ MookActor.prototype.onDeath = function () {
 };
 
 MookActor.prototype.drawEyes = function () {
+    var positionZ = this.getPosition()[2] - 8.7;
     this.createPremade({
         premadeName: 'RedEye',
-        positionZ: this.positionZ - 8.7,
+        positionZ: positionZ,
         rotationOffset: 15,
         distance: 3.5
     });
     this.createPremade({
         premadeName: 'RedEye',
-        positionZ: this.positionZ - 8.7,
+        positionZ: positionZ,
         rotationOffset: 345,
         distance: 3.5
     });
@@ -3149,10 +3148,11 @@ OrbotActor.prototype.onDeath = function () {
 };
 
 OrbotActor.prototype.drawEyes = function () {
+    var positionZ = this.getPosition()[2] - 8.2;
     if (this.timer % 20 === 0) {
         this.createPremade({
             premadeName: 'RedEyeBig',
-            positionZ: this._positionZ - 8.2,
+            positionZ: positionZ,
             rotationOffset: 0,
             distance: 1.65
         });
@@ -3220,9 +3220,10 @@ SniperActor.prototype.drawEyes = function () {
 
     this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
+    var positionZ = this.getPosition()[2] - 7.4;
     this.createPremade({
         premadeName: 'PurpleEye',
-        positionZ: this._positionZ - 7.4,
+        positionZ: positionZ,
         rotationOffset: this.eyeRotation,
         distance: 2.3
     });
@@ -3473,8 +3474,8 @@ var BobMixin = {
         _bobSpeedZ: Utils.rand(35, 45) / 1000
     },
     doBob: function doBob() {
-        this._positionZ += this._bobSpeedZ;
-        if (this._positionZ > this._bobZTop) {
+        this._position[2] += this._bobSpeedZ;
+        if (this._position[2] > this._bobZTop) {
             this._bobSpeedZ -= this._bobSpeed;
         } else {
             this._bobSpeedZ += this._bobSpeed;
@@ -3702,8 +3703,7 @@ ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, mate
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
             rotationOffset: Utils.degToRad(-90),
-            positionZOffset: this.weaponSetLocations[slotNumber][i][2],
-            positionOffset: [this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
+            positionOffset: [this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1], this.weaponSetLocations[slotNumber][i][2]]
         });
 
         this.setMeshAt(mesh, meshIndexLocation);
@@ -3711,17 +3711,18 @@ ShipActor.prototype.setupWeaponMeshes = function (slotNumber, geometryName, mate
 };
 
 ShipActor.prototype.doEngineGlow = function () {
+    var positionZ = this.getPosition()[2] - Constants.DEFAULT_POSITION_Z;
     if (this.inputListener) {
         if (this.inputListener.inputState.w && !this.inputListener.inputState.s) {
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 15,
                 distance: -5.8
             });
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 345,
                 distance: -5.8
             });
@@ -3730,13 +3731,13 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.a && !this.inputListener.inputState.d) {
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 40,
                 distance: -4
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 170,
                 distance: -6
             });
@@ -3745,13 +3746,13 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.d) {
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 320,
                 distance: -4
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 190,
                 distance: -6
             });
@@ -3760,7 +3761,7 @@ ShipActor.prototype.doEngineGlow = function () {
         if (this.inputListener.inputState.s) {
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
-                positionZ: this._positionZ - Constants.DEFAULT_POSITION_Z,
+                positionZ: positionZ,
                 rotationOffset: 180,
                 distance: -7
             });

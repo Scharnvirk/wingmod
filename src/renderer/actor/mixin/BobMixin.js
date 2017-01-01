@@ -5,8 +5,8 @@ var BobMixin = {
         _bobSpeedZ: Utils.rand(35,45)/1000
     },
     doBob: function(){
-        this._positionZ += this._bobSpeedZ;
-        if (this._positionZ > this._bobZTop){
+        this._position[2] += this._bobSpeedZ;
+        if (this._position[2] > this._bobZTop){
             this._bobSpeedZ -= this._bobSpeed;
         } else {
             this._bobSpeedZ += this._bobSpeed;

@@ -40,15 +40,16 @@ MookActor.prototype.onDeath = function(){
 };
 
 MookActor.prototype.drawEyes = function(){
+    let positionZ = this.getPosition()[2] - 8.7;
     this.createPremade({
         premadeName: 'RedEye',
-        positionZ: this.positionZ - 8.7,
+        positionZ: positionZ,
         rotationOffset: 15,
         distance: 3.5
     });
     this.createPremade({
         premadeName: 'RedEye',
-        positionZ: this.positionZ - 8.7,
+        positionZ: positionZ,
         rotationOffset: 345,
         distance: 3.5
     });

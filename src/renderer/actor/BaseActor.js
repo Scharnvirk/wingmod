@@ -9,8 +9,6 @@ function BaseActor(config, actorDependencies){
     this._manager = config.manager;
     this._particleManager = actorDependencies.particleManager;
 
-    this._positionZ = 10;
-    
     this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);
     this._logicPosition = new Float32Array([this._position[0],this._position[1]]);
     this._logicPreviousPosition = new Float32Array([this._position[0],this._position[1]]);

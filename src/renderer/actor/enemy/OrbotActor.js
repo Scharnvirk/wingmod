@@ -40,10 +40,11 @@ OrbotActor.prototype.onDeath = function(){
 };
 
 OrbotActor.prototype.drawEyes = function(){
+    let positionZ = this.getPosition()[2] - 8.2;
     if (this.timer % 20 === 0){
         this.createPremade({
             premadeName: 'RedEyeBig',
-            positionZ: this._positionZ - 8.2,
+            positionZ: positionZ,
             rotationOffset: 0,
             distance: 1.65
         });

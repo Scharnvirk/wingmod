@@ -54,9 +54,10 @@ SniperActor.prototype.drawEyes = function(){
 
     this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
+    let positionZ = this.getPosition()[2] - 7.4;
     this.createPremade({
         premadeName: 'PurpleEye',
-        positionZ: this._positionZ - 7.4,
+        positionZ: positionZ,
         rotationOffset: this.eyeRotation,
         distance: 2.3
     });
