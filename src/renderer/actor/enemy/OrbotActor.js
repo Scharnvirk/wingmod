@@ -1,17 +1,19 @@
-var BaseMesh = require("renderer/actor/component/mesh/ShipMesh");
-var BaseActor = require("renderer/actor/BaseActor");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
+var BaseActor = require('renderer/actor/BaseActor');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+var BobMixin = require('renderer/actor/mixin/BobMixin');
+var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function OrbotActor(){
     BaseActor.apply(this, arguments);
-    this.speedZ = Utils.rand(35,45)/1000;
-    this.bobSpeed = Utils.rand(18,22)/10000;
-
-    this.initialHp = 3;
-    this.hp = 3;
 }
 
 OrbotActor.extend(BaseActor);
+OrbotActor.mixin(ParticleMixin);
+OrbotActor.mixin(BobMixin);
+OrbotActor.mixin(ShowDamageMixin);
 
 OrbotActor.prototype.createMeshes = function(){
     return [new BaseMesh({
@@ -25,52 +27,27 @@ OrbotActor.prototype.createMeshes = function(){
 };
 
 OrbotActor.prototype.customUpdate = function(){
-    this.positionZ += this.speedZ;
     this.doBob();
-    this.handleDamage();
+    this.showDamage();
     this.drawEyes();
 };
 
-OrbotActor.prototype.doBob = function(){
-    if (this.positionZ > 10){
-        this.speedZ -= this.bobSpeed;
-    } else {
-        this.speedZ += this.bobSpeed;
-    }
-};
-
-OrbotActor.prototype.onSpawn = function(){
-    this.manager.newEnemy(this.actorId);
-};
+OrbotActor.prototype.onSpawn = function(){};
 
 OrbotActor.prototype.onDeath = function(){
-    this.manager.enemyDestroyed(this.actorId);
-    this.particleManager.createPremade('OrangeBoomMedium', {position: this.position});
-    this.manager.requestUiFlash('white');
-};
-
-OrbotActor.prototype.handleDamage = function(){
-    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
-    if (damageRandomValue > 20){
-        this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
-    }
-
-    if (damageRandomValue > 50 && Utils.rand(0,100) > 95){
-        this.particleManager.createPremade('BlueSparks', {position: this.position});
-    }
+    this.createPremade({premadeName: 'OrangeBoomMedium'});
+    this.requestUiFlash('white');
 };
 
 OrbotActor.prototype.drawEyes = function(){
     if (this.timer % 20 === 0){
-        this.particleManager.createPremade('RedEyeBig', {
-            position: this.position,
-            positionZ: this.positionZ - 8.2,
-            rotation: this.rotation,
+        this.createPremade({
+            premadeName: 'RedEyeBig',
+            positionZ: this._positionZ - 8.2,
             rotationOffset: 0,
             distance: 1.65
         });
     }
 };
-
 
 module.exports = OrbotActor;

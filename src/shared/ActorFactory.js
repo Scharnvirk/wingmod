@@ -5,7 +5,6 @@ var idMap = {
 MOOK: 2,
 SNIPER: 3,
 ORBOT: 4,
-MOOKBOSS: 5,
 CHUNK: 6,
 BOOMCHUNK: 7,
 PLASMAPROJECTILE: 8,
@@ -27,7 +26,6 @@ function ActorFactory(context, actorDependencies){
 ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
 ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
 ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
@@ -47,7 +45,6 @@ ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/Debug
 [idMap.MOOK]: ActorFactory.MookActor,
 [idMap.SNIPER]: ActorFactory.SniperActor,
 [idMap.ORBOT]: ActorFactory.OrbotActor,
-[idMap.MOOKBOSS]: ActorFactory.MookBossActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
 [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,

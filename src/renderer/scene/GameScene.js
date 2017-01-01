@@ -1,8 +1,7 @@
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var ChunkMesh = require("renderer/map/ChunkMesh");
-var BaseScene = require("renderer/scene/BaseScene");
-var Camera = require("renderer/Camera");
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
+var ChunkMesh = require('renderer/map/ChunkMesh');
+var BaseScene = require('renderer/scene/BaseScene');
+var Camera = require('renderer/Camera');
 
 function GameScene(config) {
 
@@ -61,10 +60,11 @@ GameScene.prototype.create = function() {
 
 GameScene.prototype.customUpdate = function(){
     if(this.actor){
-        this.directionalLight.position.x = this.actor.position[0] + 100;
-        this.directionalLight.position.y = this.actor.position[1] + 100;
-        this.directionalLight.target.position.x = this.actor.position[0];
-        this.directionalLight.target.position.y = this.actor.position[1];
+        let position = this.actor.getPosition();
+        this.directionalLight.position.x = position[0] + 100;
+        this.directionalLight.position.y = position[1] + 100;
+        this.directionalLight.target.position.x = position[0];
+        this.directionalLight.target.position.y = position[1];
         this.directionalLight.target.updateMatrixWorld();
     }
     this.handleFlash();
@@ -117,7 +117,7 @@ GameScene.prototype.createMap = function(layoutData){
         });
         chunk.setPosition(config.position);
 
-        //layout data comes from logic, thus it requires "angle" instead of "rotation"
+        //layout data comes from logic, thus it requires 'angle' instead of 'rotation'
         chunk.setRotation(config.angle);
         this.threeScene.add(chunk);
     }

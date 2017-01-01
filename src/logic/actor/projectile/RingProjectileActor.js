@@ -1,6 +1,6 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function RingProjectileActor(config){
     config = config || [];
@@ -16,9 +16,8 @@ RingProjectileActor.prototype.createBody = function(){
 };
 
 RingProjectileActor.prototype.customUpdate = function(){
-    this.body.mass *= 0.96;
-    this.damage *= 0.95;
-    this.body.updateMassProperties();
+    this.setMass(this.getMass() * 0.96);
+    this.props.damage *= 0.95;
 };
 
 module.exports = RingProjectileActor;

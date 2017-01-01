@@ -3,7 +3,7 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 3000,
+            hp: 30,
             isPlayer: true
         },
         bodyConfig: {
@@ -125,7 +125,8 @@ var ActorConfig = {
             hp: 1,
             turnSpeed: 1,
             removeOnHit: false,
-            timeout: Utils.rand(25, 100)
+            timeoutRandomMin: 25,
+            timeoutRandomMax: 100,
         },
         bodyConfig: {
             mass: 0.01
@@ -137,7 +138,8 @@ var ActorConfig = {
             hp: 1,
             turnSpeed: 1,
             removeOnHit: false,
-            timeout: Utils.rand(5, 60),
+            timeoutRandomMin: 5,
+            timeoutRandomMax: 60,
             soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8']
         },
         bodyConfig: {
@@ -147,9 +149,57 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props:{
-            hp: 350,
+            hp: 30,
             removeOnHit: false,
             spawnRate: 240
+        }
+    },
+
+    MOOK: {
+        props: {
+            acceleration: 140,
+            turnSpeed: 2,
+            hp: 6
+        },
+        bodyConfig: {
+            mass: 4,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5,
+            collisionType: 'enemyShip'
+        }
+    },
+
+    ORBOT: {
+        props: {
+            acceleration: 150,
+            turnSpeed: 4,
+            hp: 3
+        },
+        bodyConfig: {
+            mass: 2,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 2,
+            collisionType: 'enemyShip'
+        }
+    },
+
+    SNIPER: {
+        props: {
+            acceleration: 90,
+            turnSpeed: 0.8,
+            hp: 12
+        },
+        bodyConfig: {
+            mass: 8,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 4,
+            collisionType: 'enemyShip'
         }
     }
 };

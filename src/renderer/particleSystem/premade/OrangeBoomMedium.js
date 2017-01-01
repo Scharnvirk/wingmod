@@ -1,17 +1,18 @@
 module.exports = function(config){
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 10; i++){
         config.particleManager.createParticle('smokePuffAlpha',{
-            positionX: config.position[0] + Utils.rand(-2,2),
-            positionY: config.position[1] + Utils.rand(-2,2),
+            positionX: config.position[0] + Utils.rand(-10,10),
+            positionY: config.position[1] + Utils.rand(-10,10),
             colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2,15),
-            alpha: Utils.rand(0,3)/10 + 0.3,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0,4) / 10,
+            colorG: 0.95,
+            colorB: 0.9,
+            scale: Utils.rand(20, 35),
+            alpha: Utils.rand(0.6, 0.9)/10 + 0.1,
+            alphaMultiplier: 0.994,
+            particleVelocity: Utils.rand(2,5) / 60,
             particleRotation: Utils.rand(0,360),
-            lifeTime: 120
+            speedZ: Utils.rand(0,5) / 500,
+            lifeTime: Utils.rand(600, 1000)
         });
     }
 

@@ -13,8 +13,8 @@ Hud.extend(EventEmitter);
 
 Hud.prototype.update = function(){
     if(this.actor && !this.actor.dead){
-        this.drawRadar();
-        this.drawHealthBar(this.actor);
+        // this.drawRadar();
+        // this.drawHealthBar(this.actor);
     }
 };
 

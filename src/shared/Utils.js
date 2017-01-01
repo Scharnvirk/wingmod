@@ -13,12 +13,19 @@ var Utils = {
     },
 
     getRandomInteger: function(min, max){
-        if (min > max) throw 'ERROR: getRandomInteger min > max';
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
 
     rand: function(min, max){
-        return this.getRandomInteger(min, max);
+        return min === max ? min : this.getRandomInteger(min, max);
+    },
+
+    randArray: function(config){
+        if (config instanceof Array) {
+            return this.rand(config[0], config[1]);
+        } else {
+            return config;
+        }
     },
 
     makeRandomColor: function(min = 0, max = 255){
@@ -131,6 +138,15 @@ var Utils = {
 
     angleToVector: function(rotation, length){
         return this.rotationToVector(rotation, length);
+    },
+
+    distanceBetweenActors: function(actor1, actor2){
+        return this.distanceBetweenPoints(
+            actor1._body.position[0],
+            actor2._body.position[0],
+            actor1._body.position[1],
+            actor2._body.position[1]
+        );
     }
 };
 
@@ -140,5 +156,27 @@ if(!Function.prototype.extend){
         this.prototype.constructor = oldClass;
     };
 }
+
+let mixinInit = function(prototype, mixin){
+    let newMixinInstanceValues = Object.assign(prototype._mixinInstanceValues || {}, mixin._mixinInstanceValues);
+    let newProto = Object.assign(this.prototype, mixin);
+    newProto._mixinInstanceValues = newMixinInstanceValues;
+
+    prototype = newProto;
+};
+
+if(!Function.prototype.mixin){
+    Function.prototype.mixin = function(mixins){
+        if (mixins instanceof Array) {
+            mixins.forEach(mixin => {
+                mixinInit.call(this, this.prototype, mixin);
+            });
+        } else {
+            mixinInit.call(this, this.prototype, mixins);
+        }
+    };
+}
+
+
 
 module.exports = Utils;

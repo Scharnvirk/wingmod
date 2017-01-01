@@ -1,4 +1,4 @@
-var ActorFactory = require("shared/ActorFactory")('renderer');
+var ActorFactory = require('shared/ActorFactory')('renderer');
 
 function ActorManager(config){
     config = config || {};
@@ -62,7 +62,6 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
     }
 
     for(let i = 0; i < messageObject.deadActorCount; i++){
-        let actor = this.storage[deadDataArray[i]];
         this.deleteActor(deadDataArray[i*5], deadDataArray[i*5 + 2], deadDataArray[i*5 + 3]);
     }
 };
@@ -87,7 +86,6 @@ ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
     if (actor){
         actor.setPosition(positionX, positionY);
         actor.onDeath();
-
         actor.removeFromScene(this.sceneManager.getCoreActiveScene().threeScene);
     }
     delete this.storage[actorId];
@@ -101,15 +99,7 @@ ActorManager.prototype.handleActorStateChange = function(newActorStates){
         }
     });
 };
-//
-// ActorManager.prototype.newEnemy = function(actorId){ //wyleci
-//     this.enemies[actorId] = this.storage[actorId];
-// };
-//
-// ActorManager.prototype.enemyDestroyed = function(actorId){ //wyleci
-//     delete this.enemies[actorId];
-// };
-//
+
 ActorManager.prototype.requestUiFlash = function(flashType){ //wyleci (tez w handlerze stanu agenta ma byc)
     this.emit({
         type:'requestUiFlash',

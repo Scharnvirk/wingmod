@@ -3,7 +3,6 @@ ActorList = [
     "actor/enemy/MookActor",
     "actor/enemy/SniperActor",
     "actor/enemy/OrbotActor",
-    "actor/enemy/MookBossActor",
     "actor/object/ChunkActor",
     "actor/object/BoomChunkActor",
     "actor/projectile/PlasmaProjectileActor",

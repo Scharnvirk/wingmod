@@ -1,6 +1,6 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function ChunkActor(config){
     config = config || [];
@@ -26,7 +26,7 @@ ChunkActor.prototype.createBody = function(){
 };
 
 ChunkActor.prototype.onSpawn = function(){
-    this.angleForce = Utils.rand(-15,15);
+    this.setAngleForce(Utils.rand(-35,35));
 };
 
 module.exports = ChunkActor;

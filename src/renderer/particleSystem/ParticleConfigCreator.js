@@ -51,7 +51,7 @@ function ParticleConfigCreator(config){
     this.particleGeneratorConfig = {
         smokePuffAlpha: {
             material: this.particleMaterialConfig.smokePuffAlpha,
-            maxParticles: 1000,
+            maxParticles: 2000,
             positionZ: 10,
             resolutionCoefficient: config.resolutionCoefficient,
             scene: 'GameScene',
@@ -105,6 +105,7 @@ ParticleConfigCreator.prototype.createPremades = function(){
         EngineGlowSmall: require("renderer/particleSystem/premade/EngineGlowSmall"),
         OrangeBoomLarge: require("renderer/particleSystem/premade/OrangeBoomLarge"),
         SmokePuffSmall: require("renderer/particleSystem/premade/SmokePuffSmall"),
+        SmokePuffLargeLong: require("renderer/particleSystem/premade/SmokePuffLargeLong"),
         OrangeBoomMedium: require("renderer/particleSystem/premade/OrangeBoomMedium"),
         RedLaserTrail: require("renderer/particleSystem/premade/RedLaserTrail"),
         RedSparks: require("renderer/particleSystem/premade/RedSparks"),

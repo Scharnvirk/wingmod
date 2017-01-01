@@ -222,11 +222,6 @@ Core.prototype.onPlayerActorAppeared = function(event){
 Core.prototype.onUpdateActors = function(event){
     this.actorManager.updateFromLogic(event.data);
 };
-//
-// Core.prototype.onAttachPlayer = function(event){
-//     console.log('attach player');
-//     this.actorManager.attachPlayer(event.data);
-// };
 
 Core.prototype.onGameEnded = function(event){
     this.gameEnded = true;
@@ -236,7 +231,7 @@ Core.prototype.onGameEnded = function(event){
     }.bind(this), 2000);
 };
 
-Core.prototype.onGameFinished = function(event){
+Core.prototype.onGameFinished = function(){
     this.gameEnded = true;
     setTimeout(function(){
         this.ui.stopGameFinished();
@@ -247,10 +242,6 @@ Core.prototype.onGameFinished = function(event){
 Core.prototype.onGetAiImage = function(event){
     this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
 };
-//
-// Core.prototype.onActorEvents = function(event){
-//     this.actorManager.handleActorEvents(event.data);
-// };
 
 Core.prototype.onActorStateChange = function(event){
     this.actorManager.handleActorStateChange(event.data);
@@ -296,7 +287,7 @@ Core.prototype.onSoundConfig = function(event){
     this.configManager.saveSoundVolume(event.value);
 };
 
-Core.prototype.onRequestPointerLock = function(event){
+Core.prototype.onRequestPointerLock = function(){
     this.inputListener.requestPointerLock();
 };
 
@@ -322,7 +313,6 @@ Core.prototype.onPlaySound = function(event){
     var finalVolume = config.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
     if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
-        console.log('playing sound');
     }
 };
 

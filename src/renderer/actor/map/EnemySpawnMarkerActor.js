@@ -1,4 +1,5 @@
-var BaseActor = require("renderer/actor/BaseActor");
+var BaseActor = require('renderer/actor/BaseActor');
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function EnemySpawnMarkerActor(config){
     Object.apply(this, config);
@@ -6,49 +7,45 @@ function EnemySpawnMarkerActor(config){
 }
 
 EnemySpawnMarkerActor.extend(BaseActor);
+EnemySpawnMarkerActor.mixin(ParticleMixin);
 
 EnemySpawnMarkerActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAdd',{
-        positionX: this.position[0],
-        positionY: this.position[1],
+    this.createParticle({
+        particleClass: 'particleAdd',
         colorR: 0.5,
         colorG: 0.3,
         colorB: 1,
         scale: Utils.rand(this.timer/5, this.timer/5 + 20),
         alpha: this.timer/480,
         alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleRotation: 0,
         lifeTime: 2
     });
 
-    this.particleManager.createParticle('particleAdd',{
-        positionX: this.position[0],
-        positionY: this.position[1],
+    this.createParticle({
+        particleClass: 'particleAdd',
         colorR: 1,
         colorG: 1,
         colorB: 1,
         scale: Utils.rand(this.timer/10, this.timer/10 + 10),
         alpha: this.timer/480,
         alphaMultiplier: 0.8,
-        particleVelocity: 0,
-        particleRotation: 0,
         lifeTime: 2
     });
 
     for(let i = 0; i < this.timer/15; i++){
         let rotation = Utils.rand(0,360);
         var offsetPosition = Utils.rotationToVector(rotation, Utils.rand(20,30));
-        this.particleManager.createParticle('particleAdd',{
-            positionX: this.position[0] + offsetPosition[0],
-            positionY: this.position[1] + offsetPosition[1],
+        this.createParticle({
+            particleClass: 'particleAdd',
+            offsetPositionX: offsetPosition[0],
+            offsetPositionY: offsetPosition[1],
             colorR: 0.5,
             colorG: 0.3,
             colorB: 1,
             scale: 0.4 + this.timer/300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
-            particleVelocity: -(Utils.rand(this.timer/15,this.timer/10)/10),
+            particleVelocity: -(Utils.rand(this.timer/15, this.timer/10)/10),
             particleRotation: rotation,
             speedZ: Utils.rand(-40, 40) / 100,
             lifeTime: 12,
@@ -60,9 +57,8 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
 EnemySpawnMarkerActor.prototype.onDeath = function(){
     var pointCount = 8;
     for (let i = 0; i < pointCount; i++){
-        this.particleManager.createParticle('particleAdd',{
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.createParticle({
+            particleClass: 'particleAdd',
             colorR: 0.5,
             colorG: 0.3,
             colorB: 1,
@@ -74,9 +70,8 @@ EnemySpawnMarkerActor.prototype.onDeath = function(){
             lifeTime: 5
         });
 
-        this.particleManager.createParticle('particleAdd',{
-            positionX: this.position[0],
-            positionY: this.position[1],
+        this.createParticle({
+            particleClass: 'particleAdd',
             colorR: 1,
             colorG: 1,
             colorB: 1,

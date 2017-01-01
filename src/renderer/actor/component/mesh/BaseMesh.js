@@ -23,12 +23,14 @@ function BaseMesh(config){
 BaseMesh.extend(THREE.Mesh);
 
 BaseMesh.prototype.update = function(){
+    let position = this.actor.getPosition();
+    let rotation = this.actor.getRotation();
     if(this.actor){
-        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], this.actor.rotation * -1);
-        this.position.x = this.actor.position[0] + offsetVector[0];
-        this.position.y = this.actor.position[1] + offsetVector[1];
-        this.position.z = this.actor.positionZ + this.positionZOffset;
-        this.rotation.z = this.actor.rotation + this.rotationOffset;
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], rotation * -1);
+        this.position.x = position[0] + offsetVector[0];
+        this.position.y = position[1] + offsetVector[1];
+        this.position.z = this.actor._positionZ + this.positionZOffset;
+        this.rotation.z = rotation + this.rotationOffset;
     }
 };
 

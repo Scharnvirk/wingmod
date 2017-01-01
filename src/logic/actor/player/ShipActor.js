@@ -1,9 +1,9 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseBrain = require("logic/actor/component/ai/BaseBrain");
-var BaseActor = require("logic/actor/BaseActor");
-var WeaponSystem = require("logic/actor/component/WeaponSystem");
-var ActorFactory = require("shared/ActorFactory")('logic');
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var WeaponSystem = require('logic/actor/component/WeaponSystem');
+var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
+var InputMixin = require('logic/actor/mixin/InputMixin');
 
 function ShipActor(config){
     config = config || [];
@@ -29,6 +29,7 @@ function ShipActor(config){
 }
 
 ShipActor.extend(BaseActor);
+ShipActor.mixin(InputMixin);
 
 ShipActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
@@ -44,73 +45,6 @@ ShipActor.prototype.playerUpdate = function(inputState){
         this.applyThrustInput(inputState);
         this.applyLookAtAngleInput(inputState);
         this.applyWeaponInput(inputState);
-    }
-};
-
-ShipActor.prototype.applyLookAtAngleInput = function(inputState){
-    this.angleForce = 0;
-
-    var lookTarget = Utils.angleToVector(inputState.mouseRotation,1);
-    var angleVector = Utils.angleToVector(this.body.angle, 1);
-    var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
-
-    if (angle < 180 && angle > 0) {
-        this.angleForce = Math.min(angle/this.stepAngle, 1) * -1;
-    }
-
-    if (angle >= 180 && angle < 360) {
-        this.angleForce = Math.min((360-angle)/this.stepAngle, 1);
-    }
-
-    if (inputState.q) {
-        this.angleForce = 1;
-    }
-
-    if (inputState.e) {
-        this.angleForce = -1;
-    }
-
-    this.lastInputStateX = inputState.lookX;
-    this.lastInputStateY = inputState.lookY;
-};
-
-ShipActor.prototype.applyThrustInput = function(inputState){
-    this.thrust = 0;
-    this.horizontalThrust = 0;
-
-    if (inputState.a) {
-        this.horizontalThrust = -1;
-    }
-
-    if (inputState.d) {
-        this.horizontalThrust = 1;
-    }
-
-    if (inputState.w) {
-        this.thrust = 1;
-    }
-
-    if (inputState.s) {
-        this.thrust = -1;
-    }
-};
-
-ShipActor.prototype.applyWeaponInput = function(inputState){
-    if(!inputState[this.hudModifier]){
-        if (inputState.mouseLeft){
-            this.primaryWeaponSystem.shoot();
-        } else {
-            this.primaryWeaponSystem.stopShooting();
-        }
-
-        if (inputState.mouseRight){
-            this.secondaryWeaponSystem.shoot();
-        } else {
-            this.secondaryWeaponSystem.stopShooting();
-        }
-    } else {
-        this.primaryWeaponSystem.stopShooting();
-        this.secondaryWeaponSystem.stopShooting();
     }
 };
 
@@ -134,51 +68,42 @@ ShipActor.prototype.createSecondaryWeaponSystem = function(){
     });
 };
 
+ShipActor.prototype.switchWeapon = function(weaponConfig){
+    switch(weaponConfig.index){
+    case 0:
+        this.primaryWeaponSystem.switchWeapon(weaponConfig.weapon);
+        break;
+    case 1:
+        this.secondaryWeaponSystem.switchWeapon(weaponConfig.weapon);
+        break;
+    }
+};
+
 ShipActor.prototype.onDeath = function(){
-    for(let i = 0; i < 40; i++){
-        this.manager.addNew({
-            classId: ActorFactory.CHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(0,100)
-        });
-    }
-    for(let i = 0; i < 5; i++){
-        this.manager.addNew({
-            classId: ActorFactory.BOOMCHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(0,50)
-        });
-    }
-    this.body.dead = true;
-    this.manager.endGame();
-    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this});
+    this.spawn({
+        amount: 40,
+        classId: ActorFactory.CHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
+    this.spawn({
+        amount: 5,
+        classId: ActorFactory.BOOMCHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
+
+    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
 };
 
 ShipActor.prototype.onHit = function(){
-    if(Utils.rand(8, 10) == 10){
-        this.manager.addNew({
-            classId: ActorFactory.CHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(50, 100)
-        });
-    }
-};
-
-ShipActor.prototype.switchWeapon = function(weaponConfig){
-    switch(weaponConfig.index){
-        case 0:
-            this.primaryWeaponSystem.switchWeapon(weaponConfig.weapon);
-            break;
-        case 1:
-            this.secondaryWeaponSystem.switchWeapon(weaponConfig.weapon);
-            break;
-    }
+    this.spawn({
+        amount: 1,
+        probability: 0.5,
+        classId: ActorFactory.CHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
 };
 
 module.exports = ShipActor;

@@ -43,15 +43,12 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
     }
 
     if(!this.created){
-        for (let i = 0; i < mobsToSpawn; i ++ ){
-            this.manager.addNew({
-                classId: enemyType,
-                positionX: this.body.position[0] + Utils.rand(-1,1) * mobsToSpawn - 1,
-                positionY: this.body.position[1] + Utils.rand(-1,1) * mobsToSpawn - 1,
-                angle: Utils.rand(0,360),
-                velocity: Utils.rand(50, 100)
-            });
-        }
+        this.spawn({
+            amount: mobsToSpawn,
+            classId: enemyType,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
         this.created = true;
     }
 

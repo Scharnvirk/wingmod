@@ -1,33 +1,34 @@
-var BaseStateChangeHandler = require("renderer/actor/component/stateChangeHandler/BaseStateChangeHandler");
+var BaseStateChangeHandler = require('renderer/actor/component/stateChangeHandler/BaseStateChangeHandler');
 
 function BaseActor(config, actorDependencies){
-    Object.assign(this, actorDependencies);
+    this.id = this.id || config.actorId;
+    this.props = this._createProps(this.props || {});
+    this.state = this._createState(this.state || {});
+    this.timer = 0;   
 
-    this.manager = config.manager;
+    this._manager = config.manager;
+    this._particleManager = actorDependencies.particleManager;
 
-    this.positionZ = 10;
-    this.actorId = config.actorId;
+    this._positionZ = 10;
+    
+    this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);
+    this._logicPosition = new Float32Array([this._position[0],this._position[1]]);
+    this._logicPreviousPosition = new Float32Array([this._position[0],this._position[1]]);
 
-    this.position = new Float32Array([config.positionX || 0, config.positionY || 0]);
-    this.logicPosition = new Float32Array([this.position[0],this.position[1]]);
-    this.logicPreviousPosition = new Float32Array([this.position[0],this.position[1]]);
-
-    this.rotation = config.rotation || 0;
-    this.logicRotation = this.rotation;
-    this.logicPreviousRotation = this.rotation;
+    this._rotation = config.rotation || 0;
+    this._logicRotation = this._rotation;
+    this._logicPreviousRotation = this._rotation;
 
     this.updateFromLogic(config.positionX, config.positionY, config.rotation);
 
-    this.meshes = this.createMeshes() || [];
-
-    this.timer = 0;
-    this.stateChangeHandler = this.createStateHandler();
-
-    this.props = this.props || {};
+    this._meshes = this.createMeshes() || [];
+    this._stateChangeHandler = this.createStateHandler();
 
     if (this.props.isPlayer){
-        this.manager.attachPlayer(this);
+        this._manager.attachPlayer(this);
     }
+
+    Object.assign(this, this._mixinInstanceValues || {});
 }
 
 BaseActor.prototype.applyConfig = function(config){
@@ -36,38 +37,57 @@ BaseActor.prototype.applyConfig = function(config){
     }
 };
 
+BaseActor.prototype.getPosition = function(){
+    return this._position;    
+};
+
+BaseActor.prototype.getRotation = function(){
+    return this._rotation;
+};
+
+BaseActor.prototype.setMeshAt = function(mesh, index){
+    this._meshes[index] = mesh;
+};
+
+BaseActor.prototype.getMeshAt = function(index){
+    return this._meshes[index];
+};
+
+BaseActor.prototype.getOffsetPosition = function(distanceOffset, angleOffset){
+    return Utils.rotationToVector(this._rotation + (angleOffset || 0), (distanceOffset || 0));
+};
+
+BaseActor.prototype.setPosition = function(positionX, positionY){
+    this._position[0] = positionX || 0;
+    this._position[1] = positionY || 0;
+};
+
+BaseActor.prototype.onDeath = function(){};
+
+BaseActor.prototype.onSpawn = function(){};
+
+BaseActor.prototype.customUpdate = function(){};
+
 BaseActor.prototype.update = function(delta){
     this.timer ++;
 
-    this.position[0] = this.logicPreviousPosition[0] + delta * (this.logicPosition[0] - this.logicPreviousPosition[0]);
-    this.position[1] = this.logicPreviousPosition[1] + delta * (this.logicPosition[1] - this.logicPreviousPosition[1]);
-    this.rotation = this.logicPreviousRotation + delta * (this.logicRotation - this.logicPreviousRotation);
+    this._position[0] = this._logicPreviousPosition[0] + delta * (this._logicPosition[0] - this._logicPreviousPosition[0]);
+    this._position[1] = this._logicPreviousPosition[1] + delta * (this._logicPosition[1] - this._logicPreviousPosition[1]);
+    this._rotation = this._logicPreviousRotation + delta * (this._logicRotation - this._logicPreviousRotation);
 
-    if (this.meshes) {
-        for(var i = 0, l = this.meshes.length; i < l; i++){
-            this.meshes[i].update();
+    if (this._meshes) {
+        for(var i = 0, l = this._meshes.length; i < l; i++){
+            this._meshes[i].update();
         }
     }
 
     this.customUpdate();
 };
 
-BaseActor.prototype.customUpdate = function(){};
-
-BaseActor.prototype.updateFromLogic = function(positionX, positionY, rotation){
-    this.logicPreviousPosition[0] = this.logicPosition[0];
-    this.logicPreviousPosition[1] = this.logicPosition[1];
-    this.logicPreviousRotation = this.logicRotation;
-
-    this.logicPosition[0] = positionX || 0;
-    this.logicPosition[1] = positionY || 0;
-    this.logicRotation = rotation || 0;
+BaseActor.prototype.requestUiFlash = function(options){
+    this._manager.requestUiFlash(options);
 };
 
-BaseActor.prototype.setPosition = function(positionX, positionY){
-    this.position[0] = positionX || 0;
-    this.position[1] = positionY || 0;
-};
 
 BaseActor.prototype.createStateHandler = function(){
     return new BaseStateChangeHandler({actor: this});
@@ -78,32 +98,48 @@ BaseActor.prototype.createMeshes = function(){
 };
 
 BaseActor.prototype.handleStateChange = function(newState){
-    this.stateChangeHandler.update(newState);
+    this._stateChangeHandler.update(newState);
 };
 
 BaseActor.prototype.addToScene = function(scene){
-    if (this.meshes){
-        for (let i = 0, l = this.meshes.length; i < l; i++){
-            scene.add(this.meshes[i]);
+    if (this._meshes){
+        for (let i = 0, l = this._meshes.length; i < l; i++){
+            scene.add(this._meshes[i]);
         }
     }
 };
 
 BaseActor.prototype.removeFromScene = function(scene){
-    if (this.meshes){
-        for (let i = 0, l = this.meshes.length; i < l; i++){
-            scene.remove(this.meshes[i]);
+    if (this._meshes){
+        for (let i = 0, l = this._meshes.length; i < l; i++){
+            scene.remove(this._meshes[i]);
         }
     }
 };
 
-BaseActor.prototype.onDeath = function(){
-    this.body.dead = this.props.removeOnHit;
-    if(this.props.soundsOnDeath){
-        this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
-    }
+BaseActor.prototype.updateFromLogic = function(positionX, positionY, rotation){
+    this._logicPreviousPosition[0] = this._logicPosition[0];
+    this._logicPreviousPosition[1] = this._logicPosition[1];
+    this._logicPreviousRotation = this._logicRotation;
+
+    this._logicPosition[0] = positionX || 0;
+    this._logicPosition[1] = positionY || 0;
+    this._logicRotation = rotation || 0;
 };
 
-BaseActor.prototype.onSpawn = function(){};
+BaseActor.prototype._createProps = function(props){
+    let newProps = Object.assign({}, props);
+    if (!newProps.timeout && props.timeoutRandomMin && newProps.timeoutRandomMax){
+        newProps.timeout = Utils.rand(newProps.timeoutRandomMin, newProps.timeoutRandomMax);
+    }
+    return newProps;
+};
+
+BaseActor.prototype._createState = function(state){
+    let newProps = Object.assign({}, this.props);
+    let newState = Object.assign({}, state);
+    return Object.assign(newProps, newState);    
+};
+
 
 module.exports = BaseActor;

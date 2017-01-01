@@ -14,14 +14,16 @@ GameScene.extend(EventEmitter);
 
 GameScene.prototype.fillScene = function(mapBodies){
 
-    var playerActor = this.actorManager.addNew({
+    this.actorManager.addNew({
         classId: ActorFactory.SHIP,
         positionX: 0,
         positionY: 0,
         angle: 0
     });
 
-    for (var i = 0; i < 0; i++){
+    let i;
+
+    for (i = 0; i < 0; i++){
         this.actorManager.addNew({
             classId: ActorFactory.DEBUG,
             positionX: Utils.rand(-100, 100),
@@ -29,40 +31,35 @@ GameScene.prototype.fillScene = function(mapBodies){
             angle: 0
         });
     }
-    //
-    // this.emit({
-    //     type: 'newPlayerActor',
-    //     data: playerActor
-    // });
 
     this.addMapBodies(mapBodies);
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: 0,
-       positionY: 221,
-       angle: Utils.degToRad(180)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: 221,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: 221,
-       angle: Utils.degToRad(180)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: 221,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: 0,
-       positionY: -573,
-       angle: Utils.degToRad(0)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -573,
+        angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: -573,
-       angle: Utils.degToRad(0)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: -573,
+        angle: Utils.degToRad(0)
     });
 };
 
