@@ -23392,7 +23392,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":3,"renderer/Core":213,"renderer/ui/Ui":294,"shared/Constants":311,"shared/EventEmitter":312,"shared/Utils":313}],180:[function(require,module,exports){
+},{"domready":3,"renderer/Core":213,"renderer/ui/Ui":292,"shared/Constants":309,"shared/EventEmitter":310,"shared/Utils":311}],180:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -23593,7 +23593,7 @@ BaseActor.prototype._createState = function (state) {
 
 module.exports = BaseActor;
 
-},{"shared/ActorFactory":310}],181:[function(require,module,exports){
+},{"shared/ActorFactory":308}],181:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -24234,7 +24234,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],188:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],188:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -24260,7 +24260,7 @@ MoltenBallThrower.extend(BaseWeapon);
 
 module.exports = MoltenBallThrower;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],189:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],189:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -24283,7 +24283,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],190:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],190:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -24307,7 +24307,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],191:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],191:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -24331,7 +24331,7 @@ Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],192:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],192:[function(require,module,exports){
 "use strict";
 
 var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
@@ -24353,7 +24353,7 @@ RingBlaster.extend(BaseWeapon);
 
 module.exports = RingBlaster;
 
-},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":310}],193:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],193:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24433,7 +24433,7 @@ MookActor.prototype.onHit = function () {
 
 module.exports = MookActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/MoltenBallThrower":188,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":309,"shared/ActorFactory":310}],194:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/MoltenBallThrower":188,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":307,"shared/ActorFactory":308}],194:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -24515,7 +24515,7 @@ OrbotActor.prototype.onHit = function () {
 
 module.exports = OrbotActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/RingBlaster":192,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":309,"shared/ActorFactory":310}],195:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/RingBlaster":192,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":307,"shared/ActorFactory":308}],195:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24597,7 +24597,7 @@ SniperActor.prototype.onHit = function () {
 
 module.exports = SniperActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/RedBlaster":191,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":309,"shared/ActorFactory":310}],196:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/RedBlaster":191,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":307,"shared/ActorFactory":308}],196:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("logic/actor/BaseActor");
@@ -24660,7 +24660,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorFactory":310}],197:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorFactory":308}],197:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -24739,7 +24739,7 @@ EnemySpawnerActor.prototype.onHit = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309,"shared/ActorFactory":310}],198:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307,"shared/ActorFactory":308}],198:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -24910,7 +24910,7 @@ BoomChunkActor.extend(ChunkActor);
 
 module.exports = BoomChunkActor;
 
-},{"logic/actor/object/ChunkActor":202,"shared/ActorConfig":309}],202:[function(require,module,exports){
+},{"logic/actor/object/ChunkActor":202,"shared/ActorConfig":307}],202:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24942,7 +24942,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],203:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],203:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25049,7 +25049,7 @@ ShipActor.prototype.onHit = function () {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/WeaponSystem":182,"logic/actor/component/body/BaseBody":185,"logic/actor/mixin/InputMixin":200,"shared/ActorConfig":309,"shared/ActorFactory":310}],204:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/WeaponSystem":182,"logic/actor/component/body/BaseBody":185,"logic/actor/mixin/InputMixin":200,"shared/ActorConfig":307,"shared/ActorFactory":308}],204:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -25071,7 +25071,7 @@ LaserProjectileActor.prototype.createBody = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],205:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],205:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -25093,7 +25093,7 @@ MoltenProjectileActor.prototype.createBody = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],206:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],206:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -25115,12 +25115,12 @@ PlasmaProjectileActor.prototype.createBody = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],207:[function(require,module,exports){
-"use strict";
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],207:[function(require,module,exports){
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function PulseWaveProjectileActor(config) {
     config = config || [];
@@ -25136,13 +25136,13 @@ PulseWaveProjectileActor.prototype.createBody = function () {
 };
 
 PulseWaveProjectileActor.prototype.customUpdate = function () {
-    this.damage *= 0.97;
-    this.body.updateMassProperties();
+    this.setMass(this.getMass() * 0.96);
+    this.props.damage *= 0.95;
 };
 
 module.exports = PulseWaveProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],208:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],208:[function(require,module,exports){
 "use strict";
 
 var BaseBody = require("logic/actor/component/body/BaseBody");
@@ -25164,7 +25164,7 @@ RedLaserProjectileActor.prototype.createBody = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],209:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],209:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25191,7 +25191,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
 module.exports = RingProjectileActor;
 
-},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":309}],210:[function(require,module,exports){
+},{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],210:[function(require,module,exports){
 'use strict';
 
 function Camera(config) {
@@ -25423,21 +25423,21 @@ ControlsHandler.prototype.sendUpdate = function () {
 module.exports = ControlsHandler;
 
 },{}],213:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ConfigManager = require("renderer/ConfigManager");
-var InputListener = require("renderer/InputListener");
-var ParticleManager = require("renderer/particleSystem/ParticleManager");
-var ActorManager = require("renderer/actor/ActorManager");
-var LogicBus = require("renderer/LogicBus");
-var ControlsHandler = require("renderer/ControlsHandler");
-var SceneManager = require("renderer/scene/SceneManager");
-var AssetManager = require("renderer/assetManagement/assetManager.js");
-var AiImageRenderer = require("renderer/ai/AiImageRenderer");
-var Hud = require("renderer/gameUi/Hud");
-var CanvasHud = require("renderer/gameUi/CanvasHud");
-var FlatHud = require("renderer/gameUi/FlatHud");
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
+var ConfigManager = require('renderer/ConfigManager');
+var InputListener = require('renderer/InputListener');
+var ParticleManager = require('renderer/particleSystem/ParticleManager');
+var ActorManager = require('renderer/actor/ActorManager');
+var LogicBus = require('renderer/LogicBus');
+var ControlsHandler = require('renderer/ControlsHandler');
+var SceneManager = require('renderer/scene/SceneManager');
+var AssetManager = require('renderer/assetManagement/assetManager.js');
+var AiImageRenderer = require('renderer/ai/AiImageRenderer');
+var Hud = require('renderer/gameUi/Hud');
+var CanvasHud = require('renderer/gameUi/CanvasHud');
+var FlatHud = require('renderer/gameUi/FlatHud');
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 
 function Core(config) {
     if (!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -25479,7 +25479,7 @@ Core.prototype.createMainComponents = function () {
     this.sceneManager = new SceneManager({ renderer: this.renderer, core: this });
     this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ sceneManager: this.sceneManager, particleManager: this.particleManager });
-    this.logicBus = new LogicBus({ worker: this.logicWorker });
+    this.logicBus = new LogicBus({ core: this, worker: this.logicWorker });
     this.controlsHandler = new ControlsHandler({ inputListener: this.inputListener, logicBus: this.logicBus });
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager });
@@ -25488,14 +25488,6 @@ Core.prototype.createMainComponents = function () {
 };
 
 Core.prototype.initEventHandlers = function () {
-    this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
-    this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
-    this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
-    this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('actorStateChange', this.onActorStateChange.bind(this));
-    this.logicBus.on('mapDone', this.onMapDone.bind(this));
-    this.logicBus.on('playSound', this.onPlaySound.bind(this));
-
     this.ui.on('startGame', this.onStartGame.bind(this));
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
@@ -25585,7 +25577,7 @@ Core.prototype.getActiveScene = function () {
 };
 
 Core.prototype.onAssetsLoaded = function () {
-    console.log("assets loaded");
+    console.log('assets loaded');
     this.activeScene = 'MainMenuScene';
     this.sceneManager.createScene('MainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
     this.sceneManager.createScene('GameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
@@ -25638,11 +25630,9 @@ Core.prototype.getAiImageObject = function (wallsData) {
     return this.aiImageRenderer.getImageObject(wallsData);
 };
 
-//todo: something better for injecting that actor? //will have it soon //mwahhahahahah
 Core.prototype.onPlayerActorAppeared = function (event) {
     var actor = event.data;
     actor.inputListener = this.inputListener;
-    //
     this.hud.onPlayerActorAppeared(actor);
     this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
@@ -25759,7 +25749,7 @@ Core.prototype.onMapDone = function (event) {
 
 module.exports = Core;
 
-},{"renderer/ConfigManager":211,"renderer/ControlsHandler":212,"renderer/InputListener":214,"renderer/LogicBus":215,"renderer/actor/ActorManager":216,"renderer/ai/AiImageRenderer":242,"renderer/assetManagement/assetManager.js":243,"renderer/assetManagement/level/ChunkStore":246,"renderer/gameUi/CanvasHud":253,"renderer/gameUi/FlatHud":254,"renderer/gameUi/Hud":256,"renderer/particleSystem/ParticleManager":264,"renderer/scene/SceneManager":291}],214:[function(require,module,exports){
+},{"renderer/ConfigManager":211,"renderer/ControlsHandler":212,"renderer/InputListener":214,"renderer/LogicBus":215,"renderer/actor/ActorManager":216,"renderer/ai/AiImageRenderer":242,"renderer/assetManagement/assetManager.js":243,"renderer/assetManagement/level/ChunkStore":246,"renderer/gameUi/CanvasHud":253,"renderer/gameUi/FlatHud":254,"renderer/gameUi/Hud":256,"renderer/particleSystem/ParticleManager":264,"renderer/scene/SceneManager":289}],214:[function(require,module,exports){
 'use strict';
 
 function InputListener(config) {
@@ -25969,19 +25959,47 @@ InputListener.prototype.initPointerLock = function () {
 module.exports = InputListener;
 
 },{}],215:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var WorkerBus = require("shared/WorkerBus");
+var WorkerBus = require('shared/WorkerBus');
 
-function LogicBus(config) {
+function LogicBus() {
     WorkerBus.apply(this, arguments);
+    this.worker.onmessage = this.handleMessage.bind(this);
 }
 
 LogicBus.extend(WorkerBus);
 
-module.exports = WorkerBus;
+//Worker bus events passed directly - too cpu-intensive for events
+LogicBus.prototype.handleMessage = function (message) {
+    switch (message.data.type) {
+        case 'updateActors':
+            this.core.onUpdateActors(message);
+            break;
+        case 'gameEnded':
+            this.core.onGameEnded(message);
+            break;
+        case 'gameFinished':
+            this.core.onGameFinished(message);
+            break;
+        case 'getAiImage':
+            this.core.onGetAiImage(message);
+            break;
+        case 'actorStateChange':
+            this.core.onActorStateChange(message);
+            break;
+        case 'mapDone':
+            this.core.onMapDone(message);
+            break;
+        case 'playSound':
+            this.core.onPlaySound(message);
+            break;
+    }
+};
 
-},{"shared/WorkerBus":314}],216:[function(require,module,exports){
+module.exports = LogicBus;
+
+},{"shared/WorkerBus":312}],216:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -25989,7 +26007,6 @@ var ActorFactory = require('shared/ActorFactory')('renderer');
 function ActorManager(config) {
     config = config || {};
     this.storage = Object.create(null);
-    this.enemies = Object.create(null);
 
     this.scene = null;
     this.framerate = config.framerate || 60;
@@ -26089,16 +26106,27 @@ ActorManager.prototype.handleActorStateChange = function (newActorStates) {
 };
 
 ActorManager.prototype.requestUiFlash = function (flashType) {
-    //wyleci (tez w handlerze stanu agenta ma byc)
     this.emit({
         type: 'requestUiFlash',
         data: flashType
     });
 };
 
+ActorManager.prototype.getEnemies = function () {
+    var _this2 = this;
+
+    var enemies = [];
+    Object.keys(this.storage).forEach(function (actorId) {
+        if (_this2.storage[actorId].props.enemy) {
+            enemies.push(_this2.storage[actorId]);
+        }
+    });
+    return enemies;
+};
+
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":310}],217:[function(require,module,exports){
+},{"shared/ActorFactory":308}],217:[function(require,module,exports){
 'use strict';
 
 var BaseStateChangeHandler = require('renderer/actor/component/stateChangeHandler/BaseStateChangeHandler');
@@ -26262,9 +26290,7 @@ DebugActor.prototype.customUpdate = function () {
     this.createParticle({
         amount: 100,
         particleClass: 'particleNumberAdd',
-        colorR: 1,
-        colorG: 0,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.75,
@@ -26462,7 +26488,7 @@ MookActor.prototype.drawEyes = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":309}],225:[function(require,module,exports){
+},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],225:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -26522,7 +26548,7 @@ OrbotActor.prototype.drawEyes = function () {
 
 module.exports = OrbotActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":309}],226:[function(require,module,exports){
+},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],226:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -26594,7 +26620,7 @@ SniperActor.prototype.drawEyes = function () {
 
 module.exports = SniperActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":309}],227:[function(require,module,exports){
+},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],227:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -26611,9 +26637,7 @@ EnemySpawnMarkerActor.mixin(ParticleMixin);
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
+        color: 'PURPLE',
         scale: Utils.rand(this.timer / 5, this.timer / 5 + 20),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
@@ -26622,9 +26646,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(this.timer / 10, this.timer / 10 + 10),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
@@ -26638,9 +26660,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPosition[0],
             offsetPositionY: offsetPosition[1],
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 0.4 + this.timer / 300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
@@ -26658,9 +26678,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
     for (var i = 0; i < pointCount; i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,
@@ -26671,9 +26689,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,
@@ -26809,7 +26825,7 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/mixin/ParticleMixin":231,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":309}],229:[function(require,module,exports){
+},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/mixin/ParticleMixin":231,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],229:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -26847,25 +26863,20 @@ module.exports = BobMixin;
 'use strict';
 
 var ParticleMixin = {
-
     createPremade: function createPremade(config) {
         config = config || {};
-        this._particleManager.createPremade(config.premadeName, Object.assign({
-            position: [this._position[0] + (config.offsetPositionX || 0), this._position[1] + (config.offsetPositionY || 0)],
-            rotation: this._rotation
-        }, config));
+        config.position = [this._position[0] + (config.offsetPositionX || 0), this._position[1] + (config.offsetPositionY || 0)];
+        config.rotation = this._rotation;
+        this._particleManager.createPremade(config.premadeName, config);
     },
 
     createParticle: function createParticle(config) {
         config = config || {};
-
         for (var i = 0, l = Utils.randArray(config.amount || 1); i < l; i++) {
             this._particleManager.createParticle(config.particleClass || 'particleNumberAdd', {
                 positionX: this._position[0] + (config.offsetPositionX || 0),
                 positionY: this._position[1] + (config.offsetPositionY || 0),
-                colorR: config.colorR || 1,
-                colorG: config.colorG || 1,
-                colorB: config.colorB || 1,
+                color: config.color,
                 scale: Utils.randArray(config.scale || 1),
                 alpha: Utils.randArray(config.alpha || 1),
                 alphaMultiplier: Utils.randArray(config.alphaMultiplier || 1),
@@ -26955,9 +26966,7 @@ ChunkActor.prototype.customUpdate = function () {
             particleClass: 'smokePuffAlpha',
             offsetPositionX: Utils.rand(-2, 2),
             offsetPositionY: Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: Utils.rand(2, 5),
             alpha: 0.4,
             alphaMultiplier: 0.9,
@@ -26974,9 +26983,7 @@ ChunkActor.prototype.onDeath = function () {
             particleClass: 'smokePuffAlpha',
             offsetPositionX: Utils.rand(-1, 1),
             offsetPositionY: Utils.rand(-1, 1),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: Utils.rand(2, 5),
             alpha: 0.6,
             alphaMultiplier: 0.95,
@@ -27129,7 +27136,7 @@ ShipActor.prototype.doEngineGlow = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/component/mesh/RavierMesh":221,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":309}],236:[function(require,module,exports){
+},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/component/mesh/RavierMesh":221,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],236:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27137,9 +27144,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function LaserProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 0.3;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 LaserProjectileActor.extend(BaseActor);
@@ -27157,9 +27161,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 LaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: "BLUE",
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -27168,9 +27170,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: "BLUE",
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -27189,9 +27189,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function MoltenProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 0.1;
 }
 
 MoltenProjectileActor.extend(BaseActor);
@@ -27209,9 +27206,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 MoltenProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'ORANGE',
         scale: 60,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -27221,9 +27216,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'ORANGE',
         scale: 30,
         alpha: 0.6,
         alphaMultiplier: 0.7,
@@ -27242,9 +27235,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function PlasmaProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 0.3;
-    this.colorG = 1;
-    this.colorB = 0.5;
 }
 
 PlasmaProjectileActor.extend(BaseActor);
@@ -27262,9 +27252,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 PlasmaProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 7,
         particleVelocity: 1,
@@ -27277,9 +27265,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         particleClass: 'particleAdd',
         offsetPositionX: offsetPosition[0],
         offsetPositionY: offsetPosition[1],
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 7,
         particleVelocity: 1,
@@ -27289,9 +27275,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         scale: 20,
         alpha: 0.4,
         alphaMultiplier: 0.7,
@@ -27311,9 +27295,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function PulseWaveProjectileActor(config) {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 PulseWaveProjectileActor.extend(BaseActor);
@@ -27330,9 +27311,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: 2 - 2 / edgeOffset * Math.abs(i),
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 30,
             alphaMultiplier: 0.4,
@@ -27349,9 +27328,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             offsetPositionX: Utils.rand(-4, 4),
             offsetPositionY: Utils.rand(-4, 4),
             positionZ: Utils.rand(-5, 5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: Utils.rand(1, 40),
             alpha: Utils.rand(3, 10) / 10 - this.timer / 30,
             alphaMultiplier: 0.7,
@@ -27364,9 +27341,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
     for (var _i = 0; _i < 30 - this.timer * 3; _i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'BLUE',
             scale: Utils.rand(2, 7) / 10,
             alpha: 1 - this.timer / 30,
             alphaMultiplier: 0.94,
@@ -27381,9 +27356,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
 PulseWaveProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'BLUE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -27392,9 +27365,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'BLUE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -27413,9 +27384,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RedLaserProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 RedLaserProjectileActor.extend(BaseActor);
@@ -27433,9 +27401,7 @@ RedLaserProjectileActor.prototype.onDeath = function () {
 RedLaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -27444,9 +27410,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 15,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -27465,9 +27429,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RingProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 RingProjectileActor.extend(BaseActor);
@@ -27485,9 +27446,7 @@ RingProjectileActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: 2 - 2 / edgeOffset * Math.abs(i),
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 100,
             alphaMultiplier: 0.4,
@@ -27503,9 +27462,7 @@ RingProjectileActor.prototype.onDeath = function () {
         this.createParticle({
             particleClass: 'particleAdd',
             positionZ: Utils.rand(-5, 5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: Utils.rand(1, 40),
             alpha: Utils.rand(3, 10) / 10 - this.timer / 100,
             alphaMultiplier: 0.7,
@@ -27518,9 +27475,7 @@ RingProjectileActor.prototype.onDeath = function () {
     for (var _i = 0; _i < 100 - this.timer; _i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'PURPLE',
             scale: Utils.rand(2, 7) / 10,
             alpha: 1 - this.timer / 100,
             alphaMultiplier: 0.94,
@@ -27535,9 +27490,7 @@ RingProjectileActor.prototype.onDeath = function () {
 RingProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -27548,9 +27501,7 @@ RingProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -28289,10 +28240,10 @@ CanvasHud.prototype.drawBuffer = function (bufferCanvas) {
 module.exports = CanvasHud;
 
 },{}],254:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var WeaponSwitcher = require("renderer/gameUi/WeaponSwitcher");
-var TextSprite = require("renderer/gameUi/TextSprite");
+var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
+var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config) {
     Object.assign(this, config);
@@ -28301,6 +28252,7 @@ function FlatHud(config) {
     if (!this.renderer) throw new Error('No renderer defined for FlatHud!');
 
     this.activationKey = 'shift';
+
     this.switchersConfig = [{
         rotation: Utils.degToRad(90),
         switchKey: 'mouseLeft'
@@ -28328,7 +28280,7 @@ FlatHud.prototype.update = function () {
     if (this.actor && !this.actor.dead && this.hudActive) {
         var gameSceneCamera = this.sceneManager.get('GameScene').camera;
         var hudSceneCamera = this.sceneManager.get('FlatHudScene').camera;
-        var actorPosition = Utils.objToScreenPosition(this.actor, this.renderer, gameSceneCamera);
+        var actorPosition = Utils.gamePositionToScreenPosition(this.actor.getPosition(), this.renderer, gameSceneCamera);
         var coefficient = hudSceneCamera.viewWidth / document.documentElement.clientWidth / this.configManager.config.resolution;
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
@@ -28484,9 +28436,9 @@ function Hud(config) {
 Hud.extend(EventEmitter);
 
 Hud.prototype.update = function () {
-    if (this.actor && !this.actor.dead) {
-        // this.drawRadar();
-        // this.drawHealthBar(this.actor);
+    if (this.actor && this.actor.state.hp > 0) {
+        this.drawRadar();
+        this.drawHealthBar(this.actor);
     }
 };
 
@@ -28495,22 +28447,22 @@ Hud.prototype.onPlayerActorAppeared = function (actor) {
 };
 
 Hud.prototype.drawRadar = function () {
-    for (var enemyId in this.actorManager.enemies) {
-        var enemyActor = this.actorManager.enemies[enemyId];
-        var rotation = Utils.rotationBetweenPoints(enemyActor.position, this.actor.position);
+    var actorPosition = this.actor.getPosition();
+    var enemies = this.actorManager.getEnemies();
+    for (var enemyId in enemies) {
+        var enemyActor = enemies[enemyId];
+        var rotation = Utils.rotationBetweenPoints(enemyActor.getPosition(), actorPosition);
         var offsetPosition = Utils.rotationToVector(rotation + Math.PI, 12);
 
         this.drawHealthBar(enemyActor);
 
         this.particleManager.createParticle('particleAddHUD', {
-            positionX: this.actor.position[0] + offsetPosition[0],
-            positionY: this.actor.position[1] + offsetPosition[1],
+            positionX: actorPosition[0] + offsetPosition[0],
+            positionY: actorPosition[1] + offsetPosition[1],
             positionZ: -Constants.DEFAULT_POSITION_Z,
-            colorR: 1,
-            colorG: 0,
-            colorB: 0,
+            color: 'DEEPRED',
             scale: 0.75,
-            alpha: 1,
+            alpha: 0.6,
             alphaMultiplier: 1,
             particleVelocity: 0,
             particleRotation: 0,
@@ -28520,58 +28472,29 @@ Hud.prototype.drawRadar = function () {
 };
 
 Hud.prototype.drawHealthBar = function (otherActor) {
-    var hpPercentage = otherActor.hp / otherActor.hp;
-    var hpBarCount = otherActor.hpBarCount || this.defaultHpBarCount;
+    var actorPosition = this.actor.getPosition();
+    var actorRotation = this.actor.getRotation();
+    var otherActorPosition = otherActor.getPosition();
+    var hpPercentage = otherActor.state.hp / otherActor.props.hp;
+    var hpBarCount = otherActor.props.hpBarCount || this.defaultHpBarCount;
+    var positionZ = otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z;
+    var rotation = otherActor !== this.actor ? Utils.rotationBetweenPoints(otherActorPosition, actorPosition) : actorRotation;
     for (var i = 0; i < hpBarCount; i++) {
-        var rotation = otherActor !== this.actor ? Utils.rotationBetweenPoints(otherActor.position, this.actor.position) : this.actor.rotation;
         var offsetPosition = Utils.rotationToVector(rotation + Utils.degToRad(hpBarCount / 2 * 3) - Utils.degToRad(i * 3) + Math.PI, 8);
         this.particleManager.createParticle('particleAddHUD', {
-            positionX: otherActor.position[0] + offsetPosition[0],
-            positionY: otherActor.position[1] + offsetPosition[1],
-            positionZ: otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z,
-            colorR: i >= hpPercentage * hpBarCount ? 1 : 0,
-            colorG: i < hpPercentage * hpBarCount ? 1 : 0,
-            colorB: 0,
+            positionX: otherActorPosition[0] + offsetPosition[0],
+            positionY: otherActorPosition[1] + offsetPosition[1],
+            positionZ: positionZ,
+            color: i >= hpPercentage * hpBarCount ? 'GREEN' : "RED",
             scale: 0.75,
-            alpha: 1,
-            alphaMultiplier: 1,
             particleVelocity: 0,
             particleRotation: rotation,
+            alpha: 1,
+            alphaMultiplier: 1,
             lifeTime: 1,
             spriteNumber: 3
         });
     }
-};
-
-Hud.prototype.drawCrosshairs = function (actor) {
-    this.particleManager.createPremade('CrosshairBlue', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: 9,
-        distance: 20
-    });
-    this.particleManager.createPremade('CrosshairBlue', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: -9,
-        distance: 20
-    });
-    this.particleManager.createPremade('CrosshairGreen', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: 18,
-        distance: 16
-    });
-    this.particleManager.createPremade('CrosshairGreen', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: -18,
-        distance: 16
-    });
 };
 
 module.exports = Hud;
@@ -28934,10 +28857,11 @@ function ParticleConfigCreator(config) {
         smokePuffAlpha: new THREE.ShaderMaterial({
             uniforms: {
                 map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") },
-                time: { type: "f", value: 1.0 }
+                time: { type: "f", value: 1.0 },
+                spriteSheetLength: { type: "f", value: 1.0 }
             },
-            vertexShader: ParticleShaders.vertexShader,
-            fragmentShader: ParticleShaders.fragmentShader,
+            vertexShader: ParticleShaders.vertexShaderSpriteSheet,
+            fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
             transparent: true,
             depthWrite: false
         }),
@@ -29042,15 +28966,13 @@ ParticleConfigCreator.prototype.createPremades = function () {
         RedEyeBig: require("renderer/particleSystem/premade/RedEyeBig"),
         PurpleEye: require("renderer/particleSystem/premade/PurpleEye"),
         PurpleLaserTrail: require("renderer/particleSystem/premade/PurpleLaserTrail"),
-        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks"),
-        CrosshairBlue: require("renderer/particleSystem/premade/CrosshairBlue"),
-        CrosshairGreen: require("renderer/particleSystem/premade/CrosshairGreen")
+        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks")
     };
 };
 
 module.exports = ParticleConfigCreator;
 
-},{"renderer/particleSystem/ParticleShaders":265,"renderer/particleSystem/premade/BlueLaserTrail":266,"renderer/particleSystem/premade/BlueSparks":267,"renderer/particleSystem/premade/CrosshairBlue":268,"renderer/particleSystem/premade/CrosshairGreen":269,"renderer/particleSystem/premade/EngineGlowMedium":270,"renderer/particleSystem/premade/EngineGlowSmall":271,"renderer/particleSystem/premade/GreenBoomTiny":272,"renderer/particleSystem/premade/GreenTrail":273,"renderer/particleSystem/premade/OrangeBoomLarge":274,"renderer/particleSystem/premade/OrangeBoomMedium":275,"renderer/particleSystem/premade/OrangeBoomTiny":276,"renderer/particleSystem/premade/OrangeTrail":277,"renderer/particleSystem/premade/PurpleEye":278,"renderer/particleSystem/premade/PurpleLaserTrail":279,"renderer/particleSystem/premade/PurpleSparks":280,"renderer/particleSystem/premade/RedEye":281,"renderer/particleSystem/premade/RedEyeBig":282,"renderer/particleSystem/premade/RedLaserTrail":283,"renderer/particleSystem/premade/RedSparks":284,"renderer/particleSystem/premade/SmokePuffLargeLong":285,"renderer/particleSystem/premade/SmokePuffSmall":286}],263:[function(require,module,exports){
+},{"renderer/particleSystem/ParticleShaders":265,"renderer/particleSystem/premade/BlueLaserTrail":266,"renderer/particleSystem/premade/BlueSparks":267,"renderer/particleSystem/premade/EngineGlowMedium":268,"renderer/particleSystem/premade/EngineGlowSmall":269,"renderer/particleSystem/premade/GreenBoomTiny":270,"renderer/particleSystem/premade/GreenTrail":271,"renderer/particleSystem/premade/OrangeBoomLarge":272,"renderer/particleSystem/premade/OrangeBoomMedium":273,"renderer/particleSystem/premade/OrangeBoomTiny":274,"renderer/particleSystem/premade/OrangeTrail":275,"renderer/particleSystem/premade/PurpleEye":276,"renderer/particleSystem/premade/PurpleLaserTrail":277,"renderer/particleSystem/premade/PurpleSparks":278,"renderer/particleSystem/premade/RedEye":279,"renderer/particleSystem/premade/RedEyeBig":280,"renderer/particleSystem/premade/RedLaserTrail":281,"renderer/particleSystem/premade/RedSparks":282,"renderer/particleSystem/premade/SmokePuffLargeLong":283,"renderer/particleSystem/premade/SmokePuffSmall":284}],263:[function(require,module,exports){
 'use strict';
 
 function ParticleGenerator(config) {
@@ -29076,34 +28998,48 @@ function ParticleGenerator(config) {
 
     this.geometry = this.createGeometry();
     this.tick = 0;
+
+    this.particleColors = this.createColors();
 }
 
 ParticleGenerator.extend(THREE.Points);
 
+ParticleGenerator.prototype.createColors = function () {
+    return {
+        //red + blue*512 + green*512*512
+        GREEN: 120 + 256 * 512 + 200 * 262144,
+        BLUE: 100 + 100 * 512 + 256 * 262144,
+        ORANGE: 256 + 150 * 512 + 50 * 262144,
+        YELLOW: 256 + 200 * 512 + 100 * 262144,
+        RED: 256 + 200 * 512 + 200 * 262144,
+        PURPLE: 100 + 0 * 512 + 256 * 262144,
+        WHITE: 256 + 256 * 512 + 256 * 262144,
+        DEEPRED: 256 + 0 * 512 + 0 * 262144
+    };
+};
+
 ParticleGenerator.prototype.createGeometry = function () {
     var geometry = new THREE.BufferGeometry();
 
-    var vertices = new Float32Array(this.maxParticles * 3);
-    var colors = new Float32Array(this.maxParticles * 3);
-    var speeds = new Float32Array(this.maxParticles * 3);
-    var alphas = new Float32Array(this.maxParticles * 2);
+    var positions = new Float32Array(this.maxParticles * 3);
+    var speeds = new Float32Array(this.maxParticles * 4);
     var configs = new Float32Array(this.maxParticles * 4);
 
     for (var i = 0; i < this.maxParticles; i++) {
-        vertices[i * 3 + 0] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
-        vertices[i * 3 + 1] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
-        vertices[i * 3 + 2] = 0;
+        positions[i * 3 + 0] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
+        positions[i * 3 + 1] = Utils.rand(-this.positionHiddenFromView, this.positionHiddenFromView);
+        positions[i * 3 + 2] = 0;
     }
 
-    geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
-    geometry.addAttribute('color', new THREE.BufferAttribute(colors, 3));
-    geometry.addAttribute('speed', new THREE.BufferAttribute(speeds, 3));
-    geometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 2));
+    geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.addAttribute('speed', new THREE.BufferAttribute(speeds, 4));
     geometry.addAttribute('configs', new THREE.BufferAttribute(configs, 4));
 
+    geometry.attributes.position.dynamic = true;
+    geometry.attributes.speed.dynamic = true;
+    geometry.attributes.configs.dynamic = true;
+
     this.positionHandle = geometry.attributes.position.array;
-    this.alphaHandle = geometry.attributes.alpha.array;
-    this.colorHandle = geometry.attributes.color.array;
     this.speedHandle = geometry.attributes.speed.array;
     this.configsHandle = geometry.attributes.configs.array;
 
@@ -29128,7 +29064,6 @@ ParticleGenerator.prototype.reset = function () {
 ParticleGenerator.prototype.deactivate = function (particleId) {
     this.positionHandle[particleId * 3] = this.positionHiddenFromView;
     this.positionHandle[particleId * 3 + 1] = this.positionHiddenFromView;
-    this.alphaHandle[particleId * 2 + 1] = 0;
 };
 
 ParticleGenerator.prototype.update = function () {
@@ -29139,31 +29074,28 @@ ParticleGenerator.prototype.update = function () {
 
     this.geometry.attributes.position.needsUpdate = true;
     this.geometry.attributes.speed.needsUpdate = true;
-    this.geometry.attributes.alpha.needsUpdate = true;
-    this.geometry.attributes.color.needsUpdate = true;
     this.geometry.attributes.configs.needsUpdate = true;
 
     this.frameResolution = this.resolutionCoefficient * 1 / window.devicePixelRatio;
 };
 
 ParticleGenerator.prototype.initParticle = function (particleId, config) {
+    var particle4 = particleId * 4;
     var particle3 = particleId * 3;
     var offsetPosition = Utils.rotationToVector(config.particleRotation, config.particleVelocity);
     this.positionHandle[particle3] = config.positionX;
     this.positionHandle[particle3 + 1] = config.positionY;
     this.positionHandle[particle3 + 2] = config.positionZ || 0;
-    this.colorHandle[particle3] = config.colorR;
-    this.colorHandle[particle3 + 1] = config.colorG;
-    this.colorHandle[particle3 + 2] = config.colorB;
-    this.alphaHandle[particleId * 2] = config.alpha;
-    this.alphaHandle[particleId * 2 + 1] = config.alphaMultiplier;
-    this.speedHandle[particle3] = offsetPosition[0];
-    this.speedHandle[particle3 + 1] = offsetPosition[1];
-    this.speedHandle[particle3 + 2] = config.speedZ || 0;
-    this.configsHandle[particleId * 4] = config.scale * this.frameResolution;
-    this.configsHandle[particleId * 4 + 1] = this.tick;
-    this.configsHandle[particleId * 4 + 2] = config.lifeTime;
-    this.configsHandle[particleId * 4 + 3] = config.spriteNumber || 0;
+
+    this.speedHandle[particle4] = offsetPosition[0];
+    this.speedHandle[particle4 + 1] = offsetPosition[1];
+    this.speedHandle[particle4 + 2] = config.speedZ || 0;
+    this.speedHandle[particle4 + 3] = (config.alpha || 0) + 1024 * (config.alphaMultiplier * 1000 || 0);
+
+    this.configsHandle[particle4] = config.scale * this.frameResolution;
+    this.configsHandle[particle4 + 1] = this.tick;
+    this.configsHandle[particle4 + 2] = config.lifeTime + 1024 * (config.spriteNumber || 0); // + 1048576 * 12; // this.particleColors[config.color || 0];
+    this.configsHandle[particle4 + 3] = this.particleColors[config.color || 0];
 };
 
 ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCoefficient) {
@@ -29253,50 +29185,8 @@ module.exports = ParticleManager;
 "use strict";
 
 var ParticleShaders = {
-    vertexShader: " \
-        attribute vec2 alpha; \
-        attribute vec3 speed; \
-        attribute float alphaMultiplier; \
-        attribute vec3 color; \
-        attribute vec3 configs; \
-        \
-        varying float vAlpha; \
-        varying vec3 vColor; \
-        \
-        uniform float time; \
-        \
-        attribute float type;\
-        \
-        void main() { \
-            vec4 mvPosition; \
-            vec3 vPosition; \
-            if ((time - configs[1]) <= configs[2]){ \
-                vAlpha = alpha.x * pow(alpha.y, (time - configs[1])); \
-                vColor = color; \
-                vPosition = position; \
-                vPosition.x += speed.x * (time - configs[1]); \
-                vPosition.y += speed.y * (time - configs[1]); \
-                vPosition.z += speed.z * (time - configs[1]); \
-                mvPosition = modelViewMatrix * vec4( vPosition, 1.0 ); \
-                gl_PointSize = configs[0] * (1000.0 / - mvPosition.z);  \
-            } \
-            gl_Position = projectionMatrix * mvPosition; \
-        }",
-
-    fragmentShader: " \
-        uniform sampler2D map; \
-        varying vec3 vColor; \
-        varying float vAlpha; \
-        void main() { \
-			gl_FragColor = vec4(vColor, vAlpha) * texture2D( map, gl_PointCoord ); \
-        } \
-    ",
-
     vertexShaderSpriteSheet: " \
-        attribute vec2 alpha; \
-        attribute vec3 speed; \
-        attribute float alphaMultiplier; \
-        attribute vec3 color; \
+        attribute vec4 speed; \
         attribute vec4 configs; \
         \
         varying float vAlpha; \
@@ -29311,11 +29201,30 @@ var ParticleShaders = {
         attribute float type;\
         \
         void main() { \
+            float configSubStore = configs[2]; \
+            float spriteNumber = floor(configSubStore / 1024.0); \
+            configSubStore = configSubStore - spriteNumber * 1024.0; \
+            float lifeTime = configSubStore; \
+            \
+            float alphaSubStore = speed[3]; \
+            float alphaMultiplier = floor(alphaSubStore / 1024.0); \
+            alphaSubStore = alphaSubStore - alphaMultiplier * 1024.0; \
+            float alpha = alphaSubStore; \
+            alphaMultiplier = alphaMultiplier / 1000.0; \
+            \
             vec4 mvPosition; \
             vec3 vPosition; \
-            if ((time - configs[1]) <= configs[2]){ \
-                vAlpha = alpha.x * pow(alpha.y, (time - configs[1])); \
-                vColor = color; \
+            if ((time - configs[1]) <= lifeTime){ \
+                \
+                float colorSubStore = configs[3]; \
+                float colorB = floor(colorSubStore / 262144.0); \
+                colorSubStore = colorSubStore - colorB * 262144.0; \
+                float colorG = floor(colorSubStore / 512.0); \
+                colorSubStore = colorSubStore - colorG * 512.0; \
+                float colorR = colorSubStore; \
+                \
+                vAlpha = alpha * pow(alphaMultiplier, (time - configs[1])); \
+                vColor = vec3(colorR / 256.0, colorG / 256.0, colorB / 256.0); \
                 vPosition = position; \
                 vPosition.x += speed.x * (time - configs[1]); \
                 vPosition.y += speed.y * (time - configs[1]); \
@@ -29324,7 +29233,7 @@ var ParticleShaders = {
                 gl_PointSize = configs[0] * (1000.0 / - mvPosition.z);  \
             } \
             gl_Position = projectionMatrix * mvPosition; \
-            textureCoord = vec2((1.0 / spriteSheetLength) * configs[3], 0.0); \
+            textureCoord = vec2((1.0 / spriteSheetLength) * spriteNumber, 0.0); \
             textureSize = vec2(1.0 / spriteSheetLength, 1.0); \
         }",
 
@@ -29335,8 +29244,6 @@ var ParticleShaders = {
         varying mediump vec2 textureCoord; \
         varying mediump vec2 textureSize; \
         void main() { \
-            float sin_factor = sin(0.02); \
-            float cos_factor = cos(0.02); \
             mediump vec2 realTexCoord = textureCoord + (gl_PointCoord * textureSize); \
             mediump vec4 fragColor = texture2D(map, realTexCoord); \
             gl_FragColor = vec4(vColor, vAlpha) * fragColor; \
@@ -29392,14 +29299,12 @@ module.exports = ParticleShaders;
 'use strict';
 
 module.exports = function (config) {
-    for (var i = 0; i < 44; i++) {
+    for (var i = 0; i < 15; i++) {
         var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.6);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1,
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
@@ -29409,14 +29314,12 @@ module.exports = function (config) {
         });
     }
 
-    for (var _i = 0; _i < 15; _i++) {
+    for (var _i = 0; _i < 5; _i++) {
         var _offsetPosition = Utils.rotationToVector(config.rotation, -_i * 1.8);
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
-            colorR: 0.3,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'BLUE',
             scale: 5,
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
@@ -29435,9 +29338,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 0.8,
-            colorG: 0.8,
-            colorB: 1,
+            color: 'BLUE',
             scale: 0.75,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -29451,9 +29352,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -29465,9 +29364,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 0.8,
-        colorG: 0.8,
-        colorB: 1,
+        color: 'BLUE',
         scale: 2,
         alpha: 1,
         alphaMultiplier: 0.9,
@@ -29479,9 +29376,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29493,9 +29388,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 0.3,
-        colorG: 0.3,
-        colorB: 1,
+        color: 'BLUE',
         scale: 8,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29513,51 +29406,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 0.2,
-        colorG: 0.4,
-        colorB: 1,
-        scale: 2,
-        alpha: 1,
-        alphaMultiplier: 1,
-        particleVelocity: config.distance,
-        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
-        lifeTime: 1,
-        spriteNumber: 1
-    });
-};
-
-},{}],269:[function(require,module,exports){
-'use strict';
-
-module.exports = function (config) {
-    config.particleManager.createParticle('particleAdd', {
-        positionX: config.position[0],
-        positionY: config.position[1],
-        positionZ: config.positionZ,
-        colorR: 0.2,
-        colorG: 1,
-        colorB: 0.6,
-        scale: 2,
-        alpha: 1,
-        alphaMultiplier: 1,
-        particleVelocity: config.distance,
-        particleRotation: config.rotation + Utils.degToRad(config.rotationOffset),
-        lifeTime: 1,
-        spriteNumber: 1
-    });
-};
-
-},{}],270:[function(require,module,exports){
-'use strict';
-
-module.exports = function (config) {
-    config.particleManager.createParticle('particleAdd', {
-        positionX: config.position[0],
-        positionY: config.position[1],
-        positionZ: config.positionZ,
-        colorR: 0.5,
-        colorG: 0.6,
-        colorB: 1,
+        color: 'BLUE',
         scale: Utils.rand(10, 15),
         alpha: 0.4,
         alphaMultiplier: 1,
@@ -29570,9 +29419,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(3, 4),
         alpha: 1,
         alphaMultiplier: 1,
@@ -29582,7 +29429,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],271:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29590,9 +29437,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 0.5,
-        colorG: 0.6,
-        colorB: 1,
+        color: 'BLUE',
         scale: Utils.rand(6, 11),
         alpha: 0.4,
         alphaMultiplier: 1,
@@ -29605,9 +29450,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(2, 3),
         alpha: 1,
         alphaMultiplier: 1,
@@ -29617,7 +29460,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],272:[function(require,module,exports){
+},{}],270:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29626,9 +29469,7 @@ module.exports = function (config) {
             positionX: config.position[0] + Utils.rand(-1, 1),
             positionY: config.position[1] + Utils.rand(-1, 1),
             positionZ: config.positionZ + Utils.rand(-1, 1),
-            colorR: 0.8,
-            colorG: 1,
-            colorB: 0.85,
+            color: 'GREEN',
             scale: Utils.rand(4, 8),
             alpha: 0.6,
             alphaMultiplier: 0.9,
@@ -29642,9 +29483,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 0.8,
-        colorG: 1,
-        colorB: 0.85,
+        color: 'GREEN',
         scale: 40,
         alpha: 1.5,
         alphaMultiplier: 0.4,
@@ -29656,9 +29495,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 10,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29670,9 +29507,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 0.8,
-        colorG: 1,
-        colorB: 0.85,
+        color: 'GREEN',
         scale: 15,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29682,7 +29517,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],273:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29691,9 +29526,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 2.2 - 0.4 * i,
             alpha: 1 - 0.19 * i,
             alphaMultiplier: 0.8,
@@ -29706,9 +29539,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 0.3,
-        colorG: 1,
-        colorB: 0.5,
+        color: 'GREEN',
         scale: Utils.rand(4, 10),
         alpha: 0.5,
         alphaMultiplier: 0.6,
@@ -29718,7 +29549,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],274:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29726,12 +29557,10 @@ module.exports = function (config) {
         config.particleManager.createParticle('smokePuffAlpha', {
             positionX: config.position[0] + Utils.rand(-10, 10),
             positionY: config.position[1] + Utils.rand(-10, 10),
-            colorR: 0.8,
-            colorG: 0.8,
-            colorB: 0.8,
+            color: 'WHITE',
             scale: Utils.rand(20, 50),
             alpha: Utils.rand(0.4, 0.9) / 10 + 0.1,
-            alphaMultiplier: 0.994,
+            alphaMultiplier: 0.996,
             particleVelocity: Utils.rand(0, 10) / 40,
             particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(0, 5) / 500,
@@ -29743,9 +29572,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 0.5,
+            color: 'ORANGE',
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -29759,9 +29586,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 250,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -29773,9 +29598,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.95,
@@ -29787,9 +29610,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.6,
-        colorB: 0.2,
+        color: 'ORANGE',
         scale: 60,
         alpha: 1,
         alphaMultiplier: 0.95,
@@ -29799,7 +29620,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],275:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29807,9 +29628,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('smokePuffAlpha', {
             positionX: config.position[0] + Utils.rand(-10, 10),
             positionY: config.position[1] + Utils.rand(-10, 10),
-            colorR: 1,
-            colorG: 0.95,
-            colorB: 0.9,
+            color: 'WHITE',
             scale: Utils.rand(20, 35),
             alpha: Utils.rand(0.6, 0.9) / 10 + 0.1,
             alphaMultiplier: 0.994,
@@ -29824,9 +29643,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 0.5,
+            color: 'ORANGE',
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -29840,9 +29657,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 220,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -29854,9 +29669,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.95,
@@ -29868,9 +29681,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.6,
-        colorB: 0.2,
+        color: 'ORANGE',
         scale: 60,
         alpha: 1,
         alphaMultiplier: 0.95,
@@ -29880,7 +29691,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],276:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29889,9 +29700,7 @@ module.exports = function (config) {
             positionX: config.position[0] + Utils.rand(-2, 2),
             positionY: config.position[1] + Utils.rand(-2, 2),
             positionZ: config.positionZ + Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 0.73,
+            color: 'ORANGE',
             scale: Utils.rand(3, 6),
             alpha: 0.6,
             alphaMultiplier: 0.9,
@@ -29905,9 +29714,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.8,
-        colorB: 0.73,
+        color: 'ORANGE',
         scale: 35,
         alpha: 1.4,
         alphaMultiplier: 0.4,
@@ -29919,9 +29726,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 8,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29933,9 +29738,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.8,
-        colorB: 0.73,
+        color: 'ORANGE',
         scale: 10,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -29945,7 +29748,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],277:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29954,9 +29757,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1.5,
             alpha: 1,
             alphaMultiplier: 0.8,
@@ -29970,9 +29771,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.1,
+        color: 'ORANGE',
         scale: Utils.rand(5, 11),
         alpha: 0.8,
         alphaMultiplier: 0.6,
@@ -29982,7 +29781,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],278:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -29990,9 +29789,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 5,
         alpha: 0.2,
         alphaMultiplier: 1,
@@ -30006,9 +29803,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0.2,
-        colorB: 1,
+        color: 'WHITE',
         scale: 1.5,
         alpha: 1,
         alphaMultiplier: 1,
@@ -30018,7 +29813,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],279:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30027,9 +29822,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1,
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
@@ -30044,9 +29837,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
-            colorR: 1,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 5,
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
@@ -30057,7 +29848,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],280:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30065,9 +29856,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 0.75,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -30081,9 +29870,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -30095,9 +29882,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.8,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 2,
         alpha: 1,
         alphaMultiplier: 0.9,
@@ -30109,9 +29894,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -30123,9 +29906,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 8,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -30135,7 +29916,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],281:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30143,9 +29924,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0,
-        colorB: 0,
+        color: 'DEEPRED',
         scale: Utils.rand(45, 50) / 10,
         alpha: 0.3,
         alphaMultiplier: 1,
@@ -30158,9 +29937,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0.2,
-        colorB: 0.2,
+        color: 'DEEPRED',
         scale: 1,
         alpha: 0.8,
         alphaMultiplier: 1,
@@ -30170,7 +29947,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],282:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30178,9 +29955,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0,
-        colorB: 0,
+        color: 'DEEPRED',
         scale: 2.5,
         alpha: 0.3,
         alphaMultiplier: 1,
@@ -30193,9 +29968,7 @@ module.exports = function (config) {
         positionX: config.position[0],
         positionY: config.position[1],
         positionZ: config.positionZ,
-        colorR: 1,
-        colorG: 0.2,
-        colorB: 0.2,
+        color: 'DEEPRED',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 1,
@@ -30205,7 +29978,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],283:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30214,9 +29987,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1,
             alpha: 1 - 0.05 * i,
             alphaMultiplier: 0.8,
@@ -30231,9 +30002,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + _offsetPosition[0],
             positionY: config.position[1] + _offsetPosition[1],
-            colorR: 1,
-            colorG: 0.3,
-            colorB: 0.3,
+            color: 'DEEPRED',
             scale: 5,
             alpha: 0.7 - 0.1 * _i,
             alphaMultiplier: 0.6,
@@ -30244,7 +30013,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],284:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30252,9 +30021,7 @@ module.exports = function (config) {
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 0.8,
+            color: 'RED',
             scale: 0.75,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -30268,9 +30035,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -30282,9 +30047,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.8,
-        colorB: 0.8,
+        color: 'RED',
         scale: 2,
         alpha: 1,
         alphaMultiplier: 0.9,
@@ -30296,9 +30059,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -30310,9 +30071,7 @@ module.exports = function (config) {
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.3,
+        color: 'DEEPRED',
         scale: 8,
         alpha: 1,
         alphaMultiplier: 0.8,
@@ -30322,16 +30081,14 @@ module.exports = function (config) {
     });
 };
 
-},{}],285:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
     config.particleManager.createParticle('smokePuffAlpha', {
         positionX: config.position[0] + Utils.rand(-2, 2),
         positionY: config.position[1] + Utils.rand(-2, 2),
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(20, 50),
         alpha: Utils.rand(0, 3) / 10 + 0.1,
         alphaMultiplier: 0.99,
@@ -30342,16 +30099,14 @@ module.exports = function (config) {
     });
 };
 
-},{}],286:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
     config.particleManager.createParticle('smokePuffAlpha', {
         positionX: config.position[0] + Utils.rand(-2, 2),
         positionY: config.position[1] + Utils.rand(-2, 2),
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(2, 5),
         alpha: Utils.rand(0, 3) / 10 + 0.1,
         alphaMultiplier: 0.95,
@@ -30362,7 +30117,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],287:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -30429,7 +30184,7 @@ BaseScene.prototype.testMesh = function (meshClass, scale) {
 
 module.exports = BaseScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],288:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],286:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30483,7 +30238,7 @@ FlatHudScene.prototype.customUpdate = function () {};
 
 module.exports = FlatHudScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/gameUi/FlatHudCamera":255,"renderer/scene/BaseScene":287}],289:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/gameUi/FlatHudCamera":255,"renderer/scene/BaseScene":285}],287:[function(require,module,exports){
 'use strict';
 
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
@@ -30631,7 +30386,7 @@ GameScene.prototype.onPlayerActorAppeared = function (actor) {
 
 module.exports = GameScene;
 
-},{"renderer/Camera":210,"renderer/assetManagement/level/ChunkStore":246,"renderer/map/ChunkMesh":260,"renderer/scene/BaseScene":287}],290:[function(require,module,exports){
+},{"renderer/Camera":210,"renderer/assetManagement/level/ChunkStore":246,"renderer/map/ChunkMesh":260,"renderer/scene/BaseScene":285}],288:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30816,7 +30571,7 @@ MainMenuScene.prototype.lightPowerUp = function () {
 
 module.exports = MainMenuScene;
 
-},{"renderer/Camera":210,"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/scene/BaseScene":287}],291:[function(require,module,exports){
+},{"renderer/Camera":210,"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/scene/BaseScene":285}],289:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30893,7 +30648,7 @@ SceneManager.prototype.getCoreActiveScene = function () {
 
 module.exports = SceneManager;
 
-},{"renderer/scene/BaseScene":287,"renderer/scene/FlatHudScene":288,"renderer/scene/GameScene":289,"renderer/scene/MainMenuScene":290}],292:[function(require,module,exports){
+},{"renderer/scene/BaseScene":285,"renderer/scene/FlatHudScene":286,"renderer/scene/GameScene":287,"renderer/scene/MainMenuScene":288}],290:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -30956,7 +30711,7 @@ module.exports = ReactUi;
 //http://sass-guidelin.es/#architecture
 //https://css-tricks.com/the-debate-around-do-we-even-need-css-anymore/
 
-},{"classnames":2,"react":177,"react-dom":5,"renderer/ui/component/InitialView":296}],293:[function(require,module,exports){
+},{"classnames":2,"react":177,"react-dom":5,"renderer/ui/component/InitialView":294}],291:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -30984,7 +30739,7 @@ var ReactUtils = {
 
 module.exports = ReactUtils;
 
-},{"react":177}],294:[function(require,module,exports){
+},{"react":177}],292:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
@@ -31084,7 +30839,7 @@ Ui.prototype.onSoundConfig = function (data) {
 
 module.exports = Ui;
 
-},{"pubsub-js":4,"renderer/Core":213,"renderer/ui/ReactUi":292}],295:[function(require,module,exports){
+},{"pubsub-js":4,"renderer/Core":213,"renderer/ui/ReactUi":290}],293:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31146,7 +30901,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":2,"react":177,"renderer/ui/component/base/StyledText":303}],296:[function(require,module,exports){
+},{"classnames":2,"react":177,"renderer/ui/component/base/StyledText":301}],294:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31215,7 +30970,7 @@ var InitialView = _react2.default.createClass({
 
 module.exports = InitialView;
 
-},{"classnames":2,"react":177,"renderer/ui/ReactUtils":293,"renderer/ui/component/EndScreen":295,"renderer/ui/component/StartHelp":298,"renderer/ui/component/StartScreen":299,"renderer/ui/component/base/FullScreenEffect":301,"renderer/ui/component/base/Viewport":305,"renderer/ui/component/hud/AmmoTileContainer":307,"renderer/ui/component/hud/WeaponInfoContainer":308}],297:[function(require,module,exports){
+},{"classnames":2,"react":177,"renderer/ui/ReactUtils":291,"renderer/ui/component/EndScreen":293,"renderer/ui/component/StartHelp":296,"renderer/ui/component/StartScreen":297,"renderer/ui/component/base/FullScreenEffect":299,"renderer/ui/component/base/Viewport":303,"renderer/ui/component/hud/AmmoTileContainer":305,"renderer/ui/component/hud/WeaponInfoContainer":306}],295:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31344,7 +31099,7 @@ var SettingsMenu = _react2.default.createClass({
 
 module.exports = SettingsMenu;
 
-},{"classnames":2,"react":177,"renderer/ui/component/base/OptionButton":302,"renderer/ui/component/base/StyledText":303,"renderer/ui/component/base/ToggleButton":304}],298:[function(require,module,exports){
+},{"classnames":2,"react":177,"renderer/ui/component/base/OptionButton":300,"renderer/ui/component/base/StyledText":301,"renderer/ui/component/base/ToggleButton":302}],296:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31494,7 +31249,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":2,"react":177,"renderer/ui/component/base/StyledText":303}],299:[function(require,module,exports){
+},{"classnames":2,"react":177,"renderer/ui/component/base/StyledText":301}],297:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31573,7 +31328,7 @@ var StartScreen = _react2.default.createClass({
 
 module.exports = StartScreen;
 
-},{"classnames":2,"react":177,"renderer/ui/ReactUtils":293,"renderer/ui/component/SettingsMenu":297,"renderer/ui/component/base/Button":300,"renderer/ui/component/base/StyledText":303}],300:[function(require,module,exports){
+},{"classnames":2,"react":177,"renderer/ui/ReactUtils":291,"renderer/ui/component/SettingsMenu":295,"renderer/ui/component/base/Button":298,"renderer/ui/component/base/StyledText":301}],298:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31628,7 +31383,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],301:[function(require,module,exports){
+},{"classnames":2,"pubsub-js":4,"react":177}],299:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31684,7 +31439,7 @@ var FullScreenEffect = _react2.default.createClass({
 
 module.exports = FullScreenEffect;
 
-},{"classnames":2,"react":177}],302:[function(require,module,exports){
+},{"classnames":2,"react":177}],300:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31736,7 +31491,7 @@ var OptionButton = _react2.default.createClass({
 
 module.exports = OptionButton;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],303:[function(require,module,exports){
+},{"classnames":2,"pubsub-js":4,"react":177}],301:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31783,7 +31538,7 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":2,"react":177}],304:[function(require,module,exports){
+},{"classnames":2,"react":177}],302:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31834,7 +31589,7 @@ var ToggleButton = _react2.default.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],305:[function(require,module,exports){
+},{"classnames":2,"pubsub-js":4,"react":177}],303:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31880,7 +31635,7 @@ var Viewport = function (_React$Component) {
 
 module.exports = Viewport;
 
-},{"classnames":2,"react":177}],306:[function(require,module,exports){
+},{"classnames":2,"react":177}],304:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -32003,7 +31758,7 @@ var AmmoTile = function (_Component) {
 
 module.exports = AmmoTile;
 
-},{"classnames":2,"pubsub-js":4,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":293}],307:[function(require,module,exports){
+},{"classnames":2,"pubsub-js":4,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291}],305:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -32135,7 +31890,7 @@ var AmmoTileContainer = function (_Component) {
 
 module.exports = AmmoTileContainer;
 
-},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":293,"renderer/ui/component/hud/AmmoTile":306}],308:[function(require,module,exports){
+},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291,"renderer/ui/component/hud/AmmoTile":304}],306:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -32273,7 +32028,7 @@ var WeaponInfoContainer = function (_Component) {
 
 module.exports = WeaponInfoContainer;
 
-},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":293,"renderer/ui/component/hud/AmmoTile":306}],309:[function(require,module,exports){
+},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291,"renderer/ui/component/hud/AmmoTile":304}],307:[function(require,module,exports){
 'use strict';
 
 var ActorConfig = {
@@ -32281,7 +32036,8 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 30,
+            hp: 3000,
+            hpBarCount: 20,
             isPlayer: true
         },
         bodyConfig: {
@@ -32321,7 +32077,7 @@ var ActorConfig = {
         },
         bodyConfig: {
             radius: 1,
-            mass: 0.04,
+            mass: 0.3,
             ccdSpeedThreshold: 1,
             ccdIterations: 4,
             collisionType: 'playerProjectile'
@@ -32427,9 +32183,11 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props: {
-            hp: 30,
+            hp: 300,
+            hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 240
+            spawnRate: 240,
+            enemy: true
         }
     },
 
@@ -32437,7 +32195,9 @@ var ActorConfig = {
         props: {
             acceleration: 140,
             turnSpeed: 2,
-            hp: 6
+            hp: 6,
+            hpBarCount: 6,
+            enemy: true
         },
         bodyConfig: {
             mass: 4,
@@ -32453,7 +32213,9 @@ var ActorConfig = {
         props: {
             acceleration: 150,
             turnSpeed: 4,
-            hp: 3
+            hp: 3,
+            hpBarCount: 3,
+            enemy: true
         },
         bodyConfig: {
             mass: 2,
@@ -32469,7 +32231,9 @@ var ActorConfig = {
         props: {
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12
+            hp: 12,
+            hpBarCount: 12,
+            enemy: true
         },
         bodyConfig: {
             mass: 8,
@@ -32484,7 +32248,7 @@ var ActorConfig = {
 
 module.exports = ActorConfig;
 
-},{}],310:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -32556,7 +32320,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":181,"logic/actor/enemy/MookActor":193,"logic/actor/enemy/OrbotActor":194,"logic/actor/enemy/SniperActor":195,"logic/actor/map/EnemySpawnMarkerActor":196,"logic/actor/map/EnemySpawnerActor":197,"logic/actor/map/MapActor":198,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/player/ShipActor":203,"logic/actor/projectile/LaserProjectileActor":204,"logic/actor/projectile/MoltenProjectileActor":205,"logic/actor/projectile/PlasmaProjectileActor":206,"logic/actor/projectile/PulseWaveProjectileActor":207,"logic/actor/projectile/RedLaserProjectileActor":208,"logic/actor/projectile/RingProjectileActor":209,"renderer/actor/DebugActor":218,"renderer/actor/enemy/MookActor":224,"renderer/actor/enemy/OrbotActor":225,"renderer/actor/enemy/SniperActor":226,"renderer/actor/map/EnemySpawnMarkerActor":227,"renderer/actor/map/EnemySpawnerActor":228,"renderer/actor/map/MapActor":229,"renderer/actor/object/BoomChunkActor":233,"renderer/actor/object/ChunkActor":234,"renderer/actor/player/ShipActor":235,"renderer/actor/projectile/LaserProjectileActor":236,"renderer/actor/projectile/MoltenProjectileActor":237,"renderer/actor/projectile/PlasmaProjectileActor":238,"renderer/actor/projectile/PulseWaveProjectileActor":239,"renderer/actor/projectile/RedLaserProjectileActor":240,"renderer/actor/projectile/RingProjectileActor":241}],311:[function(require,module,exports){
+},{"logic/actor/DebugActor":181,"logic/actor/enemy/MookActor":193,"logic/actor/enemy/OrbotActor":194,"logic/actor/enemy/SniperActor":195,"logic/actor/map/EnemySpawnMarkerActor":196,"logic/actor/map/EnemySpawnerActor":197,"logic/actor/map/MapActor":198,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/player/ShipActor":203,"logic/actor/projectile/LaserProjectileActor":204,"logic/actor/projectile/MoltenProjectileActor":205,"logic/actor/projectile/PlasmaProjectileActor":206,"logic/actor/projectile/PulseWaveProjectileActor":207,"logic/actor/projectile/RedLaserProjectileActor":208,"logic/actor/projectile/RingProjectileActor":209,"renderer/actor/DebugActor":218,"renderer/actor/enemy/MookActor":224,"renderer/actor/enemy/OrbotActor":225,"renderer/actor/enemy/SniperActor":226,"renderer/actor/map/EnemySpawnMarkerActor":227,"renderer/actor/map/EnemySpawnerActor":228,"renderer/actor/map/MapActor":229,"renderer/actor/object/BoomChunkActor":233,"renderer/actor/object/ChunkActor":234,"renderer/actor/player/ShipActor":235,"renderer/actor/projectile/LaserProjectileActor":236,"renderer/actor/projectile/MoltenProjectileActor":237,"renderer/actor/projectile/PlasmaProjectileActor":238,"renderer/actor/projectile/PulseWaveProjectileActor":239,"renderer/actor/projectile/RedLaserProjectileActor":240,"renderer/actor/projectile/RingProjectileActor":241}],309:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -32590,7 +32354,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],312:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 "use strict";
 
 /**
@@ -32695,7 +32459,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],313:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -32815,11 +32579,11 @@ var Utils = {
         return [nx, ny];
     },
 
-    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {
+    gamePositionToScreenPosition: function gamePositionToScreenPosition(position, renderer, camera) {
         var vector = new THREE.Vector3();
         var canvas = renderer.domElement;
 
-        vector.set(object.position[0], object.position[1], Constants.DEFAULT_POSITION_Z);
+        vector.set(position[0], position[1], Constants.DEFAULT_POSITION_Z);
         vector.project(camera);
 
         vector.x = Math.round((vector.x + 1) * canvas.width / 2);
@@ -32873,11 +32637,12 @@ if (!Function.prototype.mixin) {
 
 module.exports = Utils;
 
-},{}],314:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {
     if (!config.worker) throw new Error('No worker object specified for Workerbus!');
+    if (!config.core) throw new Error('No core object specified for Workerbus!');
     config = config || {};
     Object.assign(this, config);
 

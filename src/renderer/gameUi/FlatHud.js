@@ -1,5 +1,5 @@
-var WeaponSwitcher = require("renderer/gameUi/WeaponSwitcher");
-var TextSprite = require("renderer/gameUi/TextSprite");
+var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
+var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config){
     Object.assign(this, config);
@@ -8,6 +8,7 @@ function FlatHud(config){
     if(!this.renderer) throw new Error('No renderer defined for FlatHud!');
 
     this.activationKey = 'shift';
+    
     this.switchersConfig = [
         {
             rotation: Utils.degToRad(90),
@@ -37,7 +38,7 @@ FlatHud.prototype.update = function(){
     if(this.actor && !this.actor.dead && this.hudActive){
         var gameSceneCamera = this.sceneManager.get('GameScene').camera;
         var hudSceneCamera = this.sceneManager.get('FlatHudScene').camera;
-        var actorPosition = Utils.objToScreenPosition(this.actor, this.renderer, gameSceneCamera);
+        var actorPosition = Utils.gamePositionToScreenPosition(this.actor.getPosition(), this.renderer, gameSceneCamera);
         var coefficient = hudSceneCamera.viewWidth / document.documentElement.clientWidth / this.configManager.config.resolution;
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 

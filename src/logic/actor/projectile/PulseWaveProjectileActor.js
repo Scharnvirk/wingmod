@@ -1,6 +1,6 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function PulseWaveProjectileActor(config){
     config = config || [];
@@ -16,8 +16,8 @@ PulseWaveProjectileActor.prototype.createBody = function(){
 };
 
 PulseWaveProjectileActor.prototype.customUpdate = function(){
-    this.damage *= 0.97;
-    this.body.updateMassProperties();
+    this.setMass(this.getMass() * 0.96);
+    this.props.damage *= 0.95;
 };
 
 module.exports = PulseWaveProjectileActor;

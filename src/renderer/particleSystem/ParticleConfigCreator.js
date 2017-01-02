@@ -6,9 +6,10 @@ function ParticleConfigCreator(config){
              uniforms: {
                  map: { type: 't', value: new THREE.TextureLoader().load( window.location.href + "gfx/smokePuffAlpha.png" )},
                  time: { type: "f", value: 1.0 },
+                 spriteSheetLength: { type: "f", value: 1.0},
              },
-             vertexShader: ParticleShaders.vertexShader,
-             fragmentShader: ParticleShaders.fragmentShader,
+             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
+             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
              transparent: true,
              depthWrite: false
         }),
@@ -113,9 +114,7 @@ ParticleConfigCreator.prototype.createPremades = function(){
         RedEyeBig: require("renderer/particleSystem/premade/RedEyeBig"),
         PurpleEye: require("renderer/particleSystem/premade/PurpleEye"),
         PurpleLaserTrail: require("renderer/particleSystem/premade/PurpleLaserTrail"),
-        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks"),
-        CrosshairBlue: require("renderer/particleSystem/premade/CrosshairBlue"),
-        CrosshairGreen: require("renderer/particleSystem/premade/CrosshairGreen")
+        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks")
     };
 };
 

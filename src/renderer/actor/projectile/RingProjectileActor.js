@@ -3,9 +3,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RingProjectileActor(){
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 RingProjectileActor.extend(BaseActor);
@@ -23,9 +20,7 @@ RingProjectileActor.prototype.customUpdate = function(){
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: 2 - 2/edgeOffset * Math.abs(i),
             alpha: 2 - 2/edgeOffset * Math.abs(i) - this.timer/100,
             alphaMultiplier: 0.4,
@@ -41,9 +36,7 @@ RingProjectileActor.prototype.onDeath = function(){
         this.createParticle({
             particleClass: 'particleAdd',
             positionZ: Utils.rand(-5,5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: Utils.rand(1,40),
             alpha: (Utils.rand(3,10) / 10) - this.timer/100 ,
             alphaMultiplier: 0.7,
@@ -56,9 +49,7 @@ RingProjectileActor.prototype.onDeath = function(){
     for (let i = 0; i < 100-this.timer; i++){
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'PURPLE',
             scale: Utils.rand(2,7) / 10,
             alpha: 1 - this.timer/100,
             alphaMultiplier: 0.94,
@@ -73,9 +64,7 @@ RingProjectileActor.prototype.onDeath = function(){
 RingProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'PURPLE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -86,9 +75,7 @@ RingProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,

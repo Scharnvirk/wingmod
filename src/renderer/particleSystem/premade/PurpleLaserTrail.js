@@ -4,9 +4,7 @@ module.exports = function(config){
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1,
             alpha: 1-0.05*i,
             alphaMultiplier: 0.8,
@@ -21,9 +19,7 @@ module.exports = function(config){
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0] + offsetPosition[0],
             positionY: config.position[1] + offsetPosition[1],
-            colorR: 1,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 5,
             alpha: 0.7-0.1*i,
             alphaMultiplier: 0.6,

@@ -3,9 +3,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function MoltenProjectileActor(){
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 0.1;
 }
 
 MoltenProjectileActor.extend(BaseActor);
@@ -23,9 +20,7 @@ MoltenProjectileActor.prototype.onDeath = function(){
 MoltenProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'ORANGE',
         scale: 60,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -35,9 +30,7 @@ MoltenProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'ORANGE',
         scale: 30,
         alpha: 0.6,
         alphaMultiplier: 0.7,

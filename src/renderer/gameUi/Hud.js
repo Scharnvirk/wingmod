@@ -12,9 +12,9 @@ function Hud(config){
 Hud.extend(EventEmitter);
 
 Hud.prototype.update = function(){
-    if(this.actor && !this.actor.dead){
-        // this.drawRadar();
-        // this.drawHealthBar(this.actor);
+    if(this.actor && this.actor.state.hp > 0){
+        this.drawRadar();
+        this.drawHealthBar(this.actor);
     }
 };
 
@@ -23,22 +23,22 @@ Hud.prototype.onPlayerActorAppeared = function(actor){
 };
 
 Hud.prototype.drawRadar = function(){
-    for (let enemyId in this.actorManager.enemies ){
-        let enemyActor = this.actorManager.enemies[enemyId];
-        let rotation = Utils.rotationBetweenPoints(enemyActor.position, this.actor.position);
+    let actorPosition = this.actor.getPosition();
+    let enemies = this.actorManager.getEnemies();
+    for (let enemyId in enemies ){
+        let enemyActor = enemies[enemyId];
+        let rotation = Utils.rotationBetweenPoints(enemyActor.getPosition(), actorPosition);
         let offsetPosition = Utils.rotationToVector(rotation + Math.PI, 12);
 
         this.drawHealthBar(enemyActor);
 
         this.particleManager.createParticle('particleAddHUD', {
-            positionX: this.actor.position[0] + offsetPosition[0],
-            positionY: this.actor.position[1] + offsetPosition[1],
+            positionX: actorPosition[0] + offsetPosition[0],
+            positionY: actorPosition[1] + offsetPosition[1],
             positionZ: -Constants.DEFAULT_POSITION_Z,
-            colorR: 1,
-            colorG: 0,
-            colorB: 0,
+            color: 'DEEPRED',
             scale: 0.75,
-            alpha: 1,
+            alpha: 0.6,
             alphaMultiplier: 1,
             particleVelocity: 0,
             particleRotation: 0,
@@ -48,58 +48,29 @@ Hud.prototype.drawRadar = function(){
 };
 
 Hud.prototype.drawHealthBar = function(otherActor){
-    var hpPercentage = otherActor.hp / otherActor.hp;
-    var hpBarCount = otherActor.hpBarCount || this.defaultHpBarCount;
-    for (let i = 0; i < hpBarCount; i++){
-        let rotation = (otherActor !== this.actor) ? Utils.rotationBetweenPoints(otherActor.position, this.actor.position) : this.actor.rotation;
+    let actorPosition = this.actor.getPosition();
+    let actorRotation = this.actor.getRotation();
+    let otherActorPosition = otherActor.getPosition();
+    let hpPercentage = otherActor.state.hp / otherActor.props.hp;
+    let hpBarCount = otherActor.props.hpBarCount || this.defaultHpBarCount;
+    let positionZ = otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z;
+    let rotation = (otherActor !== this.actor) ? Utils.rotationBetweenPoints(otherActorPosition, actorPosition) : actorRotation;
+    for (let i = 0; i < hpBarCount; i++){        
         let offsetPosition = Utils.rotationToVector(rotation + Utils.degToRad(hpBarCount/2*3) - Utils.degToRad(i*3) + Math.PI, 8);
         this.particleManager.createParticle('particleAddHUD', {
-            positionX: otherActor.position[0] + offsetPosition[0],
-            positionY: otherActor.position[1] + offsetPosition[1],
-            positionZ: otherActor !== this.actor ? -15 + hpBarCount : -Constants.DEFAULT_POSITION_Z,
-            colorR: i >= hpPercentage * hpBarCount ? 1 : 0,
-            colorG: i < hpPercentage * hpBarCount ? 1 : 0,
-            colorB: 0,
+            positionX: otherActorPosition[0] + offsetPosition[0],
+            positionY: otherActorPosition[1] + offsetPosition[1],
+            positionZ: positionZ,
+            color: i >= hpPercentage * hpBarCount ? 'GREEN' : "RED",
             scale: 0.75,
-            alpha: 1,
-            alphaMultiplier: 1,
             particleVelocity: 0,
             particleRotation: rotation,
+            alpha: 1,
+            alphaMultiplier: 1,
             lifeTime: 1,
             spriteNumber: 3
         });
     }
-};
-
-Hud.prototype.drawCrosshairs = function(actor){
-    this.particleManager.createPremade('CrosshairBlue', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: 9,
-        distance: 20
-    });
-    this.particleManager.createPremade('CrosshairBlue', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: -9,
-        distance: 20
-    });
-    this.particleManager.createPremade('CrosshairGreen', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: 18,
-        distance: 16
-    });
-    this.particleManager.createPremade('CrosshairGreen', {
-        position: actor.position,
-        positionZ: actor.positionZ - Constants.DEFAULT_POSITION_Z,
-        rotation: actor.rotation,
-        rotationOffset: -18,
-        distance: 16
-    });
 };
 
 module.exports = Hud;

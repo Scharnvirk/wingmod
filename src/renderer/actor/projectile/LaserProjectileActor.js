@@ -3,9 +3,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function LaserProjectileActor(){
     BaseActor.apply(this, arguments);
-    this.colorR = 0.3;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 LaserProjectileActor.extend(BaseActor);
@@ -23,9 +20,7 @@ LaserProjectileActor.prototype.onDeath = function(){
 LaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: "BLUE",
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -34,9 +29,7 @@ LaserProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: "BLUE",
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,

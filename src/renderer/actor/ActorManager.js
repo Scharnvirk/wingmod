@@ -3,7 +3,6 @@ var ActorFactory = require('shared/ActorFactory')('renderer');
 function ActorManager(config){
     config = config || {};
     this.storage = Object.create(null);
-    this.enemies = Object.create(null);
 
     this.scene = null;
     this.framerate = config.framerate || 60;
@@ -100,11 +99,21 @@ ActorManager.prototype.handleActorStateChange = function(newActorStates){
     });
 };
 
-ActorManager.prototype.requestUiFlash = function(flashType){ //wyleci (tez w handlerze stanu agenta ma byc)
+ActorManager.prototype.requestUiFlash = function(flashType){
     this.emit({
         type:'requestUiFlash',
         data: flashType
     });
+};
+
+ActorManager.prototype.getEnemies = function(){
+    let enemies = [];
+    Object.keys(this.storage).forEach(actorId => {
+        if (this.storage[actorId].props.enemy) {
+            enemies.push(this.storage[actorId]);
+        }        
+    });
+    return enemies;
 };
 
 module.exports = ActorManager;

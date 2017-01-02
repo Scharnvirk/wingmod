@@ -23,6 +23,33 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     let i;
 
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.ORBOT,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.MOOK,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.SNIPER,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
     for (i = 0; i < 0; i++){
         this.actorManager.addNew({
             classId: ActorFactory.DEBUG,

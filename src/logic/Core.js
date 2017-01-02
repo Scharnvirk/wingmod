@@ -1,9 +1,9 @@
-var RenderBus = require("logic/RenderBus");
-var GameWorld = require("logic/GameWorld");
-var ActorManager = require("logic/actor/ActorManager");
-var MapManager = require("logic/map/MapManager");
-var GameScene = require("logic/GameScene");
-var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
+var RenderBus = require('logic/RenderBus');
+var GameWorld = require('logic/GameWorld');
+var ActorManager = require('logic/actor/ActorManager');
+var MapManager = require('logic/map/MapManager');
+var GameScene = require('logic/GameScene');
+var WorldAiMapExtractor = require('logic/WorldAiMapExtractor');
 
 function Core(worker){
     this.makeMainComponents(worker);
@@ -15,7 +15,7 @@ function Core(worker){
 }
 
 Core.prototype.makeMainComponents = function(worker){
-    this.renderBus = new RenderBus({worker: worker});
+    this.renderBus = new RenderBus({core: this, worker: worker});
     this.world = new GameWorld();
     this.actorManager = new ActorManager({world: this.world});
     this.mapManager = new MapManager();
@@ -25,15 +25,7 @@ Core.prototype.makeMainComponents = function(worker){
 
 Core.prototype.initializeEventHandlers = function(){
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
-    // this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
-
-    this.renderBus.on('pause', this.onPause.bind(this));
-    this.renderBus.on('startGame', this.onStart.bind(this));
-    this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
-    this.renderBus.on('inputState', this.onInputState.bind(this));
-    this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
-    this.renderBus.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 

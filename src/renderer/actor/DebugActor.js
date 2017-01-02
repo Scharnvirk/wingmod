@@ -10,9 +10,7 @@ DebugActor.prototype.customUpdate = function(){
     this.createParticle({
         amount: 100,
         particleClass: 'particleNumberAdd',
-        colorR: 1,
-        colorG: 0,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.75,

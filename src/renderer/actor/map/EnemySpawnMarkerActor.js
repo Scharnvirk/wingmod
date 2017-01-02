@@ -12,9 +12,7 @@ EnemySpawnMarkerActor.mixin(ParticleMixin);
 EnemySpawnMarkerActor.prototype.customUpdate = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
+        color: 'PURPLE',
         scale: Utils.rand(this.timer/5, this.timer/5 + 20),
         alpha: this.timer/480,
         alphaMultiplier: 0.8,
@@ -23,9 +21,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(this.timer/10, this.timer/10 + 10),
         alpha: this.timer/480,
         alphaMultiplier: 0.8,
@@ -39,9 +35,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function(){
             particleClass: 'particleAdd',
             offsetPositionX: offsetPosition[0],
             offsetPositionY: offsetPosition[1],
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 0.4 + this.timer/300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
@@ -59,9 +53,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function(){
     for (let i = 0; i < pointCount; i++){
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,
@@ -72,9 +64,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function(){
 
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,

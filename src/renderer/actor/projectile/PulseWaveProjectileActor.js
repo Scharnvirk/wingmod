@@ -3,9 +3,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function PulseWaveProjectileActor(config){
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 PulseWaveProjectileActor.extend(BaseActor);
@@ -22,9 +19,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function(){
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: 2 - 2/edgeOffset * Math.abs(i),
             alpha: 2 - 2/edgeOffset * Math.abs(i) - this.timer/30,
             alphaMultiplier: 0.4,
@@ -41,9 +36,7 @@ PulseWaveProjectileActor.prototype.onDeath = function(){
             offsetPositionX: Utils.rand(-4,4),
             offsetPositionY: Utils.rand(-4,4),
             positionZ: Utils.rand(-5,5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: Utils.rand(1,40),
             alpha: (Utils.rand(3,10) / 10) - this.timer/30 ,
             alphaMultiplier: 0.7,
@@ -56,9 +49,7 @@ PulseWaveProjectileActor.prototype.onDeath = function(){
     for (let i = 0; i < 30-this.timer*3; i++){
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'BLUE',
             scale: Utils.rand(2,7) / 10,
             alpha: 1 - this.timer/30,
             alphaMultiplier: 0.94,
@@ -73,9 +64,7 @@ PulseWaveProjectileActor.prototype.onDeath = function(){
 PulseWaveProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'BLUE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -84,9 +73,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'BLUE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,

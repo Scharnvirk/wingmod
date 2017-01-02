@@ -3,9 +3,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RedLaserProjectileActor(){
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 RedLaserProjectileActor.extend(BaseActor);
@@ -23,9 +20,7 @@ RedLaserProjectileActor.prototype.onDeath = function(){
 RedLaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -34,9 +29,7 @@ RedLaserProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+        color: 'PURPLE',
         scale: 15,
         alpha: 1,
         alphaMultiplier: 0.4,

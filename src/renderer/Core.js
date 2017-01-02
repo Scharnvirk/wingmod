@@ -1,16 +1,16 @@
-var ConfigManager = require("renderer/ConfigManager");
-var InputListener = require("renderer/InputListener");
-var ParticleManager = require("renderer/particleSystem/ParticleManager");
-var ActorManager = require("renderer/actor/ActorManager");
-var LogicBus = require("renderer/LogicBus");
-var ControlsHandler = require("renderer/ControlsHandler");
-var SceneManager = require("renderer/scene/SceneManager");
-var AssetManager = require("renderer/assetManagement/assetManager.js");
-var AiImageRenderer = require("renderer/ai/AiImageRenderer");
-var Hud = require("renderer/gameUi/Hud");
-var CanvasHud = require("renderer/gameUi/CanvasHud");
-var FlatHud = require("renderer/gameUi/FlatHud");
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
+var ConfigManager = require('renderer/ConfigManager');
+var InputListener = require('renderer/InputListener');
+var ParticleManager = require('renderer/particleSystem/ParticleManager');
+var ActorManager = require('renderer/actor/ActorManager');
+var LogicBus = require('renderer/LogicBus');
+var ControlsHandler = require('renderer/ControlsHandler');
+var SceneManager = require('renderer/scene/SceneManager');
+var AssetManager = require('renderer/assetManagement/assetManager.js');
+var AiImageRenderer = require('renderer/ai/AiImageRenderer');
+var Hud = require('renderer/gameUi/Hud');
+var CanvasHud = require('renderer/gameUi/CanvasHud');
+var FlatHud = require('renderer/gameUi/FlatHud');
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -52,7 +52,7 @@ Core.prototype.createMainComponents = function(){
     this.sceneManager = new SceneManager({renderer: this.renderer, core: this});
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
-    this.logicBus = new LogicBus({worker: this.logicWorker});
+    this.logicBus = new LogicBus({core: this, worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
@@ -61,14 +61,6 @@ Core.prototype.createMainComponents = function(){
 };
 
 Core.prototype.initEventHandlers = function(){
-    this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
-    this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
-    this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
-    this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('actorStateChange', this.onActorStateChange.bind(this));
-    this.logicBus.on('mapDone', this.onMapDone.bind(this));
-    this.logicBus.on('playSound', this.onPlaySound.bind(this));
-
     this.ui.on('startGame', this.onStartGame.bind(this));
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
@@ -156,7 +148,7 @@ Core.prototype.getActiveScene = function(){
 };
 
 Core.prototype.onAssetsLoaded = function(){
-    console.log("assets loaded");
+    console.log('assets loaded');
     this.activeScene = 'MainMenuScene';
     this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
@@ -209,11 +201,9 @@ Core.prototype.getAiImageObject = function(wallsData){
     return this.aiImageRenderer.getImageObject(wallsData);
 };
 
-//todo: something better for injecting that actor? //will have it soon //mwahhahahahah
 Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
     actor.inputListener = this.inputListener;
-    //
     this.hud.onPlayerActorAppeared(actor);
     this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);

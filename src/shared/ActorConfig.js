@@ -3,7 +3,8 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 30,
+            hp: 3000,
+            hpBarCount: 20,
             isPlayer: true
         },
         bodyConfig: {
@@ -43,7 +44,7 @@ var ActorConfig = {
         },
         bodyConfig: {
             radius: 1,
-            mass: 0.04,
+            mass: 0.3,
             ccdSpeedThreshold: 1,
             ccdIterations: 4,
             collisionType: 'playerProjectile'
@@ -149,9 +150,11 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props:{
-            hp: 30,
+            hp: 300,
+            hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 240
+            spawnRate: 240,
+            enemy: true
         }
     },
 
@@ -159,7 +162,9 @@ var ActorConfig = {
         props: {
             acceleration: 140,
             turnSpeed: 2,
-            hp: 6
+            hp: 6,
+            hpBarCount: 6,
+            enemy: true
         },
         bodyConfig: {
             mass: 4,
@@ -175,7 +180,9 @@ var ActorConfig = {
         props: {
             acceleration: 150,
             turnSpeed: 4,
-            hp: 3
+            hp: 3,
+            hpBarCount: 3,
+            enemy: true
         },
         bodyConfig: {
             mass: 2,
@@ -191,7 +198,9 @@ var ActorConfig = {
         props: {
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12
+            hp: 12,
+            hpBarCount: 12,
+            enemy: true
         },
         bodyConfig: {
             mass: 8,

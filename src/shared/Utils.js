@@ -117,11 +117,11 @@ var Utils = {
         return [nx, ny];
     },
 
-    objToScreenPosition: function(object, renderer, camera){
+    gamePositionToScreenPosition: function(position, renderer, camera){
         var vector = new THREE.Vector3();
         var canvas = renderer.domElement;
 
-        vector.set( object.position[0], object.position[1], Constants.DEFAULT_POSITION_Z );
+        vector.set( position[0], position[1], Constants.DEFAULT_POSITION_Z );
         vector.project( camera );
 
         vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );
@@ -129,7 +129,6 @@ var Utils = {
 
         return [vector.x, vector.y];
     },
-
 
     //proxies for p2.js - it uses "angle" as angle, while three.js uses "rotation"
     angleBetweenPointsFromCenter: function(p1, p2){

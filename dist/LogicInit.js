@@ -215,14 +215,14 @@ if ('function' === typeof importScripts) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"logic/Core":3,"shared/Constants":71,"shared/EventEmitter":72,"shared/Utils":73}],3:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var RenderBus = require("logic/RenderBus");
-var GameWorld = require("logic/GameWorld");
-var ActorManager = require("logic/actor/ActorManager");
-var MapManager = require("logic/map/MapManager");
-var GameScene = require("logic/GameScene");
-var WorldAiMapExtractor = require("logic/WorldAiMapExtractor");
+var RenderBus = require('logic/RenderBus');
+var GameWorld = require('logic/GameWorld');
+var ActorManager = require('logic/actor/ActorManager');
+var MapManager = require('logic/map/MapManager');
+var GameScene = require('logic/GameScene');
+var WorldAiMapExtractor = require('logic/WorldAiMapExtractor');
 
 function Core(worker) {
     this.makeMainComponents(worker);
@@ -234,7 +234,7 @@ function Core(worker) {
 }
 
 Core.prototype.makeMainComponents = function (worker) {
-    this.renderBus = new RenderBus({ worker: worker });
+    this.renderBus = new RenderBus({ core: this, worker: worker });
     this.world = new GameWorld();
     this.actorManager = new ActorManager({ world: this.world });
     this.mapManager = new MapManager();
@@ -244,15 +244,7 @@ Core.prototype.makeMainComponents = function (worker) {
 
 Core.prototype.initializeEventHandlers = function () {
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
-    // this.scene.on('newPlayerActor', this.onNewPlayerActor.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
-
-    this.renderBus.on('pause', this.onPause.bind(this));
-    this.renderBus.on('startGame', this.onStart.bind(this));
-    this.renderBus.on('aiImageDone', this.onAiImageDone.bind(this));
-    this.renderBus.on('inputState', this.onInputState.bind(this));
-    this.renderBus.on('mapHitmapsLoaded', this.onMapHitmapsLoaded.bind(this));
-    this.renderBus.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
@@ -386,6 +378,33 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     var i = void 0;
 
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.ORBOT,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.MOOK,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 30; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.SNIPER,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
     for (i = 0; i < 0; i++) {
         this.actorManager.addNew({
             classId: ActorFactory.DEBUG,
@@ -493,7 +512,6 @@ GameWorld.prototype.makeUpdateData = function () {
             transferArray[transferrableActorCount * 5 + 3] = body.position[1];
             transferArray[transferrableActorCount * 5 + 4] = body.angle;
             transferrableActorCount++;
-            //body.update();
         }
     }
 
@@ -546,17 +564,41 @@ GameWorld.prototype.cleanDeadActors = function () {
 module.exports = GameWorld;
 
 },{}],6:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var WorkerBus = require("shared/WorkerBus");
+var WorkerBus = require('shared/WorkerBus');
 
-function RenderBus(config) {
+function RenderBus() {
     WorkerBus.apply(this, arguments);
 }
 
 RenderBus.extend(WorkerBus);
 
-module.exports = WorkerBus;
+//Worker bus events passed directly - too cpu-intensive for events
+RenderBus.prototype.handleMessage = function (message) {
+    switch (message.data.type) {
+        case 'pause':
+            this.core.onPause(message);
+            break;
+        case 'startGame':
+            this.core.onStart(message);
+            break;
+        case 'aiImageDone':
+            this.core.onAiImageDone(message);
+            break;
+        case 'inputState':
+            this.core.onInputState(message);
+            break;
+        case 'mapHitmapsLoaded':
+            this.core.onMapHitmapsLoaded(message);
+            break;
+        case 'weaponSwitched':
+            this.core.onWeaponSwitched(message);
+            break;
+    }
+};
+
+module.exports = RenderBus;
 
 },{"shared/WorkerBus":74}],7:[function(require,module,exports){
 'use strict';
@@ -2491,11 +2533,11 @@ PlasmaProjectileActor.prototype.createBody = function () {
 module.exports = PlasmaProjectileActor;
 
 },{"logic/actor/BaseActor":9,"logic/actor/component/body/BaseBody":14,"shared/ActorConfig":69}],36:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function PulseWaveProjectileActor(config) {
     config = config || [];
@@ -2511,8 +2553,8 @@ PulseWaveProjectileActor.prototype.createBody = function () {
 };
 
 PulseWaveProjectileActor.prototype.customUpdate = function () {
-    this.damage *= 0.97;
-    this.body.updateMassProperties();
+    this.setMass(this.getMass() * 0.96);
+    this.props.damage *= 0.95;
 };
 
 module.exports = PulseWaveProjectileActor;
@@ -2908,9 +2950,7 @@ DebugActor.prototype.customUpdate = function () {
     this.createParticle({
         amount: 100,
         particleClass: 'particleNumberAdd',
-        colorR: 1,
-        colorG: 0,
-        colorB: 1,
+        color: 'PURPLE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.75,
@@ -3257,9 +3297,7 @@ EnemySpawnMarkerActor.mixin(ParticleMixin);
 EnemySpawnMarkerActor.prototype.customUpdate = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 0.5,
-        colorG: 0.3,
-        colorB: 1,
+        color: 'PURPLE',
         scale: Utils.rand(this.timer / 5, this.timer / 5 + 20),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
@@ -3268,9 +3306,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(this.timer / 10, this.timer / 10 + 10),
         alpha: this.timer / 480,
         alphaMultiplier: 0.8,
@@ -3284,9 +3320,7 @@ EnemySpawnMarkerActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPosition[0],
             offsetPositionY: offsetPosition[1],
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 0.4 + this.timer / 300,
             alpha: 0.2,
             alphaMultiplier: 1.2,
@@ -3304,9 +3338,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
     for (var i = 0; i < pointCount; i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 0.5,
-            colorG: 0.3,
-            colorB: 1,
+            color: 'PURPLE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,
@@ -3317,9 +3349,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 50,
             alpha: 0.25,
             alphaMultiplier: 0.7,
@@ -3493,25 +3523,20 @@ module.exports = BobMixin;
 'use strict';
 
 var ParticleMixin = {
-
     createPremade: function createPremade(config) {
         config = config || {};
-        this._particleManager.createPremade(config.premadeName, Object.assign({
-            position: [this._position[0] + (config.offsetPositionX || 0), this._position[1] + (config.offsetPositionY || 0)],
-            rotation: this._rotation
-        }, config));
+        config.position = [this._position[0] + (config.offsetPositionX || 0), this._position[1] + (config.offsetPositionY || 0)];
+        config.rotation = this._rotation;
+        this._particleManager.createPremade(config.premadeName, config);
     },
 
     createParticle: function createParticle(config) {
         config = config || {};
-
         for (var i = 0, l = Utils.randArray(config.amount || 1); i < l; i++) {
             this._particleManager.createParticle(config.particleClass || 'particleNumberAdd', {
                 positionX: this._position[0] + (config.offsetPositionX || 0),
                 positionY: this._position[1] + (config.offsetPositionY || 0),
-                colorR: config.colorR || 1,
-                colorG: config.colorG || 1,
-                colorB: config.colorB || 1,
+                color: config.color,
                 scale: Utils.randArray(config.scale || 1),
                 alpha: Utils.randArray(config.alpha || 1),
                 alphaMultiplier: Utils.randArray(config.alphaMultiplier || 1),
@@ -3601,9 +3626,7 @@ ChunkActor.prototype.customUpdate = function () {
             particleClass: 'smokePuffAlpha',
             offsetPositionX: Utils.rand(-2, 2),
             offsetPositionY: Utils.rand(-2, 2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: Utils.rand(2, 5),
             alpha: 0.4,
             alphaMultiplier: 0.9,
@@ -3620,9 +3643,7 @@ ChunkActor.prototype.onDeath = function () {
             particleClass: 'smokePuffAlpha',
             offsetPositionX: Utils.rand(-1, 1),
             offsetPositionY: Utils.rand(-1, 1),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: Utils.rand(2, 5),
             alpha: 0.6,
             alphaMultiplier: 0.95,
@@ -3783,9 +3804,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function LaserProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 0.3;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 LaserProjectileActor.extend(BaseActor);
@@ -3803,9 +3821,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 LaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: "BLUE",
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -3814,9 +3830,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: "BLUE",
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -3835,9 +3849,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function MoltenProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 0.1;
 }
 
 MoltenProjectileActor.extend(BaseActor);
@@ -3855,9 +3866,7 @@ MoltenProjectileActor.prototype.onDeath = function () {
 MoltenProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'ORANGE',
         scale: 60,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -3867,9 +3876,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'ORANGE',
         scale: 30,
         alpha: 0.6,
         alphaMultiplier: 0.7,
@@ -3888,9 +3895,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function PlasmaProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 0.3;
-    this.colorG = 1;
-    this.colorB = 0.5;
 }
 
 PlasmaProjectileActor.extend(BaseActor);
@@ -3908,9 +3912,7 @@ PlasmaProjectileActor.prototype.onDeath = function () {
 PlasmaProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 7,
         particleVelocity: 1,
@@ -3923,9 +3925,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
         particleClass: 'particleAdd',
         offsetPositionX: offsetPosition[0],
         offsetPositionY: offsetPosition[1],
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 7,
         particleVelocity: 1,
@@ -3935,9 +3935,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'GREEN',
         scale: 20,
         alpha: 0.4,
         alphaMultiplier: 0.7,
@@ -3957,9 +3955,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function PulseWaveProjectileActor(config) {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 PulseWaveProjectileActor.extend(BaseActor);
@@ -3976,9 +3971,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: 2 - 2 / edgeOffset * Math.abs(i),
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 30,
             alphaMultiplier: 0.4,
@@ -3995,9 +3988,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
             offsetPositionX: Utils.rand(-4, 4),
             offsetPositionY: Utils.rand(-4, 4),
             positionZ: Utils.rand(-5, 5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'BLUE',
             scale: Utils.rand(1, 40),
             alpha: Utils.rand(3, 10) / 10 - this.timer / 30,
             alphaMultiplier: 0.7,
@@ -4010,9 +4001,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
     for (var _i = 0; _i < 30 - this.timer * 3; _i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'BLUE',
             scale: Utils.rand(2, 7) / 10,
             alpha: 1 - this.timer / 30,
             alphaMultiplier: 0.94,
@@ -4027,9 +4016,7 @@ PulseWaveProjectileActor.prototype.onDeath = function () {
 PulseWaveProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'BLUE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -4038,9 +4025,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'BLUE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -4059,9 +4044,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RedLaserProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 0.3;
-    this.colorB = 1;
 }
 
 RedLaserProjectileActor.extend(BaseActor);
@@ -4079,9 +4061,7 @@ RedLaserProjectileActor.prototype.onDeath = function () {
 RedLaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -4090,9 +4070,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 15,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -4111,9 +4089,6 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function RingProjectileActor() {
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 RingProjectileActor.extend(BaseActor);
@@ -4131,9 +4106,7 @@ RingProjectileActor.prototype.customUpdate = function () {
             particleClass: 'particleAdd',
             offsetPositionX: offsetPositionZ[0],
             offsetPositionY: offsetPositionZ[1],
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: 2 - 2 / edgeOffset * Math.abs(i),
             alpha: 2 - 2 / edgeOffset * Math.abs(i) - this.timer / 100,
             alphaMultiplier: 0.4,
@@ -4149,9 +4122,7 @@ RingProjectileActor.prototype.onDeath = function () {
         this.createParticle({
             particleClass: 'particleAdd',
             positionZ: Utils.rand(-5, 5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
+            color: 'PURPLE',
             scale: Utils.rand(1, 40),
             alpha: Utils.rand(3, 10) / 10 - this.timer / 100,
             alphaMultiplier: 0.7,
@@ -4164,9 +4135,7 @@ RingProjectileActor.prototype.onDeath = function () {
     for (var _i = 0; _i < 100 - this.timer; _i++) {
         this.createParticle({
             particleClass: 'particleAdd',
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'PURPLE',
             scale: Utils.rand(2, 7) / 10,
             alpha: 1 - this.timer / 100,
             alphaMultiplier: 0.94,
@@ -4181,9 +4150,7 @@ RingProjectileActor.prototype.onDeath = function () {
 RingProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -4194,9 +4161,7 @@ RingProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        colorR: this.colorR * 0.3 + 0.7,
-        colorG: this.colorG * 0.3 + 0.7,
-        colorB: this.colorB * 0.3 + 0.7,
+        color: 'PURPLE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -4252,7 +4217,8 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 30,
+            hp: 3000,
+            hpBarCount: 20,
             isPlayer: true
         },
         bodyConfig: {
@@ -4292,7 +4258,7 @@ var ActorConfig = {
         },
         bodyConfig: {
             radius: 1,
-            mass: 0.04,
+            mass: 0.3,
             ccdSpeedThreshold: 1,
             ccdIterations: 4,
             collisionType: 'playerProjectile'
@@ -4398,9 +4364,11 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props: {
-            hp: 30,
+            hp: 300,
+            hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 240
+            spawnRate: 240,
+            enemy: true
         }
     },
 
@@ -4408,7 +4376,9 @@ var ActorConfig = {
         props: {
             acceleration: 140,
             turnSpeed: 2,
-            hp: 6
+            hp: 6,
+            hpBarCount: 6,
+            enemy: true
         },
         bodyConfig: {
             mass: 4,
@@ -4424,7 +4394,9 @@ var ActorConfig = {
         props: {
             acceleration: 150,
             turnSpeed: 4,
-            hp: 3
+            hp: 3,
+            hpBarCount: 3,
+            enemy: true
         },
         bodyConfig: {
             mass: 2,
@@ -4440,7 +4412,9 @@ var ActorConfig = {
         props: {
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12
+            hp: 12,
+            hpBarCount: 12,
+            enemy: true
         },
         bodyConfig: {
             mass: 8,
@@ -4786,11 +4760,11 @@ var Utils = {
         return [nx, ny];
     },
 
-    objToScreenPosition: function objToScreenPosition(object, renderer, camera) {
+    gamePositionToScreenPosition: function gamePositionToScreenPosition(position, renderer, camera) {
         var vector = new THREE.Vector3();
         var canvas = renderer.domElement;
 
-        vector.set(object.position[0], object.position[1], Constants.DEFAULT_POSITION_Z);
+        vector.set(position[0], position[1], Constants.DEFAULT_POSITION_Z);
         vector.project(camera);
 
         vector.x = Math.round((vector.x + 1) * canvas.width / 2);
@@ -4849,6 +4823,7 @@ module.exports = Utils;
 
 function WorkerBus(config) {
     if (!config.worker) throw new Error('No worker object specified for Workerbus!');
+    if (!config.core) throw new Error('No core object specified for Workerbus!');
     config = config || {};
     Object.assign(this, config);
 
