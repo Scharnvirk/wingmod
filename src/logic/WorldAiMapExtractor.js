@@ -1,5 +1,3 @@
-
-
 function WorldAiMapExtractor(config){
     config = config || {};
     if(!config.world) throw new Error('No world specified for WorldAiMapExtractor');

@@ -4,7 +4,7 @@ import {Animate} from 'react-rebound';
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 var imagePath = 'gfx/ammoHud.png';
-var PubSub = require('pubsub-js');
+// var PubSub = require('pubsub-js');
 
 class AmmoTile extends Component {
     constructor(props, context) {
@@ -16,16 +16,16 @@ class AmmoTile extends Component {
         this.iconIndexes = {
             plasma: 0,
             energy: 4,
-            radioactive: 2,
-            missileCore: 3,
+            rads: 2,
+            shells: 3,
             coolant: 1
         };
 
         this.colors = {
             plasma: '#00d681',
             energy: '#ffc04d',
-            radioactive: '#8a4dff',
-            missileCore: '#ff4d4d',
+            rads: '#8a4dff',
+            shells: '#ff4d4d',
             coolant: '#8bc9ff'
         };
 
@@ -77,7 +77,6 @@ class AmmoTile extends Component {
 
     render() {
         if (typeof this.props.amount === 'undefined') return null;
-
         var text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
 
         return <div style={this.componentStyle.background}>

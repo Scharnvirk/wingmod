@@ -11,7 +11,6 @@ function ActorManager(config){
     this.aiGraph = {};
 
     this.actorStatesChanged = {};
-
     this.enemiesKilled = 0;
 
     Object.assign(this, config);
@@ -19,6 +18,7 @@ function ActorManager(config){
     this.timer = 0;
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
+    if(!this.gameState) throw new Error('No gameState for Logic ActorMAnager!');
 
     EventEmitter.apply(this, arguments);
 }
@@ -33,6 +33,7 @@ ActorManager.prototype.addNew = function(config){
     var actor = this.factory.create(
         Object.assign(config, {
             manager: this,
+            gameState: this.gameState,
             world: this.world,
             id: this.currentId            
         })

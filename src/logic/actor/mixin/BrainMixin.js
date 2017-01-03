@@ -24,11 +24,11 @@ var BrainMixin = {
         let angle =  Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - actorPosition[0], position[1] - actorPosition[1]]);
 
         if (angle < 180 && angle > 0) {
-            this.setAngleForce(Math.min(angle/this.stepAngle, 1) * -1);
+            this.setAngleForce(Math.min(angle/this.getStepAngle(), 1) * -1);
         }
 
         if (angle >= 180 && angle < 360) {
-            this.setAngleForce(Math.min((360-angle)/this.stepAngle, 1));
+            this.setAngleForce(Math.min((360-angle)/this.getStepAngle(), 1));
         }
     }
 };

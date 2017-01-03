@@ -5,6 +5,11 @@ function BaseWeapon(config){
     this.recoil = 0;
     this.velocity = 10;
     this.sound = null;
+    this.name = config.name || 'baseWeapon';
+    this.gameState = config.gameState;    
+    this.defaultEmptyTiming = 30;
+
+    this.ammoConfig = {};
 
     /*example:
         this.firingPoints = [
@@ -35,7 +40,14 @@ BaseWeapon.prototype.update = function(){
         this.timer --;
     } else {
         if (this.shooting) {
-            this.processActiveWeapon();
+            let canShoot = !this.gameState || this.gameState.requestShoot(this.name, this.ammoConfig);
+            if(canShoot){
+                this.processActiveWeapon();
+            } else {
+                this.shotsFired = 99999;
+                this.timer = this.cooldown;
+                this.actor.playSound(['empty']);
+            }
         }
     }
 };
@@ -85,7 +97,7 @@ BaseWeapon.prototype.handleFiringSimultaneous = function(){
     this.actor.applyRecoil(this.recoil);
 
     if (this.sound){
-        this.actor.manager.playSound({sounds:[this.sound], actor: this.actor, volume:this.volume});
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 
@@ -100,7 +112,7 @@ BaseWeapon.prototype.handleFiringAlternate = function(){
     this.actor.applyRecoil(this.recoil);
 
     if (this.sound){
-        this.actor.manager.playSound({sounds: [this.sound], actor: this.actor, volume: this.volume});
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 

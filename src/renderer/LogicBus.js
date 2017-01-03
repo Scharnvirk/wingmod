@@ -31,6 +31,9 @@ LogicBus.prototype.handleMessage = function(message){
     case 'playSound':
         this.core.onPlaySound(message);
         break;
+    case 'gameStateChange':
+        this.core.onGameStateChange(message);
+        break;
     }
 };
 

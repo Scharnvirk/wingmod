@@ -1,5 +1,5 @@
 var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
-var TextSprite = require('renderer/gameUi/TextSprite');
+// var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config){
     Object.assign(this, config);
@@ -43,7 +43,7 @@ FlatHud.prototype.update = function(){
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(switcher => {
-            var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
+            // var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
             // var textSprite = this.weaponTextSprites[switcher.index];
             // textSprite.position.x = offsetPosition[0];
             // textSprite.position.y = positionY + offsetPosition[1];
@@ -127,22 +127,22 @@ FlatHud.prototype.createSwitcher = function(switcherConfig, switcherIndex){
     return switcher;
 };
 
-FlatHud.prototype.createWeaponTextSprite = function(switcherConfig, switcherIndex){
-    var switcherTextSprite = new TextSprite({
-        visible: false,
-        fontSize: 40,
-        fontScale: 3,
-        height: 64,
-        widthMultiplier: 16
-    });
-    switcherTextSprite.drawMessage('');
+// FlatHud.prototype.createWeaponTextSprite = function(switcherConfig, switcherIndex){
+//     var switcherTextSprite = new TextSprite({
+//         visible: false,
+//         fontSize: 40,
+//         fontScale: 3,
+//         height: 64,
+//         widthMultiplier: 16
+//     });
+//     switcherTextSprite.drawMessage('');
 
-    return switcherTextSprite;
-};
+//     return switcherTextSprite;
+// };
 
-FlatHud.prototype.drawWeaponName = function(switcherIndex, weaponName){
-    this.weaponTextSprites[switcherIndex].drawMessage(this.weaponNames[weaponName]);
-};
+// FlatHud.prototype.drawWeaponName = function(switcherIndex, weaponName){
+//     this.weaponTextSprites[switcherIndex].drawMessage(this.weaponNames[weaponName]);
+// };
 
 
 module.exports = FlatHud;

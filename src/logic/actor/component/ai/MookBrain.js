@@ -219,7 +219,7 @@ MookBrain.prototype.randomStrafeAction = function(){
 MookBrain.prototype.playCalloutSound = function(){
     if(this.actor.calloutSound) {
         if(Utils.rand(0, 150) === 0){
-            this.manager.playSound({sounds: [this.actor.calloutSound], actor: this.actor});
+            this.actor.playSound([this.actor.calloutSound]);
         }
     }
 };

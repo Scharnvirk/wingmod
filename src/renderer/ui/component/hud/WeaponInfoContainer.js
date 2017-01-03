@@ -33,14 +33,7 @@ class WeaponInfoContainer extends Component {
     }
 
     componentWillMount() {
-        // PubSub.subscribe( 'reactHudAmmoChange', (msg, data) => {
-        //     this.setState({
-        //         ammo: data
-        //     });
-        // });
-        console.log("willMount");
         PubSub.subscribe( 'reactHudShow', () => {
-            console.log("setState");
             this.setState({
                 visible: true
             });

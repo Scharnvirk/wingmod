@@ -13,6 +13,9 @@ function PlasmaGun(config){
     this.sound = 'laser_charged';
     this.firingMode = 'alternate';
     this.volume = 0.5;
+    this.ammoConfig = {
+        energy: 0.5,
+    };    
 }
 
 PlasmaGun.extend(BaseWeapon);

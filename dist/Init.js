@@ -23362,6 +23362,7 @@ global.Utils = require("shared/Utils");
 global.Constants = require("shared/Constants");
 global.EventEmitter = require("shared/EventEmitter");
 
+var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
 var domready = require("domready");
 var Ui = require("renderer/ui/Ui");
@@ -23392,7 +23393,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":3,"renderer/Core":213,"renderer/ui/Ui":292,"shared/Constants":309,"shared/EventEmitter":310,"shared/Utils":311}],180:[function(require,module,exports){
+},{"domready":3,"pubsub-js":4,"renderer/Core":213,"renderer/ui/Ui":292,"shared/Constants":309,"shared/EventEmitter":310,"shared/Utils":311}],180:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -23413,6 +23414,7 @@ function BaseActor(config) {
     this._body.actorId = this.id;
     this._body.classId = config.classId;
 
+    this._stepAngle = Utils.radToDeg((this.props.turnSpeed || 0) / Constants.LOGIC_REFRESH_RATE);
     this._thrust = 0;
     this._horizontalThrust = 0;
     this._angleForce = 0;
@@ -23436,6 +23438,10 @@ BaseActor.prototype.getPosition = function () {
 
 BaseActor.prototype.getAngle = function () {
     return this._body.angle;
+};
+
+BaseActor.prototype.getStepAngle = function () {
+    return this._stepAngle;
 };
 
 BaseActor.prototype.getVelocity = function () {
@@ -23477,6 +23483,10 @@ BaseActor.prototype.setMass = function (mass) {
 
 BaseActor.prototype.getMass = function () {
     return this._body.mass;
+};
+
+BaseActor.prototype.playSound = function (sounds, volume) {
+    this.manager.playSound({ sounds: sounds, actor: this, volume: volume || 1 });
 };
 
 BaseActor.prototype.createBody = function () {
@@ -23628,32 +23638,43 @@ DebugActor.prototype.onSpawn = function () {
 module.exports = DebugActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185}],182:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
-var Blaster = require("logic/actor/component/weapon/Blaster");
-var PulseWaveGun = require("logic/actor/component/weapon/PulseWaveGun");
+var PlasmaGun = require('logic/actor/component/weapon/PlasmaGun');
+var Blaster = require('logic/actor/component/weapon/Blaster');
+var PulseWaveGun = require('logic/actor/component/weapon/PulseWaveGun');
 
 function WeaponSystem(config) {
     Object.assign(this, config);
 
-    this.weapons = {
-        'plasmagun': this.createPlasma(),
-        'lasgun': this.createBlaster(),
-        'pulsewavegun': this.createPulseWave()
-    };
+    this.weapons = this._createWeapons();
 
     if (!this.currentWeapon) {
         this.switchWeaponByIndex(0);
     }
 
     if (!this.actor) throw new Error('No actor for Logic WeaponSystem!');
+    if (!this.gameState) throw new Error('No gameState for Logic WeaponSystem!');
 }
 
+WeaponSystem.prototype._createWeapons = function () {
+    var _this = this;
+
+    var weapons = [];
+    var weaponNames = this.gameState.getWeapons();
+    weaponNames.forEach(function (weaponName) {
+        var creatorFunctionName = 'create' + Utils.firstToUpper(weaponName);
+        if (creatorFunctionName && _this[creatorFunctionName] instanceof Function) {
+            weapons[weaponName] = _this[creatorFunctionName](weaponName);
+        } else {
+            throw new Error('Could not find a creator for weapon: ' + weaponName + '. Expected creator name: ' + creatorFunctionName);
+        }
+    });
+    return weapons;
+};
+
 WeaponSystem.prototype.shoot = function () {
-    if (this.weapons[this.currentWeapon]) {
-        this.weapons[this.currentWeapon].shoot();
-    }
+    this.weapons[this.currentWeapon].shoot();
 };
 
 WeaponSystem.prototype.stopShooting = function () {
@@ -23665,7 +23686,7 @@ WeaponSystem.prototype.stopShooting = function () {
 WeaponSystem.prototype.switchWeapon = function (weaponName) {
     if (this.weapons[weaponName]) {
         this.currentWeapon = weaponName;
-        this.actor.manager.playSound({ sounds: ['cannon_change'], actor: this.actor, volume: 1 });
+        this.actor.playSound(['cannon_change']);
     } else {
         console.warn('This weapon system has no such weapon: ', weaponName);
     }
@@ -23687,24 +23708,30 @@ WeaponSystem.prototype.update = function () {
     }
 };
 
-WeaponSystem.prototype.createBlaster = function () {
+WeaponSystem.prototype.createLasgun = function (name) {
     return new Blaster({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 
-WeaponSystem.prototype.createPlasma = function () {
+WeaponSystem.prototype.createPlasmagun = function (name) {
     return new PlasmaGun({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 
-WeaponSystem.prototype.createPulseWave = function () {
+WeaponSystem.prototype.createPulsewavegun = function (name) {
     return new PulseWaveGun({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 
@@ -24010,7 +24037,7 @@ MookBrain.prototype.randomStrafeAction = function () {
 MookBrain.prototype.playCalloutSound = function () {
     if (this.actor.calloutSound) {
         if (Utils.rand(0, 150) === 0) {
-            this.manager.playSound({ sounds: [this.actor.calloutSound], actor: this.actor });
+            this.actor.playSound([this.actor.calloutSound]);
         }
     }
 };
@@ -24111,6 +24138,11 @@ function BaseWeapon(config) {
     this.recoil = 0;
     this.velocity = 10;
     this.sound = null;
+    this.name = config.name || 'baseWeapon';
+    this.gameState = config.gameState;
+    this.defaultEmptyTiming = 30;
+
+    this.ammoConfig = {};
 
     /*example:
         this.firingPoints = [
@@ -24141,7 +24173,14 @@ BaseWeapon.prototype.update = function () {
         this.timer--;
     } else {
         if (this.shooting) {
-            this.processActiveWeapon();
+            var canShoot = !this.gameState || this.gameState.requestShoot(this.name, this.ammoConfig);
+            if (canShoot) {
+                this.processActiveWeapon();
+            } else {
+                this.shotsFired = 99999;
+                this.timer = this.cooldown;
+                this.actor.playSound(['empty']);
+            }
         }
     }
 };
@@ -24188,7 +24227,7 @@ BaseWeapon.prototype.handleFiringSimultaneous = function () {
     this.actor.applyRecoil(this.recoil);
 
     if (this.sound) {
-        this.actor.manager.playSound({ sounds: [this.sound], actor: this.actor, volume: this.volume });
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 
@@ -24203,7 +24242,7 @@ BaseWeapon.prototype.handleFiringAlternate = function () {
     this.actor.applyRecoil(this.recoil);
 
     if (this.sound) {
-        this.actor.manager.playSound({ sounds: [this.sound], actor: this.actor, volume: this.volume });
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 
@@ -24222,12 +24261,13 @@ function Blaster(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 28;
-    this.velocity = 1500;
-    this.burstCount = 4;
-    this.burstCooldown = 4;
+    this.cooldown = 30;
+    this.velocity = 1800;
     this.sound = 'blue_laser';
-    this.firingMode = 'alternate';
+    this.firingMode = 'simultaneous';
+    this.ammoConfig = {
+        energy: 1
+    };
 }
 
 Blaster.extend(BaseWeapon);
@@ -24261,10 +24301,10 @@ MoltenBallThrower.extend(BaseWeapon);
 module.exports = MoltenBallThrower;
 
 },{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],189:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function PlasmaGun(config) {
     Object.assign(this, config);
@@ -24273,10 +24313,13 @@ function PlasmaGun(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 14;
+    this.cooldown = 7;
     this.velocity = 230;
     this.sound = 'plasmashot3';
     this.volume = 0.5;
+    this.ammoConfig = {
+        plasma: 1
+    };
 }
 
 PlasmaGun.extend(BaseWeapon);
@@ -24301,6 +24344,9 @@ function PlasmaGun(config) {
     this.sound = 'laser_charged';
     this.firingMode = 'alternate';
     this.volume = 0.5;
+    this.ammoConfig = {
+        energy: 0.5
+    };
 }
 
 PlasmaGun.extend(BaseWeapon);
@@ -24374,7 +24420,6 @@ function MookActor(config) {
     this.calloutSound = 'drone';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     BaseActor.apply(this, arguments);
 }
@@ -24418,7 +24463,7 @@ MookActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 MookActor.prototype.onHit = function () {
@@ -24454,7 +24499,6 @@ function OrbotActor(config) {
     this.calloutSound = 'orbot';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     BaseActor.apply(this, arguments);
 }
@@ -24500,7 +24544,7 @@ OrbotActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 OrbotActor.prototype.onHit = function () {
@@ -24536,7 +24580,6 @@ function SniperActor(config) {
     this.calloutSound = 'sniper';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     BaseActor.apply(this, arguments);
 }
@@ -24582,7 +24625,7 @@ SniperActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 SniperActor.prototype.onHit = function () {
@@ -24655,7 +24698,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
         this.created = true;
     }
 
-    this.manager.playSound({ sounds: ['spawn'], actor: this, volume: 10 });
+    this.playSound(['spawn'], 10);
 };
 
 module.exports = EnemySpawnMarkerActor;
@@ -24724,7 +24767,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 EnemySpawnerActor.prototype.onHit = function () {
@@ -24807,11 +24850,11 @@ var BrainMixin = {
         var angle = Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - actorPosition[0], position[1] - actorPosition[1]]);
 
         if (angle < 180 && angle > 0) {
-            this.setAngleForce(Math.min(angle / this.stepAngle, 1) * -1);
+            this.setAngleForce(Math.min(angle / this.getStepAngle(), 1) * -1);
         }
 
         if (angle >= 180 && angle < 360) {
-            this.setAngleForce(Math.min((360 - angle) / this.stepAngle, 1));
+            this.setAngleForce(Math.min((360 - angle) / this.getStepAngle(), 1));
         }
     }
 };
@@ -24830,11 +24873,11 @@ var InputMixin = {
         var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
         if (angle < 180 && angle > 0) {
-            angleForce = Math.min(angle / this.stepAngle, 1) * -1;
+            angleForce = Math.min(angle / this.getStepAngle(), 1) * -1;
         }
 
         if (angle >= 180 && angle < 360) {
-            angleForce = Math.min((360 - angle) / this.stepAngle, 1);
+            angleForce = Math.min((360 - angle) / this.getStepAngle(), 1);
         }
 
         if (inputState.q) {
@@ -24959,9 +25002,7 @@ function ShipActor(config) {
 
     this.applyConfig(ActorConfig.SHIP);
 
-    this.hudModifier = 'shift';
-
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
+    this.props.hudModifier = 'shift';
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
@@ -24998,6 +25039,7 @@ ShipActor.prototype.playerUpdate = function (inputState) {
 ShipActor.prototype.createPrimaryWeaponSystem = function () {
     return new WeaponSystem({
         actor: this,
+        gameState: this.gameState,
         firingPoints: [{ offsetAngle: -50, offsetDistance: 4, fireAngle: 0 }, { offsetAngle: 50, offsetDistance: 4, fireAngle: 0 }]
     });
 };
@@ -25005,6 +25047,7 @@ ShipActor.prototype.createPrimaryWeaponSystem = function () {
 ShipActor.prototype.createSecondaryWeaponSystem = function () {
     return new WeaponSystem({
         actor: this,
+        gameState: this.gameState,
         firingPoints: [{ offsetAngle: -40, offsetDistance: 8, fireAngle: 0 }, { offsetAngle: 40, offsetDistance: 8, fireAngle: 0 }]
     });
 };
@@ -25034,7 +25077,7 @@ ShipActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.manager.playSound({ sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10 });
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 ShipActor.prototype.onHit = function () {
@@ -25438,6 +25481,7 @@ var Hud = require('renderer/gameUi/Hud');
 var CanvasHud = require('renderer/gameUi/CanvasHud');
 var FlatHud = require('renderer/gameUi/FlatHud');
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
+var GameState = require('renderer/GameState');
 
 function Core(config) {
     if (!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -25485,6 +25529,7 @@ Core.prototype.createMainComponents = function () {
     this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager });
     this.flatHud = new FlatHud({ sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager });
     this.canvasHud = new CanvasHud({ canvasElement: this.canvasElement, autoWidth: true });
+    this.gameState = new GameState({ ui: this.ui });
 };
 
 Core.prototype.initEventHandlers = function () {
@@ -25676,7 +25721,7 @@ Core.prototype.onStartGame = function () {
         this.logicBus.postMessage('startGame', {});
         this.activeScene = 'GameScene';
     }
-    PubSub.publish('reactHudShow');
+    PubSub.publish('hudShow');
 };
 
 Core.prototype.onGotPointerLock = function () {
@@ -25747,9 +25792,30 @@ Core.prototype.onMapDone = function (event) {
     this.sceneManager.get('GameScene').createMap(event.data);
 };
 
+Core.prototype.onGameStateChange = function (event) {
+    this.gameState.update(event.data);
+};
+
 module.exports = Core;
 
-},{"renderer/ConfigManager":211,"renderer/ControlsHandler":212,"renderer/InputListener":214,"renderer/LogicBus":215,"renderer/actor/ActorManager":216,"renderer/ai/AiImageRenderer":242,"renderer/assetManagement/assetManager.js":243,"renderer/assetManagement/level/ChunkStore":246,"renderer/gameUi/CanvasHud":253,"renderer/gameUi/FlatHud":254,"renderer/gameUi/Hud":256,"renderer/particleSystem/ParticleManager":264,"renderer/scene/SceneManager":289}],214:[function(require,module,exports){
+},{"renderer/ConfigManager":211,"renderer/ControlsHandler":212,"renderer/GameState":214,"renderer/InputListener":215,"renderer/LogicBus":216,"renderer/actor/ActorManager":217,"renderer/ai/AiImageRenderer":243,"renderer/assetManagement/assetManager.js":244,"renderer/assetManagement/level/ChunkStore":247,"renderer/gameUi/CanvasHud":254,"renderer/gameUi/FlatHud":255,"renderer/gameUi/Hud":257,"renderer/particleSystem/ParticleManager":264,"renderer/scene/SceneManager":289}],214:[function(require,module,exports){
+'use strict';
+
+function GameState(config) {
+    config = config || {};
+    if (!config.ui) throw new Error('No ui for renderer GameState!');
+    this._state = {};
+    this._ui = config.ui;
+}
+
+GameState.prototype.update = function (newState) {
+    this._state = newState;
+    this._ui.updateState(newState);
+};
+
+module.exports = GameState;
+
+},{}],215:[function(require,module,exports){
 'use strict';
 
 function InputListener(config) {
@@ -25958,7 +26024,7 @@ InputListener.prototype.initPointerLock = function () {
 
 module.exports = InputListener;
 
-},{}],215:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 'use strict';
 
 var WorkerBus = require('shared/WorkerBus');
@@ -25994,12 +26060,15 @@ LogicBus.prototype.handleMessage = function (message) {
         case 'playSound':
             this.core.onPlaySound(message);
             break;
+        case 'gameStateChange':
+            this.core.onGameStateChange(message);
+            break;
     }
 };
 
 module.exports = LogicBus;
 
-},{"shared/WorkerBus":312}],216:[function(require,module,exports){
+},{"shared/WorkerBus":312}],217:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -26126,7 +26195,7 @@ ActorManager.prototype.getEnemies = function () {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":308}],217:[function(require,module,exports){
+},{"shared/ActorFactory":308}],218:[function(require,module,exports){
 'use strict';
 
 var BaseStateChangeHandler = require('renderer/actor/component/stateChangeHandler/BaseStateChangeHandler');
@@ -26275,7 +26344,7 @@ BaseActor.prototype._createState = function (state) {
 
 module.exports = BaseActor;
 
-},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":223}],218:[function(require,module,exports){
+},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":224}],219:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -26304,7 +26373,7 @@ DebugActor.prototype.customUpdate = function () {
 
 module.exports = DebugActor;
 
-},{"renderer/actor/BaseActor":217}],219:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218}],220:[function(require,module,exports){
 'use strict';
 
 function BaseMesh(config) {
@@ -26344,7 +26413,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],220:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -26366,7 +26435,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],221:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],222:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -26385,7 +26454,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],222:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],223:[function(require,module,exports){
 "use strict";
 
 var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
@@ -26406,7 +26475,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],223:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],224:[function(require,module,exports){
 "use strict";
 
 function BaseStateChangeHandler(config) {
@@ -26424,7 +26493,7 @@ BaseStateChangeHandler.prototype.customUpdate = function () {};
 
 module.exports = BaseStateChangeHandler;
 
-},{}],224:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -26488,7 +26557,7 @@ MookActor.prototype.drawEyes = function () {
 
 module.exports = MookActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],225:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/ShipMesh":223,"renderer/actor/mixin/BobMixin":231,"renderer/actor/mixin/ParticleMixin":232,"renderer/actor/mixin/ShowDamageMixin":233,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],226:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -26548,7 +26617,7 @@ OrbotActor.prototype.drawEyes = function () {
 
 module.exports = OrbotActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],226:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/ShipMesh":223,"renderer/actor/mixin/BobMixin":231,"renderer/actor/mixin/ParticleMixin":232,"renderer/actor/mixin/ShowDamageMixin":233,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],227:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -26620,7 +26689,7 @@ SniperActor.prototype.drawEyes = function () {
 
 module.exports = SniperActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ShipMesh":222,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],227:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/ShipMesh":223,"renderer/actor/mixin/BobMixin":231,"renderer/actor/mixin/ParticleMixin":232,"renderer/actor/mixin/ShowDamageMixin":233,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],228:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -26702,7 +26771,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],228:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],229:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -26825,7 +26894,7 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/mixin/ParticleMixin":231,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],229:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/BaseMesh":220,"renderer/actor/mixin/ParticleMixin":232,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],230:[function(require,module,exports){
 "use strict";
 
 var BaseActor = require("renderer/actor/BaseActor");
@@ -26838,7 +26907,7 @@ MapActor.extend(BaseActor);
 
 module.exports = MapActor;
 
-},{"renderer/actor/BaseActor":217}],230:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218}],231:[function(require,module,exports){
 "use strict";
 
 var BobMixin = {
@@ -26859,7 +26928,7 @@ var BobMixin = {
 
 module.exports = BobMixin;
 
-},{}],231:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 
 var ParticleMixin = {
@@ -26893,7 +26962,7 @@ var ParticleMixin = {
 
 module.exports = ParticleMixin;
 
-},{}],232:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 'use strict';
 
 var ShowDamageMixin = {
@@ -26922,7 +26991,7 @@ var ShowDamageMixin = {
 
 module.exports = ShowDamageMixin;
 
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require('renderer/actor/object/ChunkActor');
@@ -26942,7 +27011,7 @@ BoomChunkActor.prototype.onDeath = function () {
 
 module.exports = BoomChunkActor;
 
-},{"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/object/ChunkActor":234}],234:[function(require,module,exports){
+},{"renderer/actor/mixin/ParticleMixin":232,"renderer/actor/object/ChunkActor":235}],235:[function(require,module,exports){
 'use strict';
 
 var ChunkMesh = require('renderer/actor/component/mesh/ChunkMesh');
@@ -26996,7 +27065,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/ChunkMesh":220,"renderer/actor/mixin/ParticleMixin":231}],235:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/ChunkMesh":221,"renderer/actor/mixin/ParticleMixin":232}],236:[function(require,module,exports){
 'use strict';
 
 var RavierMesh = require('renderer/actor/component/mesh/RavierMesh');
@@ -27136,7 +27205,7 @@ ShipActor.prototype.doEngineGlow = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/component/mesh/BaseMesh":219,"renderer/actor/component/mesh/RavierMesh":221,"renderer/actor/mixin/BobMixin":230,"renderer/actor/mixin/ParticleMixin":231,"renderer/actor/mixin/ShowDamageMixin":232,"renderer/assetManagement/model/ModelStore":251,"shared/ActorConfig":307}],236:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/BaseMesh":220,"renderer/actor/component/mesh/RavierMesh":222,"renderer/actor/mixin/BobMixin":231,"renderer/actor/mixin/ParticleMixin":232,"renderer/actor/mixin/ShowDamageMixin":233,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],237:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27181,7 +27250,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],237:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],238:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27227,7 +27296,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],238:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],239:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27287,7 +27356,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],239:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],240:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27376,7 +27445,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PulseWaveProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],240:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],241:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27421,7 +27490,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],241:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],242:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27513,7 +27582,7 @@ RingProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RingProjectileActor;
 
-},{"renderer/actor/BaseActor":217,"renderer/actor/mixin/ParticleMixin":231}],242:[function(require,module,exports){
+},{"renderer/actor/BaseActor":218,"renderer/actor/mixin/ParticleMixin":232}],243:[function(require,module,exports){
 'use strict';
 
 function AiImageRenderer() {
@@ -27630,7 +27699,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
 
 module.exports = AiImageRenderer;
 
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 "use strict";
 
 var ModelLoader = require("renderer/assetManagement/model/ModelLoader");
@@ -27710,7 +27779,7 @@ AssetManager.prototype.chunksLoaded = function (event) {
 
 module.exports = AssetManager;
 
-},{"renderer/assetManagement/level/ChunkList":244,"renderer/assetManagement/level/ChunkLoader":245,"renderer/assetManagement/level/ChunkStore":246,"renderer/assetManagement/model/CustomModelCreator":248,"renderer/assetManagement/model/ModelList":249,"renderer/assetManagement/model/ModelLoader":250,"renderer/assetManagement/model/ModelStore":251,"renderer/assetManagement/sound/SoundLoader":252}],244:[function(require,module,exports){
+},{"renderer/assetManagement/level/ChunkList":245,"renderer/assetManagement/level/ChunkLoader":246,"renderer/assetManagement/level/ChunkStore":247,"renderer/assetManagement/model/CustomModelCreator":249,"renderer/assetManagement/model/ModelList":250,"renderer/assetManagement/model/ModelLoader":251,"renderer/assetManagement/model/ModelStore":252,"renderer/assetManagement/sound/SoundLoader":253}],245:[function(require,module,exports){
 'use strict';
 
 var levelPath = '/models/levels';
@@ -27730,7 +27799,7 @@ var ChunkList = {
 
 module.exports = ChunkList;
 
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 var HitmapLoader = require("renderer/assetManagement/level/HitmapLoader");
@@ -27793,7 +27862,7 @@ ChunkLoader.prototype.getModelName = function (path) {
 
 module.exports = ChunkLoader;
 
-},{"renderer/assetManagement/level/HitmapLoader":247}],246:[function(require,module,exports){
+},{"renderer/assetManagement/level/HitmapLoader":248}],247:[function(require,module,exports){
 "use strict";
 
 var ChunkStore = {
@@ -27836,7 +27905,7 @@ var ChunkStore = {
 
 module.exports = ChunkStore;
 
-},{}],247:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 "use strict";
 
 function HitmapLoader() {
@@ -27968,7 +28037,7 @@ HitmapLoader.prototype.addVerticesToFaces = function (vertices, faces) {
 
 module.exports = HitmapLoader;
 
-},{}],248:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 'use strict';
 
 function CustomModelCreator() {
@@ -28014,7 +28083,7 @@ CustomModelCreator.prototype.clearBatch = function () {
 
 module.exports = CustomModelCreator;
 
-},{}],249:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 'use strict';
 
 var ModelList = {
@@ -28023,7 +28092,7 @@ var ModelList = {
 
 module.exports = ModelList;
 
-},{}],250:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 'use strict';
 
 function ModelLoader() {
@@ -28076,7 +28145,7 @@ ModelLoader.prototype.getDefaultTexturePath = function (path) {
 
 module.exports = ModelLoader;
 
-},{}],251:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 "use strict";
 
 var ModelStore = {
@@ -28112,8 +28181,8 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],252:[function(require,module,exports){
-"use strict";
+},{}],253:[function(require,module,exports){
+'use strict';
 
 function SoundLoader(config) {
     config = config || {};
@@ -28121,37 +28190,40 @@ function SoundLoader(config) {
 }
 
 SoundLoader.prototype.loadSounds = function () {
-    createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.registerSound({ src: "sounds/shortzap2.wav", id: "shortzap2" });
-    createjs.Sound.registerSound({ src: "sounds/blue_laser.wav", id: "blue_laser" });
-    createjs.Sound.registerSound({ src: "sounds/plasmashot.wav", id: "plasmashot" });
-    createjs.Sound.registerSound({ src: "sounds/plasmashot2.wav", id: "plasmashot2" });
-    createjs.Sound.registerSound({ src: "sounds/plasmashot3.wav", id: "plasmashot3" });
-    createjs.Sound.registerSound({ src: "sounds/plasma1.wav", id: "plasmashot4" });
-    createjs.Sound.registerSound({ src: "sounds/SoundsCrate-SciFi-Laser1.wav", id: "laser_charged" });
-    createjs.Sound.registerSound({ src: "sounds/SoundsCrate-SciFi-Laser1b.wav", id: "laser_short" });
-    createjs.Sound.registerSound({ src: "sounds/SoundsCrate-SciFi-Laser2.wav", id: "laser_purple" });
-    createjs.Sound.registerSound({ src: "sounds/matterhit3.wav", id: "matterhit3" });
-    createjs.Sound.registerSound({ src: "sounds/plasmahit.wav", id: "plasmahit" });
-    createjs.Sound.registerSound({ src: "sounds/molten.wav", id: "molten" });
-    createjs.Sound.registerSound({ src: "sounds/debris1.wav", id: "debris1" });
-    createjs.Sound.registerSound({ src: "sounds/debris2.wav", id: "debris2" });
-    createjs.Sound.registerSound({ src: "sounds/debris3.wav", id: "debris3" });
-    createjs.Sound.registerSound({ src: "sounds/debris4.wav", id: "debris4" });
-    createjs.Sound.registerSound({ src: "sounds/debris5.wav", id: "debris5" });
-    createjs.Sound.registerSound({ src: "sounds/debris6.wav", id: "debris6" });
-    createjs.Sound.registerSound({ src: "sounds/debris7.wav", id: "debris7" });
-    createjs.Sound.registerSound({ src: "sounds/debris8.wav", id: "debris8" });
-    createjs.Sound.registerSound({ src: "sounds/drone1s1.wav", id: "drone" });
-    createjs.Sound.registerSound({ src: "sounds/spiders1.wav", id: "sniper" });
-    createjs.Sound.registerSound({ src: "sounds/itds3.wav", id: "orbot" });
-    createjs.Sound.registerSound({ src: "sounds/spawn.wav", id: "spawn" });
-    createjs.Sound.registerSound({ src: "sounds/cannon_change.wav", id: "cannon_change" });
+    createjs.Sound.alternateExtensions = ['mp3'];
+    createjs.Sound.registerSound({ src: 'sounds/shortzap2.wav', id: 'shortzap2' });
+    createjs.Sound.registerSound({ src: 'sounds/blue_laser.wav', id: 'blue_laser' });
+    createjs.Sound.registerSound({ src: 'sounds/plasmashot.wav', id: 'plasmashot' });
+    createjs.Sound.registerSound({ src: 'sounds/plasmashot2.wav', id: 'plasmashot2' });
+    createjs.Sound.registerSound({ src: 'sounds/plasmashot3.wav', id: 'plasmashot3' });
+    createjs.Sound.registerSound({ src: 'sounds/plasma1.wav', id: 'plasmashot4' });
+    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser1.wav', id: 'laser_charged' });
+    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser1b.wav', id: 'laser_short' });
+    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser2.wav', id: 'laser_purple' });
+    createjs.Sound.registerSound({ src: 'sounds/matterhit3.wav', id: 'matterhit3' });
+    createjs.Sound.registerSound({ src: 'sounds/plasmahit.wav', id: 'plasmahit' });
+    createjs.Sound.registerSound({ src: 'sounds/molten.wav', id: 'molten' });
+    createjs.Sound.registerSound({ src: 'sounds/debris1.wav', id: 'debris1' });
+    createjs.Sound.registerSound({ src: 'sounds/debris2.wav', id: 'debris2' });
+    createjs.Sound.registerSound({ src: 'sounds/debris3.wav', id: 'debris3' });
+    createjs.Sound.registerSound({ src: 'sounds/debris4.wav', id: 'debris4' });
+    createjs.Sound.registerSound({ src: 'sounds/debris5.wav', id: 'debris5' });
+    createjs.Sound.registerSound({ src: 'sounds/debris6.wav', id: 'debris6' });
+    createjs.Sound.registerSound({ src: 'sounds/debris7.wav', id: 'debris7' });
+    createjs.Sound.registerSound({ src: 'sounds/debris8.wav', id: 'debris8' });
+    createjs.Sound.registerSound({ src: 'sounds/drone1s1.wav', id: 'drone' });
+    createjs.Sound.registerSound({ src: 'sounds/spiders1.wav', id: 'sniper' });
+    createjs.Sound.registerSound({ src: 'sounds/itds3.wav', id: 'orbot' });
+    createjs.Sound.registerSound({ src: 'sounds/spawn.wav', id: 'spawn' });
+    createjs.Sound.registerSound({ src: 'sounds/cannon_change.wav', id: 'cannon_change' });
+    createjs.Sound.registerSound({ src: 'sounds/empty.wav', id: 'empty' });
+    createjs.Sound.registerSound({ src: 'sounds/ammocon_empty.mp3', id: 'ammo_empty' });
+    createjs.Sound.registerSound({ src: 'sounds/shieldcon_empty.mp3', id: 'shield_empty' });
 };
 
 module.exports = SoundLoader;
 
-},{}],253:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 'use strict';
 
 function CanvasHud(config) {
@@ -28239,11 +28311,11 @@ CanvasHud.prototype.drawBuffer = function (bufferCanvas) {
 
 module.exports = CanvasHud;
 
-},{}],254:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 'use strict';
 
 var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
-var TextSprite = require('renderer/gameUi/TextSprite');
+// var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config) {
     Object.assign(this, config);
@@ -28285,7 +28357,7 @@ FlatHud.prototype.update = function () {
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(function (switcher) {
-            var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
+            // var offsetPosition = Utils.rotationToVector(switcher.rotation, 30);
             // var textSprite = this.weaponTextSprites[switcher.index];
             // textSprite.position.x = offsetPosition[0];
             // textSprite.position.y = positionY + offsetPosition[1];
@@ -28371,26 +28443,26 @@ FlatHud.prototype.createSwitcher = function (switcherConfig, switcherIndex) {
     return switcher;
 };
 
-FlatHud.prototype.createWeaponTextSprite = function (switcherConfig, switcherIndex) {
-    var switcherTextSprite = new TextSprite({
-        visible: false,
-        fontSize: 40,
-        fontScale: 3,
-        height: 64,
-        widthMultiplier: 16
-    });
-    switcherTextSprite.drawMessage('');
+// FlatHud.prototype.createWeaponTextSprite = function(switcherConfig, switcherIndex){
+//     var switcherTextSprite = new TextSprite({
+//         visible: false,
+//         fontSize: 40,
+//         fontScale: 3,
+//         height: 64,
+//         widthMultiplier: 16
+//     });
+//     switcherTextSprite.drawMessage('');
 
-    return switcherTextSprite;
-};
+//     return switcherTextSprite;
+// };
 
-FlatHud.prototype.drawWeaponName = function (switcherIndex, weaponName) {
-    this.weaponTextSprites[switcherIndex].drawMessage(this.weaponNames[weaponName]);
-};
+// FlatHud.prototype.drawWeaponName = function(switcherIndex, weaponName){
+//     this.weaponTextSprites[switcherIndex].drawMessage(this.weaponNames[weaponName]);
+// };
 
 module.exports = FlatHud;
 
-},{"renderer/gameUi/TextSprite":257,"renderer/gameUi/WeaponSwitcher":259}],255:[function(require,module,exports){
+},{"renderer/gameUi/WeaponSwitcher":259}],256:[function(require,module,exports){
 'use strict';
 
 function FlatHudCamera(config) {
@@ -28419,7 +28491,7 @@ FlatHudCamera.prototype.update = function () {};
 
 module.exports = FlatHudCamera;
 
-},{}],256:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 'use strict';
 
 function Hud(config) {
@@ -28485,7 +28557,7 @@ Hud.prototype.drawHealthBar = function (otherActor) {
             positionX: otherActorPosition[0] + offsetPosition[0],
             positionY: otherActorPosition[1] + offsetPosition[1],
             positionZ: positionZ,
-            color: i >= hpPercentage * hpBarCount ? 'GREEN' : "RED",
+            color: i >= hpPercentage * hpBarCount ? 'DEEPRED' : "WHITE",
             scale: 0.75,
             particleVelocity: 0,
             particleRotation: rotation,
@@ -28498,56 +28570,6 @@ Hud.prototype.drawHealthBar = function (otherActor) {
 };
 
 module.exports = Hud;
-
-},{}],257:[function(require,module,exports){
-'use strict';
-
-function TextSprite(config) {
-    config = config || {};
-    config.message = config.message || '';
-    config.fontSize = config.fontSize || 20;
-    config.fontStyle = config.fontStyle || 'Oswald';
-    config.fontScale = config.fontScale || 10;
-    config.height = config.height || 64;
-    config.widthMultiplier = config.widthMultiplier || 4;
-
-    Object.assign(this, config);
-
-    this.canvas = this.createCanvas();
-    this.canvas.height = this.height;
-    this.canvas.width = this.height * this.widthMultiplier;
-
-    this.texture = new THREE.Texture(this.canvas);
-    this.context = this.canvas.getContext('2d');
-
-    this.material = new THREE.SpriteMaterial({ map: this.texture, color: 0xffffff });
-
-    THREE.Sprite.apply(this, [this.material]);
-
-    this.scale.x = config.fontScale * this.canvas.width / this.canvas.height;
-    this.scale.y = config.fontScale;
-}
-
-TextSprite.extend(THREE.Sprite);
-
-TextSprite.prototype.createCanvas = function () {
-    return document.createElement('canvas');
-};
-
-TextSprite.prototype.drawMessage = function (message) {
-    var metrics = this.context.measureText(message);
-    var textWidth = metrics.width;
-
-    var centerStartPosition = this.canvas.width / 2 - textWidth / 2;
-
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.font = "Bold " + this.fontSize + "px " + this.fontStyle;
-    this.context.fillStyle = '#00ff00';
-    this.context.fillText(message, centerStartPosition, this.fontSize);
-    this.texture.needsUpdate = true;
-};
-
-module.exports = TextSprite;
 
 },{}],258:[function(require,module,exports){
 "use strict";
@@ -28586,7 +28608,7 @@ WeaponMesh.prototype.setNewWeapon = function (newWeaponIndex) {
 
 module.exports = WeaponMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],259:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],259:[function(require,module,exports){
 'use strict';
 
 var WeaponMesh = require("renderer/gameUi/WeaponMesh");
@@ -30184,7 +30206,7 @@ BaseScene.prototype.testMesh = function (meshClass, scale) {
 
 module.exports = BaseScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251}],286:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],286:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30238,7 +30260,7 @@ FlatHudScene.prototype.customUpdate = function () {};
 
 module.exports = FlatHudScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/gameUi/FlatHudCamera":255,"renderer/scene/BaseScene":285}],287:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252,"renderer/gameUi/FlatHudCamera":256,"renderer/scene/BaseScene":285}],287:[function(require,module,exports){
 'use strict';
 
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
@@ -30386,7 +30408,7 @@ GameScene.prototype.onPlayerActorAppeared = function (actor) {
 
 module.exports = GameScene;
 
-},{"renderer/Camera":210,"renderer/assetManagement/level/ChunkStore":246,"renderer/map/ChunkMesh":260,"renderer/scene/BaseScene":285}],288:[function(require,module,exports){
+},{"renderer/Camera":210,"renderer/assetManagement/level/ChunkStore":247,"renderer/map/ChunkMesh":260,"renderer/scene/BaseScene":285}],288:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30571,7 +30593,7 @@ MainMenuScene.prototype.lightPowerUp = function () {
 
 module.exports = MainMenuScene;
 
-},{"renderer/Camera":210,"renderer/actor/component/mesh/BaseMesh":219,"renderer/assetManagement/model/ModelStore":251,"renderer/scene/BaseScene":285}],289:[function(require,module,exports){
+},{"renderer/Camera":210,"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252,"renderer/scene/BaseScene":285}],289:[function(require,module,exports){
 "use strict";
 
 var BaseScene = require("renderer/scene/BaseScene");
@@ -30743,7 +30765,6 @@ module.exports = ReactUtils;
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
-var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
 
 function Ui(config) {
@@ -30837,9 +30858,13 @@ Ui.prototype.onSoundConfig = function (data) {
     this.emit({ type: 'soundConfig', option: data.buttonEvent, value: data.state });
 };
 
+Ui.prototype.updateState = function (state) {
+    PubSub.publish('hudAmmoChange', state);
+};
+
 module.exports = Ui;
 
-},{"pubsub-js":4,"renderer/Core":213,"renderer/ui/ReactUi":290}],293:[function(require,module,exports){
+},{"renderer/Core":213,"renderer/ui/ReactUi":290}],293:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -30963,6 +30988,7 @@ var InitialView = _react2.default.createClass({
                 { blur: blurState },
                 _react2.default.createElement(Viewport, null)
             ),
+            _react2.default.createElement(AmmoTileContainer, null),
             UIcontent
         );
     }
@@ -31349,7 +31375,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var PubSub = require('pubsub-js');
+// var PubSub = require('pubsub-js');
 
 var Button = function (_React$Component) {
     _inherits(Button, _React$Component);
@@ -31383,7 +31409,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],299:[function(require,module,exports){
+},{"classnames":2,"react":177}],299:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -31452,7 +31478,7 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PubSub = require('pubsub-js');
+// var PubSub = require('pubsub-js');
 
 var OptionButton = _react2.default.createClass({
     displayName: 'OptionButton',
@@ -31491,7 +31517,7 @@ var OptionButton = _react2.default.createClass({
 
 module.exports = OptionButton;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],301:[function(require,module,exports){
+},{"classnames":2,"react":177}],301:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31551,7 +31577,7 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PubSub = require('pubsub-js');
+// var PubSub = require('pubsub-js');
 
 var ToggleButton = _react2.default.createClass({
     displayName: 'ToggleButton',
@@ -31589,7 +31615,7 @@ var ToggleButton = _react2.default.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":2,"pubsub-js":4,"react":177}],303:[function(require,module,exports){
+},{"classnames":2,"react":177}],303:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31660,7 +31686,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 var imagePath = 'gfx/ammoHud.png';
-var PubSub = require('pubsub-js');
+// var PubSub = require('pubsub-js');
 
 var AmmoTile = function (_Component) {
     _inherits(AmmoTile, _Component);
@@ -31676,16 +31702,16 @@ var AmmoTile = function (_Component) {
         _this.iconIndexes = {
             plasma: 0,
             energy: 4,
-            radioactive: 2,
-            missileCore: 3,
+            rads: 2,
+            shells: 3,
             coolant: 1
         };
 
         _this.colors = {
             plasma: '#00d681',
             energy: '#ffc04d',
-            radioactive: '#8a4dff',
-            missileCore: '#ff4d4d',
+            rads: '#8a4dff',
+            shells: '#ff4d4d',
             coolant: '#8bc9ff'
         };
 
@@ -31737,7 +31763,6 @@ var AmmoTile = function (_Component) {
         key: 'render',
         value: function render() {
             if (typeof this.props.amount === 'undefined') return null;
-
             var text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
 
             return _react2.default.createElement(
@@ -31758,7 +31783,7 @@ var AmmoTile = function (_Component) {
 
 module.exports = AmmoTile;
 
-},{"classnames":2,"pubsub-js":4,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291}],305:[function(require,module,exports){
+},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291}],305:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31809,7 +31834,7 @@ var AmmoTileContainer = function (_Component) {
             visible: false
         };
 
-        _this.knownAmmoTypes = ['plasma', 'energy', 'coolant', 'missileCore', 'radioactive'];
+        _this.knownAmmoTypes = ['plasma', 'energy', 'rads', 'shells'];
         return _this;
     }
 
@@ -31818,56 +31843,36 @@ var AmmoTileContainer = function (_Component) {
         value: function componentWillMount() {
             var _this2 = this;
 
-            PubSub.subscribe('reactHudAmmoChange', function (msg, data) {
+            PubSub.subscribe('hudAmmoChange', function (msg, data) {
                 _this2.setState({
                     ammo: data
                 });
             });
-            PubSub.subscribe('reactHudAmmoChange', function (msg, data) {
-                _this2.setState({
-                    ammo2: data
-                });
-            });
-            PubSub.subscribe('reactHudShow', function () {
+            PubSub.subscribe('hudShow', function () {
                 _this2.setState({
                     visible: true
                 });
             });
-
-            setInterval(function () {
-                _this2.setState({
-                    ammo: [{
-                        type: 'plasma',
-                        amount: Utils.rand(0, 100),
-                        maxAmount: 100
-                    }, {
-                        type: 'energy',
-                        amount: 100
-                    }, {
-                        type: 'missileCore',
-                        amount: 0,
-                        maxAmount: 10
-                    }]
-                });
-            }, 16);
         }
     }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(props) {}
     }, {
         key: 'createAmmoTiles',
-        value: function createAmmoTiles(config) {
+        value: function createAmmoTiles(ammoConfig) {
             var _this3 = this;
 
+            if (!ammoConfig || ammoConfig.length === 0) {
+                return [];
+            }
             var ammoConfigs = [];
 
-            ammoConfigs = config.map(function (ammoConfig) {
-                if (_this3.knownAmmoTypes.indexOf(ammoConfig.type) < 0) return null;
+            ammoConfigs = Object.keys(ammoConfig.ammo).map(function (ammoType) {
+                if (_this3.knownAmmoTypes.indexOf(ammoType) < 0) return null;
                 return _react2.default.createElement(AmmoTile, {
-
-                    type: ammoConfig.type,
-                    amount: ammoConfig.amount || 0,
-                    maxAmount: ammoConfig.maxAmount
+                    type: ammoType,
+                    amount: Math.ceil(ammoConfig.ammo[ammoType] || 0),
+                    maxAmount: ammoConfig.ammoMax[ammoType]
                 });
             });
 
@@ -31951,14 +31956,7 @@ var WeaponInfoContainer = function (_Component) {
         value: function componentWillMount() {
             var _this2 = this;
 
-            // PubSub.subscribe( 'reactHudAmmoChange', (msg, data) => {
-            //     this.setState({
-            //         ammo: data
-            //     });
-            // });
-            console.log("willMount");
             PubSub.subscribe('reactHudShow', function () {
-                console.log("setState");
                 _this2.setState({
                     visible: true
                 });
@@ -32036,7 +32034,7 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 3000,
+            hp: 30,
             hpBarCount: 20,
             isPlayer: true
         },
@@ -32053,7 +32051,7 @@ var ActorConfig = {
     PLASMAPROJECTILE: {
         props: {
             hp: 1,
-            damage: 1.8,
+            damage: 3,
             removeOnHit: true,
             timeout: 300,
             collisionFixesPosition: true,
@@ -32069,7 +32067,7 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 3,
+            damage: 5,
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,
@@ -32103,7 +32101,7 @@ var ActorConfig = {
     PULSEWAVEPROJECTILE: {
         props: {
             hp: 1,
-            damage: 3,
+            damage: 2,
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,
@@ -32186,7 +32184,7 @@ var ActorConfig = {
             hp: 300,
             hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 240,
+            spawnRate: 350,
             enemy: true
         }
     },
@@ -32320,7 +32318,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":181,"logic/actor/enemy/MookActor":193,"logic/actor/enemy/OrbotActor":194,"logic/actor/enemy/SniperActor":195,"logic/actor/map/EnemySpawnMarkerActor":196,"logic/actor/map/EnemySpawnerActor":197,"logic/actor/map/MapActor":198,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/player/ShipActor":203,"logic/actor/projectile/LaserProjectileActor":204,"logic/actor/projectile/MoltenProjectileActor":205,"logic/actor/projectile/PlasmaProjectileActor":206,"logic/actor/projectile/PulseWaveProjectileActor":207,"logic/actor/projectile/RedLaserProjectileActor":208,"logic/actor/projectile/RingProjectileActor":209,"renderer/actor/DebugActor":218,"renderer/actor/enemy/MookActor":224,"renderer/actor/enemy/OrbotActor":225,"renderer/actor/enemy/SniperActor":226,"renderer/actor/map/EnemySpawnMarkerActor":227,"renderer/actor/map/EnemySpawnerActor":228,"renderer/actor/map/MapActor":229,"renderer/actor/object/BoomChunkActor":233,"renderer/actor/object/ChunkActor":234,"renderer/actor/player/ShipActor":235,"renderer/actor/projectile/LaserProjectileActor":236,"renderer/actor/projectile/MoltenProjectileActor":237,"renderer/actor/projectile/PlasmaProjectileActor":238,"renderer/actor/projectile/PulseWaveProjectileActor":239,"renderer/actor/projectile/RedLaserProjectileActor":240,"renderer/actor/projectile/RingProjectileActor":241}],309:[function(require,module,exports){
+},{"logic/actor/DebugActor":181,"logic/actor/enemy/MookActor":193,"logic/actor/enemy/OrbotActor":194,"logic/actor/enemy/SniperActor":195,"logic/actor/map/EnemySpawnMarkerActor":196,"logic/actor/map/EnemySpawnerActor":197,"logic/actor/map/MapActor":198,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/player/ShipActor":203,"logic/actor/projectile/LaserProjectileActor":204,"logic/actor/projectile/MoltenProjectileActor":205,"logic/actor/projectile/PlasmaProjectileActor":206,"logic/actor/projectile/PulseWaveProjectileActor":207,"logic/actor/projectile/RedLaserProjectileActor":208,"logic/actor/projectile/RingProjectileActor":209,"renderer/actor/DebugActor":219,"renderer/actor/enemy/MookActor":225,"renderer/actor/enemy/OrbotActor":226,"renderer/actor/enemy/SniperActor":227,"renderer/actor/map/EnemySpawnMarkerActor":228,"renderer/actor/map/EnemySpawnerActor":229,"renderer/actor/map/MapActor":230,"renderer/actor/object/BoomChunkActor":234,"renderer/actor/object/ChunkActor":235,"renderer/actor/player/ShipActor":236,"renderer/actor/projectile/LaserProjectileActor":237,"renderer/actor/projectile/MoltenProjectileActor":238,"renderer/actor/projectile/PlasmaProjectileActor":239,"renderer/actor/projectile/PulseWaveProjectileActor":240,"renderer/actor/projectile/RedLaserProjectileActor":241,"renderer/actor/projectile/RingProjectileActor":242}],309:[function(require,module,exports){
 "use strict";
 
 var Constants = {

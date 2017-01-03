@@ -3,27 +3,28 @@ var GameWorld = require('logic/GameWorld');
 var ActorManager = require('logic/actor/ActorManager');
 var MapManager = require('logic/map/MapManager');
 var GameScene = require('logic/GameScene');
+var GameState = require('logic/GameState');
 var WorldAiMapExtractor = require('logic/WorldAiMapExtractor');
 
 function Core(worker){
-    this.makeMainComponents(worker);
-    this.initializeEventHandlers();
-
-    this.initFpsCounter();
+    this.createMainComponents(worker);
+    this.createEventHandlers();
+    this.createFpsCounter();
 
     this.running = false;
 }
 
-Core.prototype.makeMainComponents = function(worker){
+Core.prototype.createMainComponents = function(worker){
     this.renderBus = new RenderBus({core: this, worker: worker});
     this.world = new GameWorld();
-    this.actorManager = new ActorManager({world: this.world});
+    this.gameState = new GameState();
+    this.actorManager = new ActorManager({world: this.world, gameState: this.gameState});
     this.mapManager = new MapManager();
     this.scene = new GameScene({world: this.world, actorManager: this.actorManager, mapManager: this.mapManager});
     this.worldAiMapXtractor = new WorldAiMapExtractor({world: this.world});
 };
 
-Core.prototype.initializeEventHandlers = function(){
+Core.prototype.createEventHandlers = function(){
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
 
@@ -32,9 +33,11 @@ Core.prototype.initializeEventHandlers = function(){
     this.actorManager.on('actorStateChange', this.onActorStateChange.bind(this));
     this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
     this.actorManager.on('playSound', this.onPlaySound.bind(this));
+
+    this.gameState.on('gameStateChange', this.onGameStateChange.bind(this));
 };
 
-Core.prototype.initFpsCounter = function(){
+Core.prototype.createFpsCounter = function(){
     this.logicTicks = 0;
     if(Constants.SHOW_FPS){
         setInterval(()=>{
@@ -52,6 +55,7 @@ Core.prototype.processGameLogic = function(){
 
 Core.prototype.doTick = function(){
     this.actorManager.update(this.inputState);
+    this.gameState.update();
     this.renderBus.postMessage('updateActors', this.world.makeUpdateData());
     this.world.cleanDeadActors();
     this.world.step(1 / Constants.LOGIC_REFRESH_RATE);
@@ -82,12 +86,6 @@ Core.prototype.onPause = function(){
 Core.prototype.onAiImageDone = function(event){
     this.actorManager.aiImage = event.data;
 };
-//
-// Core.prototype.onNewPlayerActor = function(event){
-//     var playerActor = event.data;
-//     this.actorManager.setPlayerActor(playerActor);
-//     this.renderBus.postMessage('attachPlayer', {actorId: playerActor.body.actorId});
-// };
 
 Core.prototype.onActorStateChange = function(event){
     this.renderBus.postMessage('actorStateChange', {data: event.data});
@@ -125,6 +123,10 @@ Core.prototype.onPlaySound = function(event){
 
 Core.prototype.onWeaponSwitched = function(event){
     this.actorManager.switchPlayerWeapon(event.data);
+};
+
+Core.prototype.onGameStateChange = function(event){
+    this.renderBus.postMessage('gameStateChange', event.data);
 };
 
 module.exports = Core;

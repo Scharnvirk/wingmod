@@ -15,31 +15,31 @@ var InitialView = React.createClass({
     render(){
         let UIcontent = [];
         switch(this.props.mode || 'startScreen'){
-            case 'startScreen':
-                UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
-                break;
-            case 'helpScreen':
-                UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);
-                break;
-            case 'gameOverScreen':
-                UIcontent.push(<
-                    EndScreen key={ReactUtils.generateKey()}
-                    scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
-                    bigText={ReactUtils.multilinize(this.props.context.bigText)}
-                    />);
-                break;
+        case 'startScreen':
+            UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
+            break;
+        case 'helpScreen':
+            UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);
+            break;
+        case 'gameOverScreen':
+            UIcontent.push(<
+                EndScreen key={ReactUtils.generateKey()}
+                scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
+                bigText={ReactUtils.multilinize(this.props.context.bigText)}
+                />);
+            break;
         }
 
         let blurState;
         switch(this.props.mode){
-            case 'running':
-                blurState = 'end';
-                break;
-            case 'gameOverScreen':
-                blurState = 'start';
-                break;
-            default:
-                blurState = 'end';
+        case 'running':
+            blurState = 'end';
+            break;
+        case 'gameOverScreen':
+            blurState = 'start';
+            break; 
+        default:
+            blurState = 'end';
         }
 
         return <div>
@@ -48,6 +48,7 @@ var InitialView = React.createClass({
                 </Viewport>
             </FullScreenEffect>
 
+            <AmmoTileContainer/>
             {UIcontent}
         </div>;
     }

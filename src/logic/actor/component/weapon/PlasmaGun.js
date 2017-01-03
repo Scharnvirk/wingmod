@@ -1,5 +1,5 @@
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function PlasmaGun(config){
     Object.assign(this, config);
@@ -8,10 +8,13 @@ function PlasmaGun(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 14;
+    this.cooldown = 7;
     this.velocity = 230;
     this.sound = 'plasmashot3';
     this.volume = 0.5;
+    this.ammoConfig = {
+        plasma: 1
+    };
 }
 
 PlasmaGun.extend(BaseWeapon);

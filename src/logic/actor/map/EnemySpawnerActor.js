@@ -62,7 +62,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
-    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 EnemySpawnerActor.prototype.onHit = function(){

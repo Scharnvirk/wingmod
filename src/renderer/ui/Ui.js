@@ -1,5 +1,4 @@
 var ReactUi = require('renderer/ui/ReactUi');
-var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
 
 function Ui(config){
@@ -90,5 +89,10 @@ Ui.prototype.onResolutionConfig = function(data){
 Ui.prototype.onSoundConfig = function(data){
     this.emit({type: 'soundConfig', option: data.buttonEvent, value: data.state});
 };
+
+Ui.prototype.updateState = function(state){
+    PubSub.publish('hudAmmoChange', state);
+};
+    
 
 module.exports = Ui;

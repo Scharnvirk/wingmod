@@ -16,6 +16,7 @@ function BaseActor(config){
     this._body.actorId = this.id;
     this._body.classId = config.classId;
 
+    this._stepAngle = Utils.radToDeg((this.props.turnSpeed || 0) / Constants.LOGIC_REFRESH_RATE);
     this._thrust = 0;
     this._horizontalThrust = 0;
     this._angleForce = 0;
@@ -39,6 +40,10 @@ BaseActor.prototype.getPosition = function(){
 
 BaseActor.prototype.getAngle = function(){
     return this._body.angle;
+};
+
+BaseActor.prototype.getStepAngle = function(){
+    return this._stepAngle;
 };
 
 BaseActor.prototype.getVelocity = function(){
@@ -80,6 +85,10 @@ BaseActor.prototype.setMass = function(mass){
 
 BaseActor.prototype.getMass = function(){
     return this._body.mass;
+};
+
+BaseActor.prototype.playSound = function(sounds, volume){
+    this.manager.playSound({sounds:sounds, actor: this, volume: volume || 1});
 };
 
 BaseActor.prototype.createBody = function(){

@@ -12,9 +12,7 @@ function ShipActor(config){
 
     this.applyConfig(ActorConfig.SHIP);
 
-    this.hudModifier = 'shift';
-
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
+    this.props.hudModifier = 'shift';
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
@@ -51,6 +49,7 @@ ShipActor.prototype.playerUpdate = function(inputState){
 ShipActor.prototype.createPrimaryWeaponSystem = function(){
     return new WeaponSystem({
         actor: this,
+        gameState: this.gameState,
         firingPoints: [
             {offsetAngle: -50, offsetDistance: 4, fireAngle: 0},
             {offsetAngle: 50, offsetDistance: 4, fireAngle: 0}
@@ -61,6 +60,7 @@ ShipActor.prototype.createPrimaryWeaponSystem = function(){
 ShipActor.prototype.createSecondaryWeaponSystem = function(){
     return new WeaponSystem({
         actor: this,
+        gameState: this.gameState,
         firingPoints: [
             {offsetAngle: -40, offsetDistance: 8, fireAngle: 0},
             {offsetAngle: 40, offsetDistance: 8 , fireAngle: 0}
@@ -93,7 +93,7 @@ ShipActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
-    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 ShipActor.prototype.onHit = function(){

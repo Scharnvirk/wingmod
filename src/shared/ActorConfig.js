@@ -3,7 +3,7 @@ var ActorConfig = {
         props: {
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 3000,
+            hp: 30,
             hpBarCount: 20,
             isPlayer: true
         },
@@ -20,7 +20,7 @@ var ActorConfig = {
     PLASMAPROJECTILE: {
         props: {
             hp: 1,
-            damage: 1.8,
+            damage: 3,
             removeOnHit: true,
             timeout: 300,
             collisionFixesPosition: true,
@@ -36,7 +36,7 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 3,
+            damage: 5,
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,
@@ -70,7 +70,7 @@ var ActorConfig = {
     PULSEWAVEPROJECTILE: {
         props: {
             hp: 1,
-            damage: 3,
+            damage: 2,
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,
@@ -153,7 +153,7 @@ var ActorConfig = {
             hp: 300,
             hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 240,
+            spawnRate: 350,
             enemy: true
         }
     },

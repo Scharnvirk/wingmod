@@ -16,7 +16,6 @@ function SniperActor(config){
     this.calloutSound = 'sniper';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
-    this.stepAngle = Utils.radToDeg(this.props.turnSpeed / Constants.LOGIC_REFRESH_RATE);
 
     BaseActor.apply(this, arguments);
 }
@@ -64,7 +63,7 @@ SniperActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
-    this.manager.playSound({sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], actor: this, volume: 10});
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
 SniperActor.prototype.onHit = function(){

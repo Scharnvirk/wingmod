@@ -11,6 +11,7 @@ var Hud = require('renderer/gameUi/Hud');
 var CanvasHud = require('renderer/gameUi/CanvasHud');
 var FlatHud = require('renderer/gameUi/FlatHud');
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
+var GameState = require('renderer/GameState');
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -58,6 +59,7 @@ Core.prototype.createMainComponents = function(){
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
     this.canvasHud = new CanvasHud({canvasElement: this.canvasElement, autoWidth: true});
+    this.gameState = new GameState({ui: this.ui});
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -247,7 +249,7 @@ Core.prototype.onStartGame = function(){
         this.logicBus.postMessage('startGame', {});
         this.activeScene = 'GameScene';
     }
-    PubSub.publish('reactHudShow');
+    PubSub.publish('hudShow');
 };
 
 Core.prototype.onGotPointerLock = function(){
@@ -316,6 +318,10 @@ Core.prototype.onWeaponSwitched = function(event){
 
 Core.prototype.onMapDone = function(event){
     this.sceneManager.get('GameScene').createMap(event.data);
+};
+
+Core.prototype.onGameStateChange = function(event){
+    this.gameState.update(event.data);
 };
 
 module.exports = Core;

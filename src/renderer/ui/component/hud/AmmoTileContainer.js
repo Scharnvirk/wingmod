@@ -27,62 +27,37 @@ class AmmoTileContainer extends Component {
         };
 
         this.knownAmmoTypes = [
-            'plasma', 'energy', 'coolant', 'missileCore', 'radioactive'
+            'plasma', 'energy', 'rads', 'shells'
         ];
     }
 
     componentWillMount() {
-        PubSub.subscribe( 'reactHudAmmoChange', (msg, data) => {
+        PubSub.subscribe( 'hudAmmoChange', (msg, data) => {
             this.setState({
                 ammo: data
             });
         });
-        PubSub.subscribe( 'reactHudAmmoChange', (msg, data) => {
-            this.setState({
-                ammo2: data
-            });
-        });
-        PubSub.subscribe( 'reactHudShow', () => {
+        PubSub.subscribe( 'hudShow', () => {
             this.setState({
                 visible: true
             });
         });
-
-        setInterval(() =>{
-            this.setState ({
-                ammo: [
-                   {
-                       type: 'plasma',
-                       amount: Utils.rand(0,100),
-                       maxAmount: 100
-                   },
-                   {
-                       type: 'energy',
-                       amount: 100,
-                   },
-                   {
-                       type: 'missileCore',
-                       amount: 0,
-                       maxAmount: 10
-                   }
-               ]
-            });
-        }, 16);
     }
 
-    componentWillReceiveProps(props) {
-    }
+    componentWillReceiveProps(props) {}
 
-    createAmmoTiles(config) {
+    createAmmoTiles(ammoConfig) {
+        if(!ammoConfig || ammoConfig.length === 0){
+            return [];
+        }
         var ammoConfigs = [];
 
-        ammoConfigs = config.map(ammoConfig => {
-            if (this.knownAmmoTypes.indexOf(ammoConfig.type) < 0) return null;
+        ammoConfigs = Object.keys(ammoConfig.ammo).map(ammoType => {
+            if (this.knownAmmoTypes.indexOf(ammoType) < 0) return null;
             return <AmmoTile
-
-                type={ammoConfig.type}
-                amount={ammoConfig.amount || 0}
-                maxAmount={ammoConfig.maxAmount}
+                type={ammoType}
+                amount={Math.ceil(ammoConfig.ammo[ammoType] || 0)}
+                maxAmount={ammoConfig.ammoMax[ammoType]}
             />;
         });
 

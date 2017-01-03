@@ -7,11 +7,11 @@ var InputMixin = {
         var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
         if (angle < 180 && angle > 0) {
-            angleForce = Math.min(angle/this.stepAngle, 1) * -1;
+            angleForce = Math.min(angle/this.getStepAngle(), 1) * -1;
         }
 
         if (angle >= 180 && angle < 360) {
-            angleForce = Math.min((360-angle)/this.stepAngle, 1);
+            angleForce = Math.min((360-angle)/this.getStepAngle(), 1);
         }
 
         if (inputState.q) {
