@@ -1,5 +1,5 @@
-var ActorFactory = require("shared/ActorFactory")('logic');
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var ActorFactory = require('shared/ActorFactory')('logic');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function GameScene(config){
     Object.assign(this, config);

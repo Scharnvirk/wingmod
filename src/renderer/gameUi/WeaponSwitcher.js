@@ -1,4 +1,4 @@
-var WeaponMesh = require("renderer/gameUi/WeaponMesh");
+var WeaponMesh = require('renderer/gameUi/WeaponMesh');
 
 function WeaponSwitcher(config){
     Object.assign(this, config);

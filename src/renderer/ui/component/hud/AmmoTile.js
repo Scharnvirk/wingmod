@@ -1,17 +1,12 @@
-import React, {Component} from 'react';
-import classnames from 'classnames';
-import {Animate} from 'react-rebound';
-
-var ReactUtils = require('renderer/ui/ReactUtils');
+import {Component} from 'react';
 var imagePath = 'gfx/ammoHud.png';
-// var PubSub = require('pubsub-js');
 
 class AmmoTile extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor (props, context) {
+        super (props, context);
 
         this.tileCount = 4;
-        this.multiplier = 97.75; //investigate why - whould be 100
+        this.multiplier = 97.75; // investigate why - whould be 100
 
         this.iconIndexes = {
             plasma: 0,
@@ -31,14 +26,14 @@ class AmmoTile extends Component {
 
         this.componentStyle = {
             background: {
-                width: '25vw',
-                height: '4vw',
+                width: '12.5vw',
+                height: '1.5vw',
                 position: 'relative',
                 margin: '0.5vw 0.5vw 0.5vw 0.5vw',
             },
             icon: {
-                height: '4vw',
-                width: '4vw',
+                height: '2vw',
+                width: '2vw',
                 position: 'absolute',
                 right: '0',
                 backgroundImage: 'url(' + imagePath + ')',
@@ -47,8 +42,8 @@ class AmmoTile extends Component {
             text: {
                 position: 'absolute',
                 fontFamily: 'Oswald',
-                fontSize: '2.5vw',
-                right: '5vw',
+                fontSize: '1.25vw',
+                right: '2.5vw',
                 color: 'white'
             }
         };

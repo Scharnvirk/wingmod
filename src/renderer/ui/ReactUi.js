@@ -24,21 +24,21 @@ ReactUi.prototype.changeMode = function(newMode, context){
     var additionalConfig = context || null;
 
     switch(newMode){
-        case 'running':
-            if (this.InitialView.props.mode === 'helpScreen'){
-                let gameViewport = document.getElementById('gameViewport');
-                if(!gameViewport.classList.contains('noPointerEvents')){
-                    gameViewport.addClass('noPointerEvents');
-                }
-
-                this.InitialView = <InitialView mode={newMode} context={context}/>;
-                this.render();
+    case 'running':
+        if (this.InitialView.props.mode === 'helpScreen'){
+            let gameViewport = document.getElementById('gameViewport');
+            if(!gameViewport.classList.contains('noPointerEvents')){
+                gameViewport.addClass('noPointerEvents');
             }
-            break;
-        case 'helpScreen':
+
             this.InitialView = <InitialView mode={newMode} context={context}/>;
             this.render();
-            break;
+        }
+        break;
+    case 'helpScreen':
+        this.InitialView = <InitialView mode={newMode} context={context}/>;
+        this.render();
+        break;
     }
 
     return this.InitialView.props.mode;

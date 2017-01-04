@@ -61,7 +61,7 @@ Hud.prototype.drawHealthBar = function(otherActor){
             positionX: otherActorPosition[0] + offsetPosition[0],
             positionY: otherActorPosition[1] + offsetPosition[1],
             positionZ: positionZ,
-            color: i >= hpPercentage * hpBarCount ? 'DEEPRED' : "WHITE",
+            color: i >= hpPercentage * hpBarCount ? 'DEEPRED' : 'WHITE',
             scale: 0.75,
             particleVelocity: 0,
             particleRotation: rotation,

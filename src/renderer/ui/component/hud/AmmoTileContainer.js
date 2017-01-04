@@ -12,7 +12,7 @@ class AmmoTileContainer extends Component {
 
         this.componentStyle = {
             background: {
-                width: '26vw',
+                width: '13vw',
                 height: '100%',
                 right: '0px',
                 position: 'fixed',

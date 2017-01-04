@@ -36,11 +36,11 @@ Core.prototype.init = function(){
 
     this.createMainComponents();
     this.initEventHandlers();
-    this.renderStats = this.createRenderStatsWatcher();
-    this.stats = this.createStatsWatcher();
+    // this.renderStats = this.createRenderStatsWatcher();
+    // this.stats = this.createStatsWatcher();
     this.startTime = Date.now();
-    this.attachToDom(this.renderStats);
-    this.attachToDom(this.stats);
+    // this.attachToDom(this.renderStats);
+    // this.attachToDom(this.stats);
     this.attachRendererToDom(this.renderer);
 
     PubSub.publish('setConfig', this.configManager.settingConfig);
@@ -189,8 +189,8 @@ Core.prototype.render = function(){
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
     this.flatHud.update();
-    this.renderStats.update(this.renderer);
-    this.stats.update();
+    // this.renderStats.update(this.renderer);
+    // this.stats.update();
 };
 
 Core.prototype.startGameRenderMode = function(){

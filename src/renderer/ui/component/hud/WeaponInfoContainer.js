@@ -42,20 +42,20 @@ class WeaponInfoContainer extends Component {
         setInterval(() =>{
             this.setState ({
                 ammo: [
-                   {
-                       type: 'plasma',
-                       amount: Utils.rand(0,100)
-                   },
-                   {
-                       type: 'energy',
-                       amount: Utils.rand(0,100)
-                   },
-                   {
-                       type: 'missileCore',
+                    {
+                        type: 'plasma',
                         amount: Utils.rand(0,100)
-                   }
-               ],
-               update: true
+                    },
+                    {
+                        type: 'energy',
+                        amount: Utils.rand(0,100)
+                    },
+                    {
+                        type: 'missileCore',
+                        amount: Utils.rand(0,100)
+                    }
+                ],
+                update: true
             });
         }, 500);
     }
@@ -86,7 +86,7 @@ class WeaponInfoContainer extends Component {
     }
 
     render() {
-        console.log("render");
+        console.log('render');
         if (!this.state.visible) return null;
 
         return <div style={this.componentStyle.background}>

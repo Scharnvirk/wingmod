@@ -29,9 +29,9 @@ CanvasHud.prototype.fill = function(){
     // this.drawContext.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
     var context = this.drawContext;
 
-    context.font = "Normal 40px Arial";
+    context.font = 'Normal 40px Arial';
     context.textAlign = 'center';
-    context.fillStyle = "rgba(245,245,245,1)";
+    context.fillStyle = 'rgba(245,245,245,1)';
 
 
     setInterval(() => {
@@ -73,20 +73,20 @@ CanvasHud.prototype.drawBuffer = function(bufferCanvas){
     this.buffer = bufferCanvas;
 
     switch(bufferCanvas.position){
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        default:
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
+    case 'topLeft':
+        this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
+        break;
+    case 'topLeft':
+        this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
+        break;
+    case 'topLeft':
+        this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
+        break;
+    case 'topLeft':
+        this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
+        break;
+    default:
+        this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
     }
 
 

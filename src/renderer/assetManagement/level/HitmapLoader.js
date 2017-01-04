@@ -17,16 +17,16 @@ HitmapLoader.prototype.jsonToFaces = function(json){
     }
 
     var offset, zLength,
-    type, isQuad,
-    hasMaterial, hasFaceUv, hasFaceVertexUv, hasFaceNormal,
-    hasFaceVertexNormal, hasFaceColor, hasFaceVertexColor,
-    vertex, normalIndex,
-    faces = json.faces,
-    vertices = json.vertices,
-    normals = json.normals,
-    colors = json.colors,
-    nUvLayers = 0,
-    nVertices = 0;
+        type, isQuad,
+        hasMaterial, hasFaceUv, hasFaceVertexUv, hasFaceNormal,
+        hasFaceVertexNormal, hasFaceColor, hasFaceVertexColor,
+        vertex, normalIndex,
+        faces = json.faces,
+        vertices = json.vertices,
+        normals = json.normals,
+        colors = json.colors,
+        nUvLayers = 0,
+        nVertices = 0;
 
     for (let i = 0; i < json.uvs.length; i++ ) {
         if ( json.uvs[ i ].length ) nUvLayers ++;

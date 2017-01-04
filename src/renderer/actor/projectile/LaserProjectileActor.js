@@ -20,7 +20,7 @@ LaserProjectileActor.prototype.onDeath = function(){
 LaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -29,7 +29,7 @@ LaserProjectileActor.prototype.onSpawn = function(){
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,

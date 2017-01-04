@@ -1,7 +1,7 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function MapChunk(config){
-    if (!config.hitmap) throw new Error("no hitmap specified for a MapChunk!");
+    if (!config.hitmap) throw new Error('no hitmap specified for a MapChunk!');
 
     Object.assign(this, config);
 

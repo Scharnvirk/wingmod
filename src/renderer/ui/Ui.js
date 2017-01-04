@@ -17,28 +17,28 @@ Ui.extend(EventEmitter);
 Ui.prototype.setupButtonListener = function(){
     PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
-            case 'start':
-                this.onStartButtonClick();
-                break;
-            case 'stop':
-                this.onStop();
-                break;
-            case 'shadowConfig':
-                this.onShadowConfig(data);
-                break;
-            case 'resolutionConfig':
-                this.onResolutionConfig(data);
-                break;
-            case 'soundConfig':
-                this.onSoundConfig(data);
-                break;
+        case 'start':
+            this.onStartButtonClick();
+            break;
+        case 'stop':
+            this.onStop();
+            break;
+        case 'shadowConfig':
+            this.onShadowConfig(data);
+            break;
+        case 'resolutionConfig':
+            this.onResolutionConfig(data);
+            break;
+        case 'soundConfig':
+            this.onSoundConfig(data);
+            break;
         }
     } );
 };
 
 Ui.prototype.init = function(){
     if(!this.gameCore){
-        console.error("no GameCore set in UI!");
+        console.error('no GameCore set in UI!');
     }
 
     this.gameCore.init();

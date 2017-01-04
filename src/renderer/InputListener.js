@@ -67,23 +67,23 @@ function InputListener(config){
 
     this.mouseDown = function (event) {
         switch(event.button){
-            case 0:
-                this.inputState.mouseLeft = 1;
-                break;
-            case 2:
-                this.inputState.mouseRight = 1;
-                break;
+        case 0:
+            this.inputState.mouseLeft = 1;
+            break;
+        case 2:
+            this.inputState.mouseRight = 1;
+            break;
         }
     };
 
     this.mouseUp = function(event) {
         switch(event.button){
-            case 0:
-                this.inputState.mouseLeft = 0;
-                break;
-            case 2:
-                this.inputState.mouseRight = 0;
-                break;
+        case 0:
+            this.inputState.mouseLeft = 0;
+            break;
+        case 2:
+            this.inputState.mouseRight = 0;
+            break;
         }
     };
 
@@ -106,14 +106,14 @@ function InputListener(config){
     this.update = function () {
         for (let key in this.inputState){
             switch(key){
-                case 'scrollUp':
-                case 'scrollDown':
-                    if (this.inputState[key] > 0) {
-                        this.inputState[key] *= 1-this.scrollFallOffPercent/100;
-                    }
-                    if (this.inputState[key] < 0.5) {
-                        this.inputState[key] = 0;
-                    }
+            case 'scrollUp':
+            case 'scrollDown':
+                if (this.inputState[key] > 0) {
+                    this.inputState[key] *= 1-this.scrollFallOffPercent/100;
+                }
+                if (this.inputState[key] < 0.5) {
+                    this.inputState[key] = 0;
+                }
                 break;
             }
         }

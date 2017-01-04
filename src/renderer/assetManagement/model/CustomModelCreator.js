@@ -8,13 +8,13 @@ CustomModelCreator.prototype.configure = function(){
         'chunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x888888,
-                map: new THREE.TextureLoader().load("/models/chunk.png")
+                map: new THREE.TextureLoader().load('/models/chunk.png')
             })
         },
         'orangeChunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x885522,
-                map: new THREE.TextureLoader().load("/models/chunk.png")
+                map: new THREE.TextureLoader().load('/models/chunk.png')
             })
         }
     };

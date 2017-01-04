@@ -6,7 +6,7 @@ function ModelLoader(){
 ModelLoader.extend(EventEmitter);
 
 ModelLoader.prototype.loadModels = function(modelPaths){
-    if(!modelPaths) throw "ERROR: No model paths have been specified for the loader!";
+    if(!modelPaths) throw 'ERROR: No model paths have been specified for the loader!';
     var loader = new THREE.JSONLoader();
 
     Promise.all(modelPaths.map(modelPath => {

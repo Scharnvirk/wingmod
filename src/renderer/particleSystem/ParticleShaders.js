@@ -1,5 +1,5 @@
 var ParticleShaders = {    
-    vertexShaderSpriteSheet: " \
+    vertexShaderSpriteSheet: ' \
         attribute vec4 speed; \
         attribute vec4 configs; \
         \
@@ -49,9 +49,9 @@ var ParticleShaders = {
             gl_Position = projectionMatrix * mvPosition; \
             textureCoord = vec2((1.0 / spriteSheetLength) * spriteNumber, 0.0); \
             textureSize = vec2(1.0 / spriteSheetLength, 1.0); \
-        }",
+        }',
 
-    fragmentShaderSpriteSheet: " \
+    fragmentShaderSpriteSheet: ' \
         uniform sampler2D map; \
         varying vec3 vColor; \
         varying float vAlpha; \
@@ -62,9 +62,9 @@ var ParticleShaders = {
             mediump vec4 fragColor = texture2D(map, realTexCoord); \
             gl_FragColor = vec4(vColor, vAlpha) * fragColor; \
         } \
-    ",
+    ',
 
-    symbolVertexShader: " \
+    symbolVertexShader: ' \
         attribute vec4 configs; \
         attribute vec4 color; \
         \
@@ -87,9 +87,9 @@ var ParticleShaders = {
             gl_Position = projectionMatrix * mvPosition; \
             textureCoord = vec2((1.0 / (spriteSheetLength)) * configs[2], 0.0); \
             textureSize = vec2(1.0 / (spriteSheetLength), 1.0); \
-        }",
+        }',
 
-    symbolFragmentShader: " \
+    symbolFragmentShader: ' \
         uniform sampler2D map; \
         varying vec4 vColor; \
         varying mediump vec2 textureCoord; \
@@ -104,7 +104,7 @@ var ParticleShaders = {
             fragColor.z = vColor.z; \
             gl_FragColor = vec4(1.0, 1.0, 1.0, vColor.w) * fragColor; \
         } \
-    ",
+    ',
 };
 
 module.exports = ParticleShaders;

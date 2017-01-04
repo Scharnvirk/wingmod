@@ -1,6 +1,6 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function LaserProjectileActor(config){
     config = config || [];

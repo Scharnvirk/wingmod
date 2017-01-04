@@ -1,7 +1,7 @@
-var BaseScene = require("renderer/scene/BaseScene");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var Camera = require("renderer/Camera");
+var BaseScene = require('renderer/scene/BaseScene');
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var Camera = require('renderer/Camera');
 
 function MainMenuScene(config){
     Object.assign(this, config);

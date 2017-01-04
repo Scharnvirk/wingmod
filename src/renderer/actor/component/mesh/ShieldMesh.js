@@ -1,4 +1,4 @@
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 
 function ShieldMesh(config){
     BaseMesh.apply(this, arguments);

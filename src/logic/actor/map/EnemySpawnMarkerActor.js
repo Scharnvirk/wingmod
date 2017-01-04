@@ -1,6 +1,6 @@
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function EnemySpawnMarkerActor(config){
     Object.assign(this, config);

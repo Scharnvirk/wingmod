@@ -1,5 +1,5 @@
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function DebugActor(config){
     config = config || [];

@@ -1,9 +1,9 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var MookBrain = require("logic/actor/component/ai/MookBrain");
-var RingBlaster = require("logic/actor/component/weapon/RingBlaster");
-var ActorFactory = require("shared/ActorFactory")('logic');
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var MookBrain = require('logic/actor/component/ai/MookBrain');
+var RingBlaster = require('logic/actor/component/weapon/RingBlaster');
+var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 
 function OrbotActor(config){

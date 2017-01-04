@@ -1,6 +1,6 @@
-var ParticleConfigCreator = require("renderer/particleSystem/ParticleConfigCreator");
-var ParticleGenerator = require("renderer/particleSystem/ParticleGenerator");
-var FlatHudParticleGenerator = require("renderer/particleSystem/FlatHudParticleGenerator");
+var ParticleConfigCreator = require('renderer/particleSystem/ParticleConfigCreator');
+var ParticleGenerator = require('renderer/particleSystem/ParticleGenerator');
+var FlatHudParticleGenerator = require('renderer/particleSystem/FlatHudParticleGenerator');
 
 function ParticleManager(config){
     config = config || {};
@@ -20,14 +20,14 @@ ParticleManager.prototype.createGenerators = function(){
         let generator;
 
         switch(generatorName){
-            case 'ParticleGenerator':
-                generator = new ParticleGenerator(this.configs[configName]);
-                break;
-            case 'FlatHudParticleGenerator':
-                generator = new FlatHudParticleGenerator(this.configs[configName]);
-                break;
-            default:
-                throw new Error("Unknown generator type: " + generatorName);
+        case 'ParticleGenerator':
+            generator = new ParticleGenerator(this.configs[configName]);
+            break;
+        case 'FlatHudParticleGenerator':
+            generator = new FlatHudParticleGenerator(this.configs[configName]);
+            break;
+        default:
+            throw new Error('Unknown generator type: ' + generatorName);
         }
 
         this.generators[configName] = generator;

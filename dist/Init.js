@@ -23356,37 +23356,37 @@ sprintf.vsprintf = vsprintf;
 
 },{}],179:[function(require,module,exports){
 (function (global){
-"use strict";
+'use strict';
 
-global.Utils = require("shared/Utils");
-global.Constants = require("shared/Constants");
-global.EventEmitter = require("shared/EventEmitter");
+global.Utils = require('shared/Utils');
+global.Constants = require('shared/Constants');
+global.EventEmitter = require('shared/EventEmitter');
 
 var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
-var domready = require("domready");
-var Ui = require("renderer/ui/Ui");
+var domready = require('domready');
+var Ui = require('renderer/ui/Ui');
 var gameCore;
 
 function Init() {}
 
 Init.prototype.start = function () {
-    domready(function () {
-        var ui = new Ui();
+        domready(function () {
+                var ui = new Ui();
 
-        var logicWorker = new Worker('dist/LogicInit.js');
+                var logicWorker = new Worker('dist/LogicInit.js');
 
-        var core = new Core({
-            logicWorker: logicWorker,
-            ui: ui
+                var core = new Core({
+                        logicWorker: logicWorker,
+                        ui: ui
+                });
+
+                ui.gameCore = core;
+                ui.init();
+
+                global.uiDebugHandle = ui;
+                global.gameCore = core;
         });
-
-        ui.gameCore = core;
-        ui.init();
-
-        global.uiDebugHandle = ui;
-        global.gameCore = core;
-    });
 };
 
 var init = new Init();
@@ -23604,10 +23604,10 @@ BaseActor.prototype._createState = function (state) {
 module.exports = BaseActor;
 
 },{"shared/ActorFactory":308}],181:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function DebugActor(config) {
     config = config || [];
@@ -24249,10 +24249,10 @@ BaseWeapon.prototype.handleFiringAlternate = function () {
 module.exports = BaseWeapon;
 
 },{}],187:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function Blaster(config) {
     Object.assign(this, config);
@@ -24275,10 +24275,10 @@ Blaster.extend(BaseWeapon);
 module.exports = Blaster;
 
 },{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],188:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function MoltenBallThrower(config) {
     Object.assign(this, config);
@@ -24327,10 +24327,10 @@ PlasmaGun.extend(BaseWeapon);
 module.exports = PlasmaGun;
 
 },{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],190:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function PlasmaGun(config) {
     Object.assign(this, config);
@@ -24354,10 +24354,10 @@ PlasmaGun.extend(BaseWeapon);
 module.exports = PlasmaGun;
 
 },{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],191:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function Blaster(config) {
     Object.assign(this, config);
@@ -24378,10 +24378,10 @@ Blaster.extend(BaseWeapon);
 module.exports = Blaster;
 
 },{"logic/actor/component/weapon/BaseWeapon":186,"shared/ActorFactory":308}],192:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function RingBlaster(config) {
     Object.assign(this, config);
@@ -24479,14 +24479,14 @@ MookActor.prototype.onHit = function () {
 module.exports = MookActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/MoltenBallThrower":188,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":307,"shared/ActorFactory":308}],194:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var MookBrain = require("logic/actor/component/ai/MookBrain");
-var RingBlaster = require("logic/actor/component/weapon/RingBlaster");
-var ActorFactory = require("shared/ActorFactory")('logic');
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var MookBrain = require('logic/actor/component/ai/MookBrain');
+var RingBlaster = require('logic/actor/component/weapon/RingBlaster');
+var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 
 function OrbotActor(config) {
@@ -24641,11 +24641,11 @@ SniperActor.prototype.onHit = function () {
 module.exports = SniperActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/ai/MookBrain":184,"logic/actor/component/body/BaseBody":185,"logic/actor/component/weapon/RedBlaster":191,"logic/actor/mixin/BrainMixin":199,"shared/ActorConfig":307,"shared/ActorFactory":308}],196:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function EnemySpawnMarkerActor(config) {
     Object.assign(this, config);
@@ -24783,10 +24783,10 @@ EnemySpawnerActor.prototype.onHit = function () {
 module.exports = EnemySpawnerActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307,"shared/ActorFactory":308}],198:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
 
 function MapActor(config) {
     config = config || [];
@@ -24937,10 +24937,10 @@ var InputMixin = {
 module.exports = InputMixin;
 
 },{}],201:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ChunkActor = require("logic/actor/object/ChunkActor");
-var ActorConfig = require("shared/ActorConfig");
+var ChunkActor = require('logic/actor/object/ChunkActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function BoomChunkActor(config) {
     config = config || [];
@@ -25093,11 +25093,11 @@ ShipActor.prototype.onHit = function () {
 module.exports = ShipActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/WeaponSystem":182,"logic/actor/component/body/BaseBody":185,"logic/actor/mixin/InputMixin":200,"shared/ActorConfig":307,"shared/ActorFactory":308}],204:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function LaserProjectileActor(config) {
     config = config || [];
@@ -25115,11 +25115,11 @@ LaserProjectileActor.prototype.createBody = function () {
 module.exports = LaserProjectileActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],205:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function MoltenProjectileActor(config) {
     config = config || [];
@@ -25137,11 +25137,11 @@ MoltenProjectileActor.prototype.createBody = function () {
 module.exports = MoltenProjectileActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],206:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function PlasmaProjectileActor(config) {
     config = config || [];
@@ -25186,11 +25186,11 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
 module.exports = PulseWaveProjectileActor;
 
 },{"logic/actor/BaseActor":180,"logic/actor/component/body/BaseBody":185,"shared/ActorConfig":307}],208:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function RedLaserProjectileActor(config) {
     config = config || [];
@@ -25312,7 +25312,7 @@ module.exports = Camera;
 },{}],211:[function(require,module,exports){
 'use strict';
 
-var sprintf = require("sprintf");
+var sprintf = require('sprintf');
 
 function ConfigManager(config) {
     Object.assign(this, config);
@@ -25362,7 +25362,7 @@ ConfigManager.prototype.restoreFromLocalStorage = function () {
             Object.assign(this.settingConfig, this.defaultConfig);
             Object.assign(this.settingConfig, config);
         } catch (error) {
-            console.warn("Failed reading from local storage! Reverting to defaults!", error);
+            console.warn('Failed reading from local storage! Reverting to defaults!', error);
             return false;
         }
     }
@@ -25506,11 +25506,11 @@ Core.prototype.init = function () {
 
     this.createMainComponents();
     this.initEventHandlers();
-    this.renderStats = this.createRenderStatsWatcher();
-    this.stats = this.createStatsWatcher();
+    // this.renderStats = this.createRenderStatsWatcher();
+    // this.stats = this.createStatsWatcher();
     this.startTime = Date.now();
-    this.attachToDom(this.renderStats);
-    this.attachToDom(this.stats);
+    // this.attachToDom(this.renderStats);
+    // this.attachToDom(this.stats);
     this.attachRendererToDom(this.renderer);
 
     PubSub.publish('setConfig', this.configManager.settingConfig);
@@ -25661,8 +25661,8 @@ Core.prototype.render = function () {
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
     this.flatHud.update();
-    this.renderStats.update(this.renderer);
-    this.stats.update();
+    // this.renderStats.update(this.renderer);
+    // this.stats.update();
 };
 
 Core.prototype.startGameRenderMode = function () {
@@ -26414,10 +26414,10 @@ BaseMesh.prototype.update = function () {
 module.exports = BaseMesh;
 
 },{}],221:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ChunkMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -26436,10 +26436,10 @@ ChunkMesh.extend(BaseMesh);
 module.exports = ChunkMesh;
 
 },{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],222:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function RavierMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -26455,10 +26455,10 @@ RavierMesh.extend(BaseMesh);
 module.exports = RavierMesh;
 
 },{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],223:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -26895,9 +26895,9 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 module.exports = EnemySpawnerActor;
 
 },{"renderer/actor/BaseActor":218,"renderer/actor/component/mesh/BaseMesh":220,"renderer/actor/mixin/ParticleMixin":232,"renderer/assetManagement/model/ModelStore":252,"shared/ActorConfig":307}],230:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("renderer/actor/BaseActor");
+var BaseActor = require('renderer/actor/BaseActor');
 
 function MapActor() {
     BaseActor.apply(this, arguments);
@@ -27230,7 +27230,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 LaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -27239,7 +27239,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -27643,10 +27643,10 @@ AiImageRenderer.prototype.drawImage = function (wallsData) {
 AiImageRenderer.prototype.drawObject = function (object) {
     if (object) {
         switch (object.class) {
-            case "Box":
+            case 'Box':
                 this.drawBox(object);
                 break;
-            case "Convex":
+            case 'Convex':
                 this.drawConvex(object);
                 break;
         }
@@ -27700,19 +27700,19 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
 module.exports = AiImageRenderer;
 
 },{}],244:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ModelLoader = require("renderer/assetManagement/model/ModelLoader");
-var ModelList = require("renderer/assetManagement/model/ModelList");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var ModelLoader = require('renderer/assetManagement/model/ModelLoader');
+var ModelList = require('renderer/assetManagement/model/ModelList');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
-var CustomModelCreator = require("renderer/assetManagement/model/CustomModelCreator");
+var CustomModelCreator = require('renderer/assetManagement/model/CustomModelCreator');
 
-var ChunkLoader = require("renderer/assetManagement/level/ChunkLoader");
-var ChunkList = require("renderer/assetManagement/level/ChunkList");
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
+var ChunkLoader = require('renderer/assetManagement/level/ChunkLoader');
+var ChunkList = require('renderer/assetManagement/level/ChunkList');
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 
-var SoundLoader = require("renderer/assetManagement/sound/SoundLoader");
+var SoundLoader = require('renderer/assetManagement/sound/SoundLoader');
 
 function AssetManager(config) {
     config = config || {};
@@ -27802,7 +27802,7 @@ module.exports = ChunkList;
 },{}],246:[function(require,module,exports){
 'use strict';
 
-var HitmapLoader = require("renderer/assetManagement/level/HitmapLoader");
+var HitmapLoader = require('renderer/assetManagement/level/HitmapLoader');
 
 function ChunkLoader() {
     this.batch = {};
@@ -28050,13 +28050,13 @@ CustomModelCreator.prototype.configure = function () {
         'chunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x888888,
-                map: new THREE.TextureLoader().load("/models/chunk.png")
+                map: new THREE.TextureLoader().load('/models/chunk.png')
             })
         },
         'orangeChunk': {
             material: new THREE.MeshPhongMaterial({
                 color: 0x885522,
-                map: new THREE.TextureLoader().load("/models/chunk.png")
+                map: new THREE.TextureLoader().load('/models/chunk.png')
             })
         }
     };
@@ -28105,7 +28105,7 @@ ModelLoader.extend(EventEmitter);
 ModelLoader.prototype.loadModels = function (modelPaths) {
     var _this = this;
 
-    if (!modelPaths) throw "ERROR: No model paths have been specified for the loader!";
+    if (!modelPaths) throw 'ERROR: No model paths have been specified for the loader!';
     var loader = new THREE.JSONLoader();
 
     Promise.all(modelPaths.map(function (modelPath) {
@@ -28257,9 +28257,9 @@ CanvasHud.prototype.fill = function () {
     // this.drawContext.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
     var context = this.drawContext;
 
-    context.font = "Normal 40px Arial";
+    context.font = 'Normal 40px Arial';
     context.textAlign = 'center';
-    context.fillStyle = "rgba(245,245,245,1)";
+    context.fillStyle = 'rgba(245,245,245,1)';
 
     setInterval(function () {
         context.fillText('Initializing...', context.canvas.width / 2 + Utils.rand(-500, 500), context.canvas.height / 2 + Utils.rand(-500, 500));
@@ -28557,7 +28557,7 @@ Hud.prototype.drawHealthBar = function (otherActor) {
             positionX: otherActorPosition[0] + offsetPosition[0],
             positionY: otherActorPosition[1] + offsetPosition[1],
             positionZ: positionZ,
-            color: i >= hpPercentage * hpBarCount ? 'DEEPRED' : "WHITE",
+            color: i >= hpPercentage * hpBarCount ? 'DEEPRED' : 'WHITE',
             scale: 0.75,
             particleVelocity: 0,
             particleRotation: rotation,
@@ -28572,10 +28572,10 @@ Hud.prototype.drawHealthBar = function (otherActor) {
 module.exports = Hud;
 
 },{}],258:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function WeaponMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -28611,7 +28611,7 @@ module.exports = WeaponMesh;
 },{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],259:[function(require,module,exports){
 'use strict';
 
-var WeaponMesh = require("renderer/gameUi/WeaponMesh");
+var WeaponMesh = require('renderer/gameUi/WeaponMesh');
 
 function WeaponSwitcher(config) {
     Object.assign(this, config);
@@ -28870,17 +28870,17 @@ FlatHudParticleGenerator.prototype.updateResolutionCoefficient = function (resol
 module.exports = FlatHudParticleGenerator;
 
 },{}],262:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ParticleShaders = require("renderer/particleSystem/ParticleShaders");
+var ParticleShaders = require('renderer/particleSystem/ParticleShaders');
 
 function ParticleConfigCreator(config) {
     this.particleMaterialConfig = {
         smokePuffAlpha: new THREE.ShaderMaterial({
             uniforms: {
-                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + "gfx/smokePuffAlpha.png") },
-                time: { type: "f", value: 1.0 },
-                spriteSheetLength: { type: "f", value: 1.0 }
+                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + 'gfx/smokePuffAlpha.png') },
+                time: { type: 'f', value: 1.0 },
+                spriteSheetLength: { type: 'f', value: 1.0 }
             },
             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -28889,8 +28889,8 @@ function ParticleConfigCreator(config) {
         }),
         symbolsAlpha: new THREE.ShaderMaterial({
             uniforms: {
-                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + "gfx/symbols.png") },
-                time: { type: "f", value: 72.0 }
+                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + 'gfx/symbols.png') },
+                time: { type: 'f', value: 72.0 }
             },
             vertexShader: ParticleShaders.symbolVertexShader,
             fragmentShader: ParticleShaders.symbolFragmentShader,
@@ -28899,9 +28899,9 @@ function ParticleConfigCreator(config) {
         }),
         particleAdd: new THREE.ShaderMaterial({
             uniforms: {
-                map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/shaderSpriteAdd.png") },
-                time: { type: "f", value: 1.0 },
-                spriteSheetLength: { type: "f", value: 8.0 }
+                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + 'gfx/shaderSpriteAdd.png') },
+                time: { type: 'f', value: 1.0 },
+                spriteSheetLength: { type: 'f', value: 8.0 }
             },
             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -28911,9 +28911,9 @@ function ParticleConfigCreator(config) {
         }),
         particleAddHUD: new THREE.ShaderMaterial({
             uniforms: {
-                map: { type: "t", value: new THREE.TextureLoader().load(window.location.href + "gfx/shaderSpriteAdd.png") },
-                time: { type: "f", value: 1.0 },
-                spriteSheetLength: { type: "f", value: 8.0 }
+                map: { type: 't', value: new THREE.TextureLoader().load(window.location.href + 'gfx/shaderSpriteAdd.png') },
+                time: { type: 'f', value: 1.0 },
+                spriteSheetLength: { type: 'f', value: 8.0 }
             },
             vertexShader: ParticleShaders.vertexShaderSpriteSheet,
             fragmentShader: ParticleShaders.fragmentShaderSpriteSheet,
@@ -28970,25 +28970,25 @@ ParticleConfigCreator.prototype.getAllConfigs = function () {
 
 ParticleConfigCreator.prototype.createPremades = function () {
     return {
-        BlueSparks: require("renderer/particleSystem/premade/BlueSparks"),
-        BlueLaserTrail: require("renderer/particleSystem/premade/BlueLaserTrail"),
-        OrangeTrail: require("renderer/particleSystem/premade/OrangeTrail"),
-        OrangeBoomTiny: require("renderer/particleSystem/premade/OrangeBoomTiny"),
-        GreenTrail: require("renderer/particleSystem/premade/GreenTrail"),
-        GreenBoomTiny: require("renderer/particleSystem/premade/GreenBoomTiny"),
-        EngineGlowMedium: require("renderer/particleSystem/premade/EngineGlowMedium"),
-        EngineGlowSmall: require("renderer/particleSystem/premade/EngineGlowSmall"),
-        OrangeBoomLarge: require("renderer/particleSystem/premade/OrangeBoomLarge"),
-        SmokePuffSmall: require("renderer/particleSystem/premade/SmokePuffSmall"),
-        SmokePuffLargeLong: require("renderer/particleSystem/premade/SmokePuffLargeLong"),
-        OrangeBoomMedium: require("renderer/particleSystem/premade/OrangeBoomMedium"),
-        RedLaserTrail: require("renderer/particleSystem/premade/RedLaserTrail"),
-        RedSparks: require("renderer/particleSystem/premade/RedSparks"),
-        RedEye: require("renderer/particleSystem/premade/RedEye"),
-        RedEyeBig: require("renderer/particleSystem/premade/RedEyeBig"),
-        PurpleEye: require("renderer/particleSystem/premade/PurpleEye"),
-        PurpleLaserTrail: require("renderer/particleSystem/premade/PurpleLaserTrail"),
-        PurpleSparks: require("renderer/particleSystem/premade/PurpleSparks")
+        BlueSparks: require('renderer/particleSystem/premade/BlueSparks'),
+        BlueLaserTrail: require('renderer/particleSystem/premade/BlueLaserTrail'),
+        OrangeTrail: require('renderer/particleSystem/premade/OrangeTrail'),
+        OrangeBoomTiny: require('renderer/particleSystem/premade/OrangeBoomTiny'),
+        GreenTrail: require('renderer/particleSystem/premade/GreenTrail'),
+        GreenBoomTiny: require('renderer/particleSystem/premade/GreenBoomTiny'),
+        EngineGlowMedium: require('renderer/particleSystem/premade/EngineGlowMedium'),
+        EngineGlowSmall: require('renderer/particleSystem/premade/EngineGlowSmall'),
+        OrangeBoomLarge: require('renderer/particleSystem/premade/OrangeBoomLarge'),
+        SmokePuffSmall: require('renderer/particleSystem/premade/SmokePuffSmall'),
+        SmokePuffLargeLong: require('renderer/particleSystem/premade/SmokePuffLargeLong'),
+        OrangeBoomMedium: require('renderer/particleSystem/premade/OrangeBoomMedium'),
+        RedLaserTrail: require('renderer/particleSystem/premade/RedLaserTrail'),
+        RedSparks: require('renderer/particleSystem/premade/RedSparks'),
+        RedEye: require('renderer/particleSystem/premade/RedEye'),
+        RedEyeBig: require('renderer/particleSystem/premade/RedEyeBig'),
+        PurpleEye: require('renderer/particleSystem/premade/PurpleEye'),
+        PurpleLaserTrail: require('renderer/particleSystem/premade/PurpleLaserTrail'),
+        PurpleSparks: require('renderer/particleSystem/premade/PurpleSparks')
     };
 };
 
@@ -29127,11 +29127,11 @@ ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCo
 module.exports = ParticleGenerator;
 
 },{}],264:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ParticleConfigCreator = require("renderer/particleSystem/ParticleConfigCreator");
-var ParticleGenerator = require("renderer/particleSystem/ParticleGenerator");
-var FlatHudParticleGenerator = require("renderer/particleSystem/FlatHudParticleGenerator");
+var ParticleConfigCreator = require('renderer/particleSystem/ParticleConfigCreator');
+var ParticleGenerator = require('renderer/particleSystem/ParticleGenerator');
+var FlatHudParticleGenerator = require('renderer/particleSystem/FlatHudParticleGenerator');
 
 function ParticleManager(config) {
     config = config || {};
@@ -29160,7 +29160,7 @@ ParticleManager.prototype.createGenerators = function () {
                 generator = new FlatHudParticleGenerator(_this.configs[configName]);
                 break;
             default:
-                throw new Error("Unknown generator type: " + generatorName);
+                throw new Error('Unknown generator type: ' + generatorName);
         }
 
         _this.generators[configName] = generator;
@@ -29204,10 +29204,10 @@ ParticleManager.prototype.updateResolutionCoefficient = function (coefficient) {
 module.exports = ParticleManager;
 
 },{"renderer/particleSystem/FlatHudParticleGenerator":261,"renderer/particleSystem/ParticleConfigCreator":262,"renderer/particleSystem/ParticleGenerator":263}],265:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var ParticleShaders = {
-    vertexShaderSpriteSheet: " \
+    vertexShaderSpriteSheet: ' \
         attribute vec4 speed; \
         attribute vec4 configs; \
         \
@@ -29257,9 +29257,9 @@ var ParticleShaders = {
             gl_Position = projectionMatrix * mvPosition; \
             textureCoord = vec2((1.0 / spriteSheetLength) * spriteNumber, 0.0); \
             textureSize = vec2(1.0 / spriteSheetLength, 1.0); \
-        }",
+        }',
 
-    fragmentShaderSpriteSheet: " \
+    fragmentShaderSpriteSheet: ' \
         uniform sampler2D map; \
         varying vec3 vColor; \
         varying float vAlpha; \
@@ -29270,9 +29270,9 @@ var ParticleShaders = {
             mediump vec4 fragColor = texture2D(map, realTexCoord); \
             gl_FragColor = vec4(vColor, vAlpha) * fragColor; \
         } \
-    ",
+    ',
 
-    symbolVertexShader: " \
+    symbolVertexShader: ' \
         attribute vec4 configs; \
         attribute vec4 color; \
         \
@@ -29295,9 +29295,9 @@ var ParticleShaders = {
             gl_Position = projectionMatrix * mvPosition; \
             textureCoord = vec2((1.0 / (spriteSheetLength)) * configs[2], 0.0); \
             textureSize = vec2(1.0 / (spriteSheetLength), 1.0); \
-        }",
+        }',
 
-    symbolFragmentShader: " \
+    symbolFragmentShader: ' \
         uniform sampler2D map; \
         varying vec4 vColor; \
         varying mediump vec2 textureCoord; \
@@ -29312,7 +29312,7 @@ var ParticleShaders = {
             fragColor.z = vColor.z; \
             gl_FragColor = vec4(1.0, 1.0, 1.0, vColor.w) * fragColor; \
         } \
-    "
+    '
 };
 
 module.exports = ParticleShaders;
@@ -30140,10 +30140,10 @@ module.exports = function (config) {
 };
 
 },{}],285:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function BaseScene(config) {
     Object.assign(this, config);
@@ -30207,12 +30207,12 @@ BaseScene.prototype.testMesh = function (meshClass, scale) {
 module.exports = BaseScene;
 
 },{"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252}],286:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseScene = require("renderer/scene/BaseScene");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var FlatHudCamera = require("renderer/gameUi/FlatHudCamera");
+var BaseScene = require('renderer/scene/BaseScene');
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var FlatHudCamera = require('renderer/gameUi/FlatHudCamera');
 
 function FlatHudScene(config) {
     Object.assign(this, config);
@@ -30409,12 +30409,12 @@ GameScene.prototype.onPlayerActorAppeared = function (actor) {
 module.exports = GameScene;
 
 },{"renderer/Camera":210,"renderer/assetManagement/level/ChunkStore":247,"renderer/map/ChunkMesh":260,"renderer/scene/BaseScene":285}],288:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseScene = require("renderer/scene/BaseScene");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var Camera = require("renderer/Camera");
+var BaseScene = require('renderer/scene/BaseScene');
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var Camera = require('renderer/Camera');
 
 function MainMenuScene(config) {
     Object.assign(this, config);
@@ -30594,12 +30594,12 @@ MainMenuScene.prototype.lightPowerUp = function () {
 module.exports = MainMenuScene;
 
 },{"renderer/Camera":210,"renderer/actor/component/mesh/BaseMesh":220,"renderer/assetManagement/model/ModelStore":252,"renderer/scene/BaseScene":285}],289:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseScene = require("renderer/scene/BaseScene");
-var GameScene = require("renderer/scene/GameScene");
-var MainMenuScene = require("renderer/scene/MainMenuScene");
-var FlatHudScene = require("renderer/scene/FlatHudScene");
+var BaseScene = require('renderer/scene/BaseScene');
+var GameScene = require('renderer/scene/GameScene');
+var MainMenuScene = require('renderer/scene/MainMenuScene');
+var FlatHudScene = require('renderer/scene/FlatHudScene');
 
 function SceneManager(config) {
     Object.assign(this, config);
@@ -30625,7 +30625,7 @@ SceneManager.extend(EventEmitter);
 
 SceneManager.prototype.render = function (sceneName) {
     if (!this.activeScenes[sceneName]) {
-        throw new Error("No such scene for render: " + sceneName);
+        throw new Error('No such scene for render: ' + sceneName);
     }
 
     this.renderer.render(this.activeScenes[sceneName].threeScene, this.activeScenes[sceneName].camera);
@@ -30633,7 +30633,7 @@ SceneManager.prototype.render = function (sceneName) {
 
 SceneManager.prototype.createScene = function (sceneName, config) {
     if (!this.knownSceneClasses[sceneName]) {
-        throw new Error("No such scene for createScene: " + sceneName);
+        throw new Error('No such scene for createScene: ' + sceneName);
     }
 
     var configWithRenderer = Object.assign(config || {}, { renderer: this.renderer });
@@ -30651,7 +30651,7 @@ SceneManager.prototype.update = function () {
 
 SceneManager.prototype.addObjectToScene = function (sceneName, object) {
     if (!this.activeScenes[sceneName]) {
-        throw new Error("No such scene for addObjectToScene: " + sceneName);
+        throw new Error('No such scene for addObjectToScene: ' + sceneName);
     }
     this.activeScenes[sceneName].add(object);
 };
@@ -30806,7 +30806,7 @@ Ui.prototype.setupButtonListener = function () {
 
 Ui.prototype.init = function () {
     if (!this.gameCore) {
-        console.error("no GameCore set in UI!");
+        console.error('no GameCore set in UI!');
     }
 
     this.gameCore.init();
@@ -31303,7 +31303,7 @@ var StartScreen = _react2.default.createClass({
     componentWillMount: function componentWillMount() {
         var _this = this;
 
-        console.log("assetsLoadedPubsub", PubSub);
+        console.log('assetsLoadedPubsub', PubSub);
         PubSub.subscribe('assetsLoaded', function (msg, data) {
             _this.setState({ assetsLoaded: true });
         });
@@ -31668,25 +31668,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _react = require('react');
 
-var _react2 = _interopRequireDefault(_react);
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _reactRebound = require('react-rebound');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ReactUtils = require('renderer/ui/ReactUtils');
 var imagePath = 'gfx/ammoHud.png';
-// var PubSub = require('pubsub-js');
 
 var AmmoTile = function (_Component) {
     _inherits(AmmoTile, _Component);
@@ -31697,7 +31685,7 @@ var AmmoTile = function (_Component) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AmmoTile).call(this, props, context));
 
         _this.tileCount = 4;
-        _this.multiplier = 97.75; //investigate why - whould be 100
+        _this.multiplier = 97.75; // investigate why - whould be 100
 
         _this.iconIndexes = {
             plasma: 0,
@@ -31717,14 +31705,14 @@ var AmmoTile = function (_Component) {
 
         _this.componentStyle = {
             background: {
-                width: '25vw',
-                height: '4vw',
+                width: '12.5vw',
+                height: '1.5vw',
                 position: 'relative',
                 margin: '0.5vw 0.5vw 0.5vw 0.5vw'
             },
             icon: {
-                height: '4vw',
-                width: '4vw',
+                height: '2vw',
+                width: '2vw',
                 position: 'absolute',
                 right: '0',
                 backgroundImage: 'url(' + imagePath + ')',
@@ -31733,8 +31721,8 @@ var AmmoTile = function (_Component) {
             text: {
                 position: 'absolute',
                 fontFamily: 'Oswald',
-                fontSize: '2.5vw',
-                right: '5vw',
+                fontSize: '1.25vw',
+                right: '2.5vw',
                 color: 'white'
             }
         };
@@ -31765,11 +31753,11 @@ var AmmoTile = function (_Component) {
             if (typeof this.props.amount === 'undefined') return null;
             var text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
 
-            return _react2.default.createElement(
+            return React.createElement(
                 'div',
                 { style: this.componentStyle.background },
-                _react2.default.createElement('div', { style: this.createIconStyle() }),
-                _react2.default.createElement(
+                React.createElement('div', { style: this.createIconStyle() }),
+                React.createElement(
                     'div',
                     { style: this.createTextStyle() },
                     text
@@ -31783,7 +31771,7 @@ var AmmoTile = function (_Component) {
 
 module.exports = AmmoTile;
 
-},{"classnames":2,"react":177,"react-rebound":6,"renderer/ui/ReactUtils":291}],305:[function(require,module,exports){
+},{"react":177}],305:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -31820,7 +31808,7 @@ var AmmoTileContainer = function (_Component) {
 
         _this.componentStyle = {
             background: {
-                width: '26vw',
+                width: '13vw',
                 height: '100%',
                 right: '0px',
                 position: 'fixed',
@@ -32010,7 +31998,7 @@ var WeaponInfoContainer = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            console.log("render");
+            console.log('render');
             if (!this.state.visible) return null;
 
             return _react2.default.createElement(
@@ -32247,7 +32235,7 @@ var ActorConfig = {
 module.exports = ActorConfig;
 
 },{}],308:[function(require,module,exports){
-"use strict";
+'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -32277,29 +32265,29 @@ function ActorFactory(context, actorDependencies) {
     var _actorMap;
 
     this.actorDependencies = actorDependencies;
-    ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
-    ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
-    ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
-    ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-    ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
-    ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
-    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
-    ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
-    ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
-    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
-    ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RingProjectileActor") : require("logic/actor/projectile/RingProjectileActor");
-    ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
-    ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
-    ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
-    ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
-    ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
+    ActorFactory.ShipActor = context === 'renderer' ? require('renderer/actor/player/ShipActor') : require('logic/actor/player/ShipActor');
+    ActorFactory.MookActor = context === 'renderer' ? require('renderer/actor/enemy/MookActor') : require('logic/actor/enemy/MookActor');
+    ActorFactory.SniperActor = context === 'renderer' ? require('renderer/actor/enemy/SniperActor') : require('logic/actor/enemy/SniperActor');
+    ActorFactory.OrbotActor = context === 'renderer' ? require('renderer/actor/enemy/OrbotActor') : require('logic/actor/enemy/OrbotActor');
+    ActorFactory.ChunkActor = context === 'renderer' ? require('renderer/actor/object/ChunkActor') : require('logic/actor/object/ChunkActor');
+    ActorFactory.BoomChunkActor = context === 'renderer' ? require('renderer/actor/object/BoomChunkActor') : require('logic/actor/object/BoomChunkActor');
+    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/PlasmaProjectileActor') : require('logic/actor/projectile/PlasmaProjectileActor');
+    ActorFactory.LaserProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/LaserProjectileActor') : require('logic/actor/projectile/LaserProjectileActor');
+    ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/RedLaserProjectileActor') : require('logic/actor/projectile/RedLaserProjectileActor');
+    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/MoltenProjectileActor') : require('logic/actor/projectile/MoltenProjectileActor');
+    ActorFactory.RingProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/RingProjectileActor') : require('logic/actor/projectile/RingProjectileActor');
+    ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/PulseWaveProjectileActor') : require('logic/actor/projectile/PulseWaveProjectileActor');
+    ActorFactory.MapActor = context === 'renderer' ? require('renderer/actor/map/MapActor') : require('logic/actor/map/MapActor');
+    ActorFactory.EnemySpawnerActor = context === 'renderer' ? require('renderer/actor/map/EnemySpawnerActor') : require('logic/actor/map/EnemySpawnerActor');
+    ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require('renderer/actor/map/EnemySpawnMarkerActor') : require('logic/actor/map/EnemySpawnMarkerActor');
+    ActorFactory.DebugActor = context === 'renderer' ? require('renderer/actor/DebugActor') : require('logic/actor/DebugActor');
 
     this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, idMap.SHIP, ActorFactory.ShipActor), _defineProperty(_actorMap, idMap.MOOK, ActorFactory.MookActor), _defineProperty(_actorMap, idMap.SNIPER, ActorFactory.SniperActor), _defineProperty(_actorMap, idMap.ORBOT, ActorFactory.OrbotActor), _defineProperty(_actorMap, idMap.CHUNK, ActorFactory.ChunkActor), _defineProperty(_actorMap, idMap.BOOMCHUNK, ActorFactory.BoomChunkActor), _defineProperty(_actorMap, idMap.PLASMAPROJECTILE, ActorFactory.PlasmaProjectileActor), _defineProperty(_actorMap, idMap.LASERPROJECTILE, ActorFactory.LaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERPROJECTILE, ActorFactory.RedLaserProjectileActor), _defineProperty(_actorMap, idMap.MOLTENPROJECTILE, ActorFactory.MoltenProjectileActor), _defineProperty(_actorMap, idMap.RINGPROJECTILE, ActorFactory.RingProjectileActor), _defineProperty(_actorMap, idMap.PULSEWAVEPROJECTILE, ActorFactory.PulseWaveProjectileActor), _defineProperty(_actorMap, idMap.MAP, ActorFactory.MapActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNER, ActorFactory.EnemySpawnerActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNMARKER, ActorFactory.EnemySpawnMarkerActor), _defineProperty(_actorMap, idMap.DEBUG, ActorFactory.DebugActor), _actorMap);
 }
 
 ActorFactory.prototype.create = function (config) {
     if (!this.actorMap[config.classId]) {
-        throw new Error("Cannot create actor. Bad configuration!".config);
+        throw new Error('Cannot create actor. Bad configuration!'.config);
     }
     return new this.actorMap[config.classId](config, this.actorDependencies);
 };

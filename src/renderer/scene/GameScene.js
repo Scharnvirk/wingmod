@@ -100,11 +100,11 @@ GameScene.prototype.handleFlash = function(){
 
 GameScene.prototype.doUiFlash = function(type){
     switch(type) {
-        case 'red':
-            this.flashRed();
-            break;
-        default:
-            this.flashWhite();
+    case 'red':
+        this.flashRed();
+        break;
+    default:
+        this.flashWhite();
     }
 };
 

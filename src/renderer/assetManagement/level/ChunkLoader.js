@@ -1,4 +1,4 @@
-var HitmapLoader = require("renderer/assetManagement/level/HitmapLoader");
+var HitmapLoader = require('renderer/assetManagement/level/HitmapLoader');
 
 
 function ChunkLoader(){

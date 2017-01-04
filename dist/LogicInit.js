@@ -200,11 +200,11 @@ var cloner = (function (O) {'use strict';
 module.exports = cloner;
 },{}],2:[function(require,module,exports){
 (function (global){
-"use strict";
+'use strict';
 
-global.Utils = require("shared/Utils");
-global.Constants = require("shared/Constants");
-global.EventEmitter = require("shared/EventEmitter");
+global.Utils = require('shared/Utils');
+global.Constants = require('shared/Constants');
+global.EventEmitter = require('shared/EventEmitter');
 
 if ('function' === typeof importScripts) {
     importScripts('../../lib/p2.js');
@@ -353,10 +353,10 @@ Core.prototype.onGameStateChange = function (event) {
 module.exports = Core;
 
 },{"logic/GameScene":4,"logic/GameState":5,"logic/GameWorld":6,"logic/RenderBus":7,"logic/WorldAiMapExtractor":8,"logic/actor/ActorManager":9,"logic/map/MapManager":43}],4:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ActorFactory = require("shared/ActorFactory")('logic');
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var ActorFactory = require('shared/ActorFactory')('logic');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function GameScene(config) {
     Object.assign(this, config);
@@ -1132,10 +1132,10 @@ BaseActor.prototype._createState = function (state) {
 module.exports = BaseActor;
 
 },{"shared/ActorFactory":71}],11:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function DebugActor(config) {
     config = config || [];
@@ -1777,10 +1777,10 @@ BaseWeapon.prototype.handleFiringAlternate = function () {
 module.exports = BaseWeapon;
 
 },{}],17:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function Blaster(config) {
     Object.assign(this, config);
@@ -1803,10 +1803,10 @@ Blaster.extend(BaseWeapon);
 module.exports = Blaster;
 
 },{"logic/actor/component/weapon/BaseWeapon":16,"shared/ActorFactory":71}],18:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function MoltenBallThrower(config) {
     Object.assign(this, config);
@@ -1855,10 +1855,10 @@ PlasmaGun.extend(BaseWeapon);
 module.exports = PlasmaGun;
 
 },{"logic/actor/component/weapon/BaseWeapon":16,"shared/ActorFactory":71}],20:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function PlasmaGun(config) {
     Object.assign(this, config);
@@ -1882,10 +1882,10 @@ PlasmaGun.extend(BaseWeapon);
 module.exports = PlasmaGun;
 
 },{"logic/actor/component/weapon/BaseWeapon":16,"shared/ActorFactory":71}],21:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function Blaster(config) {
     Object.assign(this, config);
@@ -1906,10 +1906,10 @@ Blaster.extend(BaseWeapon);
 module.exports = Blaster;
 
 },{"logic/actor/component/weapon/BaseWeapon":16,"shared/ActorFactory":71}],22:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function RingBlaster(config) {
     Object.assign(this, config);
@@ -2007,14 +2007,14 @@ MookActor.prototype.onHit = function () {
 module.exports = MookActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/ai/MookBrain":14,"logic/actor/component/body/BaseBody":15,"logic/actor/component/weapon/MoltenBallThrower":18,"logic/actor/mixin/BrainMixin":29,"shared/ActorConfig":70,"shared/ActorFactory":71}],24:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var MookBrain = require("logic/actor/component/ai/MookBrain");
-var RingBlaster = require("logic/actor/component/weapon/RingBlaster");
-var ActorFactory = require("shared/ActorFactory")('logic');
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var MookBrain = require('logic/actor/component/ai/MookBrain');
+var RingBlaster = require('logic/actor/component/weapon/RingBlaster');
+var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 
 function OrbotActor(config) {
@@ -2169,11 +2169,11 @@ SniperActor.prototype.onHit = function () {
 module.exports = SniperActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/ai/MookBrain":14,"logic/actor/component/body/BaseBody":15,"logic/actor/component/weapon/RedBlaster":21,"logic/actor/mixin/BrainMixin":29,"shared/ActorConfig":70,"shared/ActorFactory":71}],26:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function EnemySpawnMarkerActor(config) {
     Object.assign(this, config);
@@ -2311,10 +2311,10 @@ EnemySpawnerActor.prototype.onHit = function () {
 module.exports = EnemySpawnerActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":70,"shared/ActorFactory":71}],28:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
 
 function MapActor(config) {
     config = config || [];
@@ -2465,10 +2465,10 @@ var InputMixin = {
 module.exports = InputMixin;
 
 },{}],31:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var ChunkActor = require("logic/actor/object/ChunkActor");
-var ActorConfig = require("shared/ActorConfig");
+var ChunkActor = require('logic/actor/object/ChunkActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function BoomChunkActor(config) {
     config = config || [];
@@ -2621,11 +2621,11 @@ ShipActor.prototype.onHit = function () {
 module.exports = ShipActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/WeaponSystem":12,"logic/actor/component/body/BaseBody":15,"logic/actor/mixin/InputMixin":30,"shared/ActorConfig":70,"shared/ActorFactory":71}],34:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function LaserProjectileActor(config) {
     config = config || [];
@@ -2643,11 +2643,11 @@ LaserProjectileActor.prototype.createBody = function () {
 module.exports = LaserProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":70}],35:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function MoltenProjectileActor(config) {
     config = config || [];
@@ -2665,11 +2665,11 @@ MoltenProjectileActor.prototype.createBody = function () {
 module.exports = MoltenProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":70}],36:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function PlasmaProjectileActor(config) {
     config = config || [];
@@ -2714,11 +2714,11 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
 module.exports = PulseWaveProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":70}],38:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var BaseActor = require("logic/actor/BaseActor");
-var ActorConfig = require("shared/ActorConfig");
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function RedLaserProjectileActor(config) {
     config = config || [];
@@ -2777,12 +2777,12 @@ MapAiGraphCreator.prototype.createPositions = function () {};
 module.exports = MapAiGraphCreator;
 
 },{}],41:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function MapChunk(config) {
-    if (!config.hitmap) throw new Error("no hitmap specified for a MapChunk!");
+    if (!config.hitmap) throw new Error('no hitmap specified for a MapChunk!');
 
     Object.assign(this, config);
 
@@ -2872,12 +2872,12 @@ MapCreator.prototype.setPrototypeChunks = function (chunks) {
 module.exports = MapCreator;
 
 },{}],43:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var MapChunk = require("logic/map/MapChunk");
-var MapCreator = require("logic/map/MapCreator");
-var MapAiGraphCreator = require("logic/map/MapAiGraphCreator");
-var cloner = require("cloner");
+var MapChunk = require('logic/map/MapChunk');
+var MapCreator = require('logic/map/MapCreator');
+var MapAiGraphCreator = require('logic/map/MapAiGraphCreator');
+var cloner = require('cloner');
 
 function MapManager(config) {
     Object.assign(this, config);
@@ -3159,10 +3159,10 @@ BaseMesh.prototype.update = function () {
 module.exports = BaseMesh;
 
 },{}],47:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ChunkMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -3181,10 +3181,10 @@ ChunkMesh.extend(BaseMesh);
 module.exports = ChunkMesh;
 
 },{"renderer/actor/component/mesh/BaseMesh":46,"renderer/assetManagement/model/ModelStore":69}],48:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function RavierMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -3200,10 +3200,10 @@ RavierMesh.extend(BaseMesh);
 module.exports = RavierMesh;
 
 },{"renderer/actor/component/mesh/BaseMesh":46,"renderer/assetManagement/model/ModelStore":69}],49:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -3640,9 +3640,9 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 module.exports = EnemySpawnerActor;
 
 },{"renderer/actor/BaseActor":44,"renderer/actor/component/mesh/BaseMesh":46,"renderer/actor/mixin/ParticleMixin":58,"renderer/assetManagement/model/ModelStore":69,"shared/ActorConfig":70}],56:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var BaseActor = require("renderer/actor/BaseActor");
+var BaseActor = require('renderer/actor/BaseActor');
 
 function MapActor() {
     BaseActor.apply(this, arguments);
@@ -3975,7 +3975,7 @@ LaserProjectileActor.prototype.onDeath = function () {
 LaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 30,
         alpha: 0.8,
         alphaMultiplier: 0.2,
@@ -3984,7 +3984,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: "BLUE",
+        color: 'BLUE',
         scale: 12,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -4584,7 +4584,7 @@ var ActorConfig = {
 module.exports = ActorConfig;
 
 },{}],71:[function(require,module,exports){
-"use strict";
+'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -4614,29 +4614,29 @@ function ActorFactory(context, actorDependencies) {
     var _actorMap;
 
     this.actorDependencies = actorDependencies;
-    ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
-    ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
-    ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
-    ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-    ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
-    ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
-    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
-    ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
-    ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
-    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
-    ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RingProjectileActor") : require("logic/actor/projectile/RingProjectileActor");
-    ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
-    ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
-    ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
-    ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
-    ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
+    ActorFactory.ShipActor = context === 'renderer' ? require('renderer/actor/player/ShipActor') : require('logic/actor/player/ShipActor');
+    ActorFactory.MookActor = context === 'renderer' ? require('renderer/actor/enemy/MookActor') : require('logic/actor/enemy/MookActor');
+    ActorFactory.SniperActor = context === 'renderer' ? require('renderer/actor/enemy/SniperActor') : require('logic/actor/enemy/SniperActor');
+    ActorFactory.OrbotActor = context === 'renderer' ? require('renderer/actor/enemy/OrbotActor') : require('logic/actor/enemy/OrbotActor');
+    ActorFactory.ChunkActor = context === 'renderer' ? require('renderer/actor/object/ChunkActor') : require('logic/actor/object/ChunkActor');
+    ActorFactory.BoomChunkActor = context === 'renderer' ? require('renderer/actor/object/BoomChunkActor') : require('logic/actor/object/BoomChunkActor');
+    ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/PlasmaProjectileActor') : require('logic/actor/projectile/PlasmaProjectileActor');
+    ActorFactory.LaserProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/LaserProjectileActor') : require('logic/actor/projectile/LaserProjectileActor');
+    ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/RedLaserProjectileActor') : require('logic/actor/projectile/RedLaserProjectileActor');
+    ActorFactory.MoltenProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/MoltenProjectileActor') : require('logic/actor/projectile/MoltenProjectileActor');
+    ActorFactory.RingProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/RingProjectileActor') : require('logic/actor/projectile/RingProjectileActor');
+    ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require('renderer/actor/projectile/PulseWaveProjectileActor') : require('logic/actor/projectile/PulseWaveProjectileActor');
+    ActorFactory.MapActor = context === 'renderer' ? require('renderer/actor/map/MapActor') : require('logic/actor/map/MapActor');
+    ActorFactory.EnemySpawnerActor = context === 'renderer' ? require('renderer/actor/map/EnemySpawnerActor') : require('logic/actor/map/EnemySpawnerActor');
+    ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require('renderer/actor/map/EnemySpawnMarkerActor') : require('logic/actor/map/EnemySpawnMarkerActor');
+    ActorFactory.DebugActor = context === 'renderer' ? require('renderer/actor/DebugActor') : require('logic/actor/DebugActor');
 
     this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, idMap.SHIP, ActorFactory.ShipActor), _defineProperty(_actorMap, idMap.MOOK, ActorFactory.MookActor), _defineProperty(_actorMap, idMap.SNIPER, ActorFactory.SniperActor), _defineProperty(_actorMap, idMap.ORBOT, ActorFactory.OrbotActor), _defineProperty(_actorMap, idMap.CHUNK, ActorFactory.ChunkActor), _defineProperty(_actorMap, idMap.BOOMCHUNK, ActorFactory.BoomChunkActor), _defineProperty(_actorMap, idMap.PLASMAPROJECTILE, ActorFactory.PlasmaProjectileActor), _defineProperty(_actorMap, idMap.LASERPROJECTILE, ActorFactory.LaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERPROJECTILE, ActorFactory.RedLaserProjectileActor), _defineProperty(_actorMap, idMap.MOLTENPROJECTILE, ActorFactory.MoltenProjectileActor), _defineProperty(_actorMap, idMap.RINGPROJECTILE, ActorFactory.RingProjectileActor), _defineProperty(_actorMap, idMap.PULSEWAVEPROJECTILE, ActorFactory.PulseWaveProjectileActor), _defineProperty(_actorMap, idMap.MAP, ActorFactory.MapActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNER, ActorFactory.EnemySpawnerActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNMARKER, ActorFactory.EnemySpawnMarkerActor), _defineProperty(_actorMap, idMap.DEBUG, ActorFactory.DebugActor), _actorMap);
 }
 
 ActorFactory.prototype.create = function (config) {
     if (!this.actorMap[config.classId]) {
-        throw new Error("Cannot create actor. Bad configuration!".config);
+        throw new Error('Cannot create actor. Bad configuration!'.config);
     }
     return new this.actorMap[config.classId](config, this.actorDependencies);
 };

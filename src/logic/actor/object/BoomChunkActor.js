@@ -1,5 +1,5 @@
-var ChunkActor = require("logic/actor/object/ChunkActor");
-var ActorConfig = require("shared/ActorConfig");
+var ChunkActor = require('logic/actor/object/ChunkActor');
+var ActorConfig = require('shared/ActorConfig');
 
 function BoomChunkActor(config){
     config = config || [];

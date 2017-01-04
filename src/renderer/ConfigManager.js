@@ -1,4 +1,4 @@
-var sprintf = require("sprintf");
+var sprintf = require('sprintf');
 
 function ConfigManager(config){
     Object.assign(this, config);
@@ -48,7 +48,7 @@ ConfigManager.prototype.restoreFromLocalStorage = function(){
             Object.assign(this.settingConfig, this.defaultConfig);
             Object.assign(this.settingConfig, config);
         } catch (error){
-            console.warn("Failed reading from local storage! Reverting to defaults!", error);
+            console.warn('Failed reading from local storage! Reverting to defaults!', error);
             return false;
         }
     }
@@ -61,15 +61,15 @@ ConfigManager.prototype.saveToLocalStorage = function(){
 ConfigManager.prototype.saveShadow = function(value){
     this.settingConfig.shadow = value;
     switch(value){
-        case 0:
-            this.config.shadow = null;
-            break;
-        case 1:
-            this.config.shadow = THREE.PCFShadowMap;
-            break;
-        case 2:
-            this.config.shadow = THREE.PCFSoftShadowMap;
-            break;
+    case 0:
+        this.config.shadow = null;
+        break;
+    case 1:
+        this.config.shadow = THREE.PCFShadowMap;
+        break;
+    case 2:
+        this.config.shadow = THREE.PCFSoftShadowMap;
+        break;
     }
     this.saveToLocalStorage();
 };

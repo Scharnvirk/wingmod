@@ -1,7 +1,7 @@
-var BaseScene = require("renderer/scene/BaseScene");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var FlatHudCamera = require("renderer/gameUi/FlatHudCamera");
+var BaseScene = require('renderer/scene/BaseScene');
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var FlatHudCamera = require('renderer/gameUi/FlatHudCamera');
 
 
 function FlatHudScene(config){

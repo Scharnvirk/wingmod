@@ -16,7 +16,7 @@ function TextSprite(config){
     this.texture = new THREE.Texture(this.canvas);
     this.context = this.canvas.getContext('2d');
 
-	this.material = new THREE.SpriteMaterial(
+    this.material = new THREE.SpriteMaterial(
 		{ map: this.texture, color: 0xffffff }
     );
 
@@ -34,12 +34,12 @@ TextSprite.prototype.createCanvas = function(){
 
 TextSprite.prototype.drawMessage = function(message){
     var metrics = this.context.measureText( message );
-	var textWidth = metrics.width;
+    var textWidth = metrics.width;
 
     var centerStartPosition = this.canvas.width / 2 - textWidth / 2;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.font = "Bold " + this.fontSize + "px " + this.fontStyle;
+    this.context.font = 'Bold ' + this.fontSize + 'px ' + this.fontStyle;
     this.context.fillStyle = '#00ff00';
     this.context.fillText( message, centerStartPosition, this.fontSize);
     this.texture.needsUpdate = true;

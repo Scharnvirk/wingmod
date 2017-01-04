@@ -23,7 +23,7 @@ var StartScreen = React.createClass({
         return { assetsLoaded: false };
     },
     componentWillMount() {
-        console.log("assetsLoadedPubsub", PubSub);
+        console.log('assetsLoadedPubsub', PubSub);
         PubSub.subscribe( 'assetsLoaded', (msg, data) => {
             this.setState({assetsLoaded: true});
         });
