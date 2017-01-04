@@ -90,6 +90,10 @@ BaseActor.prototype.requestUiFlash = function(options){
     this._manager.requestUiFlash(options);
 };
 
+BaseActor.prototype.requestShake = function(){
+    this._manager.requestShake();
+};
+
 BaseActor.prototype.createStateHandler = function(){
     return new BaseStateChangeHandler({actor: this});
 };

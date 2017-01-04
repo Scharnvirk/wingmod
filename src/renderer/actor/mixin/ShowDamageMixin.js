@@ -6,6 +6,7 @@ var ShowDamageMixin = {
         if(withFlash){
             if(this.state.hp < this._lastHp){
                 this.requestUiFlash('red');
+                this.requestShake();
             }
         }
 

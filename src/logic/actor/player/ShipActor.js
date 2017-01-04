@@ -12,8 +12,6 @@ function ShipActor(config){
 
     this.applyConfig(ActorConfig.SHIP);
 
-    this.props.hudModifier = 'shift';
-
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
 

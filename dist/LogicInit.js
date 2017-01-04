@@ -512,11 +512,27 @@ GameState.prototype.rechargeAmmo = function () {
     }
 };
 
+GameState.prototype.prepareMessage = function (text, color) {
+    this._state.message = {
+        text: text,
+        color: color
+    };
+};
+
+GameState.prototype.sendMessage = function (text, color) {
+    this._state.message = {
+        text: text,
+        color: color
+    };
+    this._notifyOfStateChange();
+};
+
 GameState.prototype._notifyOfStateChange = function () {
     this.emit({
         type: 'gameStateChange',
         data: this._state
     });
+    this._cleanState();
 };
 
 GameState.prototype._createInitialState = function () {
@@ -525,7 +541,7 @@ GameState.prototype._createInitialState = function () {
         currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
         ammo: {
             energy: 100,
-            plasma: 100,
+            plasma: 10,
             rads: 0,
             shells: 0
         },
@@ -538,6 +554,10 @@ GameState.prototype._createInitialState = function () {
     };
 };
 
+GameState.prototype._cleanState = function () {
+    this._state.message = null;
+};
+
 GameState.prototype._canFireWeapon = function (weaponName, ammoConfig) {
     var _this = this;
 
@@ -548,6 +568,7 @@ GameState.prototype._canFireWeapon = function (weaponName, ammoConfig) {
         ammoTypes.forEach(function (ammoType) {
             if (!_this._state.ammo[ammoType] || _this._state.ammo[ammoType] < ammoConfig[ammoType]) {
                 canFire = false;
+                _this.sendMessage('CANNOT FIRE ' + weaponName.toUpperCase() + '; AMMO MISSING: ' + ammoType.toUpperCase() + '!', '#ff5030');
             }
         });
         return canFire;
@@ -1668,7 +1689,7 @@ function BaseWeapon(config) {
     this.sound = null;
     this.name = config.name || 'baseWeapon';
     this.gameState = config.gameState;
-    this.defaultEmptyTiming = 30;
+    this.defaultEmptyTiming = 60;
 
     this.ammoConfig = {};
 
@@ -1706,7 +1727,7 @@ BaseWeapon.prototype.update = function () {
                 this.processActiveWeapon();
             } else {
                 this.shotsFired = 99999;
-                this.timer = this.cooldown;
+                this.timer = this.defaultEmptyTiming;
                 this.actor.playSound(['empty']);
             }
         }
@@ -2390,9 +2411,11 @@ var BrainMixin = {
 module.exports = BrainMixin;
 
 },{}],30:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var InputMixin = {
+    _hudModifier: 'shift',
+
     applyLookAtAngleInput: function applyLookAtAngleInput(inputState) {
         var angleForce = 0;
 
@@ -2443,7 +2466,7 @@ var InputMixin = {
     },
 
     applyWeaponInput: function applyWeaponInput(inputState) {
-        if (!inputState[this.hudModifier]) {
+        if (!inputState[this._hudModifier]) {
             if (inputState.mouseLeft) {
                 this.primaryWeaponSystem.shoot();
             } else {
@@ -2529,8 +2552,6 @@ function ShipActor(config) {
     Object.assign(this, config);
 
     this.applyConfig(ActorConfig.SHIP);
-
-    this.props.hudModifier = 'shift';
 
     this.lastInputStateX = 0;
     this.lastInputStateY = 0;
@@ -3035,6 +3056,10 @@ BaseActor.prototype.requestUiFlash = function (options) {
     this._manager.requestUiFlash(options);
 };
 
+BaseActor.prototype.requestShake = function () {
+    this._manager.requestShake();
+};
+
 BaseActor.prototype.createStateHandler = function () {
     return new BaseStateChangeHandler({ actor: this });
 };
@@ -3282,6 +3307,7 @@ MookActor.prototype.onSpawn = function () {};
 MookActor.prototype.onDeath = function () {
     this.createPremade({ premadeName: 'OrangeBoomMedium' });
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 MookActor.prototype.drawEyes = function () {
@@ -3346,6 +3372,7 @@ OrbotActor.prototype.onSpawn = function () {};
 OrbotActor.prototype.onDeath = function () {
     this.createPremade({ premadeName: 'OrangeBoomMedium' });
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 OrbotActor.prototype.drawEyes = function () {
@@ -3410,6 +3437,7 @@ SniperActor.prototype.onSpawn = function () {};
 SniperActor.prototype.onDeath = function () {
     this.createPremade({ premadeName: 'OrangeBoomMedium' });
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 SniperActor.prototype.drawEyes = function () {
@@ -3550,6 +3578,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
         var position = [actorPosition[0] + Utils.rand(-5, 5), actorPosition[1] + Utils.rand(-5, 5)];
         this.createPremade({ premadeName: 'OrangeBoomLarge', position: position });
         this.requestUiFlash('white');
+        this.requestShake();
     };
 
     for (var i = 0; i < 5; i++) {
@@ -3718,6 +3747,7 @@ var ShowDamageMixin = {
         if (withFlash) {
             if (this.state.hp < this._lastHp) {
                 this.requestUiFlash('red');
+                this.requestShake();
             }
         }
 
@@ -3752,6 +3782,7 @@ BoomChunkActor.mixin(ParticleMixin);
 BoomChunkActor.prototype.onDeath = function () {
     this.createPremade({ premadeName: 'OrangeBoomLarge' });
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 module.exports = BoomChunkActor;
@@ -3853,6 +3884,7 @@ ShipActor.prototype.customUpdate = function () {
 ShipActor.prototype.onDeath = function () {
     this.createPremade({ premadeName: 'OrangeBoomLarge' });
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 ShipActor.prototype.switchWeapon = function (changeConfig) {
@@ -4521,7 +4553,7 @@ var ActorConfig = {
             hp: 300,
             hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 350,
+            spawnRate: 240,
             enemy: true
         }
     },

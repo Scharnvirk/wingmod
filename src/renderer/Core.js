@@ -36,11 +36,11 @@ Core.prototype.init = function(){
 
     this.createMainComponents();
     this.initEventHandlers();
-    // this.renderStats = this.createRenderStatsWatcher();
-    // this.stats = this.createStatsWatcher();
+    this.renderStats = this.createRenderStatsWatcher();
+    this.stats = this.createStatsWatcher();
     this.startTime = Date.now();
-    // this.attachToDom(this.renderStats);
-    // this.attachToDom(this.stats);
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
     this.attachRendererToDom(this.renderer);
 
     PubSub.publish('setConfig', this.configManager.settingConfig);
@@ -76,6 +76,7 @@ Core.prototype.initEventHandlers = function(){
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
+    this.actorManager.on('requestShake', this.onRequestShake.bind(this));
 
     this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
@@ -189,8 +190,8 @@ Core.prototype.render = function(){
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
     this.flatHud.update();
-    // this.renderStats.update(this.renderer);
-    // this.stats.update();
+    this.renderStats.update(this.renderer);
+    this.stats.update();
 };
 
 Core.prototype.startGameRenderMode = function(){
@@ -241,6 +242,13 @@ Core.prototype.onActorStateChange = function(event){
 
 Core.prototype.onRequestUiFlash = function(event){
     this.sceneManager.get(this.activeScene).doUiFlash(event.data);
+};
+
+Core.prototype.onRequestShake = function(){
+    this.viewportElement.addClass('shake-once');
+    setTimeout(() => {
+        this.viewportElement.removeClass('shake-once');
+    }, 100);
 };
 
 Core.prototype.onStartGame = function(){

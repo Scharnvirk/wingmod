@@ -91,7 +91,7 @@ Ui.prototype.onSoundConfig = function(data){
 };
 
 Ui.prototype.updateState = function(state){
-    PubSub.publish('hudAmmoChange', state);
+    PubSub.publish('hudStateChange', state);
 };
     
 

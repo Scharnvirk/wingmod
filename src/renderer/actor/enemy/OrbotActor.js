@@ -39,6 +39,7 @@ OrbotActor.prototype.onSpawn = function(){};
 OrbotActor.prototype.onDeath = function(){
     this.createPremade({premadeName: 'OrangeBoomMedium'});
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 OrbotActor.prototype.drawEyes = function(){

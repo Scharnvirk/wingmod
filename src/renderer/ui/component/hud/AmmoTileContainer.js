@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import classnames from 'classnames';
-import {Animate} from 'react-rebound';
 
 var ReactUtils = require('renderer/ui/ReactUtils');
-var imagePath = 'gfx/ammoHud.png';
 var AmmoTile = require('renderer/ui/component/hud/AmmoTile');
 
 class AmmoTileContainer extends Component {
@@ -32,7 +29,7 @@ class AmmoTileContainer extends Component {
     }
 
     componentWillMount() {
-        PubSub.subscribe( 'hudAmmoChange', (msg, data) => {
+        PubSub.subscribe( 'hudStateChange', (msg, data) => {
             this.setState({
                 ammo: data
             });
@@ -44,7 +41,7 @@ class AmmoTileContainer extends Component {
         });
     }
 
-    componentWillReceiveProps(props) {}
+    componentWillReceiveProps() {}
 
     createAmmoTiles(ammoConfig) {
         if(!ammoConfig || ammoConfig.length === 0){
@@ -55,6 +52,7 @@ class AmmoTileContainer extends Component {
         ammoConfigs = Object.keys(ammoConfig.ammo).map(ammoType => {
             if (this.knownAmmoTypes.indexOf(ammoType) < 0) return null;
             return <AmmoTile
+                key={ammoType}
                 type={ammoType}
                 amount={Math.ceil(ammoConfig.ammo[ammoType] || 0)}
                 maxAmount={ammoConfig.ammoMax[ammoType]}

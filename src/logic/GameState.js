@@ -37,11 +37,27 @@ GameState.prototype.rechargeAmmo = function(){
     }
 };
 
+GameState.prototype.prepareMessage = function(text, color){
+    this._state.message = {
+        text: text, 
+        color: color
+    };
+};
+
+GameState.prototype.sendMessage = function(text, color){
+    this._state.message = {
+        text: text, 
+        color: color
+    };
+    this._notifyOfStateChange();
+};
+
 GameState.prototype._notifyOfStateChange = function(){
     this.emit({
         type: 'gameStateChange',
         data: this._state
     });
+    this._cleanState();
 };
 
 GameState.prototype._createInitialState = function(){
@@ -50,7 +66,7 @@ GameState.prototype._createInitialState = function(){
         currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
         ammo: {
             energy: 100,
-            plasma: 100,
+            plasma: 10,
             rads: 0,
             shells: 0
         },
@@ -63,6 +79,10 @@ GameState.prototype._createInitialState = function(){
     };
 };
 
+GameState.prototype._cleanState = function(){
+    this._state.message = null;
+};
+
 GameState.prototype._canFireWeapon = function(weaponName, ammoConfig){
     let weaponExists = !!~this._state.weapons.indexOf(weaponName);
     let ammoTypes = Object.keys(ammoConfig);
@@ -71,6 +91,7 @@ GameState.prototype._canFireWeapon = function(weaponName, ammoConfig){
         ammoTypes.forEach(ammoType => {
             if (!this._state.ammo[ammoType] || this._state.ammo[ammoType] < ammoConfig[ammoType]) {
                 canFire = false;
+                this.sendMessage('CANNOT FIRE ' + weaponName.toUpperCase() + '; AMMO MISSING: ' + ammoType.toUpperCase() + '!', '#ff5030');
             }    
         });
         return canFire;

@@ -28,7 +28,7 @@ GameScene.prototype.create = function() {
         b: Utils.rand(100,100)/100
     };
 
-    this.directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    this.directionalLight = new THREE.DirectionalLight( 0xdddddd, 1 );
     this.directionalLight.position.set( 0, 0, 200 );
     this.directionalLight.distance = 1000;
 
@@ -51,7 +51,7 @@ GameScene.prototype.create = function() {
 
     this.threeScene.add( this.directionalLight );
 
-    this.ambientLight = new THREE.AmbientLight( 0x505050, 1 );
+    this.ambientLight = new THREE.AmbientLight( 0x303030, 1 );
 
     this.threeScene.add( this.ambientLight );
 

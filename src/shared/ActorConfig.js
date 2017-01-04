@@ -153,7 +153,7 @@ var ActorConfig = {
             hp: 300,
             hpBarCount: 30,
             removeOnHit: false,
-            spawnRate: 350,
+            spawnRate: 240,
             enemy: true
         }
     },

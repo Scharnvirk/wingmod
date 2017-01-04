@@ -38,6 +38,7 @@ ShipActor.prototype.customUpdate = function(){
 ShipActor.prototype.onDeath = function(){
     this.createPremade({premadeName: 'OrangeBoomLarge'});
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 ShipActor.prototype.switchWeapon = function(changeConfig){

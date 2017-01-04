@@ -11,6 +11,7 @@ BoomChunkActor.mixin(ParticleMixin);
 BoomChunkActor.prototype.onDeath = function(){
     this.createPremade({premadeName: 'OrangeBoomLarge'});
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 module.exports = BoomChunkActor;

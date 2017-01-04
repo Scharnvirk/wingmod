@@ -43,6 +43,7 @@ SniperActor.prototype.onSpawn = function(){};
 SniperActor.prototype.onDeath = function(){
     this.createPremade({premadeName: 'OrangeBoomMedium'});
     this.requestUiFlash('white');
+    this.requestShake();
 };
 
 SniperActor.prototype.drawEyes = function(){

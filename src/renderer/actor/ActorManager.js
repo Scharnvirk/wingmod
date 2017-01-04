@@ -106,6 +106,13 @@ ActorManager.prototype.requestUiFlash = function(flashType){
     });
 };
 
+
+ActorManager.prototype.requestShake = function(){
+    this.emit({
+        type:'requestShake'
+    });
+};
+
 ActorManager.prototype.getEnemies = function(){
     let enemies = [];
     Object.keys(this.storage).forEach(actorId => {

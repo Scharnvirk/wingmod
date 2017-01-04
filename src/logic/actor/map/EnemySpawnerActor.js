@@ -19,7 +19,7 @@ EnemySpawnerActor.prototype.customUpdate = function(){
     } else {
         if ( Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate ){
             this.createEnemySpawnMarker();
-        }
+        } 
     }
 };
 

@@ -7,7 +7,7 @@ function BaseWeapon(config){
     this.sound = null;
     this.name = config.name || 'baseWeapon';
     this.gameState = config.gameState;    
-    this.defaultEmptyTiming = 30;
+    this.defaultEmptyTiming = 60;
 
     this.ammoConfig = {};
 
@@ -45,7 +45,7 @@ BaseWeapon.prototype.update = function(){
                 this.processActiveWeapon();
             } else {
                 this.shotsFired = 99999;
-                this.timer = this.cooldown;
+                this.timer = this.defaultEmptyTiming;
                 this.actor.playSound(['empty']);
             }
         }

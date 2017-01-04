@@ -4,7 +4,7 @@ function SoundLoader(config){
 }
 
 SoundLoader.prototype.loadSounds = function(){
-    createjs.Sound.alternateExtensions = ['mp3'];
+    createjs.Sound.alternateExtensions = ['mp3']; 
     createjs.Sound.registerSound({src:'sounds/shortzap2.wav', id:'shortzap2'});
     createjs.Sound.registerSound({src:'sounds/blue_laser.wav', id:'blue_laser'});
     createjs.Sound.registerSound({src:'sounds/plasmashot.wav', id:'plasmashot'});
@@ -30,9 +30,10 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/itds3.wav', id:'orbot'});
     createjs.Sound.registerSound({src:'sounds/spawn.wav', id:'spawn'});
     createjs.Sound.registerSound({src:'sounds/cannon_change.wav', id:'cannon_change'});
-    createjs.Sound.registerSound({src:'sounds/empty.wav', id:'empty'});
+    createjs.Sound.registerSound({src:'sounds/emptyError.wav', id:'empty'});
     createjs.Sound.registerSound({src:'sounds/ammocon_empty.mp3', id:'ammo_empty'});
     createjs.Sound.registerSound({src:'sounds/shieldcon_empty.mp3', id:'shield_empty'});
+    createjs.Sound.registerSound({src:'sounds/spawnerCharge.wav', id:'spawnCharge'});
 };
 
 module.exports = SoundLoader;

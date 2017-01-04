@@ -11,6 +11,7 @@ function Server(){
     this.PASSWD_CONFIG_PATH = './passwd.json';
     this.INDEX_PATH = './index.html';
     this.STYLE_PATH = './styles.css';
+    this.SHAKE_STYLE_PATH = './shake.css';
 
     this.USE_PASSWORD_AUTH = false;
 
@@ -121,6 +122,7 @@ Server.prototype.populateCache = function(paths, zCache){
     })
     zCache['index.html'] = fs.readFileSync(this.INDEX_PATH, 'utf-8');
     zCache['/styles.css'] = fs.readFileSync(this.STYLE_PATH);
+    zCache['/shake.css'] = fs.readFileSync(this.SHAKE_STYLE_PATH);
 
     return zCache;
 }
@@ -168,6 +170,11 @@ Server.prototype.createRoutes = function(paths) {
     routes['/styles.css'] = function(req, res) {
         res.setHeader('Content-Type', 'text/css');
         res.send(this.getFromCache('/styles.css') );
+    }.bind(this);
+
+    routes['/shake.css'] = function(req, res) {
+        res.setHeader('Content-Type', 'text/css');
+        res.send(this.getFromCache('/shake.css') );
     }.bind(this);
 
     paths.forEach(function(itemPath){

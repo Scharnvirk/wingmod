@@ -1,5 +1,7 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 var imagePath = 'gfx/ammoHud.png';
+var ReactUtils = require('renderer/ui/ReactUtils');
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group'); 
 
 class AmmoTile extends Component {
     constructor (props, context) {
@@ -7,6 +9,7 @@ class AmmoTile extends Component {
 
         this.tileCount = 4;
         this.multiplier = 97.75; // investigate why - whould be 100
+        this.gain = false;
 
         this.iconIndexes = {
             plasma: 0,
@@ -44,19 +47,28 @@ class AmmoTile extends Component {
                 fontFamily: 'Oswald',
                 fontSize: '1.25vw',
                 right: '2.5vw',
-                color: 'white'
             }
         };
     }
 
-    componentWillReceiveProps(props) {}
+    componentWillReceiveProps() {}
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.amount > this.props.amount){
+            this.gain = true;
+        } else {
+            this.gain = false;
+        }
+        return this.props.amount !== nextProps.amount;
+    }   
 
     createIconStyle() {
         var positionOffset = ((this.iconIndexes[this.props.type] || 0 / this.tileCount) * this.multiplier) + '%';
         return Object.assign(
             this.componentStyle.icon,
             {
-                backgroundPosition: positionOffset + ' 0'
+                backgroundPosition: positionOffset + ' 0',
+                color: this.colors[this.props.type || 'white']
             }
         );
     }
@@ -72,11 +84,20 @@ class AmmoTile extends Component {
 
     render() {
         if (typeof this.props.amount === 'undefined') return null;
-        var text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
+        let text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
+
+
+        
 
         return <div style={this.componentStyle.background}>
             <div style={this.createIconStyle()}/>
-            <div style={this.createTextStyle()}>{text}</div>
+            <ReactCSSTransitionGroup
+                transitionName={this.gain ? 'ammoGain' : 'ammoLoss'}
+                transitionEnterTimeout={50}
+                transitionLeave={false}>
+                {<div key={ReactUtils.generateKey()} style={this.createTextStyle()}>{text}</div>}
+            </ReactCSSTransitionGroup>
+            
         </div>;
     }
 }

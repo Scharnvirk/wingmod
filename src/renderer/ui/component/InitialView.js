@@ -7,6 +7,7 @@ var StartHelp = require('renderer/ui/component/StartHelp');
 var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
 var AmmoTileContainer = require('renderer/ui/component/hud/AmmoTileContainer');
+var MessageContainer = require('renderer/ui/component/hud/MessageContainer');
 var WeaponInfoContainer = require('renderer/ui/component/hud/WeaponInfoContainer');
 
 var ReactUtils = require('renderer/ui/ReactUtils');
@@ -49,6 +50,7 @@ var InitialView = React.createClass({
             </FullScreenEffect>
 
             <AmmoTileContainer/>
+            <MessageContainer/>
             {UIcontent}
         </div>;
     }

@@ -29,6 +29,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
         let position = [actorPosition[0] + Utils.rand(-5,5), actorPosition[1] + Utils.rand(-5,5)];
         this.createPremade({premadeName: 'OrangeBoomLarge', position: position});
         this.requestUiFlash('white');
+        this.requestShake();
     };
 
     for(let i = 0; i < 5; i++){
