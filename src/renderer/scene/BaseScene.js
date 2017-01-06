@@ -32,6 +32,10 @@ BaseScene.prototype.createThreeScene = function(){
     return new THREE.Scene();
 };
 
+BaseScene.prototype.getCamera = function(){
+    return this.camera;
+};
+
 BaseScene.prototype.addPlayerActor = function(actor){};
 BaseScene.prototype.customUpdate = function(){};
 BaseScene.prototype.resetCamera = function(){};

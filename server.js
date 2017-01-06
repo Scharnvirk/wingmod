@@ -18,6 +18,7 @@ function Server(){
     this.RESOURCE_DIRECTORIES_PATHS = [
         'lib',
         'lib/utils',
+        'lib/threeExtensions',
         'models',
         'models/levels',
         'gfx',
@@ -35,12 +36,12 @@ function Server(){
     this.createPassConfig().
     then(this.createResourceList.bind(this)).
     then(function(paths){
-            this.zCache = this.populateCache(paths);
-            this.setupTerminationHandlers();
-            this.routes = this.createRoutes(paths);
-            this.setupRoutesWithAuth();
-            this.start();
-        }.bind(this)
+        this.zCache = this.populateCache(paths);
+        this.setupTerminationHandlers();
+        this.routes = this.createRoutes(paths);
+        this.setupRoutesWithAuth();
+        this.start();
+    }.bind(this)
     ).catch(function(error){
         console.log(error);
     });
@@ -53,36 +54,36 @@ Server.prototype.createPassConfig = function(){
             return;
         }
     ).catch(function(error){
-        console.log("WARN: no passwd config file found!");
+        console.log('WARN: no passwd config file found!');
         this.passwdConfig = {};
-    })
-}
+    });
+};
 
 Server.prototype.createUrl = function(){
     var ipAddress = process.env.OPENSHIFT_NODEJS_IP;
     var port  = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-    if (typeof ipAddress === "undefined") {
-        ipAddress = "127.0.0.1";
+    if (typeof ipAddress === 'undefined') {
+        ipAddress = '127.0.0.1';
     }
 
     return {
         port: port,
         ipAddress: ipAddress
-    }
-}
+    };
+};
 
 Server.prototype.readDirectory = function(path){
     return fs.readdirP(path).then(function(result){
         var fullPaths = [];
         result.forEach(function(item){
             fullPaths.push('/' + path + '/' + item);
-        })
+        });
         return fullPaths;
     }, function(error){
         console.log(error);
     });
-}
+};
 
 Server.prototype.createResourceList = function(){
     var whenPathsLoaded = [];
@@ -92,7 +93,7 @@ Server.prototype.createResourceList = function(){
             whenPathsLoaded.push(this.readDirectory(path));
         }.bind(this),
         function(error){
-            console.log(error)
+            console.log(error);
         }
     );
 
@@ -101,14 +102,14 @@ Server.prototype.createResourceList = function(){
             var allItemsWithPaths = [];
             result.forEach(function(itemDirectory){
                 allItemsWithPaths = allItemsWithPaths.concat(itemDirectory);
-            })
+            });
             return allItemsWithPaths;
         }
-    )
-}
+    );
+};
 
 Server.prototype.populateCache = function(paths, zCache){
-    if (typeof zCache === "undefined") {
+    if (typeof zCache === 'undefined') {
         zCache = {};
     }
 
@@ -119,30 +120,30 @@ Server.prototype.populateCache = function(paths, zCache){
         if(!isFileDirectory){
             zCache[itemPath] = fs.readFileSync(startingPath + itemPath);
         }
-    })
+    });
     zCache['index.html'] = fs.readFileSync(this.INDEX_PATH, 'utf-8');
     zCache['/styles.css'] = fs.readFileSync(this.STYLE_PATH);
     zCache['/shake.css'] = fs.readFileSync(this.SHAKE_STYLE_PATH);
 
     return zCache;
-}
+};
 
 Server.prototype.getFromCache = function(key) {
     if (!this.zCache) {
-        console.error("no Zcache!");
+        console.error('no Zcache!');
     } else {
         return this.zCache[key];
     }
-}
+};
 
 Server.prototype.terminate = function(signal) {
-    if (typeof signal === "string") {
-       console.log('%s: Received %s - terminating server app ...',
+    if (typeof signal === 'string') {
+        console.log('%s: Received %s - terminating server app ...',
                    Date(Date.now()), signal);
-       process.exit(1);
+        process.exit(1);
     }
     console.log('%s: Node server stopped.', Date(Date.now()) );
-}
+};
 
 Server.prototype.setupTerminationHandlers = function() {
     process.on('exit', function() {
@@ -157,10 +158,10 @@ Server.prototype.setupTerminationHandlers = function() {
             this.terminate(element);
         }.bind(this));
     }.bind(this));
-}
+};
 
 Server.prototype.createRoutes = function(paths) {
-    routes = {};
+    var routes = {};
 
     routes['/'] = function(req, res) {
         res.setHeader('Content-Type', 'text/html');
@@ -188,19 +189,19 @@ Server.prototype.createRoutes = function(paths) {
     }.bind(this);
 
     return routes;
-}
+};
 
 Server.prototype.auth = function(request, result, next) {
     function unauthorized(result) {
         result.set('WWW-Authenticate', 'Basic realm=Authorization Required');
         return result.sendStatus(401);
-    };
+    }
 
     var user = basicAuth(request);
 
     if (!user || !user.name || !user.pass) {
         return unauthorized(result);
-    };
+    }
 
     var userHash = crypto.createHash('sha256');
     var passHash = crypto.createHash('sha256');
@@ -217,11 +218,11 @@ Server.prototype.auth = function(request, result, next) {
         }
     });
     return unauthorized(result);
-}
+};
 
 Server.prototype.routeWithoutAuth = function(request, result, next){
     return next();
-}
+};
 
 Server.prototype.setupRoutesWithAuth = function(){
     this.app = express();
@@ -231,7 +232,7 @@ Server.prototype.setupRoutesWithAuth = function(){
     for (var route in this.routes) {
         this.app.get(route, authFunction, this.routes[route]);
     }
-}
+};
 
 Server.prototype.start = function(){
     this.app.listen(
@@ -246,6 +247,6 @@ Server.prototype.start = function(){
             );
         }.bind(this)
     );
-}
+};
 
 var server = new Server();

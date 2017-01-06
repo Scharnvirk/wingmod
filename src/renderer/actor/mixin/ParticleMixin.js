@@ -24,7 +24,6 @@ var ParticleMixin = {
             });
         }
     }
-
 };
 
 module.exports = ParticleMixin;

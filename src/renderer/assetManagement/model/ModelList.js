@@ -3,6 +3,7 @@ var ModelList = {
         '/models/ship.json',
         '/models/ravier.json',
         '/models/ravier_gunless.json',
+        '/models/ravier_shield.json',
         '/models/drone.json',
         '/models/sniper.json',
         '/models/orbot.json',

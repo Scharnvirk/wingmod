@@ -16,6 +16,9 @@ CustomModelCreator.prototype.configure = function(){
                 color: 0x885522,
                 map: new THREE.TextureLoader().load('/models/chunk.png')
             })
+        },
+        'shieldSphere': {
+            geometry: new THREE.SphereGeometry( 5, 24, 24 )
         }
     };
 };

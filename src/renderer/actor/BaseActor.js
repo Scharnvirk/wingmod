@@ -59,10 +59,19 @@ BaseActor.prototype.getOffsetPosition = function(distanceOffset, angleOffset){
     return Utils.rotationToVector(this._rotation + (angleOffset || 0), (distanceOffset || 0));
 };
 
+BaseActor.prototype.getRelativeContactPoint = function(){
+    return this.state.relativeContactPoint;
+};
+
 BaseActor.prototype.setPosition = function(positionX, positionY){
     this._position[0] = positionX || 0;
     this._position[1] = positionY || 0;
 };
+
+BaseActor.prototype.getCamera = function(){
+    return this._manager.getCamera();
+};
+
 
 BaseActor.prototype.onDeath = function(){};
 

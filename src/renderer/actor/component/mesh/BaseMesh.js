@@ -7,7 +7,7 @@ function BaseMesh(config){
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
     this.rotationOffset = 0;
-    this.positionOffset = [0, 0, 0];
+    this.positionOffset = config.positionOffset || [0, 0, 0];
 
     Object.assign(this, config);
 
@@ -21,6 +21,8 @@ function BaseMesh(config){
 
 BaseMesh.extend(THREE.Mesh);
 
+BaseMesh.prototype.customUpdate = function(){};
+
 BaseMesh.prototype.update = function(){
     let position = this.actor.getPosition();
     let rotation = this.actor.getRotation();
@@ -31,6 +33,7 @@ BaseMesh.prototype.update = function(){
         this.position.z = position[2] + this.positionOffset[2];
         this.rotation.z = rotation + this.rotationOffset;
     }
+    this.customUpdate();
 };
 
 module.exports = BaseMesh;

@@ -37,7 +37,8 @@ ParticleGenerator.prototype.createColors = function(){
         RED: 256 + 200*512 + 200*262144,
         PURPLE: 100 + 0*512 + 256*262144,
         WHITE: 256 + 256*512 + 256*262144,
-        DEEPRED: 256 + 0*512 + 0*262144
+        DEEPRED: 256 + 0*512 + 0*262144,
+        DEEPGREEN: 0 + 180*512 + 0*262144
     };
 };
 

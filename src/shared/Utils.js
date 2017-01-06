@@ -28,12 +28,17 @@ var Utils = {
         }
     },
 
-    makeRandomColor: function(min = 0, max = 255){
-        var colors = ['','',''];
+    makeRandomColor: function(min = 0, max = 255, r, g, b){
+        var colors = [r || '', g || '', b || ''];
 
+        let newColor = 0;
         colors.forEach(function(color, index){
-            var newColor = this.rand(min, max).toString(16);
-            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;
+            if (colors[index] === ''){
+                newColor = this.rand(min, max).toString(16);
+            } else {
+                newColor = colors[index].toString(16);
+            }   
+            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;         
         }.bind(this));
 
         var color = '0x' + colors.join('');

@@ -97,7 +97,16 @@ BaseActor.prototype.createBody = function(){
 
 BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     if(otherActor && this.state.hp != Infinity && otherActor.props.damage > 0){
-        this.state.hp -= otherActor.props.damage;
+        if (this.state.shield) {
+            this.state.shield -= otherActor.props.damage;
+            if(this.state.shield < 0) {
+                this.state.hp += this.state.shield;
+                this.state.shield = 0;
+            }
+        } else {
+            this.state.hp -= otherActor.props.damage;
+        }        
+        this.state.relativeContactPoint = relativeContactPoint;
         this.onHit();
     }
 

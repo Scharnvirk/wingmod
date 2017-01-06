@@ -123,4 +123,8 @@ ActorManager.prototype.getEnemies = function(){
     return enemies;
 };
 
+ActorManager.prototype.getCamera = function(){
+    return this.sceneManager.getCoreActiveScene().getCamera();
+};
+
 module.exports = ActorManager;

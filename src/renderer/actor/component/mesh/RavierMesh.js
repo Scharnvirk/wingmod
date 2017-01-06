@@ -7,6 +7,9 @@ function RavierMesh(config){
     config = config || {};
     config.geometry = ModelStore.get('ravier_gunless').geometry;
     config.material = ModelStore.get('ravier').material;
+
+    this.positionOffset = [0, -2, 0];
+
     Object.assign(this, config);
 }
 

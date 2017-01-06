@@ -1,5 +1,6 @@
 var RavierMesh = require('renderer/actor/component/mesh/RavierMesh');
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var BaseActor = require('renderer/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
@@ -13,10 +14,10 @@ function ShipActor(){
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[3,0,0], [-3,0,0]], [[5,3.5,-2.2], [-5,3.5,-2.2]]];
+    this.weaponSetLocations = [[[3,-2,0], [-3,-2,0]], [[5,1.5,-2.2], [-5,1.5,-2.2]]];
 
     this.setupWeaponMeshes(0, 'plasmagun', 'plasmagun');
-    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');
+    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');    
 }
 
 ShipActor.extend(BaseActor);
@@ -26,13 +27,16 @@ ShipActor.mixin(ShowDamageMixin);
 
 ShipActor.prototype.createMeshes = function(){
     this.shipMesh = new RavierMesh({actor: this, scaleX: 3.3, scaleY: 3.3, scaleZ: 3.3});
-    return [this.shipMesh];
+    this.shieldMesh = new ShieldMesh({actor: this, sourceMesh: this.shipMesh, camera: this.getCamera()});
+    this.protectedMeshes = 2;
+    return [this.shipMesh, this.shieldMesh];
 };
 
 ShipActor.prototype.customUpdate = function(){
     this.doEngineGlow();
     this.doBob();
-    this.showDamage(true);
+    this.updateShield();
+    this.showDamage(true);    
 };
 
 ShipActor.prototype.onDeath = function(){
@@ -43,7 +47,7 @@ ShipActor.prototype.onDeath = function(){
 
 ShipActor.prototype.switchWeapon = function(changeConfig){
     for (let i = 0, l = this.weaponSetLocations[changeConfig.index].length; i < l; i++){
-        let meshIndexLocation = (l * changeConfig.index + i) + 1; //zeroth is reserved for ship
+        let meshIndexLocation = (l * changeConfig.index + i) + this.protectedMeshes; //zeroth is reserved for ship
         let mesh = this.getMeshAt(meshIndexLocation);
         mesh.geometry = ModelStore.get(changeConfig.weapon).geometry;
         mesh.material = ModelStore.get(changeConfig.weapon).material;
@@ -59,7 +63,7 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
     }
 
     for (let i = 0, l = this.weaponSetLocations[slotNumber].length; i < l; i++){
-        var meshIndexLocation = (l * slotNumber + i) + 1; //zeroth is reserved for ship
+        var meshIndexLocation = (l * slotNumber + i) + this.protectedMeshes; //zeroth is reserved for ship
         let mesh = new BaseMesh({
             actor: this,
             scaleX: scales[0] || defaultScale,
@@ -75,6 +79,14 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
     }
 };
 
+ShipActor.prototype.updateShield = function(){
+    if(this.state.shield < this._lastShield){
+        this.shieldMesh.setIntensity(200);
+        this.requestUiFlash('red');
+        this.requestShake();
+    }
+    this._lastShield = this.state.shield;
+};
 
 ShipActor.prototype.doEngineGlow = function(){
     let positionZ = this.getPosition()[2] - Constants.DEFAULT_POSITION_Z;
@@ -83,14 +95,14 @@ ShipActor.prototype.doEngineGlow = function(){
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
                 positionZ: positionZ,
-                rotationOffset: 15,
-                distance: -5.8
+                rotationOffset: 10,
+                distance: -7.6
             });
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
                 positionZ: positionZ,
-                rotationOffset: 345,
-                distance: -5.8
+                rotationOffset: 350,
+                distance: -7.6
             });
         }
 
@@ -98,14 +110,14 @@ ShipActor.prototype.doEngineGlow = function(){
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
                 positionZ: positionZ,
-                rotationOffset: 40,
-                distance: -4
+                rotationOffset: 25,
+                distance: -6
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
                 positionZ: positionZ,
                 rotationOffset: 170,
-                distance: -6
+                distance: -4.2
             });
         }
 
@@ -113,14 +125,14 @@ ShipActor.prototype.doEngineGlow = function(){
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
                 positionZ: positionZ,
-                rotationOffset: 320,
-                distance: -4
+                rotationOffset: 335,
+                distance: -6
             });
             this.createPremade({
                 premadeName: 'EngineGlowSmall',
                 positionZ: positionZ,
                 rotationOffset: 190,
-                distance: -6
+                distance: -4.2
             });
         }
 
@@ -129,7 +141,7 @@ ShipActor.prototype.doEngineGlow = function(){
                 premadeName: 'EngineGlowMedium',
                 positionZ: positionZ,
                 rotationOffset: 180,
-                distance: -7
+                distance: -5
             });
         }
     }

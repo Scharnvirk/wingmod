@@ -4,7 +4,8 @@ var ActorConfig = {
             acceleration: 1000,
             turnSpeed: 6,
             hp: 30,
-            hpBarCount: 20,
+            shield: 30,
+            hpBarCount: 5,
             isPlayer: true
         },
         bodyConfig: {
@@ -151,7 +152,7 @@ var ActorConfig = {
     ENEMYSPAWNER: {
         props:{
             hp: 300,
-            hpBarCount: 30,
+            hpBarCount: 7,
             removeOnHit: false,
             spawnRate: 240,
             enemy: true
@@ -163,7 +164,7 @@ var ActorConfig = {
             acceleration: 140,
             turnSpeed: 2,
             hp: 6,
-            hpBarCount: 6,
+            hpBarCount: 5,
             enemy: true
         },
         bodyConfig: {
@@ -180,8 +181,8 @@ var ActorConfig = {
         props: {
             acceleration: 150,
             turnSpeed: 4,
-            hp: 3,
-            hpBarCount: 3,
+            hp: 2,
+            hpBarCount: 5,
             enemy: true
         },
         bodyConfig: {
@@ -199,7 +200,7 @@ var ActorConfig = {
             acceleration: 90,
             turnSpeed: 0.8,
             hp: 12,
-            hpBarCount: 12,
+            hpBarCount: 5,
             enemy: true
         },
         bodyConfig: {
