@@ -5,6 +5,7 @@ var RingBlaster = require('logic/actor/component/weapon/RingBlaster');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
+var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function OrbotActor(config){
     config = config || [];
@@ -22,6 +23,7 @@ function OrbotActor(config){
 
 OrbotActor.extend(BaseActor);
 OrbotActor.mixin(BrainMixin);
+OrbotActor.mixin(DropMixin);
 
 OrbotActor.prototype.createBrain = function(){
     return new MookBrain({
@@ -63,6 +65,7 @@ OrbotActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
+    this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
@@ -74,6 +77,7 @@ OrbotActor.prototype.onHit = function(){
         angle: [0, 360],
         velocity: [50, 100]
     });
+    this.playSound(['armorHit1', 'armorHit2'], 1);
 };
 
 

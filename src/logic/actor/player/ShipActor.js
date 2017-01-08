@@ -4,6 +4,7 @@ var WeaponSystem = require('logic/actor/component/WeaponSystem');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var InputMixin = require('logic/actor/mixin/InputMixin');
+var PickupMixin = require('logic/actor/mixin/PickupMixin');
 
 function ShipActor(config){
     config = config || [];
@@ -26,6 +27,7 @@ function ShipActor(config){
 
 ShipActor.extend(BaseActor);
 ShipActor.mixin(InputMixin);
+ShipActor.mixin(PickupMixin);
 
 ShipActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
@@ -92,16 +94,21 @@ ShipActor.prototype.onDeath = function(){
     });
 
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
-};
+}; 
 
-ShipActor.prototype.onHit = function(){
-    this.spawn({
-        amount: 1,
-        probability: 0.5,
-        classId: ActorFactory.CHUNK,
-        angle: [0, 360],
-        velocity: [50, 100]
-    });
+ShipActor.prototype.onHit = function(shielded){
+    if (shielded) {
+        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
+    } else {
+        this.spawn({
+            amount: 1,
+            probability: 0.5,
+            classId: ActorFactory.CHUNK,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+        this.playSound(['armorHit1', 'armorHit2'], 10);
+    }
 };
 
 module.exports = ShipActor;

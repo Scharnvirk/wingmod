@@ -2,7 +2,6 @@ import classnames from 'classnames';
 import React, {Component} from 'react';
 var ReactUtils = require('renderer/ui/ReactUtils');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group'); 
-var Message = require('renderer/ui/component/hud/Message');
 
 class MessageContainer extends Component {
     constructor(props, context) {
@@ -72,22 +71,28 @@ class MessageContainer extends Component {
         });
     }
 
+    addMessage(){
+        this.state.message.index = this.currentMessageIndex;
+        this.state.message.style = Object.assign({}, this.componentStyle.message);
+        this.state.message.style.color = this.state.message.color;
+        this.state.messages[this.currentMessageIndex] = this.state.message;
+        
+        delete (this.state.message);            
+        setTimeout(this.deleteMessage.bind(this, this.currentMessageIndex), 3000);            
+        if(Object.keys(this.state.messages).length > 3){
+            delete this.state.messages[this.currentMessageIndex - 3];
+        }
+        this.currentMessageIndex ++;
+    }
+
     render() {
         let items = [];
         if (this.state.message){
-            this.state.message.index = this.currentMessageIndex;
-            this.state.messages[this.currentMessageIndex] = this.state.message;
-            delete (this.state.message);            
-            setTimeout(this.deleteMessage.bind(this, this.currentMessageIndex), 3000);            
-            if(Object.keys(this.state.messages).length > 3){
-                delete this.state.messages[this.currentMessageIndex - 3];
-            }
-            this.currentMessageIndex ++;
+            this.addMessage();
         }
         Object.keys(this.state.messages).forEach(messageIndex => {
-            this.componentStyle.message.color = this.state.messages[messageIndex].color;
             items.push(                
-                <div key={this.state.messages[messageIndex].index} style={this.componentStyle.message}>
+                <div key={this.state.messages[messageIndex].index} style={this.state.messages[messageIndex].style}>
                     <span>{this.state.messages[messageIndex].text}</span>
                 </div>                      
             );

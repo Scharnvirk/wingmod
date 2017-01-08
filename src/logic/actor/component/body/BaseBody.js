@@ -35,6 +35,14 @@ BaseBody.prototype.createShape = function(){
                     Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                     Constants.COLLISION_GROUPS.TERRAIN
         });
+    case 'pickup':
+        return new p2.Circle({
+            radius: this.radius,
+            collisionGroup: Constants.COLLISION_GROUPS.PICKUP,
+            collisionMask:
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.TERRAIN
+        });
     case 'playerShip':
         return new p2.Circle({
             radius: this.radius,
@@ -43,7 +51,8 @@ BaseBody.prototype.createShape = function(){
                     Constants.COLLISION_GROUPS.ENEMY |
                     Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
                     Constants.COLLISION_GROUPS.TERRAIN |
-                    Constants.COLLISION_GROUPS.ENEMYEXPLOSION
+                    Constants.COLLISION_GROUPS.ENEMYEXPLOSION |
+                    Constants.COLLISION_GROUPS.PICKUP
         });
     case 'enemyShip':
         return new p2.Circle({
@@ -67,7 +76,8 @@ BaseBody.prototype.createShape = function(){
                     Constants.COLLISION_GROUPS.ENEMY |
                     Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                     Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.PICKUP
         });
     case 'terrain-convex':
         return new p2.Convex({

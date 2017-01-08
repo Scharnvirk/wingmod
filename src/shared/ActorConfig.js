@@ -1,11 +1,13 @@
 var ActorConfig = {
     SHIP: {
         props: {
+            canPickup: true,
             acceleration: 1000,
             turnSpeed: 6,
             hp: 30,
             shield: 30,
-            hpBarCount: 5,
+            hpBarCount: 10,
+            shieldBarCount: 10,
             isPlayer: true
         },
         bodyConfig: {
@@ -70,7 +72,7 @@ var ActorConfig = {
 
     PULSEWAVEPROJECTILE: {
         props: {
-            hp: 1,
+            hp: 2,
             damage: 2,
             removeOnHit: true,
             timeout: 30,
@@ -79,7 +81,7 @@ var ActorConfig = {
         },
         bodyConfig: {
             radius: 3,
-            mass: 2,
+            mass: 2.5,
             ccdSpeedThreshold: 1,
             ccdIterations: 2,
             collisionType: 'playerProjectile'
@@ -107,7 +109,7 @@ var ActorConfig = {
     RINGPROJECTILE: {
         props: {
             hp: 1,
-            damage: 6,
+            damage: 5,
             removeOnHit: true,
             timeout: 120,
             collisionFixesPosition: true,
@@ -151,8 +153,14 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props:{
-            hp: 300,
+            drops: [{class: 'SHIELDPICKUP', amount: [1, 3]}, {class: 'ENERGYPICKUP', amount: [1 ,3]}, {class: 'PLASMAPICKUP', amount: 1}],
+            danger: 4,
+            hp: 80,
+            shield: 100,
+            shieldSize: 4,
+            shieldColor: 0x5533ff,
             hpBarCount: 7,
+            shieldBarCount: 7,
             removeOnHit: false,
             spawnRate: 240,
             enemy: true
@@ -161,6 +169,8 @@ var ActorConfig = {
 
     MOOK: {
         props: {
+            drops: [{class: 'ENERGYPICKUP', probability: 0.2}],
+            danger: 2,
             acceleration: 140,
             turnSpeed: 2,
             hp: 6,
@@ -179,6 +189,8 @@ var ActorConfig = {
 
     ORBOT: {
         props: {
+            drops: [{class: 'PLASMAPICKUP', probability: 0.2}],
+            danger: 1,
             acceleration: 150,
             turnSpeed: 4,
             hp: 2,
@@ -197,6 +209,8 @@ var ActorConfig = {
 
     SNIPER: {
         props: {
+            drops: [{class: 'SHIELDPICKUP', probability: 0.3}],
+            danger: 3,
             acceleration: 90,
             turnSpeed: 0.8,
             hp: 12,
@@ -211,7 +225,55 @@ var ActorConfig = {
             radius: 4,
             collisionType: 'enemyShip'
         }
-    }
+    },
+
+    SHIELDPICKUP: {
+        props:{
+            pickup: 'shield',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 1,
+            damping: 0.75,
+            collisionType: 'pickup'
+        }
+    },
+
+    ENERGYPICKUP: {
+        props:{
+            pickup: 'energy',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 1,
+            damping: 0.75,
+            collisionType: 'pickup'
+        }
+    },
+
+    PLASMAPICKUP: {
+        props:{
+            pickup: 'plasma',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 1,
+            damping: 0.75,
+            collisionType: 'pickup'
+        }
+    },
 };
 
 module.exports = ActorConfig;

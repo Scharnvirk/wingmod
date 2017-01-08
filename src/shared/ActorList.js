@@ -14,7 +14,10 @@ var ActorList = [
     'actor/map/MapActor',
     'actor/map/EnemySpawnerActor',
     'actor/map/EnemySpawnMarkerActor',
-    'actor/DebugActor'
+    'actor/DebugActor',
+    'actor/pickup/ShieldPickupActor',
+    'actor/pickup/EnergyPickupActor',
+    'actor/pickup/PlasmaPickupActor'
 ];
 
 module.exports = ActorList;

@@ -4,7 +4,10 @@ function BaseActor(config){
     this.id = this.id || config.id;
     this.props = this._createProps(this.props || {});
     this.state = this._createState(this.state || {});
-    this.timer = 0;        
+    this.timer = 0;   
+
+    this.gameState = config.gameState || null;     
+    this.manager = config.manager || null;
 
     this._body = this.createBody();
     if(!this._body) throw new Error('No body defined for Logic Actor!');
@@ -96,25 +99,20 @@ BaseActor.prototype.createBody = function(){
 };
 
 BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
-    if(otherActor && this.state.hp != Infinity && otherActor.props.damage > 0){
-        if (this.state.shield) {
-            this.state.shield -= otherActor.props.damage;
-            if(this.state.shield < 0) {
-                this.state.hp += this.state.shield;
-                this.state.shield = 0;
-            }
-        } else {
-            this.state.hp -= otherActor.props.damage;
-        }        
-        this.state.relativeContactPoint = relativeContactPoint;
-        this.onHit();
-    }
+    this._updateHpAndShieldOnCollision(otherActor, relativeContactPoint);
 
     if (this.state.hp <= 0 || this.props.removeOnHit){
         this.deathMain(relativeContactPoint);
     }
 
+    if (otherActor && this.state.pickup && otherActor.state.canPickup) {
+        otherActor.handlePickup(this.state.pickup);
+        this.deathMain(relativeContactPoint);
+    }
+
     this.manager.updateActorState(this);
+
+    this.customOnCollision();
 };
 
 BaseActor.prototype.update = function(){
@@ -129,6 +127,10 @@ BaseActor.prototype.update = function(){
 BaseActor.prototype.remove = function(){
     this.manager.removeActorAt(this.id);
 };
+
+BaseActor.prototype.handlePickup = function(){};
+
+BaseActor.prototype.customOnCollision = function(){};
 
 BaseActor.prototype.customUpdate = function(){};
 
@@ -183,10 +185,10 @@ BaseActor.prototype.spawn = function(config){
     config.angle = config.angle || 0;
     config.velocity = config.velocity || 0;
     config.classId = config.classId || ActorFactory.DEBUG;
-    config.probability = 1 / (config.probability || 1);
-
-    if (config.probability === 1 || Utils.rand(1, config.probability) === config.probability){
-        for(let i = 0; i < Utils.randArray(config.amount); i++){        
+    config.probability = (config.probability || 1) * 100;
+    
+    for(let i = 0; i < Utils.randArray(config.amount); i++){        
+        if (config.probability === 100 || Utils.rand(1, 100) <= config.probability){
             this.manager.addNew({
                 classId: config.classId,
                 positionX: this._body.position[0],
@@ -211,5 +213,23 @@ BaseActor.prototype._createState = function(state){
     let newState = Object.assign({}, state);
     return Object.assign(newProps, newState);    
 };
+
+BaseActor.prototype._updateHpAndShieldOnCollision = function(otherActor, relativeContactPoint){
+    if(otherActor && this.state.hp != Infinity && otherActor.props.damage > 0){
+        if (this.state.shield) {
+            this.state.shield -= otherActor.props.damage;            
+            if(this.state.shield < 0) {
+                this.state.hp += this.state.shield;
+                this.state.shield = 0;
+            }
+            this.onHit(true);
+        } else {
+            this.state.hp -= otherActor.props.damage;
+            this.onHit();
+        }        
+        this.state.relativeContactPoint = relativeContactPoint;        
+    }
+};
+
 
 module.exports = BaseActor;

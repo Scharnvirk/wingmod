@@ -33,7 +33,18 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/emptyError.wav', id:'empty'});
     createjs.Sound.registerSound({src:'sounds/ammocon_empty.mp3', id:'ammo_empty'});
     createjs.Sound.registerSound({src:'sounds/shieldcon_empty.mp3', id:'shield_empty'});
-    createjs.Sound.registerSound({src:'sounds/spawnerCharge.wav', id:'spawnCharge'});
+    createjs.Sound.registerSound({src:'sounds/armorHit1.wav', id:'armorHit1'});
+    createjs.Sound.registerSound({src:'sounds/armorHit2.wav', id:'armorHit2'});
+    createjs.Sound.registerSound({src:'sounds/shieldHit1.wav', id:'shieldHit1'});
+    createjs.Sound.registerSound({src:'sounds/shieldHit2.wav', id:'shieldHit2'});
+    createjs.Sound.registerSound({src:'sounds/shieldHit3.wav', id:'shieldHit3'});
+    createjs.Sound.registerSound({src:'sounds/powerup.wav', id:'powerup'});
+    createjs.Sound.registerSound({src:'sounds/distrupter_fire.wav', id:'disrupter'});
+    createjs.Sound.registerSound({src:'sounds/arc_01.wav', id:'arc1'});
+    createjs.Sound.registerSound({src:'sounds/arc_02.wav', id:'arc2'});
+    createjs.Sound.registerSound({src:'sounds/arc_03.wav', id:'arc3'});
+    createjs.Sound.registerSound({src:'sounds/arc_04.wav', id:'arc4'});
+    createjs.Sound.registerSound({src:'sounds/arc_05.wav', id:'arc5'});
 };
 
 module.exports = SoundLoader;

@@ -1,16 +1,48 @@
 function GameState(){
     this._state = this._createInitialState();
+    this._props = this._createInitialProps(); 
     this._notifyOfStateChange();
     this._timer = 0;
     
-    this.props = {
-        ammoRechargeRate: 30
-    };
-
     EventEmitter.apply(this, arguments);
 }
 
 GameState.extend(EventEmitter);
+
+GameState.prototype._createInitialState = function(){
+    return {
+        weapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
+        currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
+        ammo: {
+            energy: 100,
+            plasma: 100,
+            rads: 0,
+            shells: 0
+        },
+        ammoMax: {
+            energy: 200,
+            plasma: 200,
+            rads: 10,
+            shells: 400
+        }
+    };
+};
+
+GameState.prototype._createInitialProps = function(){
+    return {        
+        ammoRechargeRate: 60,
+        pickupColors: {
+            plasma: '#00d681',
+            energy: '#ffc04d',
+            rads: '#8a4dff',
+            shells: '#ff4d4d',
+            coolant: '#8bc9ff',
+            shield: '#66aaff'
+        }
+    };
+};
+
+
 
 GameState.prototype.update = function(){
     this._timer ++;
@@ -32,10 +64,45 @@ GameState.prototype.getWeapons = function(){
 };
 
 GameState.prototype.rechargeAmmo = function(){
-    if (this._timer % this.props.ammoRechargeRate === 0) {
-        this._addAmmo({energy: 1});
+    if (this._timer % this._props.ammoRechargeRate === 0) {
+        this.addAmmo({energy: 1});
     }
 };
+
+GameState.prototype.handleShieldPickup = function(amount){
+    this._state.message = {
+        text: amount + ' ' + 'SHIELDS',
+        color: this._props.pickupColors['shield']
+    };
+    this._notifyOfStateChange();
+};
+
+GameState.prototype.addAmmo = function(ammoConfig, withMessage){
+    Object.keys(ammoConfig).forEach(ammoType => {
+        this._state.ammo[ammoType] += ammoConfig[ammoType];
+        let notify = false;
+
+        if (this._state.ammo[ammoType] !== this._state.ammoMax[ammoType]) {
+            notify = true;
+        }
+
+        if (this._state.ammo[ammoType] > this._state.ammoMax[ammoType]){
+            this._state.ammo[ammoType] = this._state.ammoMax[ammoType];
+        }
+
+        if (withMessage) {
+            this._state.message = {
+                text: ammoConfig[ammoType] + ' ' + ammoType.toUpperCase(),
+                color: this._props.pickupColors[ammoType]
+            };
+        }
+
+        if (notify) {
+            this._notifyOfStateChange();
+        }
+    });
+};
+
 
 GameState.prototype.prepareMessage = function(text, color){
     this._state.message = {
@@ -58,25 +125,6 @@ GameState.prototype._notifyOfStateChange = function(){
         data: this._state
     });
     this._cleanState();
-};
-
-GameState.prototype._createInitialState = function(){
-    return {
-        weapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
-        currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
-        ammo: {
-            energy: 100,
-            plasma: 10,
-            rads: 0,
-            shells: 0
-        },
-        ammoMax: {
-            energy: 200,
-            plasma: 200,
-            rads: 10,
-            shells: 400
-        }
-    };
 };
 
 GameState.prototype._cleanState = function(){
@@ -103,17 +151,6 @@ GameState.prototype._canFireWeapon = function(weaponName, ammoConfig){
 GameState.prototype._subtractAmmo = function(ammoConfig){    
     Object.keys(ammoConfig).forEach(ammoType => {
         this._state.ammo[ammoType] -= ammoConfig[ammoType];
-    });
-};
-
-GameState.prototype._addAmmo = function(ammoConfig){
-    Object.keys(ammoConfig).forEach(ammoType => {
-        this._state.ammo[ammoType] += ammoConfig[ammoType];
-        if (this._state.ammo[ammoType] > this._state.ammoMax[ammoType]){
-            this._state.ammo[ammoType] = this._state.ammoMax[ammoType];
-        } else {
-            this._notifyOfStateChange();
-        }
     });
 };
 

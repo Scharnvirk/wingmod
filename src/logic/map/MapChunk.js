@@ -29,7 +29,8 @@ MapChunk.prototype.createShapes = function(){
                     Constants.COLLISION_GROUPS.ENEMY |
                     Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                     Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.PICKUP
             })
         );
     }

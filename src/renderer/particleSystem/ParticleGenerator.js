@@ -7,7 +7,7 @@ function ParticleGenerator(config){
     config.resolutionCoefficient = config.resolutionCoefficient || 1;
     config.needsUpdate = config.needsUpdate || false;
     config.autoUpdate = config.autoUpdate || true;
-
+ 
     config.positionHiddenFromView = 100000;
 
     Object.assign(this, config);
@@ -27,7 +27,7 @@ function ParticleGenerator(config){
 
 ParticleGenerator.extend(THREE.Points);
 
-ParticleGenerator.prototype.createColors = function(){
+ParticleGenerator.prototype.createColors = function(){ 
     return {
         //red + blue*512 + green*512*512
         GREEN: 120 + 256*512 + 200*262144,
@@ -38,7 +38,9 @@ ParticleGenerator.prototype.createColors = function(){
         PURPLE: 100 + 0*512 + 256*262144,
         WHITE: 256 + 256*512 + 256*262144,
         DEEPRED: 256 + 0*512 + 0*262144,
-        DEEPGREEN: 0 + 180*512 + 0*262144
+        DEEPGREEN: 0 + 180*512 + 0*262144,
+        DEEPBLUE: 0 + 100*512 + 256*262144,
+        DEEPYELLOW: 255 + 200*512 + 0*262144
     };
 };
 

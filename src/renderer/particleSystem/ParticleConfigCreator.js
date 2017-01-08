@@ -114,7 +114,10 @@ ParticleConfigCreator.prototype.createPremades = function(){
         RedEyeBig: require('renderer/particleSystem/premade/RedEyeBig'),
         PurpleEye: require('renderer/particleSystem/premade/PurpleEye'),
         PurpleLaserTrail: require('renderer/particleSystem/premade/PurpleLaserTrail'),
-        PurpleSparks: require('renderer/particleSystem/premade/PurpleSparks')
+        PurpleSparks: require('renderer/particleSystem/premade/PurpleSparks'),
+        EnergyPickup: require('renderer/particleSystem/premade/EnergyPickup'),
+        ShieldPickup: require('renderer/particleSystem/premade/ShieldPickup'),
+        PlasmaPickup: require('renderer/particleSystem/premade/PlasmaPickup')
     };
 };
 

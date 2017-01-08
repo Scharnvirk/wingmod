@@ -9,8 +9,8 @@ function RingBlaster(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 80;
-    this.velocity = 130;
-    this.sound = 'laser_charged';
+    this.velocity = 140;
+    this.sound = 'disrupter';
 }
 
 RingBlaster.extend(BaseWeapon);

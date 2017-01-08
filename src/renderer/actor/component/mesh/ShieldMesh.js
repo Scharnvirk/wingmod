@@ -4,13 +4,14 @@ var ModelStore = require('renderer/assetManagement/model/ModelStore');
 function ShieldMesh(config){
     BaseMesh.apply(this, arguments);
 
-    if (!this.sourceMesh) throw new Error('ShieldMesh requires a sourceMesh but none was given');
     if (!this.camera) throw new Error('ShieldMesh requires a camera but none was given');
     Object.assign(this, config);
 
     this.hitPosition = new THREE.Vector3(0, 0, 0);
     this.intensity = 0;
-    this.shieldColor = new THREE.Color(0x2244bb);
+    this.shieldSize = this.actor.props.shieldSize || 1.5;
+    this.shieldColor = new THREE.Color(this.actor.props.shieldColor || 0x5599dd);
+    this.disabled = true;
 
     let vertexShader = this._createVertexShader();
     let fragmentShader = this._createFragmentShader();
@@ -18,7 +19,7 @@ function ShieldMesh(config){
     
     this.geometry = ModelStore.get('shieldSphere').geometry;
     this.material = material;
-    this.scale.multiplyScalar(1.5);
+    this.scale.set(0.01, 0.01, 0.01); 
 
     this.castShadow = false;
     this.receiveShadow = false;
@@ -31,11 +32,24 @@ ShieldMesh.prototype.customUpdate = function(){
     this._updateHitAngle();
 };
 
-ShieldMesh.prototype.setIntensity = function(intensity){
+ShieldMesh.prototype.setIntensity = function(intensity){ 
     this.intensity = parseInt(intensity) - 100;
+    this._enable();
 };
 
+ShieldMesh.prototype._disable = function(){
+    if (!this.disabled) {
+        this.scale.set(0.01, 0.01, 0.01);
+        this.disabled = true;
+    }
+};
 
+ShieldMesh.prototype._enable = function(){
+    if (this.disabled) {
+        this.scale.set(this.shieldSize, this.shieldSize, this.shieldSize);
+        this.disabled = false;
+    }    
+};
 
 ShieldMesh.prototype._updateIntensity = function(){
     if (this.intensity > -100){
@@ -43,6 +57,8 @@ ShieldMesh.prototype._updateIntensity = function(){
         this.material.uniforms['c'].value = (this.intensity + Utils.rand(-10, 10)) / 100;
         this.shieldColor.b = Utils.rand(150,255)/256;
         this.material.uniforms.glowColor.value = this.shieldColor;
+    } else {
+        this._disable();
     }
 };
 

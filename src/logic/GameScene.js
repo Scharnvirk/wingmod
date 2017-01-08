@@ -25,7 +25,7 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ORBOT,
+    //         classId: ActorFactory.SHIELDPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -34,21 +34,21 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.MOOK,
+    //         classId: ActorFactory.ENERGYPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
     //     });
     // }
 
-    for (i = 0; i < 1; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.SNIPER,
-            positionX: Utils.rand(-100, 100),
-            positionY: Utils.rand(-100, 100),
-            angle: 0
-        });
-    }
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.PLASMAPICKUP,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
 
     // for (i = 0; i < 0; i++){
     //     this.actorManager.addNew({

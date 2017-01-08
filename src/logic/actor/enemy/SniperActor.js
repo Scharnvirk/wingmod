@@ -5,6 +5,7 @@ var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
+var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function SniperActor(config){
     config = config || [];
@@ -22,6 +23,7 @@ function SniperActor(config){
 
 SniperActor.extend(BaseActor);
 SniperActor.mixin(BrainMixin);
+SniperActor.mixin(DropMixin);
 
 SniperActor.prototype.createBrain = function(){
     return new MookBrain({
@@ -62,7 +64,8 @@ SniperActor.prototype.onDeath = function(){
         angle: [0, 360],
         velocity: [50, 100]
     });
-
+    
+    this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
@@ -74,6 +77,7 @@ SniperActor.prototype.onHit = function(){
         angle: [0, 360],
         velocity: [50, 100]
     });
+    this.playSound(['armorHit1', 'armorHit2'], 1);
 };
 
 module.exports = SniperActor;

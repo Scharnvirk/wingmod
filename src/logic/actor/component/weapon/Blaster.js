@@ -13,7 +13,7 @@ function Blaster(config){
     this.sound = 'blue_laser';
     this.firingMode = 'simultaneous';
     this.ammoConfig = {
-        energy: 1,
+        energy: 2,
     };
 }
 

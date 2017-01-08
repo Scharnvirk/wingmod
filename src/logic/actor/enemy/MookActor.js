@@ -5,6 +5,7 @@ var MoltenBallThrower = require('logic/actor/component/weapon/MoltenBallThrower'
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
+var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function MookActor(config){
     config = config || [];
@@ -22,6 +23,7 @@ function MookActor(config){
 
 MookActor.extend(BaseActor);
 MookActor.mixin(BrainMixin);
+MookActor.mixin(DropMixin);
 
 MookActor.prototype.createBrain = function(){
     return new MookBrain({
@@ -62,6 +64,7 @@ MookActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
+    this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
@@ -73,6 +76,7 @@ MookActor.prototype.onHit = function(){
         angle: [0, 360],
         velocity: [50, 100]
     });
+    this.playSound(['armorHit1', 'armorHit2'], 1);
 };
 
 module.exports = MookActor;

@@ -12,6 +12,7 @@ var ParticleMixin = {
             this._particleManager.createParticle(config.particleClass || 'particleNumberAdd', {
                 positionX: this._position[0] + (config.offsetPositionX || 0),
                 positionY: this._position[1] + (config.offsetPositionY || 0),
+                positionZ: this._position[2] + (config.offsetPositionZ || 0) - Constants.DEFAULT_POSITION_Z,
                 color: config.color,
                 scale: Utils.randArray(config.scale || 1),
                 alpha: Utils.randArray(config.alpha || 1),

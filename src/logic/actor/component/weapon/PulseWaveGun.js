@@ -10,11 +10,11 @@ function PlasmaGun(config){
 
     this.cooldown = 5;
     this.velocity = 460;
-    this.sound = 'laser_charged';
+    this.sound = 'disrupter';
     this.firingMode = 'alternate';
     this.volume = 0.5;
     this.ammoConfig = {
-        energy: 0.5,
+        energy: 0.3,
     };    
 }
 

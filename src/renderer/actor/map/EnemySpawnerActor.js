@@ -2,6 +2,7 @@ var BaseActor = require('renderer/actor/BaseActor');
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var ActorConfig = require('shared/ActorConfig');
+var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
@@ -12,6 +13,8 @@ function EnemySpawnerActor(config){
 
     this.bottomMesh = this.createBottomMesh();
     this.topMesh = this.createTopMesh();
+    this.shieldMesh = new ShieldMesh({actor: this, sourceMesh: this.shipMesh, camera: this.getCamera()});
+
     this.setupMeshes();
 
     this.rotationSpeed = 0;
@@ -90,19 +93,31 @@ EnemySpawnerActor.prototype.update = function(){
     this.timer ++;
     this.bottomMesh.update();
     this.topMesh.update();
+    this.shieldMesh.update();
+    this.updateShield();
 
     this.doChargingAnimation();
     this.showDamage();
 };
 
+EnemySpawnerActor.prototype.updateShield = function(){
+    if(this.state.shield < this._lastShield){
+        this.shieldMesh.setIntensity(200);
+    }
+
+    this._lastShield = this.state.shield;
+};
+
 EnemySpawnerActor.prototype.addToScene = function(scene){
     scene.add(this.bottomMesh);
     scene.add(this.topMesh);
+    scene.add(this.shieldMesh);
 };
 
 EnemySpawnerActor.prototype.removeFromScene = function(scene){
     scene.remove(this.bottomMesh);
     scene.remove(this.topMesh);
+    scene.remove(this.shieldMesh);
 };
 
 EnemySpawnerActor.prototype.doChargingAnimation = function(){
