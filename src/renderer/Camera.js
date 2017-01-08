@@ -27,14 +27,15 @@ Camera.extend(THREE.PerspectiveCamera);
 
 Camera.prototype.update = function(){
     let inputState = this.inputListener.inputState;
-
+    
     if(this.actor){
-        let offsetPosition = Utils.rotationToVector(this.actor.rotation, -this.zOffset);
+        let rotation = this.actor.getRotation();
+        let position = this.actor.getPosition();
+        let offsetPosition = Utils.rotationToVector(rotation, -this.zOffset);
 
-        this.rotation.z = this.actor.rotation;
-
-        this.position.x = this.actor.position[0] + offsetPosition[0];
-        this.position.y = this.actor.position[1] + offsetPosition[1];
+        this.rotation.z = rotation;
+        this.position.x = position[0] + offsetPosition[0];
+        this.position.y = position[1] + offsetPosition[1];
     }
 
     if(this.expectedPositionZ != this.position.z && this.expectedPositionZ > -1){

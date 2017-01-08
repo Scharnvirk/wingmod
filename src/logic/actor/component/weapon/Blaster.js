@@ -1,5 +1,5 @@
-var BaseWeapon = require("logic/actor/component/weapon/BaseWeapon");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function Blaster(config){
     Object.assign(this, config);
@@ -8,12 +8,13 @@ function Blaster(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 28;
-    this.velocity = 1500;
-    this.burstCount = 4;
-    this.burstCooldown = 4;
+    this.cooldown = 30;
+    this.velocity = 1800;
     this.sound = 'blue_laser';
-    this.firingMode = 'alternate';
+    this.firingMode = 'simultaneous';
+    this.ammoConfig = {
+        energy: 2,
+    };
 }
 
 Blaster.extend(BaseWeapon);

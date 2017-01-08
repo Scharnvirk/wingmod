@@ -1,14 +1,17 @@
-var ChunkActor = require("renderer/actor/object/ChunkActor");
+var ChunkActor = require('renderer/actor/object/ChunkActor');
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function BoomChunkActor(){
     ChunkActor.apply(this, arguments);
 }
 
 BoomChunkActor.extend(ChunkActor);
+BoomChunkActor.mixin(ParticleMixin);
 
 BoomChunkActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
-    this.manager.requestUiFlash('white');
+    this.createPremade({premadeName: 'OrangeBoomLarge'});
+    this.requestUiFlash('white');
+    this.requestShake();
 };
 
 module.exports = BoomChunkActor;

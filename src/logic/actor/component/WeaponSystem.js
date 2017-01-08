@@ -1,27 +1,37 @@
-var PlasmaGun = require("logic/actor/component/weapon/PlasmaGun");
-var Blaster = require("logic/actor/component/weapon/Blaster");
-var PulseWaveGun = require("logic/actor/component/weapon/PulseWaveGun");
+var PlasmaGun = require('logic/actor/component/weapon/PlasmaGun');
+var Blaster = require('logic/actor/component/weapon/Blaster');
+var PulseWaveGun = require('logic/actor/component/weapon/PulseWaveGun');
 
 function WeaponSystem(config){
     Object.assign(this, config);
-
-    this.weapons = {
-        'plasmagun': this.createPlasma(),
-        'lasgun': this.createBlaster(),
-        'pulsewavegun': this.createPulseWave()
-    };
+    
+    this.weapons = this._createWeapons();
 
     if (!this.currentWeapon){
         this.switchWeaponByIndex(0);
     }
 
     if (!this.actor) throw new Error('No actor for Logic WeaponSystem!');
+    if (!this.gameState) throw new Error('No gameState for Logic WeaponSystem!');
 }
 
+
+WeaponSystem.prototype._createWeapons = function(){
+    let weapons = [];
+    let weaponNames = this.gameState.getWeapons();
+    weaponNames.forEach(weaponName => {
+        let creatorFunctionName = 'create' + Utils.firstToUpper(weaponName);
+        if (creatorFunctionName && this[creatorFunctionName] instanceof Function){
+            weapons[weaponName] = this[creatorFunctionName](weaponName);
+        } else {
+            throw new Error('Could not find a creator for weapon: ' + weaponName + '. Expected creator name: ' + creatorFunctionName);
+        }
+    });
+    return weapons;
+};
+
 WeaponSystem.prototype.shoot = function(){
-    if (this.weapons[this.currentWeapon]) {
-        this.weapons[this.currentWeapon].shoot();
-    }
+    this.weapons[this.currentWeapon].shoot();
 };
 
 WeaponSystem.prototype.stopShooting = function(){
@@ -33,7 +43,7 @@ WeaponSystem.prototype.stopShooting = function(){
 WeaponSystem.prototype.switchWeapon = function(weaponName){
     if (this.weapons[weaponName]) {
         this.currentWeapon = weaponName;
-        this.actor.manager.playSound({sounds:['cannon_change'], actor: this.actor, volume: 1});
+        this.actor.playSound(['cannon_change']);
     } else {
         console.warn('This weapon system has no such weapon: ', weaponName);
     }
@@ -55,24 +65,30 @@ WeaponSystem.prototype.update = function(){
     }
 };
 
-WeaponSystem.prototype.createBlaster = function(){
+WeaponSystem.prototype.createLasgun = function(name){
     return new Blaster({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 
-WeaponSystem.prototype.createPlasma = function(){
+WeaponSystem.prototype.createPlasmagun = function(name){
     return new PlasmaGun({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 
-WeaponSystem.prototype.createPulseWave = function(){
+WeaponSystem.prototype.createPulsewavegun = function(name){
     return new PulseWaveGun({
         actor: this.actor,
-        firingPoints: this.firingPoints
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
     });
 };
 

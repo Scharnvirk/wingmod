@@ -1,5 +1,6 @@
 function WorkerBus(config){
     if(!config.worker) throw new Error('No worker object specified for Workerbus!');
+    if(!config.core) throw new Error('No core object specified for Workerbus!');
     config = config || {};
     Object.assign(this, config);
 

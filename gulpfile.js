@@ -55,7 +55,7 @@ function onError(buildInfo, message){
     }
 }
 
-function onSuccess(){
+function onSuccess(config){
     var time = buildCurrentTimeString();
     var version = JSON.parse(fs.readFileSync(VERSION_PATH, "utf8"));
     version.build ++;
@@ -63,7 +63,7 @@ function onSuccess(){
 
     var versionString = version.major + '.' + version.minor + '.' + version.patch + '.' + version.build;
 
-    console.log(time + ' Build complete! Current version: ' + versionString);
+    console.log(time + ' Build complete! Current version: ' + versionString + ' [' + config.src + ']');
 }
 
 function rebundle(bundler, config){
@@ -72,7 +72,7 @@ function rebundle(bundler, config){
     }
 
     bundler.bundle()
-    .on('end', onSuccess)
+    .on('end', onSuccess.bind(this, config))
     .on('error', onError.bind(this, {src: config.src, lastBuildId: buildIds[config.src]}))
     .pipe(source(config.output))
     .pipe(gulp.dest(config.dest));
@@ -119,7 +119,7 @@ gulp.task('watch', function(){
     nodemon({
         script: 'server.js',
         ext: 'js',
-        watch: ['dist/']
+        watch: ['dist/', 'styles.css', 'index.html']
     });
     createBundles(sources, true);
 });

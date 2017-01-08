@@ -1,8 +1,7 @@
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var ChunkMesh = require("renderer/map/ChunkMesh");
-var BaseScene = require("renderer/scene/BaseScene");
-var Camera = require("renderer/Camera");
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
+var ChunkMesh = require('renderer/map/ChunkMesh');
+var BaseScene = require('renderer/scene/BaseScene');
+var Camera = require('renderer/Camera');
 
 function GameScene(config) {
 
@@ -29,7 +28,7 @@ GameScene.prototype.create = function() {
         b: Utils.rand(100,100)/100
     };
 
-    this.directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    this.directionalLight = new THREE.DirectionalLight( 0xdddddd, 1 );
     this.directionalLight.position.set( 0, 0, 200 );
     this.directionalLight.distance = 1000;
 
@@ -52,7 +51,7 @@ GameScene.prototype.create = function() {
 
     this.threeScene.add( this.directionalLight );
 
-    this.ambientLight = new THREE.AmbientLight( 0x505050, 1 );
+    this.ambientLight = new THREE.AmbientLight( 0x303030, 1 );
 
     this.threeScene.add( this.ambientLight );
 
@@ -61,10 +60,11 @@ GameScene.prototype.create = function() {
 
 GameScene.prototype.customUpdate = function(){
     if(this.actor){
-        this.directionalLight.position.x = this.actor.position[0] + 100;
-        this.directionalLight.position.y = this.actor.position[1] + 100;
-        this.directionalLight.target.position.x = this.actor.position[0];
-        this.directionalLight.target.position.y = this.actor.position[1];
+        let position = this.actor.getPosition();
+        this.directionalLight.position.x = position[0] + 100;
+        this.directionalLight.position.y = position[1] + 100;
+        this.directionalLight.target.position.x = position[0];
+        this.directionalLight.target.position.y = position[1];
         this.directionalLight.target.updateMatrixWorld();
     }
     this.handleFlash();
@@ -100,11 +100,11 @@ GameScene.prototype.handleFlash = function(){
 
 GameScene.prototype.doUiFlash = function(type){
     switch(type) {
-        case 'red':
-            this.flashRed();
-            break;
-        default:
-            this.flashWhite();
+    case 'red':
+        this.flashRed();
+        break;
+    default:
+        this.flashWhite();
     }
 };
 
@@ -117,9 +117,9 @@ GameScene.prototype.createMap = function(layoutData){
         });
         chunk.setPosition(config.position);
 
-        //layout data comes from logic, thus it requires "angle" instead of "rotation"
+        //layout data comes from logic, thus it requires 'angle' instead of 'rotation'
         chunk.setRotation(config.angle);
-        //this.threeScene.add(chunk);
+        this.threeScene.add(chunk);
     }
 };
 

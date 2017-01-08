@@ -1,7 +1,7 @@
-var MapChunk = require("logic/map/MapChunk");
-var MapCreator = require("logic/map/MapCreator");
-var MapAiGraphCreator = require("logic/map/MapAiGraphCreator");
-var cloner = require("cloner");
+var MapChunk = require('logic/map/MapChunk');
+var MapCreator = require('logic/map/MapCreator');
+var MapAiGraphCreator = require('logic/map/MapAiGraphCreator');
+var cloner = require('cloner');
 
 function MapManager(config){
     Object.assign(this, config);
@@ -22,8 +22,8 @@ MapManager.prototype.fixFaceVerticesOrder = function(hitmap){
 
 MapManager.prototype.extractXZFromHitmap = function(hitmap){
     return hitmap.map(face => face.map(vertex => {
-            return [vertex[0], vertex[2]];
-        })
+        return [vertex[0], vertex[2]];
+    })
     );
 };
 

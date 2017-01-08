@@ -5,19 +5,21 @@ var idMap = {
 MOOK: 2,
 SNIPER: 3,
 ORBOT: 4,
-MOOKBOSS: 5,
-CHUNK: 6,
-BOOMCHUNK: 7,
-PLASMAPROJECTILE: 8,
-LASERPROJECTILE: 9,
-REDLASERPROJECTILE: 10,
-MOLTENPROJECTILE: 11,
-RINGPROJECTILE: 12,
-PULSEWAVEPROJECTILE: 13,
-MAP: 14,
-ENEMYSPAWNER: 15,
-ENEMYSPAWNMARKER: 16,
-DEBUG: 17,
+CHUNK: 5,
+BOOMCHUNK: 6,
+PLASMAPROJECTILE: 7,
+LASERPROJECTILE: 8,
+REDLASERPROJECTILE: 9,
+MOLTENPROJECTILE: 10,
+RINGPROJECTILE: 11,
+PULSEWAVEPROJECTILE: 12,
+MAP: 13,
+ENEMYSPAWNER: 14,
+ENEMYSPAWNMARKER: 15,
+DEBUG: 16,
+SHIELDPICKUP: 17,
+ENERGYPICKUP: 18,
+PLASMAPICKUP: 19,
 
 };
 
@@ -27,7 +29,6 @@ function ActorFactory(context, actorDependencies){
 ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
 ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-ActorFactory.MookBossActor = context === 'renderer' ? require("renderer/actor/enemy/MookBossActor") : require("logic/actor/enemy/MookBossActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
 ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
@@ -40,6 +41,9 @@ ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/Map
 ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
 ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
 ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/DebugActor") : require("logic/actor/DebugActor");
+ActorFactory.ShieldPickupActor = context === 'renderer' ? require("renderer/actor/pickup/ShieldPickupActor") : require("logic/actor/pickup/ShieldPickupActor");
+ActorFactory.EnergyPickupActor = context === 'renderer' ? require("renderer/actor/pickup/EnergyPickupActor") : require("logic/actor/pickup/EnergyPickupActor");
+ActorFactory.PlasmaPickupActor = context === 'renderer' ? require("renderer/actor/pickup/PlasmaPickupActor") : require("logic/actor/pickup/PlasmaPickupActor");
 
 
     this.actorMap = {
@@ -47,7 +51,6 @@ ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/Debug
 [idMap.MOOK]: ActorFactory.MookActor,
 [idMap.SNIPER]: ActorFactory.SniperActor,
 [idMap.ORBOT]: ActorFactory.OrbotActor,
-[idMap.MOOKBOSS]: ActorFactory.MookBossActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
 [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
@@ -60,6 +63,9 @@ ActorFactory.DebugActor = context === 'renderer' ? require("renderer/actor/Debug
 [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
 [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
 [idMap.DEBUG]: ActorFactory.DebugActor,
+[idMap.SHIELDPICKUP]: ActorFactory.ShieldPickupActor,
+[idMap.ENERGYPICKUP]: ActorFactory.EnergyPickupActor,
+[idMap.PLASMAPICKUP]: ActorFactory.PlasmaPickupActor,
 
     };
 }

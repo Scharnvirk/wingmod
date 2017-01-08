@@ -1,14 +1,14 @@
-var ModelLoader = require("renderer/assetManagement/model/ModelLoader");
-var ModelList = require("renderer/assetManagement/model/ModelList");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var ModelLoader = require('renderer/assetManagement/model/ModelLoader');
+var ModelList = require('renderer/assetManagement/model/ModelList');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
-var CustomModelCreator = require("renderer/assetManagement/model/CustomModelCreator");
+var CustomModelCreator = require('renderer/assetManagement/model/CustomModelCreator');
 
-var ChunkLoader = require("renderer/assetManagement/level/ChunkLoader");
-var ChunkList = require("renderer/assetManagement/level/ChunkList");
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
+var ChunkLoader = require('renderer/assetManagement/level/ChunkLoader');
+var ChunkList = require('renderer/assetManagement/level/ChunkList');
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 
-var SoundLoader = require("renderer/assetManagement/sound/SoundLoader");
+var SoundLoader = require('renderer/assetManagement/sound/SoundLoader');
 
 function AssetManager(config) {
     config = config || {};

@@ -1,41 +1,56 @@
-var RavierMesh = require("renderer/actor/component/mesh/RavierMesh");
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
-var BaseActor = require("renderer/actor/BaseActor");
+var RavierMesh = require('renderer/actor/component/mesh/RavierMesh');
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var BaseActor = require('renderer/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
+
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+var BobMixin = require('renderer/actor/mixin/BobMixin');
+var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function ShipActor(){
+    this.applyConfig(ActorConfig.SHIP);
     BaseActor.apply(this, arguments);
+
     this.count = 0;
-    this.speedZ = 0.04;
-
-    //todo: generic config holder
-    this.initialHp = 30;
-    this.hp = 30;
-    this.lastHp = this.hp;
-    this.hpBarCount = 20;
-
-    this.speedZ = 0.04;
-    this.speedY = 0.0025;
-    this.speedX = 0.002;
-
-    this.weaponSetLocations = [[[3,0,0], [-3,0,0]], [[5,3.5,-2.2], [-5,3.5,-2.2]]];
+    this.weaponSetLocations = [[[3,-2,0], [-3,-2,0]], [[5,1.5,-2.2], [-5,1.5,-2.2]]];
 
     this.setupWeaponMeshes(0, 'plasmagun', 'plasmagun');
-    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');
+    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');    
 }
 
 ShipActor.extend(BaseActor);
+ShipActor.mixin(ParticleMixin);
+ShipActor.mixin(BobMixin);
+ShipActor.mixin(ShowDamageMixin);
 
 ShipActor.prototype.createMeshes = function(){
     this.shipMesh = new RavierMesh({actor: this, scaleX: 3.3, scaleY: 3.3, scaleZ: 3.3});
-    return [this.shipMesh];
+    this.shieldMesh = new ShieldMesh({actor: this, sourceMesh: this.shipMesh, camera: this.getCamera()});
+    this.protectedMeshes = 2;
+    return [this.shipMesh, this.shieldMesh];
+};
+
+ShipActor.prototype.customUpdate = function(){
+    this.doEngineGlow();
+    this.doBob();
+    this.updateShield();
+    this.showDamage(true);    
+};
+
+ShipActor.prototype.onDeath = function(){
+    this.createPremade({premadeName: 'OrangeBoomLarge'});
+    this.requestUiFlash('white');
+    this.requestShake();
 };
 
 ShipActor.prototype.switchWeapon = function(changeConfig){
     for (let i = 0, l = this.weaponSetLocations[changeConfig.index].length; i < l; i++){
-        var meshIndexLocation = (l * changeConfig.index + i) + 1; //zeroth is reserved for ship
-        this.meshes[meshIndexLocation].geometry = ModelStore.get(changeConfig.weapon).geometry;
-        this.meshes[meshIndexLocation].material = ModelStore.get(changeConfig.weapon).material;
+        let meshIndexLocation = (l * changeConfig.index + i) + this.protectedMeshes; //zeroth is reserved for ship
+        let mesh = this.getMeshAt(meshIndexLocation);
+        mesh.geometry = ModelStore.get(changeConfig.weapon).geometry;
+        mesh.material = ModelStore.get(changeConfig.weapon).material;
     }
 };
 
@@ -48,8 +63,8 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
     }
 
     for (let i = 0, l = this.weaponSetLocations[slotNumber].length; i < l; i++){
-        var meshIndexLocation = (l * slotNumber + i) + 1; //zeroth is reserved for ship
-        this.meshes[meshIndexLocation] = new BaseMesh({
+        var meshIndexLocation = (l * slotNumber + i) + this.protectedMeshes; //zeroth is reserved for ship
+        let mesh = new BaseMesh({
             actor: this,
             scaleX: scales[0] || defaultScale,
             scaleY: scales[1] || defaultScale,
@@ -57,119 +72,79 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
             geometry: ModelStore.get(geometryName).geometry,
             material: ModelStore.get(materialName).material,
             rotationOffset: Utils.degToRad(-90),
-            positionZOffset: this.weaponSetLocations[slotNumber][i][2],
-            positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1]]
+            positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1], this.weaponSetLocations[slotNumber][i][2]]
         });
+
+        this.setMeshAt(mesh, meshIndexLocation);
     }
 };
 
-ShipActor.prototype.customUpdate = function(){
-    this.doEngineGlow();
-    this.positionZ += this.speedZ;
-    this.doBob();
-    this.handleDamage();
-};
-
-ShipActor.prototype.doBank = function(){
-    this.mesh.rotation.x += Utils.degToRad((this.logicPreviousRotation - this.rotation) * 50);
-};
-
-ShipActor.prototype.doBob = function(){
-
-    if (this.positionZ > 10){
-        this.speedZ -= 0.002;
-    } else {
-        this.speedZ += 0.002;
-    }    
+ShipActor.prototype.updateShield = function(){
+    if(this.state.shield < this._lastShield){
+        this.shieldMesh.setIntensity(200);
+        this.requestUiFlash('red');
+        this.requestShake();
+    }
+    this._lastShield = this.state.shield;
 };
 
 ShipActor.prototype.doEngineGlow = function(){
+    let positionZ = this.getPosition()[2] - Constants.DEFAULT_POSITION_Z;
     if(this.inputListener){
         if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
-            this.particleManager.createPremade('EngineGlowMedium', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 15,
-                distance: -5.8
+            this.createPremade({
+                premadeName: 'EngineGlowMedium',
+                positionZ: positionZ,
+                rotationOffset: 10,
+                distance: -7.6
             });
-            this.particleManager.createPremade('EngineGlowMedium', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 345,
-                distance: -5.8
+            this.createPremade({
+                premadeName: 'EngineGlowMedium',
+                positionZ: positionZ,
+                rotationOffset: 350,
+                distance: -7.6
             });
         }
 
         if(this.inputListener.inputState.a && !this.inputListener.inputState.d){
-            this.particleManager.createPremade('EngineGlowSmall', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 40,
-                distance: -4
-            });
-            this.particleManager.createPremade('EngineGlowSmall', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 170,
+            this.createPremade({
+                premadeName: 'EngineGlowSmall',
+                positionZ: positionZ,
+                rotationOffset: 25,
                 distance: -6
+            });
+            this.createPremade({
+                premadeName: 'EngineGlowSmall',
+                positionZ: positionZ,
+                rotationOffset: 170,
+                distance: -4.2
             });
         }
 
         if(this.inputListener.inputState.d){
-            this.particleManager.createPremade('EngineGlowSmall', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 320,
-                distance: -4
-            });
-            this.particleManager.createPremade('EngineGlowSmall', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
-                rotationOffset: 190,
+            this.createPremade({
+                premadeName: 'EngineGlowSmall',
+                positionZ: positionZ,
+                rotationOffset: 335,
                 distance: -6
+            });
+            this.createPremade({
+                premadeName: 'EngineGlowSmall',
+                positionZ: positionZ,
+                rotationOffset: 190,
+                distance: -4.2
             });
         }
 
         if(this.inputListener.inputState.s){
-            this.particleManager.createPremade('EngineGlowMedium', {
-                position: this.position,
-                positionZ: this.positionZ - Constants.DEFAULT_POSITION_Z,
-                rotation: this.rotation,
+            this.createPremade({
+                premadeName: 'EngineGlowMedium',
+                positionZ: positionZ,
                 rotationOffset: 180,
-                distance: -7
+                distance: -5
             });
         }
     }
-};
-
-ShipActor.prototype.onDeath = function(){
-    this.particleManager.createPremade('OrangeBoomLarge', {position: this.position});
-    this.dead = true;
-    this.manager.requestUiFlash('white');
-};
-
-
-ShipActor.prototype.handleDamage = function(){
-    if(this.hp < this.lastHp){
-        this.manager.requestUiFlash('red');
-    }
-
-    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
-    if (damageRandomValue > 20){
-        this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
-    }
-
-    if (damageRandomValue > 50 && Utils.rand(0,100) > 95){
-        this.particleManager.createPremade('BlueSparks', {position: this.position});
-    }
-
-    this.lastHp = this.hp;
 };
 
 module.exports = ShipActor;

@@ -1,15 +1,15 @@
-var BaseMesh = require("renderer/actor/component/mesh/ShipMesh");
-var BaseActor = require("renderer/actor/BaseActor");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
+var BaseActor = require('renderer/actor/BaseActor');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var ActorConfig = require('shared/ActorConfig');
+
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+var BobMixin = require('renderer/actor/mixin/BobMixin');
+var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function SniperActor(){
+    this.applyConfig(ActorConfig.SNIPER);
     BaseActor.apply(this, arguments);
-    this.speedZ = Utils.rand(35,45)/1000;
-    this.bobSpeed = Utils.rand(18,22)/10000;
-
-    this.initialHp = 12;
-    this.hp = 12;
-
     this.eyeRotation = 0;
     this.eyeSpeed = 3;
     this.eyeEdge = 50;
@@ -17,6 +17,9 @@ function SniperActor(){
 }
 
 SniperActor.extend(BaseActor);
+SniperActor.mixin(ParticleMixin);
+SniperActor.mixin(BobMixin);
+SniperActor.mixin(ShowDamageMixin);
 
 SniperActor.prototype.createMeshes = function(){
     return [new BaseMesh({
@@ -30,41 +33,18 @@ SniperActor.prototype.createMeshes = function(){
 };
 
 SniperActor.prototype.customUpdate = function(){
-    this.positionZ += this.speedZ;
     this.doBob();
-    this.handleDamage();
+    this.showDamage();
     this.drawEyes();
 };
 
-SniperActor.prototype.doBob = function(){
-    if (this.positionZ > 10){
-        this.speedZ -= this.bobSpeed;
-    } else {
-        this.speedZ += this.bobSpeed;
-    }
-};
-
-SniperActor.prototype.onSpawn = function(){
-    this.manager.newEnemy(this.actorId);
-};
+SniperActor.prototype.onSpawn = function(){};
 
 SniperActor.prototype.onDeath = function(){
-    this.manager.enemyDestroyed(this.actorId);
-    this.particleManager.createPremade('OrangeBoomMedium', {position: this.position});
-    this.manager.requestUiFlash('white');
+    this.createPremade({premadeName: 'OrangeBoomMedium'});
+    this.requestUiFlash('white');
+    this.requestShake();
 };
-
-SniperActor.prototype.handleDamage = function(){
-    let damageRandomValue = Utils.rand(0, 100) - 100 * (this.hp / this.initialHp);
-    if (damageRandomValue > 20){
-        this.particleManager.createPremade('SmokePuffSmall', {position: this.position});
-    }
-
-    if (damageRandomValue > 50 && Utils.rand(0,100) > 95){
-        this.particleManager.createPremade('BlueSparks', {position: this.position});
-    }
-};
-
 
 SniperActor.prototype.drawEyes = function(){
     if (this.eyeRotation > this.eyeEdge){
@@ -77,27 +57,13 @@ SniperActor.prototype.drawEyes = function(){
 
     this.eyeRotation += this.eyeSpeed * (this.eyeGoingRight ? 1 : -1);
 
-    this.particleManager.createPremade('PurpleEye', {
-        position: this.position,
-        positionZ: this.positionZ - 7.4,
-        rotation: this.rotation,
+    let positionZ = this.getPosition()[2] - 7.4;
+    this.createPremade({
+        premadeName: 'PurpleEye',
+        positionZ: positionZ,
         rotationOffset: this.eyeRotation,
         distance: 2.3
     });
 };
-
-SniperActor.prototype.onHit = function(){
-    if (Utils.rand(0, 5) == 5){
-        this.manager.addNew({
-            classId: ActorFactory.CHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            rotation: Utils.rand(0, 360),
-            velocity: Utils.rand(50, 100)
-        });
-    }
-};
-
-
 
 module.exports = SniperActor;

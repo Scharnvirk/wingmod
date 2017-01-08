@@ -1,7 +1,7 @@
-var BaseScene = require("renderer/scene/BaseScene");
-var GameScene = require("renderer/scene/GameScene");
-var MainMenuScene = require("renderer/scene/MainMenuScene");
-var FlatHudScene = require("renderer/scene/FlatHudScene");
+var BaseScene = require('renderer/scene/BaseScene');
+var GameScene = require('renderer/scene/GameScene');
+var MainMenuScene = require('renderer/scene/MainMenuScene');
+var FlatHudScene = require('renderer/scene/FlatHudScene');
 
 function SceneManager(config){
     Object.assign(this, config);
@@ -23,7 +23,7 @@ SceneManager.extend(EventEmitter);
 
 SceneManager.prototype.render = function(sceneName){
     if (!this.activeScenes[sceneName]){
-        throw new Error ("No such scene for render: " + sceneName);
+        throw new Error ('No such scene for render: ' + sceneName);
     }
 
     this.renderer.render(
@@ -34,7 +34,7 @@ SceneManager.prototype.render = function(sceneName){
 
 SceneManager.prototype.createScene = function(sceneName, config){
     if (!this.knownSceneClasses[sceneName]){
-        throw new Error ("No such scene for createScene: " + sceneName);
+        throw new Error ('No such scene for createScene: ' + sceneName);
     }
 
     var configWithRenderer = Object.assign(config || {}, {renderer: this.renderer});
@@ -52,7 +52,7 @@ SceneManager.prototype.update = function(){
 
 SceneManager.prototype.addObjectToScene = function(sceneName, object){
     if (!this.activeScenes[sceneName]){
-        throw new Error ("No such scene for addObjectToScene: " + sceneName);
+        throw new Error ('No such scene for addObjectToScene: ' + sceneName);
     }
     this.activeScenes[sceneName].add(object);
 };

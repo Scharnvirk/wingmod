@@ -1,5 +1,4 @@
 var ReactUi = require('renderer/ui/ReactUi');
-var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
 
 function Ui(config){
@@ -18,28 +17,28 @@ Ui.extend(EventEmitter);
 Ui.prototype.setupButtonListener = function(){
     PubSub.subscribe( 'buttonClick', (msg, data) => {
         switch(data.buttonEvent){
-            case 'start':
-                this.onStartButtonClick();
-                break;
-            case 'stop':
-                this.onStop();
-                break;
-            case 'shadowConfig':
-                this.onShadowConfig(data);
-                break;
-            case 'resolutionConfig':
-                this.onResolutionConfig(data);
-                break;
-            case 'soundConfig':
-                this.onSoundConfig(data);
-                break;
+        case 'start':
+            this.onStartButtonClick();
+            break;
+        case 'stop':
+            this.onStop();
+            break;
+        case 'shadowConfig':
+            this.onShadowConfig(data);
+            break;
+        case 'resolutionConfig':
+            this.onResolutionConfig(data);
+            break;
+        case 'soundConfig':
+            this.onSoundConfig(data);
+            break;
         }
     } );
 };
 
 Ui.prototype.init = function(){
     if(!this.gameCore){
-        console.error("no GameCore set in UI!");
+        console.error('no GameCore set in UI!');
     }
 
     this.gameCore.init();
@@ -63,18 +62,19 @@ Ui.prototype.stopGameFinished = function(){
 
 Ui.prototype.onStartButtonClick = function(){
     if(this.assetsLoaded){
-        this.emit({type: 'getPointerLock'});
         this.reactUi.changeMode('helpScreen');
+        this.emit({type: 'requestPointerLock'});
     }
 };
 
 Ui.prototype.gotPointerLock = function(){
-    this.emit({type: 'startGame'});
-    this.reactUi.changeMode('running');
+    let newMode = this.reactUi.changeMode('running');
+    if (newMode === 'running') {
+        this.emit({type: 'startGame'});
+    }
 };
 
 Ui.prototype.lostPointerLock = function(){
-    this.emit({type: 'getPointerLock'});
     this.reactUi.changeMode('helpScreen');
 };
 
@@ -89,5 +89,10 @@ Ui.prototype.onResolutionConfig = function(data){
 Ui.prototype.onSoundConfig = function(data){
     this.emit({type: 'soundConfig', option: data.buttonEvent, value: data.state});
 };
+
+Ui.prototype.updateState = function(state){
+    PubSub.publish('hudStateChange', state);
+};
+    
 
 module.exports = Ui;

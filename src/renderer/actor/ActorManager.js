@@ -1,9 +1,8 @@
-var ActorFactory = require("shared/ActorFactory")('renderer');
+var ActorFactory = require('shared/ActorFactory')('renderer');
 
 function ActorManager(config){
     config = config || {};
     this.storage = Object.create(null);
-    this.enemies = Object.create(null);
 
     this.scene = null;
     this.framerate = config.framerate || 60;
@@ -52,7 +51,8 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
                     classId: dataArray[i*5+1],
                     positionX: dataArray[i*5+2],
                     positionY: dataArray[i*5+3],
-                    rotation: dataArray[i*5+4]
+                    rotation: dataArray[i*5+4],
+                    manager: this
                 });
             }
         } else {
@@ -61,62 +61,42 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
     }
 
     for(let i = 0; i < messageObject.deadActorCount; i++){
-        let actor = this.storage[deadDataArray[i]];
         this.deleteActor(deadDataArray[i*5], deadDataArray[i*5 + 2], deadDataArray[i*5 + 3]);
     }
 };
 
 ActorManager.prototype.createActor = function(config){
     var actor = this.factory.create(config);
-    actor.actorId = config.actorId;
-    actor.manager = this;
-
-    if(this.actorRequestingPlayer && this.actorRequestingPlayer === config.actorId){
-        this.emit({
-            type: 'playerActorAppeared',
-            data: actor
-        });
-    }
 
     this.storage[config.actorId] = actor;
     actor.addToScene(this.sceneManager.getCoreActiveScene().threeScene);
     actor.onSpawn();
 };
 
-ActorManager.prototype.attachPlayer = function(messageObject){
-    if (!this.storage[messageObject.actorId]){
-        this.actorRequestingPlayer = messageObject.actorId;
-    }
+ActorManager.prototype.attachPlayer = function(actor){
+    this.emit({
+        type: 'playerActorAppeared',
+        data: actor
+    });
 };
 
 ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
     var actor = this.storage[actorId];
-    if(actor){
+    if (actor){
         actor.setPosition(positionX, positionY);
         actor.onDeath();
-
         actor.removeFromScene(this.sceneManager.getCoreActiveScene().threeScene);
     }
     delete this.storage[actorId];
 };
 
-ActorManager.prototype.handleActorEvents = function(messageObject){
-    var actorData = messageObject.actorData;
-
-    for (let actorId in actorData ){
+ActorManager.prototype.handleActorStateChange = function(newActorStates){
+    Object.keys(newActorStates).forEach(actorId => {
         let actor = this.storage[actorId];
         if (actor){
-            actor.handleEvent(actorData[actorId]);
+            actor.handleStateChange(newActorStates[actorId]);
         }
-    }
-};
-
-ActorManager.prototype.newEnemy = function(actorId){
-    this.enemies[actorId] = this.storage[actorId];
-};
-
-ActorManager.prototype.enemyDestroyed = function(actorId){
-    delete this.enemies[actorId];
+    });
 };
 
 ActorManager.prototype.requestUiFlash = function(flashType){
@@ -124,6 +104,27 @@ ActorManager.prototype.requestUiFlash = function(flashType){
         type:'requestUiFlash',
         data: flashType
     });
+};
+
+
+ActorManager.prototype.requestShake = function(){
+    this.emit({
+        type:'requestShake'
+    });
+};
+
+ActorManager.prototype.getEnemies = function(){
+    let enemies = [];
+    Object.keys(this.storage).forEach(actorId => {
+        if (this.storage[actorId].props.enemy) {
+            enemies.push(this.storage[actorId]);
+        }        
+    });
+    return enemies;
+};
+
+ActorManager.prototype.getCamera = function(){
+    return this.sceneManager.getCoreActiveScene().getCamera();
 };
 
 module.exports = ActorManager;

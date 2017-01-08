@@ -1,22 +1,34 @@
-var ActorFactory = require("shared/ActorFactory")('logic');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function BaseActor(config){
-    Object.assign(this, config);
+    this.id = this.id || config.id;
+    this.props = this._createProps(this.props || {});
+    this.state = this._createState(this.state || {});
+    this.timer = 0;   
 
-    this.body = this.createBody();
-    if(!this.body) throw new Error('No body defined for Logic Actor!');
+    this.gameState = config.gameState || null;     
+    this.manager = config.manager || null;
 
-    this.body.position = [this.positionX || 0, this.positionY || 0];
-    this.body.angle = this.angle || 0;
-    this.body.actor = this;
-    this.body.velocity = Utils.angleToVector(this.angle, this.velocity || 0);
+    this._body = this.createBody();
+    if(!this._body) throw new Error('No body defined for Logic Actor!');
 
-    this.thrust = 0;
-    this.horizontalThrust = 0;
-    this.angleForce = 0;
+    this._body.position = [config.positionX || 0, config.positionY || 0];
+    this._body.angle = config.angle || 0;
+    this._body.actor = this;
+    this._body.velocity = Utils.angleToVector(config.angle, config.velocity || 0);
+    this._body.actorId = this.id;
+    this._body.classId = config.classId;
 
-    this.timer = 0;
-    this.customParams = {};
+    this._stepAngle = Utils.radToDeg((this.props.turnSpeed || 0) / Constants.LOGIC_REFRESH_RATE);
+    this._thrust = 0;
+    this._horizontalThrust = 0;
+    this._angleForce = 0;
+
+    if (this.props.isPlayer){
+        this.manager.attachPlayer(this);
+    }
+
+    Object.assign(this, this._mixinInstanceValues || {});
 }
 
 BaseActor.prototype.applyConfig = function(config){
@@ -25,41 +37,100 @@ BaseActor.prototype.applyConfig = function(config){
     }
 };
 
+BaseActor.prototype.getPosition = function(){
+    return this._body.position;
+};
+
+BaseActor.prototype.getAngle = function(){
+    return this._body.angle;
+};
+
+BaseActor.prototype.getStepAngle = function(){
+    return this._stepAngle;
+};
+
+BaseActor.prototype.getVelocity = function(){
+    return this._body.velocity;
+};
+
+BaseActor.prototype.applyRecoil = function(amount){
+    this._body.applyForceLocal([0, -amount]);
+};
+
+BaseActor.prototype.destroyBody = function(){
+    return this._body.dead = true;
+};
+
+BaseActor.prototype.getAngleVector = function(leadFactor){
+    return Utils.angleToVector(this._body.angle, leadFactor || 1);
+};
+
+BaseActor.prototype.getBody = function(){
+    return this._body;
+};
+
+BaseActor.prototype.setThrust = function(thrust){
+    this._thrust = thrust;
+};
+
+BaseActor.prototype.setHorizontalThrust = function(horizontalThrust){
+    this._horizontalThrust = horizontalThrust;
+};
+
+BaseActor.prototype.setAngleForce = function(angleForce){
+    this._angleForce = angleForce;
+};
+
+BaseActor.prototype.setMass = function(mass){
+    this._body.mass = mass;
+    this._body.updateMassProperties();
+};
+
+BaseActor.prototype.getMass = function(){
+    return this._body.mass;
+};
+
+BaseActor.prototype.playSound = function(sounds, volume){
+    this.manager.playSound({sounds:sounds, actor: this, volume: volume || 1});
+};
+
 BaseActor.prototype.createBody = function(){
     return null;
 };
 
+BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
+    this._updateHpAndShieldOnCollision(otherActor, relativeContactPoint);
+
+    if (this.state.hp <= 0 || this.props.removeOnHit){
+        this.deathMain(relativeContactPoint);
+    }
+
+    if (otherActor && this.state.pickup && otherActor.state.canPickup) {
+        otherActor.handlePickup(this.state.pickup);
+        this.deathMain(relativeContactPoint);
+    }
+
+    this.manager.updateActorState(this);
+
+    this.customOnCollision();
+};
+
 BaseActor.prototype.update = function(){
     this.timer ++;
-    if(this.timer > this.timeout){
+    if(this.timer > this.props.timeout){
         this.deathMain();
     }
     this.customUpdate();
     this.processMovement();
 };
 
-BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
-    if(otherActor && this.hp != Infinity && otherActor.damage > 0){
-        this.hp -= otherActor.damage;
-        this.sendActorEvent('currentHp', this.hp);
-        this.onHit();
-    }
-
-    if (this.hp <= 0 || this.removeOnHit){
-        if (this.collisionFixesPosition) {
-            this.body.position = relativeContactPoint;
-        }
-        this.deathMain();
-    }
+BaseActor.prototype.remove = function(){
+    this.manager.removeActorAt(this.id);
 };
 
-BaseActor.prototype.sendActorEvent = function(eventName, eventdata){
-    this.manager.requestActorEvent(this.body.actorId, eventName, eventdata);
-};
+BaseActor.prototype.handlePickup = function(){};
 
-BaseActor.prototype.remove = function(actorId){
-    this.manager.removeActorAt(actorId);
-};
+BaseActor.prototype.customOnCollision = function(){};
 
 BaseActor.prototype.customUpdate = function(){};
 
@@ -69,28 +140,32 @@ BaseActor.prototype.onHit = function(){};
 
 BaseActor.prototype.onSpawn = function(){};
 
-BaseActor.prototype.onDeath = function(){
+BaseActor.prototype.onDeath = function(){};
 
-};
-
-BaseActor.prototype.deathMain = function(){
+BaseActor.prototype.deathMain = function(relativeContactPoint){
+    if (this.props.collisionFixesPosition && relativeContactPoint) {
+        this._body.position = relativeContactPoint;
+    }
     this.manager.actorDied(this);
+    if(this.props.soundsOnDeath){
+        this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
+    }
     this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function(){
-    if(this.angleForce !== 0){
-        this.body.angularVelocity = this.angleForce * this.turnSpeed;
+    if(this._angleForce !== 0){
+        this._body.angularVelocity = this._angleForce * this.props.turnSpeed;
     } else {
-        this.body.angularVelocity = 0;
+        this._body.angularVelocity = 0;
     }
 
-    if(this.thrust !== 0){
-        this.body.applyForceLocal([0, this.thrust * this.acceleration]);
+    if(this._thrust !== 0){
+        this._body.applyForceLocal([0, this._thrust * this.props.acceleration]);
     }
 
-    if(this.horizontalThrust !== 0){
-        this.body.applyForceLocal([this.horizontalThrust * this.acceleration, 0]);
+    if(this._horizontalThrust !== 0){
+        this._body.applyForceLocal([this._horizontalThrust * this.props.acceleration, 0]);
     }
 };
 
@@ -103,5 +178,58 @@ BaseActor.prototype.drawDebug = function(position){
         velocity: 0
     });
 };
+
+BaseActor.prototype.spawn = function(config){    
+    config = config || {};
+    config.amount = config.amount || 1;
+    config.angle = config.angle || 0;
+    config.velocity = config.velocity || 0;
+    config.classId = config.classId || ActorFactory.DEBUG;
+    config.probability = (config.probability || 1) * 100;
+    
+    for(let i = 0; i < Utils.randArray(config.amount); i++){        
+        if (config.probability === 100 || Utils.rand(1, 100) <= config.probability){
+            this.manager.addNew({
+                classId: config.classId,
+                positionX: this._body.position[0],
+                positionY: this._body.position[1],
+                angle: Utils.randArray(config.angle),
+                velocity: Utils.randArray(config.velocity)
+            });
+        }
+    }
+};
+
+BaseActor.prototype._createProps = function(props){
+    let newProps = Object.assign({}, props);
+    if (!newProps.timeout && props.timeoutRandomMin && newProps.timeoutRandomMax){
+        newProps.timeout = Utils.rand(newProps.timeoutRandomMin, newProps.timeoutRandomMax);
+    }
+    return newProps;
+};
+
+BaseActor.prototype._createState = function(state){
+    let newProps = Object.assign({}, this.props);
+    let newState = Object.assign({}, state);
+    return Object.assign(newProps, newState);    
+};
+
+BaseActor.prototype._updateHpAndShieldOnCollision = function(otherActor, relativeContactPoint){
+    if(otherActor && this.state.hp != Infinity && otherActor.props.damage > 0){
+        if (this.state.shield) {
+            this.state.shield -= otherActor.props.damage;            
+            if(this.state.shield < 0) {
+                this.state.hp += this.state.shield;
+                this.state.shield = 0;
+            }
+            this.onHit(true);
+        } else {
+            this.state.hp -= otherActor.props.damage;
+            this.onHit();
+        }        
+        this.state.relativeContactPoint = relativeContactPoint;        
+    }
+};
+
 
 module.exports = BaseActor;

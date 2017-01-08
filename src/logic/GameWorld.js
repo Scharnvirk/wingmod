@@ -39,7 +39,6 @@ GameWorld.prototype.makeUpdateData = function(){
             transferArray[transferrableActorCount*5+3] = body.position[1];
             transferArray[transferrableActorCount*5+4] = body.angle;
             transferrableActorCount ++;
-            body.update();
         }
     }
 

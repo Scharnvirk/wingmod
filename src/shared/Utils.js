@@ -13,20 +13,32 @@ var Utils = {
     },
 
     getRandomInteger: function(min, max){
-        if (min > max) throw 'ERROR: getRandomInteger min > max';
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
 
     rand: function(min, max){
-        return this.getRandomInteger(min, max);
+        return min === max ? min : this.getRandomInteger(min, max);
     },
 
-    makeRandomColor: function(min = 0, max = 255){
-        var colors = ['','',''];
+    randArray: function(config){
+        if (config instanceof Array) {
+            return this.rand(config[0], config[1]);
+        } else {
+            return config;
+        }
+    },
 
+    makeRandomColor: function(min = 0, max = 255, r, g, b){
+        var colors = [r || '', g || '', b || ''];
+
+        let newColor = 0;
         colors.forEach(function(color, index){
-            var newColor = this.rand(min, max).toString(16);
-            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;
+            if (colors[index] === ''){
+                newColor = this.rand(min, max).toString(16);
+            } else {
+                newColor = colors[index].toString(16);
+            }   
+            colors[index] = newColor.length === 1 ? '0' + newColor : newColor;         
         }.bind(this));
 
         var color = '0x' + colors.join('');
@@ -110,11 +122,11 @@ var Utils = {
         return [nx, ny];
     },
 
-    objToScreenPosition: function(object, renderer, camera){
+    gamePositionToScreenPosition: function(position, renderer, camera){
         var vector = new THREE.Vector3();
         var canvas = renderer.domElement;
 
-        vector.set( object.position[0], object.position[1], object.positionZ );
+        vector.set( position[0], position[1], Constants.DEFAULT_POSITION_Z );
         vector.project( camera );
 
         vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );
@@ -123,7 +135,6 @@ var Utils = {
         return [vector.x, vector.y];
     },
 
-
     //proxies for p2.js - it uses "angle" as angle, while three.js uses "rotation"
     angleBetweenPointsFromCenter: function(p1, p2){
         return this.rotationBetweenPointsFromCenter(p1, p2);
@@ -131,6 +142,15 @@ var Utils = {
 
     angleToVector: function(rotation, length){
         return this.rotationToVector(rotation, length);
+    },
+
+    distanceBetweenActors: function(actor1, actor2){
+        return this.distanceBetweenPoints(
+            actor1._body.position[0],
+            actor2._body.position[0],
+            actor1._body.position[1],
+            actor2._body.position[1]
+        );
     }
 };
 
@@ -140,5 +160,27 @@ if(!Function.prototype.extend){
         this.prototype.constructor = oldClass;
     };
 }
+
+let mixinInit = function(prototype, mixin){
+    let newMixinInstanceValues = Object.assign(prototype._mixinInstanceValues || {}, mixin._mixinInstanceValues);
+    let newProto = Object.assign(this.prototype, mixin);
+    newProto._mixinInstanceValues = newMixinInstanceValues;
+
+    prototype = newProto;
+};
+
+if(!Function.prototype.mixin){
+    Function.prototype.mixin = function(mixins){
+        if (mixins instanceof Array) {
+            mixins.forEach(mixin => {
+                mixinInit.call(this, this.prototype, mixin);
+            });
+        } else {
+            mixinInit.call(this, this.prototype, mixins);
+        }
+    };
+}
+
+
 
 module.exports = Utils;

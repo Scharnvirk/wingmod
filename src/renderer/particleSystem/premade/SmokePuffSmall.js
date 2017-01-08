@@ -2,9 +2,7 @@ module.exports = function(config){
     config.particleManager.createParticle('smokePuffAlpha',{
         positionX: config.position[0] + Utils.rand(-2,2),
         positionY: config.position[1] + Utils.rand(-2,2),
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: Utils.rand(2,5),
         alpha: Utils.rand(0,3)/10 + 0.1,
         alphaMultiplier: 0.95,

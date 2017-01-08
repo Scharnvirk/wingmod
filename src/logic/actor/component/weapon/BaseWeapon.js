@@ -5,6 +5,11 @@ function BaseWeapon(config){
     this.recoil = 0;
     this.velocity = 10;
     this.sound = null;
+    this.name = config.name || 'baseWeapon';
+    this.gameState = config.gameState;    
+    this.defaultEmptyTiming = 60;
+
+    this.ammoConfig = {};
 
     /*example:
         this.firingPoints = [
@@ -35,7 +40,14 @@ BaseWeapon.prototype.update = function(){
         this.timer --;
     } else {
         if (this.shooting) {
-            this.processActiveWeapon();
+            let canShoot = !this.gameState || this.gameState.requestShoot(this.name, this.ammoConfig);
+            if(canShoot){
+                this.processActiveWeapon();
+            } else {
+                this.shotsFired = 99999;
+                this.timer = this.defaultEmptyTiming;
+                this.actor.playSound(['empty']);
+            }
         }
     }
 };
@@ -50,11 +62,11 @@ BaseWeapon.prototype.stopShooting = function(){
 
 BaseWeapon.prototype.processActiveWeapon = function(){
     switch (this.firingMode){
-        case 'alternate':
-            this.handleFiringAlternate();
-            break;
-        default:
-            this.handleFiringSimultaneous();
+    case 'alternate':
+        this.handleFiringAlternate();
+        break;
+    default:
+        this.handleFiringSimultaneous();
     }
     this.shotsFired ++;
     if (this.shotsFired >= this.burstCount){
@@ -64,16 +76,17 @@ BaseWeapon.prototype.processActiveWeapon = function(){
 };
 
 BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
-    var body = this.actor.body;
+    var position = this.actor.getPosition();
+    var angle = this.actor.getAngle();
     var offsetPosition = Utils.angleToVector(
-        body.angle + Utils.degToRad(firingPointConfig.offsetAngle),
+        angle + Utils.degToRad(firingPointConfig.offsetAngle),
         firingPointConfig.offsetDistance
     );
     this.actor.manager.addNew({
         classId: this.projectileClass,
-        positionX: body.position[0] + offsetPosition[0],
-        positionY: body.position[1] + offsetPosition[1],
-        angle: body.angle + firingPointConfig.fireAngle,
+        positionX: position[0] + offsetPosition[0],
+        positionY: position[1] + offsetPosition[1],
+        angle: angle + firingPointConfig.fireAngle,
         velocity: this.velocity
     });
 };
@@ -81,10 +94,10 @@ BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
 BaseWeapon.prototype.handleFiringSimultaneous = function(){
     this.firingPoints.forEach(this.fireProjectile.bind(this));
     this.timer += this.burstCooldown;
-    this.actor.body.applyForceLocal([0, -this.recoil]);
+    this.actor.applyRecoil(this.recoil);
 
     if (this.sound){
-        this.actor.manager.playSound({sounds:[this.sound], actor: this.actor, volume:this.volume});
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 
@@ -96,10 +109,10 @@ BaseWeapon.prototype.handleFiringAlternate = function(){
 
     this.fireProjectile(this.firingPoints[this.currentFiringPoint]);
     this.timer += this.burstCooldown;
-    this.actor.body.applyForceLocal([0, -this.recoil]);
+    this.actor.applyRecoil(this.recoil);
 
     if (this.sound){
-        this.actor.manager.playSound({sounds: [this.sound], actor: this.actor, volume: this.volume});
+        this.actor.playSound([this.sound], this.volume);
     }
 };
 

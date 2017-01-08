@@ -1,4 +1,4 @@
-var BaseBrain = require("logic/actor/component/ai/BaseBrain");
+var BaseBrain = require('logic/actor/component/ai/BaseBrain');
 
 function MookBrain(config){
 
@@ -45,9 +45,8 @@ MookBrain.prototype.createWallDetectionParameters = function(){
 
 };
 
-
 MookBrain.prototype.update = function(){
-    if(this.playerActor && this.playerActor.body){
+    if(this.playerActor && this.playerActor._body){
         this.timer ++;
 
         if (this.timer % 30 === 0){
@@ -55,10 +54,11 @@ MookBrain.prototype.update = function(){
         }
 
         var nearbyWalls = this.detectNearbyWallsFast();
+        let actorPosition = this.actor.getPosition();
 
-        if (this.isWallBetween(this.actor.body.position, this.playerActor.body.position)){
+        if (this.isWallBetween(actorPosition, this.playerActor.getPosition())){
             if (this.gotoPoint){
-                if (!this.isWallBetween(this.actor.body.position, this.gotoPoint)) {
+                if (!this.isWallBetween(actorPosition, this.gotoPoint)) {
                     this.seesGotoPointAction(nearbyWalls);
                 } else {
                     this.gotoPoint = null;
@@ -80,12 +80,9 @@ MookBrain.prototype.detectNearbyWallsFast = function(){
     for (let a = 0; a < this.wallDetectionAngles.length; a++){
         for (let d = 0; d < this.wallDetectionDistances.length; d++){
             this.detectionResults[a] = 0;
-            let positionOffset = Utils.angleToVector(this.actor.body.angle + Utils.degToRad(this.wallDetectionAngles[a]), this.wallDetectionDistances[d]);
-            let position = [
-                this.actor.body.position[0] + positionOffset[0],
-                this.actor.body.position[1] + positionOffset[1]
-            ];
-            this.detectionResults[a] = this.isPositionInWall(position);
+            let positionOffset = Utils.angleToVector(this.actor.getAngle() + Utils.degToRad(this.wallDetectionAngles[a]), this.wallDetectionDistances[d]);
+            let actorPosition = this.actor.getPosition();
+            this.detectionResults[a] = this.isPositionInWall([actorPosition[0] + positionOffset[0], actorPosition[1] + positionOffset[1]]);
             if(this.detectionResults[a]){
                 break;
             }
@@ -141,8 +138,8 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls){
 
 MookBrain.prototype.seesPlayerAction = function(){
     this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, 1);
-    this.gotoPoint = [this.playerActor.body.position[0], this.playerActor.body.position[1]];
-    var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.playerActor.body.position[0], this.actor.body.position[1], this.playerActor.body.position[1]);
+    this.gotoPoint = this.playerActor.getPosition();
+    let distance = Utils.distanceBetweenActors(this.actor, this.playerActor);
 
     this.orders.thrust = 0;
     if (distance > this.farDistance) {
@@ -188,7 +185,9 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
     this.orders.turn = 0;
     this.orders.shoot = false;
 
-    var distance = Utils.distanceBetweenPoints(this.actor.body.position[0], this.gotoPoint[0], this.actor.body.position[1], this.gotoPoint[1]);
+    let position = this.actor.getPosition();
+
+    var distance = Utils.distanceBetweenPoints(position[0], this.gotoPoint[0], position[1], this.gotoPoint[1]);
 
     if (distance < 20){
         this.gotoPoint = null;
@@ -207,8 +206,8 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
     }
 };
 
-MookBrain.prototype.shootAction = function(distance = 0){
-    this.orders.shoot = Utils.pointInArc(this.actor.body.position, this.playerActor.body.position, this.actor.body.angle, this.shootingArc);
+MookBrain.prototype.shootAction = function(){
+    this.orders.shoot = Utils.pointInArc(this.actor.getPosition(), this.playerActor.getPosition(), this.actor.getAngle(), this.shootingArc);
 };
 
 MookBrain.prototype.randomStrafeAction = function(){
@@ -220,7 +219,7 @@ MookBrain.prototype.randomStrafeAction = function(){
 MookBrain.prototype.playCalloutSound = function(){
     if(this.actor.calloutSound) {
         if(Utils.rand(0, 150) === 0){
-            this.manager.playSound({sounds: [this.actor.calloutSound], actor: this.actor});
+            this.actor.playSound([this.actor.calloutSound]);
         }
     }
 };

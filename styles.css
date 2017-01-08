@@ -54,10 +54,10 @@
 
 @keyframes fadeout {
     from {
-      opacity: 0;
+      opacity: 1;
     }
     to {
-      opacity: 1;
+      opacity: 0;
     }
 }
 
@@ -89,6 +89,8 @@
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
   user-select: none;
 }
 
@@ -305,3 +307,56 @@
   position: fixed;
   z-index: 1
 }
+
+.canvasHud{
+  position: absolute;
+}
+
+.ammoLoss-enter {
+  color: red !important;
+}
+
+.ammoLoss-enter.ammoLoss-enter-active {
+  color: white;
+  transition: color 50ms ease-in;
+}
+
+.ammoGain-enter {
+  color: #00cc00 !important;
+}
+
+.ammoGain-enter.ammoLoss-enter-active {
+  color: white;
+  transition: color 50ms ease-in;
+}
+
+@keyframes messageFade {
+    0% {
+      opacity: 0;
+    }  
+    5% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+}
+
+@keyframes screenShake {
+    0% {
+      opacity: 0;
+    }  
+    5% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+}
+

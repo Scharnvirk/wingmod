@@ -61,25 +61,29 @@ function InputListener(config){
         this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
+    this.drag = function (event) {
+        event.preventDefault();
+    };
+
     this.mouseDown = function (event) {
         switch(event.button){
-            case 0:
-                this.inputState.mouseLeft = 1;
-                break;
-            case 2:
-                this.inputState.mouseRight = 1;
-                break;
+        case 0:
+            this.inputState.mouseLeft = 1;
+            break;
+        case 2:
+            this.inputState.mouseRight = 1;
+            break;
         }
     };
 
     this.mouseUp = function(event) {
         switch(event.button){
-            case 0:
-                this.inputState.mouseLeft = 0;
-                break;
-            case 2:
-                this.inputState.mouseRight = 0;
-                break;
+        case 0:
+            this.inputState.mouseLeft = 0;
+            break;
+        case 2:
+            this.inputState.mouseRight = 0;
+            break;
         }
     };
 
@@ -102,14 +106,14 @@ function InputListener(config){
     this.update = function () {
         for (let key in this.inputState){
             switch(key){
-                case 'scrollUp':
-                case 'scrollDown':
-                    if (this.inputState[key] > 0) {
-                        this.inputState[key] *= 1-this.scrollFallOffPercent/100;
-                    }
-                    if (this.inputState[key] < 0.5) {
-                        this.inputState[key] = 0;
-                    }
+            case 'scrollUp':
+            case 'scrollDown':
+                if (this.inputState[key] > 0) {
+                    this.inputState[key] *= 1-this.scrollFallOffPercent/100;
+                }
+                if (this.inputState[key] < 0.5) {
+                    this.inputState[key] = 0;
+                }
                 break;
             }
         }
@@ -118,7 +122,8 @@ function InputListener(config){
     this.dispose = function () {
         this.domElement.removeEventListener('contextmenu', contextmenu, false);
         this.domElement.removeEventListener('wheel', _wheel, false);
-        this.domElement.removeEventListener('mousemove', _wheel, false);
+        this.domElement.removeEventListener('mousemove', _move, false);
+        this.domElement.removeEventListener('drag', _drag, false);
         this.domElement.removeEventListener('mousedown', _mousedown, false);
         this.domElement.removeEventListener('mouseup', _mouseup, false);
         window.removeEventListener('keydown', _keydown, false);
@@ -129,22 +134,26 @@ function InputListener(config){
     var _keyup = bind(this, this.keyup);
     var _wheel = bind(this, this.mouseWheel);
     var _move = bind(this, this.mouseMove);
+    var _drag = bind(this, this.drag);
     var _mousedown = bind(this, this.mouseDown);
     var _mouseup = bind(this, this.mouseUp);
 
     this.domElement.addEventListener('contextmenu', contextmenu, false);
     this.domElement.addEventListener('wheel', _wheel, false);
     this.domElement.addEventListener('mousemove', _move, false);
+    this.domElement.addEventListener('drag', _drag, false);
     this.domElement.addEventListener('mousedown', _mousedown, false);
     this.domElement.addEventListener('mouseup', _mouseup, false);
     window.addEventListener('keydown', _keydown, false);
     window.addEventListener('keyup', _keyup, false);
+
+    this.initPointerLock();
 }
 
 InputListener.extend(EventEmitter);
 
-InputListener.prototype.acquirePointerLock = function(){
-    this.domElement.onclick = function(){
+InputListener.prototype.requestPointerLock = function(){
+    this.pointerLockRequestFunction = function(){
         if (!document.pointerLockElement && this.domElement.requestPointerLock){
             this.domElement.requestPointerLock();
         }
@@ -156,13 +165,20 @@ InputListener.prototype.acquirePointerLock = function(){
         }
     }.bind(this);
 
+    this.domElement.onclick = this.pointerLockRequestFunction;
+};
+
+InputListener.prototype.abandonPointerLock = function(){
+    this.domElement.onclick = function(){};
+};
+
+InputListener.prototype.initPointerLock = function(){
     var onPointerLockChange = function(event){
         if (document.pointerLockElement !== null) {
             this.emit({type: 'gotPointerLock'});
         } else {
             this.emit({type: 'lostPointerLock'});
         }
-        document.removeEventListener('pointerlockchange', onPointerLockChange, false);
     };
 
     var mozOnPointerLockChange = function(event){
@@ -171,7 +187,6 @@ InputListener.prototype.acquirePointerLock = function(){
         } else {
             this.emit({type: 'lostPointerLock'});
         }
-        document.removeEventListener('mozpointerlockchange', mozOnPointerLockChange, false);
     };
 
     var webkitOnPointerLockChange = function(event){
@@ -180,7 +195,6 @@ InputListener.prototype.acquirePointerLock = function(){
         } else {
             this.emit({type: 'lostPointerLock'});
         }
-        document.removeEventListener('webkitpointerlockchange', webkitOnPointerLockChange, false);
     };
 
     document.addEventListener('pointerlockchange', onPointerLockChange.bind(this));

@@ -1,43 +1,48 @@
-var BaseActor = require("logic/actor/BaseActor");
-var BaseBody = require("logic/actor/component/body/BaseBody");
-var ActorFactory = require("shared/ActorFactory")('logic');
+var BaseActor = require('logic/actor/BaseActor');
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
+var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function EnemySpawnerActor(config){
     Object.assign(this, config);
+    this.applyConfig(ActorConfig.ENEMYSPAWNER);
     BaseActor.apply(this, arguments);
-
-    this.spawnDelay = 0;
-
-    this.spawnRate = 240;
-
-    this.applyConfig({
-        hp: 350,
-        removeOnHit: false
-    });
+    
+    this.state.spawnDelay = 0;
 }
 
 EnemySpawnerActor.extend(BaseActor);
+EnemySpawnerActor.mixin(DropMixin);
 
 EnemySpawnerActor.prototype.customUpdate = function(){
-    if (this.spawnDelay > 0){
-        this.spawnDelay -- ;
+    if (this.state.spawnDelay > 0){
+        this.state.spawnDelay -- ;
     } else {
-        if ( Utils.rand( Math.min(this.timer/60, this.spawnRate), this.spawnRate) === this.spawnRate ){
-            //this.createEnemySpawnMarker();
+        if ( Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate ){
+            this.createEnemySpawnMarker();
+        } 
+    }
+        
+    if (this.timer % 10 === 0 && this.state.shield < this.props.shield) {
+        this.state.shield += 5;        
+        if (this.state.shield > this.props.shield) {
+            this.state.shield = this.props.shield;
         }
+        this.manager.updateActorState(this);
     }
 };
 
 EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
-    this.spawnDelay = this.spawnRate;
-    this.manager.addNew({
+    this.state.spawnDelay = this.props.spawnRate;
+
+    this.spawn({
         classId: ActorFactory.ENEMYSPAWNMARKER,
-        positionX: this.body.position[0],
-        positionY: this.body.position[1],
-        angle: 0,
-        velocity: 0
+        angle: [0, 0],
+        velocity: [0, 0]
     });
-    this.sendActorEvent('newSpawnDelay', this.spawnRate);
+
+    this.manager.updateActorState(this);
 };
 
 EnemySpawnerActor.prototype.createBody = function(){
@@ -54,36 +59,35 @@ EnemySpawnerActor.prototype.createBody = function(){
 };
 
 EnemySpawnerActor.prototype.onDeath = function(){
-    for(let i = 0; i < 40; i++){
-        this.manager.addNew({
-            classId: ActorFactory.CHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(0,150)
-        });
-    }
-    for(let i = 0; i < 10; i++){
-        this.manager.addNew({
-            classId: ActorFactory.BOOMCHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0,360),
-            velocity: Utils.rand(0,50)
-        });
-    }
-    this.body.dead = true;
+    this.spawn({
+        amount: 40,
+        classId: ActorFactory.CHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
+    this.spawn({
+        amount: 5,
+        classId: ActorFactory.BOOMCHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
+
+    this.handleDrops();
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };
 
-EnemySpawnerActor.prototype.onHit = function(){
-    if(Utils.rand(0, 5) == 5){
-        this.manager.addNew({
+EnemySpawnerActor.prototype.onHit = function(shielded){
+    if (shielded) {
+        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
+    } else {
+        this.spawn({
+            amount: 1,
+            probability: 0.5,
             classId: ActorFactory.CHUNK,
-            positionX: this.body.position[0],
-            positionY: this.body.position[1],
-            angle: Utils.rand(0, 360),
-            velocity: Utils.rand(50, 100)
+            angle: [0, 360],
+            velocity: [50, 100]
         });
+        this.playSound(['armorHit1', 'armorHit2'], 10);
     }
 };
 

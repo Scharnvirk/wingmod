@@ -10,14 +10,15 @@ var Constants = {
     RENDER_DISTANCE: 500,
 
     COLLISION_GROUPS: {
-            SHIP: Math.pow(2,0),
-            ENEMY: Math.pow(2,1),
-            SHIPPROJECTILE: Math.pow(2,2),
-            ENEMYPROJECTILE: Math.pow(2,3),
-            SHIPEXPLOSION: Math.pow(2,4),
-            ENEMYEXPLOSION: Math.pow(2,5),
-            OBJECT: Math.pow(2,6),
-            TERRAIN: Math.pow(2,10),
+        SHIP: Math.pow(2,0),
+        ENEMY: Math.pow(2,1),
+        SHIPPROJECTILE: Math.pow(2,2),
+        ENEMYPROJECTILE: Math.pow(2,3),
+        SHIPEXPLOSION: Math.pow(2,4),
+        ENEMYEXPLOSION: Math.pow(2,5),
+        OBJECT: Math.pow(2,6),
+        PICKUP: Math.pow(2,8),
+        TERRAIN: Math.pow(2,10),
     },
 
     STORAGE_SIZE: 1000,

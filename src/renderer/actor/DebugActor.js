@@ -1,4 +1,4 @@
-var BaseActor = require("renderer/actor/BaseActor");
+var BaseActor = require('renderer/actor/BaseActor');
 
 function DebugActor(){
     BaseActor.apply(this, arguments);
@@ -7,18 +7,18 @@ function DebugActor(){
 DebugActor.extend(BaseActor);
 
 DebugActor.prototype.customUpdate = function(){
-    this.particleManager.createParticle('particleAdd',{
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: 1,
-        colorG: 0,
-        colorB: 1,
+    this.createParticle({
+        amount: 100,
+        particleClass: 'particleNumberAdd',
+        color: 'PURPLE',
         scale: 5,
         alpha: 1,
         alphaMultiplier: 0.75,
         particleVelocity: 0,
         particleRotation: 0,
-        lifeTime: 5
+        lifeTime: 5,
+        spriteNumber: [0, 10],
+        speedZ: 1,
     });
 };
 

@@ -1,5 +1,5 @@
-var ActorFactory = require("shared/ActorFactory")('logic');
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var ActorFactory = require('shared/ActorFactory')('logic');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function GameScene(config){
     Object.assign(this, config);
@@ -14,55 +14,79 @@ GameScene.extend(EventEmitter);
 
 GameScene.prototype.fillScene = function(mapBodies){
 
-    var playerActor = this.actorManager.addNew({
+    this.actorManager.addNew({
         classId: ActorFactory.SHIP,
-        positionX: -200,
+        positionX: 0,
         positionY: 0,
         angle: 0
     });
 
-    for (var i = 0; i < 250; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.MOOK,
-            positionX: Utils.rand(-10, 10),
-            positionY: Utils.rand(-10, 10),
-            angle: 0
-        });
-    }
+    let i;
 
-    this.emit({
-        type: 'newPlayerActor',
-        data: playerActor
-    });
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.SHIELDPICKUP,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.ENERGYPICKUP,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.PLASMAPICKUP,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
+
+    // for (i = 0; i < 0; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.DEBUG,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
 
     this.addMapBodies(mapBodies);
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: 0,
-       positionY: 221,
-       angle: Utils.degToRad(180)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: 221,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: 221,
-       angle: Utils.degToRad(180)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: 221,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: 0,
-       positionY: -573,
-       angle: Utils.degToRad(0)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: 0,
+        positionY: -573,
+        angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
-       classId: ActorFactory.ENEMYSPAWNER,
-       positionX: -352,
-       positionY: -573,
-       angle: Utils.degToRad(0)
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -352,
+        positionY: -573,
+        angle: Utils.degToRad(0)
     });
 };
 

@@ -1,10 +1,11 @@
-global.Utils = require("shared/Utils");
-global.Constants = require("shared/Constants");
-global.EventEmitter = require("shared/EventEmitter");
+global.Utils = require('shared/Utils');
+global.Constants = require('shared/Constants');
+global.EventEmitter = require('shared/EventEmitter');
 
+var PubSub = require('pubsub-js');
 var Core = require('renderer/Core');
-var domready = require("domready");
-var Ui = require("renderer/ui/Ui");
+var domready = require('domready');
+var Ui = require('renderer/ui/Ui');
 var gameCore;
 
 function Init() {}

@@ -1,4 +1,4 @@
-var ActorFactory = require("shared/ActorFactory")('logic');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function ActorManager(config){
     config = config || {};
@@ -7,10 +7,10 @@ function ActorManager(config){
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
     this.playerActors = [];
-    this.actorEventsToSend = {};
     this.aiImage = null;
     this.aiGraph = {};
 
+    this.actorStatesChanged = {};
     this.enemiesKilled = 0;
 
     Object.assign(this, config);
@@ -18,6 +18,7 @@ function ActorManager(config){
     this.timer = 0;
 
     if(!this.world) throw new Error('No world for Logic ActorManager!');
+    if(!this.gameState) throw new Error('No gameState for Logic ActorMAnager!');
 
     EventEmitter.apply(this, arguments);
 }
@@ -26,22 +27,21 @@ ActorManager.extend(EventEmitter);
 
 ActorManager.prototype.addNew = function(config){
     if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
-        console.warn('Actor manager storage is full! Cannot create new Actor!');
-        return;
+        throw new Error('Actor manager storage is full! Cannot create new Actor!');
     }
 
     var actor = this.factory.create(
         Object.assign(config, {
             manager: this,
-            world: this.world
+            gameState: this.gameState,
+            world: this.world,
+            id: this.currentId            
         })
     );
-
-    actor.body.actorId = this.currentId;
-    actor.body.classId = config.classId;
+    
     this.storage[this.currentId] = actor;
     this.currentId ++;
-    this.world.addBody(actor.body);
+    this.world.addBody(actor.getBody());
     actor.onSpawn();
 
     return actor;
@@ -60,11 +60,11 @@ ActorManager.prototype.update = function(inputState){
         this.storage[actorId].update();
     }
 
-    this.sendActorEvents();
+    this.sendActorStateChanges();
 };
 
-ActorManager.prototype.setPlayerActor = function(actor){
-    this.playerActors.push(actor.body.actorId);
+ActorManager.prototype.attachPlayer = function(actor){
+    this.playerActors.push(actor.id);
 };
 
 ActorManager.prototype.removeActorAt = function(actorId){
@@ -72,8 +72,8 @@ ActorManager.prototype.removeActorAt = function(actorId){
 };
 
 ActorManager.prototype.actorDied = function(actor){
-    delete this.storage[actor.body.actorId];
-    this.world.prepareBodyForDeath(actor.body);
+    delete this.storage[actor.id];
+    this.world.prepareBodyForDeath(actor.getBody());
 };
 
 ActorManager.prototype.endGame = function(){
@@ -86,22 +86,21 @@ ActorManager.prototype.endGame = function(){
     });
 };
 
-ActorManager.prototype.getFirstPlayerActor = function(){
+ActorManager.prototype.getFirstPlayerActor = function(){ //wyleci
     return this.storage[this.playerActors[0]];
 };
 
-ActorManager.prototype.requestActorEvent = function(actorId, eventName, eventParams){
-    this.actorEventsToSend[actorId] = this.actorEventsToSend[actorId] || {};
-    this.actorEventsToSend[actorId][eventName] = eventParams;
+ActorManager.prototype.updateActorState = function(actor){
+    this.actorStatesChanged[actor.id] = actor.state;
 };
 
-ActorManager.prototype.sendActorEvents = function(){
-    if (Object.keys(this.actorEventsToSend).length > 0){
+ActorManager.prototype.sendActorStateChanges = function(){
+    if (Object.keys(this.actorStatesChanged).length > 0){
         this.emit({
-            type: 'actorEvents',
-            data: this.actorEventsToSend
+            type: 'actorStateChange',
+            data: this.actorStatesChanged
         });
-        this.actorEventsToSend = {};
+        this.actorStatesChanged = {};
     }
 };
 
@@ -109,13 +108,7 @@ ActorManager.prototype.playSound = function(config){
     if(!this.muteSounds){
         var volume = config.volume || 1;
         var playerActor = this.getFirstPlayerActor();
-        var distance = config.actor && playerActor ?
-            Utils.distanceBetweenPoints(
-                playerActor.body.position[0],
-                config.actor.body.position[0],
-                playerActor.body.position[1],
-                config.actor.body.position[1]
-            ) : 0;
+        var distance = config.actor && playerActor ? Utils.distanceBetweenActors(config.actor, playerActor) : 0;            
         this.emit({
             type: 'playSound',
             data: {
@@ -127,7 +120,7 @@ ActorManager.prototype.playSound = function(config){
     }
 };
 
-ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){
+ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){ //wyleci
     var playerActor = this.getFirstPlayerActor();
     if (playerActor){
         playerActor.switchWeapon(weaponConfig);

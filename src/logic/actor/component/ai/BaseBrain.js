@@ -18,14 +18,16 @@ function BaseBrain(config){
 BaseBrain.prototype.update = function(){};
 
 BaseBrain.prototype.getPlayerPosition = function(){
-    return this.playerActor.body.position;
+    return this.playerActor.getPosition();
 };
 
 BaseBrain.prototype.getPlayerPositionWithLead = function(leadSpeed = 1, leadSkill = 0){
-    var p = this.actor.body.position;
-    var tp = this.playerActor.body.position;
-    var tv = this.playerActor.body.velocity;
-    var lv = Utils.angleToVector(this.actor.body.angle, leadSpeed);
+
+
+    var p = this.actor.getPosition();
+    var tp = this.playerActor.getPosition();
+    var tv = this.playerActor.getVelocity();
+    var lv = this.actor.getAngleVector(leadSpeed);
 
     var lead = Math.sqrt( leadSkill * ( ((tp[0]-p[0])*(tp[0]-p[0]) + (tp[1]-p[1])*(tp[1]-p[1])) / (lv[0]*lv[0] + lv[1]*lv[1])) );
     return [(tp[0] + tv[0] * lead), (tp[1] + tv[1] * lead)];

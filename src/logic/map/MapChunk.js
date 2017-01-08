@@ -1,7 +1,7 @@
-var BaseBody = require("logic/actor/component/body/BaseBody");
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function MapChunk(config){
-    if (!config.hitmap) throw new Error("no hitmap specified for a MapChunk!");
+    if (!config.hitmap) throw new Error('no hitmap specified for a MapChunk!');
 
     Object.assign(this, config);
 
@@ -29,7 +29,8 @@ MapChunk.prototype.createShapes = function(){
                     Constants.COLLISION_GROUPS.ENEMY |
                     Constants.COLLISION_GROUPS.SHIPPROJECTILE |
                     Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.PICKUP
             })
         );
     }

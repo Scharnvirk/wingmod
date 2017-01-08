@@ -57,12 +57,12 @@ AiImageRenderer.prototype.drawImage = function(wallsData){
 AiImageRenderer.prototype.drawObject = function(object){
     if(object){
         switch(object.class){
-            case "Box":
-                this.drawBox(object);
-                break;
-            case "Convex":
-                this.drawConvex(object);
-                break;
+        case 'Box':
+            this.drawBox(object);
+            break;
+        case 'Convex':
+            this.drawConvex(object);
+            break;
         }
     }
 };

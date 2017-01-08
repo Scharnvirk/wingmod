@@ -1,16 +1,17 @@
-var ConfigManager = require("renderer/ConfigManager");
-var InputListener = require("renderer/InputListener");
-var ParticleManager = require("renderer/particleSystem/ParticleManager");
-var ActorManager = require("renderer/actor/ActorManager");
-var LogicBus = require("renderer/LogicBus");
-var ControlsHandler = require("renderer/ControlsHandler");
-var SceneManager = require("renderer/scene/SceneManager");
-var AssetManager = require("renderer/assetManagement/assetManager.js");
-var AiImageRenderer = require("renderer/ai/AiImageRenderer");
-var Hud = require("renderer/gameUi/Hud");
-var CanvasHud = require("renderer/gameUi/CanvasHud");
-var FlatHud = require("renderer/gameUi/FlatHud");
-var ChunkStore = require("renderer/assetManagement/level/ChunkStore");
+var ConfigManager = require('renderer/ConfigManager');
+var InputListener = require('renderer/InputListener');
+var ParticleManager = require('renderer/particleSystem/ParticleManager');
+var ActorManager = require('renderer/actor/ActorManager');
+var LogicBus = require('renderer/LogicBus');
+var ControlsHandler = require('renderer/ControlsHandler');
+var SceneManager = require('renderer/scene/SceneManager');
+var AssetManager = require('renderer/assetManagement/assetManager.js');
+var AiImageRenderer = require('renderer/ai/AiImageRenderer');
+var Hud = require('renderer/gameUi/Hud');
+var CanvasHud = require('renderer/gameUi/CanvasHud');
+var FlatHud = require('renderer/gameUi/FlatHud');
+var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
+var GameState = require('renderer/GameState');
 
 function Core(config){
     if(!config.logicWorker) throw new Error('Logic core initialization failure!');
@@ -52,29 +53,21 @@ Core.prototype.createMainComponents = function(){
     this.sceneManager = new SceneManager({renderer: this.renderer, core: this});
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
-    this.logicBus = new LogicBus({worker: this.logicWorker});
+    this.logicBus = new LogicBus({core: this, worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
     this.canvasHud = new CanvasHud({canvasElement: this.canvasElement, autoWidth: true});
+    this.gameState = new GameState({ui: this.ui});
 };
 
 Core.prototype.initEventHandlers = function(){
-    this.logicBus.on('updateActors', this.onUpdateActors.bind(this));
-    this.logicBus.on('attachPlayer', this.onAttachPlayer.bind(this));
-    this.logicBus.on('gameEnded', this.onGameEnded.bind(this));
-    this.logicBus.on('gameFinished', this.onGameFinished.bind(this));
-    this.logicBus.on('getAiImage', this.onGetAiImage.bind(this));
-    this.logicBus.on('actorEvents', this.onActorEvents.bind(this));
-    this.logicBus.on('mapDone', this.onMapDone.bind(this));
-    this.logicBus.on('playSound', this.onPlaySound.bind(this));
-
-    this.ui.on('getPointerLock', this.onGetPointerLock.bind(this));
     this.ui.on('startGame', this.onStartGame.bind(this));
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
     this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
+    this.ui.on('requestPointerLock', this.onRequestPointerLock.bind(this));
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
@@ -83,6 +76,7 @@ Core.prototype.initEventHandlers = function(){
 
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
+    this.actorManager.on('requestShake', this.onRequestShake.bind(this));
 
     this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
@@ -130,7 +124,6 @@ Core.prototype.autoResize = function() {
     var callback = () => {
         this.resetRenderer();
         this.resetCamera();
-        this.resetHud();
     };
     window.addEventListener('resize', callback, false);
     return {
@@ -158,7 +151,7 @@ Core.prototype.getActiveScene = function(){
 };
 
 Core.prototype.onAssetsLoaded = function(){
-    console.log("assets loaded");
+    console.log('assets loaded');
     this.activeScene = 'MainMenuScene';
     this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
@@ -211,11 +204,9 @@ Core.prototype.getAiImageObject = function(wallsData){
     return this.aiImageRenderer.getImageObject(wallsData);
 };
 
-//todo: something better for injecting that actor?
 Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
     actor.inputListener = this.inputListener;
-
     this.hud.onPlayerActorAppeared(actor);
     this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
@@ -223,11 +214,6 @@ Core.prototype.onPlayerActorAppeared = function(event){
 
 Core.prototype.onUpdateActors = function(event){
     this.actorManager.updateFromLogic(event.data);
-};
-
-Core.prototype.onAttachPlayer = function(event){
-    console.log('attach player');
-    this.actorManager.attachPlayer(event.data);
 };
 
 Core.prototype.onGameEnded = function(event){
@@ -238,7 +224,7 @@ Core.prototype.onGameEnded = function(event){
     }.bind(this), 2000);
 };
 
-Core.prototype.onGameFinished = function(event){
+Core.prototype.onGameFinished = function(){
     this.gameEnded = true;
     setTimeout(function(){
         this.ui.stopGameFinished();
@@ -250,34 +236,38 @@ Core.prototype.onGetAiImage = function(event){
     this.logicBus.postMessage('aiImageDone', this.getAiImageObject(event.data));
 };
 
-Core.prototype.onActorEvents = function(event){
-    this.actorManager.handleActorEvents(event.data);
+Core.prototype.onActorStateChange = function(event){
+    this.actorManager.handleActorStateChange(event.data.data);
 };
 
 Core.prototype.onRequestUiFlash = function(event){
     this.sceneManager.get(this.activeScene).doUiFlash(event.data);
 };
 
-Core.prototype.onStartGame = function(event){
+Core.prototype.onRequestShake = function(){
+    this.viewportElement.addClass('shake-once');
+    setTimeout(() => {
+        this.viewportElement.removeClass('shake-once');
+    }, 100);
+};
+
+Core.prototype.onStartGame = function(){
     if (!this.running) {
         this.running = true;
         this.logicBus.postMessage('startGame', {});
         this.activeScene = 'GameScene';
     }
+    PubSub.publish('hudShow');
 };
 
-Core.prototype.onGetPointerLock = function(event){
-    this.inputListener.acquirePointerLock();
-};
-
-Core.prototype.onGotPointerLock = function(event){
+Core.prototype.onGotPointerLock = function(){
     //TODO: game state machine
     if(!this.gameEnded){
         this.ui.gotPointerLock();
     }
 };
 
-Core.prototype.onLostPointerLock = function(event){
+Core.prototype.onLostPointerLock = function(){
     if(!this.gameEnded){
         this.ui.lostPointerLock();
     }
@@ -295,6 +285,10 @@ Core.prototype.onResolutionConfig = function(event){
 
 Core.prototype.onSoundConfig = function(event){
     this.configManager.saveSoundVolume(event.value);
+};
+
+Core.prototype.onRequestPointerLock = function(){
+    this.inputListener.requestPointerLock();
 };
 
 Core.prototype.recreateRenderer = function(){
@@ -319,7 +313,6 @@ Core.prototype.onPlaySound = function(event){
     var finalVolume = config.soundVolume * Math.min(baseVolume * (Utils.rand(80,100)/100) * configVolume, 1);
     if (finalVolume > 0.01){
         createjs.Sound.play(event.data.sounds[Utils.rand(0, event.data.sounds.length - 1)], {volume: finalVolume});
-        console.log('playing sound');
     }
 };
 
@@ -333,6 +326,10 @@ Core.prototype.onWeaponSwitched = function(event){
 
 Core.prototype.onMapDone = function(event){
     this.sceneManager.get('GameScene').createMap(event.data);
+};
+
+Core.prototype.onGameStateChange = function(event){
+    this.gameState.update(event.data);
 };
 
 module.exports = Core;

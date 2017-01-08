@@ -1,5 +1,5 @@
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function BaseScene(config){
     Object.assign(this, config);
@@ -30,6 +30,10 @@ BaseScene.prototype.create = function(){
 
 BaseScene.prototype.createThreeScene = function(){
     return new THREE.Scene();
+};
+
+BaseScene.prototype.getCamera = function(){
+    return this.camera;
 };
 
 BaseScene.prototype.addPlayerActor = function(actor){};

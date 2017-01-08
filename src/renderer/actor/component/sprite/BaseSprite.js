@@ -9,9 +9,10 @@ function BaseSprite(config){
 BaseSprite.extend(THREE.Sprite);
 
 BaseSprite.prototype.update = function(){
-    if(this.actor){
-        this.position.x = this.actor.position[0];
-        this.position.y = this.actor.position[1];
-        this.position.z = this.actor.positionZ;
+    let position = this.actor.getPosition();
+    if (this.actor) {
+        this.position.x = position[0];
+        this.position.y = position[1];
+        this.position.z = position[2];
     }
 };

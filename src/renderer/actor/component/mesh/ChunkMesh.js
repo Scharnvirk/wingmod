@@ -1,5 +1,5 @@
-var BaseMesh = require("renderer/actor/component/mesh/BaseMesh");
-var ModelStore = require("renderer/assetManagement/model/ModelStore");
+var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ChunkMesh(config){
     BaseMesh.apply(this, arguments);
@@ -12,7 +12,6 @@ function ChunkMesh(config){
 
     this.castShadow = true;
 }
-
 
 ChunkMesh.extend(BaseMesh);
 

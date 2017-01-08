@@ -1,81 +1,104 @@
+var BaseActor = require('renderer/actor/BaseActor');
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+var ActorConfig = require('shared/ActorConfig');
 
-var BaseActor = require("renderer/actor/BaseActor");
-
-function RingProjectileActor(config){
+function RingProjectileActor(){
+    this.applyConfig(ActorConfig.RINGPROJECTILE);
     BaseActor.apply(this, arguments);
-    this.colorR = 1;
-    this.colorG = 1;
-    this.colorB = 1;
 }
 
 RingProjectileActor.extend(BaseActor);
+RingProjectileActor.mixin(ParticleMixin);
 
 RingProjectileActor.prototype.customUpdate = function(){
-    var offsetPositionZ, offsetPositionY;
-    var ringSections = 36;
-    var edgeOffset = ringSections / 2;
+    let ringSections = 20;
+    let angle = Utils.degToRad(360/ringSections);  
+    let zPosition, xPosition, offsetPosition;
+    let timerFactor = this.timer/(this.props.timeout+3);
+    let radius = Utils.rand(15,20)/10 - timerFactor;  
 
-    for (let i = -ringSections/2; i < ringSections/2; i ++){
-      offsetPositionZ = Utils.rotationToVector(Utils.degToRad(240/ringSections * i) + this.rotation, 1 + this.timer/10);
-      this.particleManager.createParticle('particleAdd', {
-          positionX: this.position[0] + offsetPositionZ[0],
-          positionY: this.position[1] + offsetPositionZ[1],
-          colorR: this.colorR,
-          colorG: this.colorG,
-          colorB: this.colorB,
-          scale: 2 - 2/edgeOffset * Math.abs(i),
-          alpha: 2 - 2/edgeOffset * Math.abs(i) - this.timer/100,
-          alphaMultiplier: 0.4,
-          particleVelocity: 1,
-          particleRotation: this.rotation,
-          lifeTime: 3
-      });
-   }
+    for (let i = 0; i < ringSections; i ++){        
+        zPosition = Math.sin(i*angle) * radius;
+        xPosition = Math.cos(i*angle) * radius;
+        offsetPosition = this.getOffsetPosition(xPosition, Math.PI/2);
+        this.createParticle({
+            particleClass: 'particleAdd',
+            offsetPositionX: offsetPosition[0],
+            offsetPositionY: offsetPosition[1],
+            offsetPositionZ: zPosition,
+            color: 'WHITE',
+            scale: 1,
+            alpha: 1 - timerFactor,
+            alphaMultiplier: 0.9,
+            particleVelocity: 0,
+            lifeTime: 1
+        }); 
+    }
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'PURPLE',
+        scale: 16 - timerFactor*3,
+        alpha: 1 - timerFactor,
+        alphaMultiplier: 0.94,
+        particleVelocity: 0,
+        particleRotation: 0,
+        lifeTime: 1
+    });
 };
 
 RingProjectileActor.prototype.onDeath = function(){
-    for (let i = 0; i < 15; i++){
-        this.particleManager.createParticle('particleAdd', {
-            positionX: this.position[0] + Utils.rand(-4,4),
-            positionY: this.position[1] + Utils.rand(-4,4),
-            positionZ: Utils.rand(-5,5),
-            colorR: this.colorR,
-            colorG: this.colorG,
-            colorB: this.colorB,
-            scale: Utils.rand(1,40),
-            alpha: (Utils.rand(3,10) / 10) - this.timer/100 ,
-            alphaMultiplier: 0.7,
+    let ringSections = 28;
+    let angle = Utils.degToRad(360/ringSections);  
+    let zPosition, xPosition, offsetPosition, xOffsetPosition;
+    let timerFactor = this.timer/(this.props.timeout+3);
+    let radius = 5 - timerFactor*3;  
+
+    for (let i = 0; i < ringSections; i ++){        
+        zPosition = Math.sin(i*angle) * radius;
+        xPosition = Math.cos(i*angle) * radius;
+        offsetPosition = this.getOffsetPosition(xPosition, Math.PI/2);
+        xOffsetPosition = this.getOffsetPosition(-5);
+        
+        this.createParticle({
+            particleClass: 'particleAdd',
+            offsetPositionX: offsetPosition[0] + xOffsetPosition[0],
+            offsetPositionY: offsetPosition[1] + xOffsetPosition[1],
+            offsetPositionZ: zPosition,
+            color: 'PURPLE',
+            scale: 5,
+            alpha: 2 - timerFactor*2,
+            alphaMultiplier: 0.6,
             particleVelocity: 0,
-            particleRotation: 0,
-            lifeTime: 1
+            lifeTime: 3
         });
     }
 
-    for (let i = 0; i < 100-this.timer; i++){
-        this.particleManager.createParticle('particleAdd',{
-            positionX: this.position[0],
-            positionY: this.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2,7) / 10,
-            alpha: 1 - this.timer/100,
-            alphaMultiplier: 0.94,
-            particleVelocity: Utils.rand(5, 15) / 10,
-            particleRotation: Utils.rand(0,360),
-            speedZ: Utils.rand(-50, 50) / 100,
-            lifeTime: Utils.rand(10,20)
-        });
-    }
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0] + xOffsetPosition[0],
+        offsetPositionY: offsetPosition[1] + xOffsetPosition[1],
+        color: 'PURPLE',
+        alphaMultiplier: 0.6,
+        scale: 30,
+        alpha: 2 - timerFactor*2,
+        lifeTime: 3,
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'WHITE',
+        scale: 24,
+        alpha: 2 - timerFactor*2,
+        alphaMultiplier: 0.6,
+        lifeTime: 3
+    });
 };
 
 RingProjectileActor.prototype.onSpawn = function(){
-    this.particleManager.createParticle('particleAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'PURPLE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.2,
@@ -84,17 +107,14 @@ RingProjectileActor.prototype.onSpawn = function(){
         lifeTime: 1
     });
 
-    this.particleManager.createParticle('particleAdd', {
-        positionX: this.position[0],
-        positionY: this.position[1],
-        colorR: this.colorR*0.3+0.7,
-        colorG: this.colorG*0.3+0.7,
-        colorB: this.colorB*0.3+0.7,
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'PURPLE',
         scale: 30,
         alpha: 1,
         alphaMultiplier: 0.4,
         particleVelocity: 1,
-        particleRotation: this.rotation,
+        particleRotation: this.getRotation(),
         lifeTime: 3
     });
 };

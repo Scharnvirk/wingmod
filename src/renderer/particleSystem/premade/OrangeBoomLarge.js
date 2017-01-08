@@ -1,17 +1,16 @@
 module.exports = function(config){
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 20; i++){
         config.particleManager.createParticle('smokePuffAlpha',{
-            positionX: config.position[0] + Utils.rand(-2,2),
-            positionY: config.position[1] + Utils.rand(-2,2),
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
-            scale: Utils.rand(2,15),
-            alpha: Utils.rand(0,3)/10 + 0.3,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0,4) / 10,
+            positionX: config.position[0] + Utils.rand(-10,10),
+            positionY: config.position[1] + Utils.rand(-10,10),
+            color: 'WHITE',
+            scale: Utils.rand(20, 50),
+            alpha: Utils.rand(0.4, 0.9)/10 + 0.1,
+            alphaMultiplier: 0.996,
+            particleVelocity: Utils.rand(0,10) / 40,
             particleRotation: Utils.rand(0,360),
-            lifeTime: 120
+            speedZ: Utils.rand(0,5) / 500,
+            lifeTime: Utils.rand(600, 1000)
         });
     }
 
@@ -19,9 +18,7 @@ module.exports = function(config){
         config.particleManager.createParticle('particleAdd',{
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 0.8,
-            colorB: 0.5,
+            color: 'ORANGE',
             scale: 1.2,
             alpha: 1,
             alphaMultiplier: 0.94,
@@ -35,9 +32,7 @@ module.exports = function(config){
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 250,
         alpha: 1,
         alphaMultiplier: 0.4,
@@ -49,9 +44,7 @@ module.exports = function(config){
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 1,
-        colorB: 1,
+        color: 'WHITE',
         scale: 50,
         alpha: 1,
         alphaMultiplier: 0.95,
@@ -63,9 +56,7 @@ module.exports = function(config){
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.6,
-        colorB: 0.2,
+        color: 'ORANGE',
         scale: 60,
         alpha: 1,
         alphaMultiplier: 0.95,

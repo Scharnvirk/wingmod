@@ -4,15 +4,13 @@ module.exports = function(config){
         config.particleManager.createParticle('particleAdd', {
             positionX: config.position[0],
             positionY: config.position[1],
-            colorR: 1,
-            colorG: 1,
-            colorB: 1,
+            color: 'WHITE',
             scale: 1.5,
             alpha: 1,
-            alphaMultiplier: 0.8,
-            particleVelocity: 1,
+            alphaMultiplier: 0.6,
+            particleVelocity: 2,
             particleRotation: config.rotation,
-            lifeTime: 1,
+            lifeTime: 2,
             spriteNumber: 2
         });
     }
@@ -20,14 +18,12 @@ module.exports = function(config){
     config.particleManager.createParticle('particleAdd', {
         positionX: config.position[0],
         positionY: config.position[1],
-        colorR: 1,
-        colorG: 0.3,
-        colorB: 0.1,
+        color: 'ORANGE',
         scale: Utils.rand(5,11),
         alpha: 0.8,
         alphaMultiplier: 0.6,
-        particleVelocity: 1,
+        particleVelocity: 2,
         particleRotation: config.rotation,
-        lifeTime: 1
+        lifeTime: 2
     });
 };
