@@ -10,7 +10,7 @@ function Blaster(config){
 
     this.cooldown = 150;
     this.velocity = 500;
-    this.burstCount = 1;
+    this.burstCount = 2;
     this.burstCooldown = 20;
     this.sound = 'laser_purple';
 }

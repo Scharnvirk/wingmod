@@ -7,12 +7,21 @@ function EnergyPickupActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.ENERGYPICKUP);
     BaseActor.apply(this, arguments);
+    if(this.parent){
+        this.props.timeout = 9999999;
+    }
 }
 
 EnergyPickupActor.extend(BaseActor);
 
 EnergyPickupActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
+};
+
+EnergyPickupActor.prototype.onDeath = function(){
+    if (this.parent && this.parent.onPickupTaken) {
+        this.parent.onPickupTaken();
+    }
 };
 
 module.exports = EnergyPickupActor;

@@ -38,6 +38,8 @@ ActorManager.prototype.addNew = function(config){
             id: this.currentId            
         })
     );
+
+    actor.parent = config.parent;
     
     this.storage[this.currentId] = actor;
     this.currentId ++;

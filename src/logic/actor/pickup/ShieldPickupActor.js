@@ -7,6 +7,9 @@ function ShieldPickupActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.SHIELDPICKUP);
     BaseActor.apply(this, arguments);
+    if(this.parent){
+        this.props.timeout = 9999999;
+    }
 }
 
 ShieldPickupActor.extend(BaseActor);
@@ -14,5 +17,12 @@ ShieldPickupActor.extend(BaseActor);
 ShieldPickupActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
+
+ShieldPickupActor.prototype.onDeath = function(){
+    if (this.parent && this.parent.onPickupTaken) {
+        this.parent.onPickupTaken();
+    }
+};
+
 
 module.exports = ShieldPickupActor;

@@ -7,6 +7,9 @@ function PlasmaPickupActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMAPICKUP);
     BaseActor.apply(this, arguments);
+    if(this.parent){
+        this.props.timeout = 9999999;
+    }
 }
 
 PlasmaPickupActor.extend(BaseActor);
@@ -14,5 +17,12 @@ PlasmaPickupActor.extend(BaseActor);
 PlasmaPickupActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
+
+PlasmaPickupActor.prototype.onDeath = function(){
+    if (this.parent && this.parent.onPickupTaken) {
+        this.parent.onPickupTaken();
+    }
+};
+
 
 module.exports = PlasmaPickupActor;

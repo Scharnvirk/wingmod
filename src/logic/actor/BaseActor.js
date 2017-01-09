@@ -194,7 +194,8 @@ BaseActor.prototype.spawn = function(config){
                 positionX: this._body.position[0],
                 positionY: this._body.position[1],
                 angle: Utils.randArray(config.angle),
-                velocity: Utils.randArray(config.velocity)
+                velocity: Utils.randArray(config.velocity),
+                parent: this
             });
         }
     }

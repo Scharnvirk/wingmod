@@ -9,7 +9,7 @@ function RingBlaster(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 80;
-    this.velocity = 140;
+    this.velocity = 200;
     this.sound = 'disrupter';
 }
 

@@ -153,7 +153,7 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props:{
-            drops: [{class: 'SHIELDPICKUP', amount: [1, 3]}, {class: 'ENERGYPICKUP', amount: [1 ,3]}, {class: 'PLASMAPICKUP', amount: 1}],
+            drops: [{class: 'SHIELDPICKUP', amount: [1, 2]}, {class: 'ENERGYPICKUP', amount: [1, 2]}, {class: 'PLASMAPICKUP', amount: 1}],
             danger: 4,
             hp: 80,
             shield: 100,
@@ -164,12 +164,32 @@ var ActorConfig = {
             removeOnHit: false,
             spawnRate: 240,
             enemy: true
+        },
+        bodyConfig: {
+            radius: 8,
+            collisionType: 'enemyMapObject'
+        }
+    },
+
+    ITEMSPAWNER: {
+        props:{
+            hp: 1,
+            removeOnHit: false,
+            spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true}
+        },
+        bodyConfig: {
+            mass: 4,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5,
+            collisionType: 'unCollidable'
         }
     },
 
     MOOK: {
         props: {
-            drops: [{class: 'ENERGYPICKUP', probability: 0.2}],
+            drops: [{class: 'ENERGYPICKUP', probability: 0.1}],
             danger: 2,
             acceleration: 140,
             turnSpeed: 2,
@@ -189,7 +209,7 @@ var ActorConfig = {
 
     ORBOT: {
         props: {
-            drops: [{class: 'PLASMAPICKUP', probability: 0.2}],
+            drops: [{class: 'PLASMAPICKUP', probability: 0.1}],
             danger: 1,
             acceleration: 150,
             turnSpeed: 4,
@@ -209,7 +229,7 @@ var ActorConfig = {
 
     SNIPER: {
         props: {
-            drops: [{class: 'SHIELDPICKUP', probability: 0.3}],
+            drops: [{class: 'SHIELDPICKUP', probability: 0.2}],
             danger: 3,
             acceleration: 90,
             turnSpeed: 0.8,
@@ -236,8 +256,8 @@ var ActorConfig = {
             timeoutRandomMax: 2100,
         },
         bodyConfig: {
-            radius: 1,
-            mass: 1,
+            radius: 4,
+            mass: 0.000001,
             damping: 0.75,
             collisionType: 'pickup'
         }
@@ -252,8 +272,8 @@ var ActorConfig = {
             timeoutRandomMax: 2100,
         },
         bodyConfig: {
-            radius: 1,
-            mass: 1,
+            radius: 4,
+            mass: 0.000001,
             damping: 0.75,
             collisionType: 'pickup'
         }
@@ -268,8 +288,8 @@ var ActorConfig = {
             timeoutRandomMax: 2100,
         },
         bodyConfig: {
-            radius: 1,
-            mass: 1,
+            radius: 4,
+            mass: 0.000001,
             damping: 0.75,
             collisionType: 'pickup'
         }

@@ -1,5 +1,5 @@
-var BaseActor = require('logic/actor/BaseActor');
 var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var DropMixin = require('logic/actor/mixin/DropMixin');
@@ -13,7 +13,11 @@ function EnemySpawnerActor(config){
 }
 
 EnemySpawnerActor.extend(BaseActor);
-EnemySpawnerActor.mixin(DropMixin);
+EnemySpawnerActor.mixin(DropMixin); 
+
+EnemySpawnerActor.prototype.createBody = function(){
+    return new BaseBody(this.bodyConfig);
+};
 
 EnemySpawnerActor.prototype.customUpdate = function(){
     if (this.state.spawnDelay > 0){
@@ -43,19 +47,6 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
     });
 
     this.manager.updateActorState(this);
-};
-
-EnemySpawnerActor.prototype.createBody = function(){
-    return new BaseBody({
-        shape:  new p2.Circle({
-            radius: 8,
-            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
-            collisionMask:
-                Constants.COLLISION_GROUPS.SHIP |
-                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                Constants.COLLISION_GROUPS.SHIPEXPLOSION
-        })
-    });
 };
 
 EnemySpawnerActor.prototype.onDeath = function(){

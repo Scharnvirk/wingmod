@@ -17,6 +17,12 @@ BaseBody.extend(p2.Body);
 
 BaseBody.prototype.createShape = function(){
     switch(this.collisionType){
+    case 'unCollidable':
+        return new p2.Circle({
+            radius: 0,
+            collisionGroup: 0,
+            collisionMask: 0
+        });
     case 'playerProjectile':
         return new p2.Circle({
             radius: this.radius,
@@ -65,6 +71,15 @@ BaseBody.prototype.createShape = function(){
                     Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
                     Constants.COLLISION_GROUPS.TERRAIN |
                     Constants.COLLISION_GROUPS.SHIPEXPLOSION
+        });
+    case 'enemyMapObject':
+        return new p2.Circle({
+            radius: this.radius,
+            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+            collisionMask:
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.SHIPEXPLOSION
         });
     case 'terrain':
         return new p2.Box({

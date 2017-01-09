@@ -14,6 +14,7 @@ var ActorList = [
     'actor/map/MapActor',
     'actor/map/EnemySpawnerActor',
     'actor/map/EnemySpawnMarkerActor',
+    'actor/map/ItemSpawnerActor',
     'actor/DebugActor',
     'actor/pickup/ShieldPickupActor',
     'actor/pickup/EnergyPickupActor',
