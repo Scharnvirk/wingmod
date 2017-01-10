@@ -29095,6 +29095,7 @@ function AiImageRenderer() {
     this.drawContext.translate(this.AI_SCENE_SIZE_X / 2, this.AI_SCENE_SIZE_Y / 2);
 }
 
+//add this to constructor to see what AI sees
 AiImageRenderer.prototype.debugDraw = function () {
     document.body.insertBefore(this.canvas, document.getElementById('react-content'));
     this.canvas.style.position = 'absolute';
@@ -29175,7 +29176,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
     pos[1] *= this.lengthMultiplierY;
 
     dc.translate(pos[0], pos[1]);
-    dc.rotate(convexDataObject.rotation);
+    dc.rotate(convexDataObject.angle);
 
     dc.moveTo(convexDataObject.vertices[0][0] * this.lengthMultiplierX, convexDataObject.vertices[0][1] * this.lengthMultiplierY);
     for (var i = 1; i < convexDataObject.vertices.length; i++) {
@@ -29185,7 +29186,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
     dc.closePath();
     dc.fill();
 
-    dc.rotate(-convexDataObject.rotation);
+    dc.rotate(-convexDataObject.angle);
     dc.translate(-pos[0], -pos[1]);
 };
 

@@ -32,6 +32,7 @@ WorldAiMapExtractor.prototype.extractSingleShape = function(body){
         case 'Convex':
             return {
                 class: body.shape.constructor.name,
+                angle: body.angle,
                 vertices: body.shape.vertices,
                 position: body.position
             };

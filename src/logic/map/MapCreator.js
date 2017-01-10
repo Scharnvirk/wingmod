@@ -21,7 +21,6 @@ MapCreator.prototype.createMap = function(){
             position: [0,1],
             angle: 0
         },
-
         {
             name: 'chunk_HangarStraight_SideSmall_1',
             position: [-1,0],
