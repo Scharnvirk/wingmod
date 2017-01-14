@@ -4,7 +4,7 @@ var InputMixin = {
     applyLookAtAngleInput: function(inputState){
         let angleForce = 0;
 
-        var lookTarget = Utils.angleToVector(inputState.mouseRotation,1);
+        var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
         var angleVector = this.getAngleVector();
         var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
 
@@ -16,17 +16,7 @@ var InputMixin = {
             angleForce = Math.min((360-angle)/this.getStepAngle(), 1);
         }
 
-        if (inputState.q) {
-            angleForce = 1;
-        }
-
-        if (inputState.e) {
-            angleForce = -1;
-        }
-
         this.setAngleForce(angleForce);
-        this.lastInputStateX = inputState.lookX;
-        this.lastInputStateY = inputState.lookY;
     },
 
     applyThrustInput: function(inputState){

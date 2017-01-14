@@ -19,6 +19,10 @@ CustomModelCreator.prototype.configure = function(){
         },
         'shieldSphere': {
             geometry: new THREE.SphereGeometry( 5, 24, 24 )
+        },
+        'targetingRecticle': {
+            geometry: new THREE.SphereGeometry( 2, 8, 8 ),
+            material: new THREE.MeshBasicMaterial( { color: 0xffff00, depthTest: false, transparent: true, wireframe: true, wireFrame: true } )
         }
     };
 };

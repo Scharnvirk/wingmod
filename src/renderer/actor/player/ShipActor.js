@@ -4,6 +4,7 @@ var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var BaseActor = require('renderer/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
+var TargetingRecticleMesh = require('renderer/actor/component/mesh/TargetingRecticleMesh');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
@@ -15,6 +16,14 @@ function ShipActor(){
 
     this.count = 0;
     this.weaponSetLocations = [[[3,-2,0], [-3,-2,0]], [[5,1.5,-2.2], [-5,1.5,-2.2]]];
+    this.targetingLinePositions = this._createTargetingLinePositions();
+
+    this.targetingDistance = 100;
+    this.targetingMinDistance = 20;
+    this.targetingMaxDistance = 400;
+    this.targetingYScale = 4;
+    this.targetingOffset = 0;
+    this.targetingFadeFactor = 100;
 
     this.setupWeaponMeshes(0, 'plasmagun', 'plasmagun');
     this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');    
@@ -28,6 +37,8 @@ ShipActor.mixin(ShowDamageMixin);
 ShipActor.prototype.createMeshes = function(){
     this.shipMesh = new RavierMesh({actor: this, scaleX: 3.3, scaleY: 3.3, scaleZ: 3.3});
     this.shieldMesh = new ShieldMesh({actor: this, sourceMesh: this.shipMesh, camera: this.getCamera()});
+    // this.targetingRecticleMesh = new TargetingRecticleMesh({actor: this});
+
     this.protectedMeshes = 2;
     return [this.shipMesh, this.shieldMesh];
 };
@@ -37,6 +48,8 @@ ShipActor.prototype.customUpdate = function(){
     this.doBob();
     this.updateShield();
     this.showDamage(true);    
+    this.updateTargetingDistance();
+    this.showTargetingLines();
 };
 
 ShipActor.prototype.onDeath = function(){
@@ -80,7 +93,7 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
 };
 
 ShipActor.prototype.updateShield = function(){
-    if(this.state.shield < this._lastShield){
+    if (this.state.shield < this._lastShield) {
         this.shieldMesh.setIntensity(200);
         this.requestUiFlash('red');
         this.requestShake();
@@ -88,9 +101,75 @@ ShipActor.prototype.updateShield = function(){
     this._lastShield = this.state.shield;
 };
 
+// ShipActor.prototype.updateTargetingRecticle = function(){
+//     // console.log(this.inputListener.inputState.mouseRotation);
+//     this.updateTargetingDistance(this.inputListener.inputState.mouseY);
+// };
+
+ShipActor.prototype.updateTargetingDistance = function(){        
+    let distance = this.inputListener.inputState.mouseY;
+    distance *= -1 / this.targetingYScale;
+
+    let offset;
+
+    if (distance + this.targetingOffset < this.targetingMinDistance) {
+        offset = this.targetingMinDistance - distance;
+        if (offset > this.targetingOffset){
+            this.targetingOffset = offset;
+        }
+    } else if (distance + this.targetingOffset > this.targetingMaxDistance){
+        offset = this.targetingMaxDistance - distance;
+        if (offset < this.targetingOffset){
+            this.targetingOffset = offset;
+        }
+    }
+    
+    // console.log(this.targetingDistance);
+    this.targetingDistance = distance + this.targetingOffset;    
+};
+
+ShipActor.prototype.showTargetingLines = function() {
+    let offsetPosition, weaponOffsetPosition;
+    let alpha = this.targetingDistance / this.targetingFadeFactor;
+    for (let w = 0, wl = this.targetingLinePositions.length; w < wl; w++){
+        weaponOffsetPosition = this.getOffsetPosition(this.targetingLinePositions[w][0], Utils.degToRad(90));
+        for (let i = 0, l = 10; i < l; i++) {
+            offsetPosition = this.getOffsetPosition(this.targetingDistance * i/10);
+            this.createParticle({
+                particleClass: 'particleAdd',
+                offsetPositionX: offsetPosition[0] + weaponOffsetPosition[0],
+                offsetPositionY: offsetPosition[1] + weaponOffsetPosition[1],
+                color: 'WHITE',
+                alphaMultiplier: 0.7,
+                scale: 0.5,
+                particleVelocity: 1,
+                alpha: alpha,
+                lifeTime: 1,
+            });
+        }
+
+        offsetPosition = this.getOffsetPosition(this.targetingDistance);
+        this.createParticle({
+            particleClass: 'particleAdd',
+            offsetPositionX: offsetPosition[0] + weaponOffsetPosition[0],
+            offsetPositionY: offsetPosition[1] + weaponOffsetPosition[1],
+            color: 'WHITE',
+            alphaMultiplier: 0.7,
+            scale: 2,
+            particleVelocity: 1,
+            alpha: 1,
+            lifeTime: 1,
+            spriteNumber: 6
+        });
+    }
+    
+};
+
+
 ShipActor.prototype.doEngineGlow = function(){
     let positionZ = this.getPosition()[2] - Constants.DEFAULT_POSITION_Z;
     if(this.inputListener){
+        
         if(this.inputListener.inputState.w && !this.inputListener.inputState.s){
             this.createPremade({
                 premadeName: 'EngineGlowMedium',
@@ -145,6 +224,12 @@ ShipActor.prototype.doEngineGlow = function(){
             });
         }
     }
+};
+
+ShipActor.prototype._createTargetingLinePositions = function(){
+    let targetingLinePositions = [];
+    this.weaponSetLocations.forEach(weaponConfig => weaponConfig.forEach(finalWeaponConfig => targetingLinePositions.push(finalWeaponConfig)));
+    return targetingLinePositions;
 };
 
 module.exports = ShipActor;

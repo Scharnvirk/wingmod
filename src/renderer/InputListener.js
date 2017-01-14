@@ -13,18 +13,13 @@ function InputListener(config){
 
     this.inputState = Object.create(null);
     this.inputState.mouseRotation = 0;
+    this.inputState.mouseY = 0;
 
     this.keys = {
-        81: 'q',
-        69: 'e',
         87: 'w',
         83: 's',
         65: 'a',
         68: 'd',
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
         16: 'shift',
         1001: 'scrollUp',
         1002: 'scrollDown',
@@ -57,8 +52,8 @@ function InputListener(config){
     };
 
     this.mouseMove = function (event) {
-        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.002;
-        this.inputState.mouseY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.0015;
+        this.inputState.mouseY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
     this.drag = function (event) {
