@@ -11,6 +11,7 @@ var ActorList = [
     'actor/projectile/MoltenProjectileActor',
     'actor/projectile/RingProjectileActor',
     'actor/projectile/PulseWaveProjectileActor',
+    'actor/projectile/ConcsnMissileActor',
     'actor/map/MapActor',
     'actor/map/EnemySpawnerActor',
     'actor/map/EnemySpawnMarkerActor',
@@ -18,7 +19,8 @@ var ActorList = [
     'actor/DebugActor',
     'actor/pickup/ShieldPickupActor',
     'actor/pickup/EnergyPickupActor',
-    'actor/pickup/PlasmaPickupActor'
+    'actor/pickup/PlasmaPickupActor',
+    'actor/pickup/MissileQuadPickupActor'
 ];
 
 module.exports = ActorList;

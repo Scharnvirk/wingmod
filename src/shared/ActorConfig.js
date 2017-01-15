@@ -124,6 +124,24 @@ var ActorConfig = {
         }
     },
 
+    CONCSNMISSILE: {
+        props: {
+            hp: 2,
+            damage: 50,
+            removeOnHit: true,
+            timeout: 800,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3']
+        },
+        bodyConfig: {
+            radius: 2,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4,
+            collisionType: 'playerProjectile'
+        }
+    },
+
     CHUNK: {
         props:{
             hp: 1,
@@ -294,6 +312,22 @@ var ActorConfig = {
             collisionType: 'pickup'
         }
     },
+
+    MISSILEQUADPICKUP: {
+        props:{
+            pickup: 'missileQuad',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+        },
+        bodyConfig: {
+            radius: 4,
+            mass: 0.000001,
+            damping: 0.75,
+            collisionType: 'pickup'
+        }
+    }
 };
 
 module.exports = ActorConfig;

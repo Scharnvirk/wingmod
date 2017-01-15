@@ -24,7 +24,7 @@ class AmmoTileContainer extends Component {
         };
 
         this.knownAmmoTypes = [
-            'plasma', 'energy', 'rads', 'shells'
+            'plasma', 'energy', 'rads', 'missiles'
         ];
     }
 

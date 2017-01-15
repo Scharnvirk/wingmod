@@ -11,19 +11,19 @@ GameState.extend(EventEmitter);
 
 GameState.prototype._createInitialState = function(){
     return {
-        weapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
-        currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun'],
+        weapons: ['plasmagun', 'lasgun', 'pulsewavegun', 'missilelauncher'],
+        currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun', 'missilelauncher'],
         ammo: {
             energy: 100,
-            plasma: 100,
+            plasma: 0,
             rads: 0,
-            shells: 0
+            missiles: 0
         },
         ammoMax: {
             energy: 200,
             plasma: 200,
             rads: 10,
-            shells: 400
+            missiles: 20
         }
     };
 };
@@ -35,7 +35,7 @@ GameState.prototype._createInitialProps = function(){
             plasma: '#00d681',
             energy: '#ffc04d',
             rads: '#8a4dff',
-            shells: '#ff4d4d',
+            missiles: '#ff4d4d',
             coolant: '#8bc9ff',
             shield: '#66aaff'
         }

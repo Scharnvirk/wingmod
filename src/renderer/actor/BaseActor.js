@@ -43,6 +43,10 @@ BaseActor.prototype.getRotation = function(){
     return this._rotation;
 };
 
+BaseActor.prototype.setRotation = function(rotation){
+    this._rotation = rotation;
+};
+
 BaseActor.prototype.setMeshAt = function(mesh, index){
     this._meshes[index] = mesh;
 };

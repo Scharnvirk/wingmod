@@ -96,9 +96,9 @@ MainMenuScene.prototype.createStartScene = function(){
 
     this.threeScene.add(mesh);
 
-    var shipMesh = new BaseMesh({
-        geometry: ModelStore.get('ravier').geometry,
-        material: ModelStore.get('ravier').material
+    var shipMesh = new BaseMesh({ 
+        geometry: ModelStore.get('missilelauncher').geometry,
+        material: ModelStore.get('weaponModel').material
     });
 
     scale = 4;

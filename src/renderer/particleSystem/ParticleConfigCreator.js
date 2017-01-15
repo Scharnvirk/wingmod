@@ -117,7 +117,8 @@ ParticleConfigCreator.prototype.createPremades = function(){
         PurpleSparks: require('renderer/particleSystem/premade/PurpleSparks'),
         EnergyPickup: require('renderer/particleSystem/premade/EnergyPickup'),
         ShieldPickup: require('renderer/particleSystem/premade/ShieldPickup'),
-        PlasmaPickup: require('renderer/particleSystem/premade/PlasmaPickup')
+        PlasmaPickup: require('renderer/particleSystem/premade/PlasmaPickup'),
+        MissileQuadPickup: require('renderer/particleSystem/premade/MissileQuadPickup')
     };
 };
 

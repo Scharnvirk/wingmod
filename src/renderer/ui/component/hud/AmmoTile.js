@@ -15,7 +15,7 @@ class AmmoTile extends Component {
             plasma: 0,
             energy: 4,
             rads: 2,
-            shells: 3,
+            missiles: 3,
             coolant: 1
         };
 
@@ -23,7 +23,7 @@ class AmmoTile extends Component {
             plasma: '#00d681',
             energy: '#ffc04d',
             rads: '#8a4dff',
-            shells: '#ff4d4d',
+            missiles: '#ff4d4d',
             coolant: '#8bc9ff'
         };
 

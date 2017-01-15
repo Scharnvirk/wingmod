@@ -27,7 +27,7 @@ function ShipActor(config){
 
 ShipActor.extend(BaseActor);
 ShipActor.mixin(InputMixin);
-ShipActor.mixin(PickupMixin);
+ShipActor.mixin(PickupMixin);  
 
 ShipActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);

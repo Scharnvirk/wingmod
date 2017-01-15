@@ -22,7 +22,20 @@ CustomModelCreator.prototype.configure = function(){
         },
         'targetingRecticle': {
             geometry: new THREE.SphereGeometry( 2, 8, 8 ),
-            material: new THREE.MeshBasicMaterial( { color: 0xffff00, depthTest: false, transparent: true, wireframe: true, wireFrame: true } )
+            material: new THREE.MeshBasicMaterial( { color: 0xffff00, depthTest: false, transparent: true, wireframe: true} )
+        },
+        'weaponModel': {
+            material: new THREE.MeshPhongMaterial( { 
+                transparent: false,
+                color: 0x808080,
+                specular: 0x505050,
+                emissive: 0xffffff,
+                shininess: 50,
+                map: new THREE.TextureLoader().load('/models/weapons_diffuse.png'),
+                specularMap: new THREE.TextureLoader().load('/models/weapons_specular.png'),
+                bumpMap: new THREE.TextureLoader().load('/models/weapons_bump.png'),
+                emissiveMap: new THREE.TextureLoader().load('/models/weapons_illumination.png')
+            } )
         }
     };
 };

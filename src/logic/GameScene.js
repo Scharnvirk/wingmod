@@ -108,6 +108,14 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -486,
+        positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'PLASMAPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
         positionX: -176,
         positionY: -352,

@@ -15,8 +15,9 @@ function ShipActor(){
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[3,-2,0], [-3,-2,0]], [[5,1.5,-2.2], [-5,1.5,-2.2]]];
+    this.weaponSetLocations = [[[3,-1,0], [-3,-1,0]], [[5,2.5,-1.45], [-5,2.5,-1.45]]];
     this.targetingLinePositions = this._createTargetingLinePositions();
+    this.weaponMaterialName = 'weaponModel';
 
     this.targetingDistance = 100;
     this.targetingMinDistance = 20;
@@ -25,8 +26,8 @@ function ShipActor(){
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'plasmagun', 'plasmagun');
-    this.setupWeaponMeshes(1, 'plasmagun', 'plasmagun');    
+    this.setupWeaponMeshes(0, 'plasmagun');
+    this.setupWeaponMeshes(1, 'plasmagun');    
 }
 
 ShipActor.extend(BaseActor);
@@ -37,7 +38,6 @@ ShipActor.mixin(ShowDamageMixin);
 ShipActor.prototype.createMeshes = function(){
     this.shipMesh = new RavierMesh({actor: this, scaleX: 3.3, scaleY: 3.3, scaleZ: 3.3});
     this.shieldMesh = new ShieldMesh({actor: this, sourceMesh: this.shipMesh, camera: this.getCamera()});
-    // this.targetingRecticleMesh = new TargetingRecticleMesh({actor: this});
 
     this.protectedMeshes = 2;
     return [this.shipMesh, this.shieldMesh];
@@ -63,11 +63,11 @@ ShipActor.prototype.switchWeapon = function(changeConfig){
         let meshIndexLocation = (l * changeConfig.index + i) + this.protectedMeshes; //zeroth is reserved for ship
         let mesh = this.getMeshAt(meshIndexLocation);
         mesh.geometry = ModelStore.get(changeConfig.weapon).geometry;
-        mesh.material = ModelStore.get(changeConfig.weapon).material;
+        mesh.material = ModelStore.get('weaponModel').material; 
     }
 };
 
-ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, materialName, scales){
+ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, scales){
     var defaultScale = 1;
     scales = scales || [];
 
@@ -83,7 +83,7 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, mater
             scaleY: scales[1] || defaultScale,
             scaleZ: scales[2] || defaultScale,
             geometry: ModelStore.get(geometryName).geometry,
-            material: ModelStore.get(materialName).material,
+            material: ModelStore.get(this.weaponMaterialName).material,
             rotationOffset: Utils.degToRad(-90),
             positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1], this.weaponSetLocations[slotNumber][i][2]]
         });
@@ -100,11 +100,6 @@ ShipActor.prototype.updateShield = function(){
     }
     this._lastShield = this.state.shield;
 };
-
-// ShipActor.prototype.updateTargetingRecticle = function(){
-//     // console.log(this.inputListener.inputState.mouseRotation);
-//     this.updateTargetingDistance(this.inputListener.inputState.mouseY);
-// };
 
 ShipActor.prototype.updateTargetingDistance = function(){        
     let distance = this.inputListener.inputState.mouseY;
@@ -124,7 +119,6 @@ ShipActor.prototype.updateTargetingDistance = function(){
         }
     }
     
-    // console.log(this.targetingDistance);
     this.targetingDistance = distance + this.targetingOffset;    
 };
 
@@ -133,7 +127,7 @@ ShipActor.prototype.showTargetingLines = function() {
     let alpha = this.targetingDistance / this.targetingFadeFactor;
     for (let w = 0, wl = this.targetingLinePositions.length; w < wl; w++){
         weaponOffsetPosition = this.getOffsetPosition(this.targetingLinePositions[w][0], Utils.degToRad(90));
-        for (let i = 0, l = 10; i < l; i++) {
+        for (let i = 1, l = 10; i < l; i++) {
             offsetPosition = this.getOffsetPosition(this.targetingDistance * i/10);
             this.createParticle({
                 particleClass: 'particleAdd',
@@ -155,7 +149,7 @@ ShipActor.prototype.showTargetingLines = function() {
             offsetPositionY: offsetPosition[1] + weaponOffsetPosition[1],
             color: 'WHITE',
             alphaMultiplier: 0.7,
-            scale: 2,
+            scale: 2 + this.targetingDistance/100,
             particleVelocity: 1,
             alpha: 1,
             lifeTime: 1,

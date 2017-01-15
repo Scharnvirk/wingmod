@@ -6,7 +6,7 @@ var cloner = require('cloner');
 function MapManager(config){
     Object.assign(this, config);
 
-    this.chunkPrototypes = {};
+    this.chunkPrototypes = {}; 
     this.mapBodies = [];
     this.mapCreator = new MapCreator();
     this.graphCreator = new MapAiGraphCreator();

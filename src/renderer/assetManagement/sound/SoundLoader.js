@@ -45,6 +45,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/arc_03.wav', id:'arc3'});
     createjs.Sound.registerSound({src:'sounds/arc_04.wav', id:'arc4'});
     createjs.Sound.registerSound({src:'sounds/arc_05.wav', id:'arc5'});
+    createjs.Sound.registerSound({src:'sounds/bazooka.wav', id:'missile'});
 };
 
 module.exports = SoundLoader;
