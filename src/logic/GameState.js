@@ -15,7 +15,7 @@ GameState.prototype._createInitialState = function(){
         currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun', 'missilelauncher'],
         ammo: {
             energy: 100,
-            plasma: 0,
+            plasma: 25,
             rads: 0,
             missiles: 0
         },
@@ -24,7 +24,9 @@ GameState.prototype._createInitialState = function(){
             plasma: 200,
             rads: 10,
             missiles: 20
-        }
+        },        
+        existingActorsByType: {},
+        removedActorsByType: {}
     };
 };
 
@@ -117,6 +119,29 @@ GameState.prototype.sendMessage = function(text, color){
         color: color
     };
     this._notifyOfStateChange();
+};
+
+GameState.prototype.addActorByType = function(type){
+    if(!this._state.existingActorsByType[type]){
+        this._state.existingActorsByType[type] = 0;
+    }
+    this._state.existingActorsByType[type] ++;
+};
+
+GameState.prototype.removeActorByType = function(type){
+    if(!this._state.existingActorsByType[type]){
+        this._state.existingActorsByType[type] = 0;
+    } else {
+        this._state.existingActorsByType[type] --;
+    }
+};
+
+GameState.prototype.getActorCountByType = function(type){
+    if(!this._state.existingActorsByType[type]){
+        this._state.existingActorsByType[type] = 0;
+    }
+
+    return this._state.existingActorsByType[type];
 };
 
 GameState.prototype._notifyOfStateChange = function(){

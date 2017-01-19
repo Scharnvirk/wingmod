@@ -26,7 +26,7 @@ function ShipActor(){
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'plasmagun');
+    this.setupWeaponMeshes(0, 'lasgun');
     this.setupWeaponMeshes(1, 'plasmagun');    
 }
 

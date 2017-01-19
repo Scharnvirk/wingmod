@@ -27,11 +27,11 @@ Core.prototype.createMainComponents = function(worker){
 Core.prototype.createEventHandlers = function(){
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
+    this.scene.on('gameEnded', this.onPlayerDied.bind(this));
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('actorStateChange', this.onActorStateChange.bind(this));
-    this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
     this.actorManager.on('playSound', this.onPlaySound.bind(this));
 
     this.gameState.on('gameStateChange', this.onGameStateChange.bind(this));
@@ -97,12 +97,18 @@ Core.prototype.onNewMapBodies = function(){
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };
 
-Core.prototype.onPlayerDied = function(event){
-    this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
+Core.prototype.onPlayerDied = function(event){    
+    setTimeout(() => {
+        this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
+        this.running = false;
+    }, 2000);
 };
 
 Core.prototype.onGameFinished = function(event){
-    this.renderBus.postMessage('gameFinished', {});
+    setTimeout(() => {
+        this.renderBus.postMessage('gameFinished', {enemiesKilled: event.data});
+        this.running = false;
+    }, 500);    
 };
 
 Core.prototype.onMapHitmapsLoaded = function(event){

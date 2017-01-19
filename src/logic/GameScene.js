@@ -35,7 +35,7 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ENERGYPICKUP,
+    //         classId: ActorFactory.MOOK,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -109,8 +109,24 @@ GameScene.prototype.fillScene = function(mapBodies){
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -486,
+        positionX: -480,
+        positionY: -10,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -480,
         positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -480,
+        positionY: 10,
         angle: 0
     });
 
@@ -160,6 +176,7 @@ GameScene.prototype.update = function(){
 
     if(this.timer % 180 === 0){
         this.checkGameEndCondition();
+        this.checkGameOverCondition();
     }
 };
 
@@ -174,6 +191,12 @@ GameScene.prototype.addMapBodies = function(mapBodies){
 GameScene.prototype.checkGameEndCondition = function(){
     if(this.world.countEnemies() === 0){
         this.emit({type: 'gameFinished'});
+    }
+};
+
+GameScene.prototype.checkGameOverCondition = function(){
+    if(!this.actorManager.getFirstPlayerActor()){
+        this.emit({type: 'gameEnded'});
     }
 };
 

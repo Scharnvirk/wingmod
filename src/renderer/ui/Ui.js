@@ -48,15 +48,15 @@ Ui.prototype.setAssetsLoaded = function(state){
     this.assetsLoaded = state;
 };
 
-Ui.prototype.stopGame = function(info){
+Ui.prototype.stopGame = function(){
     var bigText = 'GAME OVER';
-    var scoreText = 'BOTS DESTROYED: ' + info.enemiesKilled;
+    var scoreText = 'Don\'t worry! Next time you will do better!';
     this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
 };
 
 Ui.prototype.stopGameFinished = function(){
     var bigText = 'SUCCESS!';
-    var scoreText = 'Congratulations! You have done it!';
+    var scoreText = 'Congratulations! Thanks for trying Wingmod2!';
     this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
 };
 

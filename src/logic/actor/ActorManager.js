@@ -88,7 +88,7 @@ ActorManager.prototype.endGame = function(){
     });
 };
 
-ActorManager.prototype.getFirstPlayerActor = function(){ //wyleci
+ActorManager.prototype.getFirstPlayerActor = function(){
     return this.storage[this.playerActors[0]];
 };
 

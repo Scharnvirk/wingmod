@@ -41,10 +41,12 @@ WeaponSystem.prototype.stopShooting = function(){
     }
 };
 
-WeaponSystem.prototype.switchWeapon = function(weaponName){
+WeaponSystem.prototype.switchWeapon = function(weaponName, silent){
     if (this.weapons[weaponName]) {
         this.currentWeapon = weaponName;
-        this.actor.playSound(['cannon_change']);
+        if (!silent) {
+            this.actor.playSound(['cannon_change']);
+        }
     } else {
         console.warn('This weapon system has no such weapon: ', weaponName);
     }

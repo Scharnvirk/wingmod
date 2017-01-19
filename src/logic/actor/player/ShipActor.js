@@ -19,8 +19,9 @@ function ShipActor(config){
     this.primaryWeaponSystem = this.createPrimaryWeaponSystem();
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
-    this.primaryWeaponSystem.switchWeaponByIndex(0);
-    this.secondaryWeaponSystem.switchWeaponByIndex(0);
+    let silent = true;
+    this.primaryWeaponSystem.switchWeapon('lasgun', silent);
+    this.secondaryWeaponSystem.switchWeapon('plasmagun', silent);
 
     BaseActor.apply(this, arguments);
 }

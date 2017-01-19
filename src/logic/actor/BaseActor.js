@@ -28,6 +28,8 @@ function BaseActor(config){
         this.manager.attachPlayer(this);
     }
 
+    this.gameState.addActorByType(this.props.type);
+
     Object.assign(this, this._mixinInstanceValues || {});
 }
 
@@ -35,6 +37,7 @@ BaseActor.prototype.applyConfig = function(config){
     for (let property in config){
         this[property] = this[property] || config[property];
     }
+    this.bodyConfig.collisionType = this.props.type;
 };
 
 BaseActor.prototype.getPosition = function(){
@@ -150,6 +153,7 @@ BaseActor.prototype.deathMain = function(relativeContactPoint){
     if(this.props.soundsOnDeath){
         this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
     }
+    this.gameState.removeActorByType(this.props.type);
     this.onDeath();
 };
 

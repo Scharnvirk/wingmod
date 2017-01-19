@@ -246,11 +246,11 @@ Core.prototype.createMainComponents = function (worker) {
 Core.prototype.createEventHandlers = function () {
     this.scene.on('newMapBodies', this.onNewMapBodies.bind(this));
     this.scene.on('gameFinished', this.onGameFinished.bind(this));
+    this.scene.on('gameEnded', this.onPlayerDied.bind(this));
 
     this.mapManager.on('mapDone', this.onMapDone.bind(this));
 
     this.actorManager.on('actorStateChange', this.onActorStateChange.bind(this));
-    this.actorManager.on('playerDied', this.onPlayerDied.bind(this));
     this.actorManager.on('playSound', this.onPlaySound.bind(this));
 
     this.gameState.on('gameStateChange', this.onGameStateChange.bind(this));
@@ -319,11 +319,21 @@ Core.prototype.onNewMapBodies = function () {
 };
 
 Core.prototype.onPlayerDied = function (event) {
-    this.renderBus.postMessage('gameEnded', { enemiesKilled: event.data });
+    var _this2 = this;
+
+    setTimeout(function () {
+        _this2.renderBus.postMessage('gameEnded', { enemiesKilled: event.data });
+        _this2.running = false;
+    }, 2000);
 };
 
 Core.prototype.onGameFinished = function (event) {
-    this.renderBus.postMessage('gameFinished', {});
+    var _this3 = this;
+
+    setTimeout(function () {
+        _this3.renderBus.postMessage('gameFinished', { enemiesKilled: event.data });
+        _this3.running = false;
+    }, 500);
 };
 
 Core.prototype.onMapHitmapsLoaded = function (event) {
@@ -392,7 +402,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ENERGYPICKUP,
+    //         classId: ActorFactory.MOOK,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -466,8 +476,24 @@ GameScene.prototype.fillScene = function (mapBodies) {
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -486,
+        positionX: -480,
+        positionY: -10,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -480,
         positionY: 0,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -480,
+        positionY: 10,
         angle: 0
     });
 
@@ -517,6 +543,7 @@ GameScene.prototype.update = function () {
 
     if (this.timer % 180 === 0) {
         this.checkGameEndCondition();
+        this.checkGameOverCondition();
     }
 };
 
@@ -530,6 +557,12 @@ GameScene.prototype.addMapBodies = function (mapBodies) {
 GameScene.prototype.checkGameEndCondition = function () {
     if (this.world.countEnemies() === 0) {
         this.emit({ type: 'gameFinished' });
+    }
+};
+
+GameScene.prototype.checkGameOverCondition = function () {
+    if (!this.actorManager.getFirstPlayerActor()) {
+        this.emit({ type: 'gameEnded' });
     }
 };
 
@@ -555,7 +588,7 @@ GameState.prototype._createInitialState = function () {
         currentWeapons: ['plasmagun', 'lasgun', 'pulsewavegun', 'missilelauncher'],
         ammo: {
             energy: 100,
-            plasma: 0,
+            plasma: 25,
             rads: 0,
             missiles: 0
         },
@@ -564,7 +597,9 @@ GameState.prototype._createInitialState = function () {
             plasma: 200,
             rads: 10,
             missiles: 20
-        }
+        },
+        existingActorsByType: {},
+        removedActorsByType: {}
     };
 };
 
@@ -656,6 +691,29 @@ GameState.prototype.sendMessage = function (text, color) {
         color: color
     };
     this._notifyOfStateChange();
+};
+
+GameState.prototype.addActorByType = function (type) {
+    if (!this._state.existingActorsByType[type]) {
+        this._state.existingActorsByType[type] = 0;
+    }
+    this._state.existingActorsByType[type]++;
+};
+
+GameState.prototype.removeActorByType = function (type) {
+    if (!this._state.existingActorsByType[type]) {
+        this._state.existingActorsByType[type] = 0;
+    } else {
+        this._state.existingActorsByType[type]--;
+    }
+};
+
+GameState.prototype.getActorCountByType = function (type) {
+    if (!this._state.existingActorsByType[type]) {
+        this._state.existingActorsByType[type] = 0;
+    }
+
+    return this._state.existingActorsByType[type];
 };
 
 GameState.prototype._notifyOfStateChange = function () {
@@ -1000,7 +1058,6 @@ ActorManager.prototype.endGame = function () {
 };
 
 ActorManager.prototype.getFirstPlayerActor = function () {
-    //wyleci
     return this.storage[this.playerActors[0]];
 };
 
@@ -1077,6 +1134,8 @@ function BaseActor(config) {
         this.manager.attachPlayer(this);
     }
 
+    this.gameState.addActorByType(this.props.type);
+
     Object.assign(this, this._mixinInstanceValues || {});
 }
 
@@ -1084,6 +1143,7 @@ BaseActor.prototype.applyConfig = function (config) {
     for (var property in config) {
         this[property] = this[property] || config[property];
     }
+    this.bodyConfig.collisionType = this.props.type;
 };
 
 BaseActor.prototype.getPosition = function () {
@@ -1199,6 +1259,7 @@ BaseActor.prototype.deathMain = function (relativeContactPoint) {
     if (this.props.soundsOnDeath) {
         this.manager.playSound({ sounds: this.props.soundsOnDeath, actor: this });
     }
+    this.gameState.removeActorByType(this.props.type);
     this.onDeath();
 };
 
@@ -1364,10 +1425,12 @@ WeaponSystem.prototype.stopShooting = function () {
     }
 };
 
-WeaponSystem.prototype.switchWeapon = function (weaponName) {
+WeaponSystem.prototype.switchWeapon = function (weaponName, silent) {
     if (this.weapons[weaponName]) {
         this.currentWeapon = weaponName;
-        this.actor.playSound(['cannon_change']);
+        if (!silent) {
+            this.actor.playSound(['cannon_change']);
+        }
     } else {
         console.warn('This weapon system has no such weapon: ', weaponName);
     }
@@ -2478,7 +2541,9 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     if (this.state.spawnDelay > 0) {
         this.state.spawnDelay--;
     } else {
-        if (Utils.rand(Math.min(this.timer / 60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate) {
+        var timeCondition = Utils.rand(Math.min(this.timer / 60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
+        var limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
+        if (timeCondition && limitCondition) {
             this.createEnemySpawnMarker();
         }
     }
@@ -3012,8 +3077,9 @@ function ShipActor(config) {
     this.primaryWeaponSystem = this.createPrimaryWeaponSystem();
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
-    this.primaryWeaponSystem.switchWeaponByIndex(0);
-    this.secondaryWeaponSystem.switchWeaponByIndex(0);
+    var silent = true;
+    this.primaryWeaponSystem.switchWeapon('lasgun', silent);
+    this.secondaryWeaponSystem.switchWeapon('plasmagun', silent);
 
     BaseActor.apply(this, arguments);
 }
@@ -4794,7 +4860,7 @@ function ShipActor() {
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'plasmagun');
+    this.setupWeaponMeshes(0, 'lasgun');
     this.setupWeaponMeshes(1, 'plasmagun');
 }
 
@@ -5578,15 +5644,15 @@ var ActorConfig = {
             shield: 30,
             hpBarCount: 10,
             shieldBarCount: 10,
-            isPlayer: true
+            isPlayer: true,
+            type: 'playerShip'
         },
         bodyConfig: {
             mass: 4,
             damping: 0.85,
             angularDamping: 0,
             inertia: 10,
-            radius: 7,
-            collisionType: 'playerShip'
+            radius: 7
         }
     },
 
@@ -5597,12 +5663,12 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 300,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 2,
-            mass: 1,
-            collisionType: 'playerProjectile'
+            mass: 1
         }
     },
 
@@ -5613,14 +5679,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 1,
             mass: 0.3,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'playerProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -5631,12 +5697,12 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 1000,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 1,
-            mass: 1,
-            collisionType: 'enemyProjectile'
+            mass: 1
         }
     },
 
@@ -5647,14 +5713,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 3,
             mass: 2.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 2,
-            collisionType: 'playerProjectile'
+            ccdIterations: 2
         }
     },
 
@@ -5665,14 +5731,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 120,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 1,
             mass: 0.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'enemyProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -5683,14 +5749,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 120,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 3,
             mass: 20,
             ccdSpeedThreshold: 1,
-            ccdIterations: 2,
-            collisionType: 'enemyProjectile'
+            ccdIterations: 2
         }
     },
 
@@ -5701,14 +5767,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 800,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 2,
             mass: 0.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'playerProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -5751,11 +5817,12 @@ var ActorConfig = {
             shieldBarCount: 7,
             removeOnHit: false,
             spawnRate: 240,
-            enemy: true
+            globalMaxSpawnedEnemies: 16,
+            enemy: true,
+            type: 'enemyMapObject'
         },
         bodyConfig: {
-            radius: 8,
-            collisionType: 'enemyMapObject'
+            radius: 8
         }
     },
 
@@ -5763,15 +5830,15 @@ var ActorConfig = {
         props: {
             hp: 1,
             removeOnHit: false,
-            spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true }
+            spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+            type: 'unCollidable'
         },
         bodyConfig: {
             mass: 4,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
-            collisionType: 'unCollidable'
+            radius: 5
         }
     },
 
@@ -5783,15 +5850,15 @@ var ActorConfig = {
             turnSpeed: 2,
             hp: 6,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 4,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
-            collisionType: 'enemyShip'
+            radius: 5
         }
     },
 
@@ -5803,15 +5870,15 @@ var ActorConfig = {
             turnSpeed: 4,
             hp: 2,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 2,
-            collisionType: 'enemyShip'
+            radius: 2
         }
     },
 
@@ -5823,15 +5890,15 @@ var ActorConfig = {
             turnSpeed: 0.8,
             hp: 12,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 8,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 4,
-            collisionType: 'enemyShip'
+            radius: 4
         }
     },
 
@@ -5841,13 +5908,13 @@ var ActorConfig = {
             hp: 1000,
             turnSpeed: 1,
             timeoutRandomMin: 1800,
-            timeoutRandomMax: 2100
+            timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -5857,13 +5924,13 @@ var ActorConfig = {
             hp: 1000,
             turnSpeed: 1,
             timeoutRandomMin: 1800,
-            timeoutRandomMax: 2100
+            timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -5873,13 +5940,13 @@ var ActorConfig = {
             hp: 1000,
             turnSpeed: 1,
             timeoutRandomMin: 1800,
-            timeoutRandomMax: 2100
+            timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -5889,13 +5956,13 @@ var ActorConfig = {
             hp: 1000,
             turnSpeed: 1,
             timeoutRandomMin: 1800,
-            timeoutRandomMax: 2100
+            timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     }
 };

@@ -8,15 +8,15 @@ var ActorConfig = {
             shield: 30,
             hpBarCount: 10,
             shieldBarCount: 10,
-            isPlayer: true
+            isPlayer: true,
+            type: 'playerShip'
         },
         bodyConfig: {
             mass: 4,
             damping: 0.85,
             angularDamping: 0,
             inertia: 10,
-            radius: 7,
-            collisionType: 'playerShip'
+            radius: 7
         }
     },
 
@@ -27,12 +27,12 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 300,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 2,
-            mass: 1,
-            collisionType: 'playerProjectile'
+            mass: 1
         }
     },
 
@@ -43,14 +43,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 1,
             mass: 0.3,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'playerProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -61,12 +61,12 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 1000,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 1,
-            mass: 1,
-            collisionType: 'enemyProjectile'
+            mass: 1
         }
     },
 
@@ -77,14 +77,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 3,
             mass: 2.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 2,
-            collisionType: 'playerProjectile'
+            ccdIterations: 2
         }
     },
 
@@ -95,14 +95,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 120,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 1,
             mass: 0.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'enemyProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -113,14 +113,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 120,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 3,
             mass: 20,
             ccdSpeedThreshold: 1,
-            ccdIterations: 2,
-            collisionType: 'enemyProjectile'
+            ccdIterations: 2
         }
     },
 
@@ -131,14 +131,14 @@ var ActorConfig = {
             removeOnHit: true,
             timeout: 800,
             collisionFixesPosition: true,
-            soundsOnDeath: ['matterhit3']
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
         },
         bodyConfig: {
             radius: 2,
             mass: 0.5,
             ccdSpeedThreshold: 1,
-            ccdIterations: 4,
-            collisionType: 'playerProjectile'
+            ccdIterations: 4
         }
     },
 
@@ -181,11 +181,12 @@ var ActorConfig = {
             shieldBarCount: 7,
             removeOnHit: false,
             spawnRate: 240,
-            enemy: true
+            globalMaxSpawnedEnemies: 16,
+            enemy: true,
+            type: 'enemyMapObject'
         },
         bodyConfig: {
-            radius: 8,
-            collisionType: 'enemyMapObject'
+            radius: 8
         }
     },
 
@@ -193,7 +194,8 @@ var ActorConfig = {
         props:{
             hp: 1,
             removeOnHit: false,
-            spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true}
+            spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+            type: 'unCollidable'
         },
         bodyConfig: {
             mass: 4,
@@ -201,7 +203,6 @@ var ActorConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 5,
-            collisionType: 'unCollidable'
         }
     },
 
@@ -213,15 +214,15 @@ var ActorConfig = {
             turnSpeed: 2,
             hp: 6,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 4,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5,
-            collisionType: 'enemyShip'
+            radius: 5
         }
     },
 
@@ -233,15 +234,15 @@ var ActorConfig = {
             turnSpeed: 4,
             hp: 2,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 2,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 2,
-            collisionType: 'enemyShip'
+            radius: 2
         }
     },
 
@@ -253,15 +254,15 @@ var ActorConfig = {
             turnSpeed: 0.8,
             hp: 12,
             hpBarCount: 5,
-            enemy: true
+            enemy: true,
+            type: 'enemyShip'
         },
         bodyConfig: {
             mass: 8,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 4,
-            collisionType: 'enemyShip'
+            radius: 4
         }
     },
 
@@ -272,12 +273,12 @@ var ActorConfig = {
             turnSpeed: 1,
             timeoutRandomMin: 1800,
             timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -288,12 +289,12 @@ var ActorConfig = {
             turnSpeed: 1,
             timeoutRandomMin: 1800,
             timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -304,12 +305,12 @@ var ActorConfig = {
             turnSpeed: 1,
             timeoutRandomMin: 1800,
             timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     },
 
@@ -320,12 +321,12 @@ var ActorConfig = {
             turnSpeed: 1,
             timeoutRandomMin: 1800,
             timeoutRandomMax: 2100,
+            type: 'pickup'
         },
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75,
-            collisionType: 'pickup'
+            damping: 0.75
         }
     }
 };

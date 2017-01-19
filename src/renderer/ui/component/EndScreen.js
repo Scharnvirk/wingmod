@@ -6,7 +6,7 @@ var StyledText = require('renderer/ui/component/base/StyledText');
 
 class EndScreen extends React.Component {
     render() {
-        return <div className={classnames('class', ['centerHorizontal', 'centerVertical'])}>
+        return <div className={classnames('class', ['centerHorizontal'])}>
             <StyledText style={'titleText'}>
                 {this.props.bigText}
             </StyledText>

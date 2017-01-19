@@ -23,7 +23,9 @@ EnemySpawnerActor.prototype.customUpdate = function(){
     if (this.state.spawnDelay > 0){
         this.state.spawnDelay -- ;
     } else {
-        if ( Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate ){
+        let timeCondition = Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
+        let limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
+        if ( timeCondition && limitCondition ){
             this.createEnemySpawnMarker();
         } 
     }
