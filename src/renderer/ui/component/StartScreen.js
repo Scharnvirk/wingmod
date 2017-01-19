@@ -29,7 +29,6 @@ var StartScreen = React.createClass({
         });
     },
     render() {
-        var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
 
@@ -45,9 +44,6 @@ var StartScreen = React.createClass({
                 <Button text={startButtonText} buttonEvent={'start'} />
                 <SettingsMenu/>
             </div>
-            <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
-                <span className={'textDark'} >{versionText}</span>
-            </StyledText>
         </div>;
     }
 });

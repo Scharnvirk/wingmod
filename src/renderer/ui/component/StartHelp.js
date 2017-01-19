@@ -5,7 +5,6 @@ var StyledText = require('renderer/ui/component/base/StyledText');
 
 class StartHelp extends React.Component {
     render() {
-        var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         return <div style = {{bottom: '100px'}}>
             <div
                 className={ classnames('class', ['centerHorizontal', 'topCenter', 'verticalSpacing']) }
@@ -43,9 +42,6 @@ class StartHelp extends React.Component {
                     <span>{'FIREFOX: Click and accept a popup dialog.'}</span>
                 </StyledText>
             </div>
-            <StyledText style={classnames('class', ['smallText', 'topRightCorner' ])}>
-                <span className={'textDark'} >{versionText}</span>
-            </StyledText>
 
         </div>;
     }

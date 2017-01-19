@@ -33390,7 +33390,6 @@ var StartHelp = function (_React$Component) {
     _createClass(StartHelp, [{
         key: 'render',
         value: function render() {
-            var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
             return _react2.default.createElement(
                 'div',
                 { style: { bottom: '100px' } },
@@ -33486,15 +33485,6 @@ var StartHelp = function (_React$Component) {
                             'FIREFOX: Click and accept a popup dialog.'
                         )
                     )
-                ),
-                _react2.default.createElement(
-                    StyledText,
-                    { style: (0, _classnames2.default)('class', ['smallText', 'topRightCorner']) },
-                    _react2.default.createElement(
-                        'span',
-                        { className: 'textDark' },
-                        versionText
-                    )
                 )
             );
         }
@@ -33539,7 +33529,6 @@ var StartScreen = _react2.default.createClass({
         });
     },
     render: function render() {
-        var versionText = 'ver. ' + (Constants.VERSION || 'LOCAL BUILD');
         var startButtonText = this.state.assetsLoaded ? 'START GAME' : 'LOADING...';
         var startClass = this.state.assetsLoaded ? '' : 'textDark';
 
@@ -33568,15 +33557,6 @@ var StartScreen = _react2.default.createClass({
                 ),
                 _react2.default.createElement(Button, { text: startButtonText, buttonEvent: 'start' }),
                 _react2.default.createElement(SettingsMenu, null)
-            ),
-            _react2.default.createElement(
-                StyledText,
-                { style: (0, _classnames2.default)('class', ['smallText', 'topRightCorner']) },
-                _react2.default.createElement(
-                    'span',
-                    { className: 'textDark' },
-                    versionText
-                )
             )
         );
     }
@@ -34598,7 +34578,7 @@ var ActorConfig = {
             shieldBarCount: 7,
             removeOnHit: false,
             spawnRate: 240,
-            globalMaxSpawnedEnemies: 2,
+            globalMaxSpawnedEnemies: 16,
             enemy: true,
             type: 'enemyMapObject'
         },
