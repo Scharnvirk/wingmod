@@ -25,7 +25,7 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ITEMSPAWNER,
+    //         classId: ActorFactory.SNIPER,
     //         spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),

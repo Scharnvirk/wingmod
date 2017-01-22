@@ -265,7 +265,6 @@ Core.prototype.onStartGame = function(){
 };
 
 Core.prototype.onGotPointerLock = function(){
-    //TODO: game state machine
     if(!this.gameEnded){
         this.ui.gotPointerLock();
     }

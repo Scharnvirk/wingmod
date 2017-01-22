@@ -4,7 +4,6 @@ var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var BaseActor = require('renderer/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
-var TargetingRecticleMesh = require('renderer/actor/component/mesh/TargetingRecticleMesh');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
@@ -15,7 +14,7 @@ function ShipActor(){
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[3,-1,0], [-3,-1,0]], [[5,2.5,-1.45], [-5,2.5,-1.45]]];
+    this.weaponSetLocations = [[[3, -3, -0], [-3, -3, -0]], [[5, 0.5, -1.45], [-5, 0.5, -1.45]]]; 
     this.targetingLinePositions = this._createTargetingLinePositions();
     this.weaponMaterialName = 'weaponModel';
 

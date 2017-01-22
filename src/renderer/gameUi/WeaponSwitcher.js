@@ -8,7 +8,7 @@ function WeaponSwitcher(config){
     this.itemRotation = 0;
     this.position = [0,0];
 
-    this.weapons = ['plasmagun', 'lasgun', 'pulsewavegun', 'missilelauncher'];
+    this.weapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
     this.moveCounter = 0;
     this.weaponsToDisplay = 5;
     this.currentWeapon = Math.floor(this.weaponsToDisplay / 2); //the middle one

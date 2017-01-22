@@ -1,5 +1,6 @@
 var PlasmaGun = require('logic/actor/component/weapon/PlasmaGun');
 var Blaster = require('logic/actor/component/weapon/Blaster');
+var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
 var PulseWaveGun = require('logic/actor/component/weapon/PulseWaveGun');
 var MissileLauncher = require('logic/actor/component/weapon/MissileLauncher');
 
@@ -70,6 +71,15 @@ WeaponSystem.prototype.update = function(){
 
 WeaponSystem.prototype.createLasgun = function(name){
     return new Blaster({
+        actor: this.actor,
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
+    });
+};
+
+WeaponSystem.prototype.createRedlasgun = function(name){
+    return new RedBlaster({
         actor: this.actor,
         firingPoints: this.firingPoints,
         name: name,

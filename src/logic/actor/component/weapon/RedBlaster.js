@@ -8,11 +8,13 @@ function Blaster(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 150;
-    this.velocity = 500;
-    this.burstCount = 2;
-    this.burstCooldown = 20;
-    this.sound = 'laser_purple';
+    this.cooldown = 15;
+    this.velocity = 1000;
+    this.sound = 'red_laser';
+    this.firingMode = 'simultaneous';
+    this.ammoConfig = {
+        energy: 0.5,
+    };
 }
 
 Blaster.extend(BaseWeapon);

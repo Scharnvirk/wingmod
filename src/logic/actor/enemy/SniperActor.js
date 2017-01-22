@@ -1,7 +1,7 @@
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
-var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
+var SniperBlaster = require('logic/actor/component/weapon/SniperBlaster');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
@@ -48,7 +48,7 @@ SniperActor.prototype.customUpdate = function(){
 };
 
 SniperActor.prototype.createWeapon = function(){
-    return new RedBlaster({
+    return new SniperBlaster({
         actor: this,
         manager: this.manager,
         firingPoints: [

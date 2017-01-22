@@ -12,6 +12,7 @@ var ModelList = {
         '/models/telering_top.json',
         '/models/levels/startmenu.json',
         '/models/lasgun.json',
+        '/models/redlasgun.json',
         '/models/plasmagun.json',
         '/models/pulsewavegun.json',
         '/models/missilelauncher.json',

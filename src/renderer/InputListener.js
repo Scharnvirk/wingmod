@@ -121,8 +121,8 @@ function InputListener(config){
         this.domElement.removeEventListener('drag', _drag, false);
         this.domElement.removeEventListener('mousedown', _mousedown, false);
         this.domElement.removeEventListener('mouseup', _mouseup, false);
-        window.removeEventListener('keydown', _keydown, false);
-        window.removeEventListener('keyup', _keyup, false);
+        this.domElement.removeEventListener('keydown', _keydown, false);
+        this.domElement.removeEventListener('keyup', _keyup, false);
     };
 
     var _keydown = bind(this, this.keydown);
@@ -139,8 +139,8 @@ function InputListener(config){
     this.domElement.addEventListener('drag', _drag, false);
     this.domElement.addEventListener('mousedown', _mousedown, false);
     this.domElement.addEventListener('mouseup', _mouseup, false);
-    window.addEventListener('keydown', _keydown, false);
-    window.addEventListener('keyup', _keyup, false);
+    this.domElement.addEventListener('keydown', _keydown, false);
+    this.domElement.addEventListener('keyup', _keyup, false);
 
     this.initPointerLock();
 }

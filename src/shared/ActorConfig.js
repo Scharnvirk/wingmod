@@ -54,6 +54,24 @@ var ActorConfig = {
         }
     },
 
+    REDLASERPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 2,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.3,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
     MOLTENPROJECTILE: {
         props: {
             hp: 1,
@@ -88,7 +106,7 @@ var ActorConfig = {
         }
     },
 
-    REDLASERPROJECTILE: {
+    PURPLELASERPROJECTILE: {
         props: {
             hp: 1,
             damage: 4,
