@@ -5,6 +5,7 @@ var ActorList = [
     'actor/enemy/OrbotActor',
     'actor/object/ChunkActor',
     'actor/object/BoomChunkActor',
+    'actor/object/ExplosionActor',
     'actor/projectile/PlasmaProjectileActor',
     'actor/projectile/LaserProjectileActor',
     'actor/projectile/RedLaserProjectileActor',

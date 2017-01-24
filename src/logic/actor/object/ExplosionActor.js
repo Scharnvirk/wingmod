@@ -2,18 +2,17 @@ var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
 
-
-function LaserProjectileActor(config){
+function ExplosionActor(config){
     config = config || [];
     Object.assign(this, config);
-    this.applyConfig(ActorConfig.LASERPROJECTILE);
+    this.applyConfig(ActorConfig.EXPLOSION);
     BaseActor.apply(this, arguments);
 }
 
-LaserProjectileActor.extend(BaseActor);
+ExplosionActor.extend(BaseActor);
 
-LaserProjectileActor.prototype.createBody = function(){
+ExplosionActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-module.exports = LaserProjectileActor;
+module.exports = ExplosionActor;

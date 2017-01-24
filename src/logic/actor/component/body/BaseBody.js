@@ -28,49 +28,50 @@ BaseBody.prototype.createShape = function(){
             radius: this.radius,
             collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
             collisionMask:
-                    Constants.COLLISION_GROUPS.ENEMY |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                    Constants.COLLISION_GROUPS.TERRAIN
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN
         });
     case 'enemyProjectile':
         return new p2.Circle({
             radius: this.radius,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
             collisionMask:
-                    Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                    Constants.COLLISION_GROUPS.TERRAIN
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN
         });
     case 'pickup':
         return new p2.Circle({
             radius: this.radius,
             collisionGroup: Constants.COLLISION_GROUPS.PICKUP,
             collisionMask:
-                    Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.TERRAIN
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.TERRAIN | 
+                Constants.COLLISION_GROUPS.EXPLOSION
         });
     case 'playerShip':
         return new p2.Circle({
             radius: this.radius,
             collisionGroup: Constants.COLLISION_GROUPS.SHIP,
             collisionMask:
-                    Constants.COLLISION_GROUPS.ENEMY |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                    Constants.COLLISION_GROUPS.TERRAIN |
-                    Constants.COLLISION_GROUPS.ENEMYEXPLOSION |
-                    Constants.COLLISION_GROUPS.PICKUP
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN |
+                Constants.COLLISION_GROUPS.PICKUP | 
+                Constants.COLLISION_GROUPS.EXPLOSION
         });
     case 'enemyShip':
         return new p2.Circle({
             radius: this.radius,
             collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
             collisionMask:
-                    Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.ENEMY |
-                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                    Constants.COLLISION_GROUPS.TERRAIN |
-                    Constants.COLLISION_GROUPS.SHIPEXPLOSION
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.TERRAIN |
+                Constants.COLLISION_GROUPS.EXPLOSION
         });
     case 'enemyMapObject':
         return new p2.Circle({
@@ -79,7 +80,7 @@ BaseBody.prototype.createShape = function(){
             collisionMask:
                 Constants.COLLISION_GROUPS.SHIP |
                 Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                Constants.COLLISION_GROUPS.SHIPEXPLOSION
+                Constants.COLLISION_GROUPS.EXPLOSION
         });
     case 'terrain':
         return new p2.Box({
@@ -87,23 +88,32 @@ BaseBody.prototype.createShape = function(){
             width: this.width,
             collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
             collisionMask:
-                    Constants.COLLISION_GROUPS.OBJECT |
-                    Constants.COLLISION_GROUPS.ENEMY |
-                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                    Constants.COLLISION_GROUPS.SHIP |
-                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                    Constants.COLLISION_GROUPS.PICKUP
+                Constants.COLLISION_GROUPS.OBJECT |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                Constants.COLLISION_GROUPS.PICKUP
         });
     case 'terrain-convex':
         return new p2.Convex({
             vertices: this.vertices,
             collisionGroup: Constants.COLLISION_GROUPS.TERRAIN,
             collisionMask:
-                        Constants.COLLISION_GROUPS.OBJECT |
-                        Constants.COLLISION_GROUPS.ENEMY |
-                        Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                        Constants.COLLISION_GROUPS.SHIP |
-                        Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+                Constants.COLLISION_GROUPS.OBJECT |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                Constants.COLLISION_GROUPS.SHIP |
+                Constants.COLLISION_GROUPS.ENEMYPROJECTILE
+        });
+    case 'explosion':
+        return new p2.Circle({
+            radius: this.radius,
+            collisionGroup: Constants.COLLISION_GROUPS.EXPLOSION,
+            collisionMask:
+                Constants.COLLISION_GROUPS.OBJECT |
+                Constants.COLLISION_GROUPS.ENEMY |
+                Constants.COLLISION_GROUPS.SHIP
         });
     default:
         throw new Error('No collisionType defined for default createShape in BaseBody!');

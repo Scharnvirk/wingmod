@@ -1,17 +1,17 @@
 var BaseActor = require('renderer/actor/BaseActor');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
-function DebugActor(){
+function ExplosionActor(){
     BaseActor.apply(this, arguments);
 }
 
-DebugActor.extend(BaseActor);
-DebugActor.mixin(ParticleMixin);
+ExplosionActor.extend(BaseActor);
+ExplosionActor.mixin(ParticleMixin);
 
-DebugActor.prototype.customUpdate = function(){
+ExplosionActor.prototype.customUpdate = function(){
     this.createParticle({
         amount: 100,
-        particleClass: 'particleAdd', 
+        particleClass: 'particleAdd',
         color: 'PURPLE',
         scale: 5,
         alpha: 1,
@@ -24,4 +24,4 @@ DebugActor.prototype.customUpdate = function(){
     });
 };
 
-module.exports = DebugActor;
+module.exports = ExplosionActor;

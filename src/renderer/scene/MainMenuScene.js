@@ -9,6 +9,8 @@ function MainMenuScene(config){
     this.timer = 0;
     this.lightChargeDelay = 20;
     this.lightChargeTime = 300;
+    this.lightChargeSpeed = 0.003;
+    this.lampChargeSpeed = 0.006;
 }
 
 MainMenuScene.extend(BaseScene);
@@ -110,9 +112,9 @@ MainMenuScene.prototype.createStartScene = function(){
     shipMesh.rotation.z = Utils.degToRad(-120);
 
     shipMesh.position.z = 4;
-    shipMesh.speedZ = 0.03;
-    shipMesh.speedY = 0.0025;
-    shipMesh.speedX = 0.002;
+    shipMesh.speedZ = 0.015;
+    shipMesh.speedY = 0.0012;
+    shipMesh.speedX = 0.001;
 
     this.shipMesh = shipMesh;
     this.sceneMesh = mesh;
@@ -134,49 +136,55 @@ MainMenuScene.prototype.customUpdate = function(){
 MainMenuScene.prototype.doBob = function(){
     this.shipMesh.position.z += this.shipMesh.speedZ;
     if (this.shipMesh.position.z > 4){
-        this.shipMesh.speedZ -= 0.001;
+        this.shipMesh.speedZ -= 0.0005;
     } else {
-        this.shipMesh.speedZ += 0.001;
+        this.shipMesh.speedZ += 0.0005;
     }
 
     this.shipMesh.rotation.y += this.shipMesh.speedY;
     if (this.shipMesh.rotation.y > 0){
-        this.shipMesh.speedY -= 0.0002;
+        this.shipMesh.speedY -= 0.0001;
     } else {
-        this.shipMesh.speedY += 0.0002;
+        this.shipMesh.speedY += 0.0001;
     }
 
     this.shipMesh.rotation.x += this.shipMesh.speedX;
     if (this.shipMesh.rotation.x > 0){
-        this.shipMesh.speedX -= 0.00015;
+        this.shipMesh.speedX -= 0.00008;
     } else {
-        this.shipMesh.speedX += 0.00015;
+        this.shipMesh.speedX += 0.00008;
     }
 
     this.shipMesh.rotation.z -= 0.003;
 };
 
 MainMenuScene.prototype.doFlicker = function(){
-    var random = Utils.rand(0,1000);
+    let random = Utils.rand(0,1000);
 
-    if (random > 980){
-        this.directionalLight.intensity -= 0.05;
-        this.ambientLight.intensity -= 0.05;
+    if (random > 980 && this.ambientLight.intensity > 0.95){
+        this.directionalLight.intensity -= 0.1;
+        this.ambientLight.intensity -= 0.1;
         this.sceneMaterial.emissiveIntensity -= 0.2;
     }
 };
 
 MainMenuScene.prototype.lightPowerUp = function(){
-    var lightIntensity, lampIntensity;
+    let lightIntensity, lampIntensity;
 
     lightIntensity = (this.timer - this.lightChargeDelay) * (1/this.lightChargeTime);
     lampIntensity = (this.timer - this.lightChargeDelay) * (4/this.lightChargeTime);
+
     lightIntensity = Math.min(1, lightIntensity);
     lampIntensity = Math.min(1, lampIntensity);
 
-    this.directionalLight.intensity = lightIntensity;
-    this.ambientLight.intensity = lightIntensity;
-    this.sceneMaterial.emissiveIntensity = lampIntensity;
+    if (this.ambientLight.intensity < lightIntensity) {
+        this.ambientLight.intensity += this.lightChargeSpeed;
+        this.directionalLight.intensity += this.lightChargeSpeed;
+    }
+
+    if (this.sceneMaterial.emissiveIntensity < lampIntensity) {
+        this.sceneMaterial.emissiveIntensity += this.lampChargeSpeed;
+    }
 };
 
 

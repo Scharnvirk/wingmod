@@ -18,7 +18,12 @@ ChunkActor.prototype.createBody = function(){
                 shape: new p2.Circle({
                     radius: 1,
                     collisionGroup: Constants.COLLISION_GROUPS.OBJECT,
-                    collisionMask: Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.SHIPPROJECTILE
+                    collisionMask: 
+                        Constants.COLLISION_GROUPS.TERRAIN | 
+                        Constants.COLLISION_GROUPS.ENEMY | 
+                        Constants.COLLISION_GROUPS.SHIP | 
+                        Constants.COLLISION_GROUPS.ENEMYPROJECTILE | 
+                        Constants.COLLISION_GROUPS.SHIPPROJECTILE
                 })
             }
         )

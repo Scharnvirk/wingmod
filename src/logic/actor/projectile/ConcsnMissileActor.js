@@ -1,6 +1,7 @@
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function ConcsnMissileActor(config){
     config = config || [];
@@ -14,5 +15,12 @@ ConcsnMissileActor.extend(BaseActor);
 ConcsnMissileActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
+
+ConcsnMissileActor.prototype.onDeath = function(){    
+    this.spawn({
+        classId: ActorFactory.EXPLOSION
+    });
+};
+
 
 module.exports = ConcsnMissileActor;

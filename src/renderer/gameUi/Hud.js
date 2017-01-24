@@ -67,7 +67,7 @@ Hud.prototype.drawHealthBarEnemy = function(otherActor){
     let actorRotation = this.actor.getRotation();
     let otherActorPosition = otherActor.getPosition(); 
     let hpPercentage = otherActor.state.hp / otherActor.props.hp;
-    let hpBarCount = otherActor.props.hpBarCount || this.defaultHpBarCount;
+    let hpBarCount = otherActor.props.hpBarCount || this.defaultHpBarCount;    
     let positionZ = -5;
     for (let i = 0; i < hpBarCount; i++){
         let offsetPosition = Utils.rotationToVector(actorRotation + Utils.degToRad((hpBarCount - 1)/2*12) - Utils.degToRad(i*12), 8);
@@ -75,7 +75,7 @@ Hud.prototype.drawHealthBarEnemy = function(otherActor){
         this.particleManager.createParticle('particleAddHUD', {
             positionX: otherActorPosition[0] + offsetPosition[0],
             positionY: otherActorPosition[1] + offsetPosition[1],
-            positionZ: positionZ,
+            positionZ: positionZ + otherActor.props.barHeight || 0,
             color: ((rest <= 1000 / (hpBarCount * 2)) && rest !== 0) && i+1 >= hpPercentage * hpBarCount || i >= hpPercentage * hpBarCount  ? 'DEEPRED' : 'DEEPGREEN',
             scale: 1.4,
             particleVelocity: 0,
@@ -100,7 +100,7 @@ Hud.prototype.drawShieldBarEnemy = function(otherActor){
         this.particleManager.createParticle('particleAddHUD', {
             positionX: otherActorPosition[0] + offsetPosition[0],
             positionY: otherActorPosition[1] + offsetPosition[1],
-            positionZ: positionZ,
+            positionZ: positionZ + otherActor.props.barHeight || 0, 
             color: ((rest <= 1000 / (shieldBarCount * 2)) && rest !== 0) && i+1 >= shieldPercentage * shieldBarCount || i >= shieldPercentage * shieldBarCount  ? 'DEEPRED' : 'DEEPBLUE',
             scale: 1.4,
             particleVelocity: 0,

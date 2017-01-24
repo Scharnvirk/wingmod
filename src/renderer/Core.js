@@ -220,20 +220,12 @@ Core.prototype.onGameEnded = function(event){
     this.gameEnded = true;
     this.ui.stopGame(event.data);
     this.renderLoop.stop();
-    // setTimeout(function(){
-    //     this.ui.stopGame(event.data);
-    //     this.renderLoop.stop();
-    // }.bind(this), 2000);
 };
 
 Core.prototype.onGameFinished = function(){
     this.gameEnded = true;
     this.ui.stopGameFinished();
     this.renderLoop.stop();
-    // setTimeout(function(){
-    //     this.ui.stopGameFinished();
-    //     this.renderLoop.stop();
-    // }.bind(this), 500);
 };
 
 Core.prototype.onGetAiImage = function(event){

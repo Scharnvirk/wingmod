@@ -207,7 +207,9 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
 };
 
 MookBrain.prototype.shootAction = function(){
-    this.orders.shoot = Utils.pointInArc(this.actor.getPosition(), this.playerActor.getPosition(), this.actor.getAngle(), this.shootingArc);
+    let inArc = Utils.pointInArc(this.actor.getPosition(), this.playerActor.getPosition(), this.actor.getAngle(), this.shootingArc);
+    let playerLive = this.playerActor.state.hp > 0;
+    this.orders.shoot = inArc && playerLive;
 };
 
 MookBrain.prototype.randomStrafeAction = function(){

@@ -5,10 +5,6 @@ function DebugActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
     Object.assign(this, config);
-
-    this.applyConfig({
-        // timeout: config.timeout || 5
-    });
 }
 
 DebugActor.extend(BaseActor);
@@ -21,10 +17,6 @@ DebugActor.prototype.createBody = function(){
         actor: this,
         mass: 0
     });
-};
-
-DebugActor.prototype.onSpawn = function(){
-    // this.angleForce = Utils.rand(-15,15);
 };
 
 module.exports = DebugActor;

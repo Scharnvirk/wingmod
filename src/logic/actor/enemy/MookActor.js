@@ -64,6 +64,10 @@ MookActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
+    this.spawn({
+        classId: ActorFactory.EXPLOSION
+    });
+
     this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
 };

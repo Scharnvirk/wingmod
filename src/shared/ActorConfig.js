@@ -20,6 +20,20 @@ var ActorConfig = {
         }
     },
 
+    EXPLOSION: {
+        props:{
+            hp: 1000,
+            damage: 10,
+            removeOnHit: true,
+            timeout: 1,
+            type: 'explosion'
+        },
+        bodyConfig: {
+            radius: 40,
+            mass: 5
+        }
+    },
+
     PLASMAPROJECTILE: {
         props: {
             hp: 1,
@@ -197,6 +211,7 @@ var ActorConfig = {
             shieldColor: 0x5533ff,
             hpBarCount: 7,
             shieldBarCount: 7,
+            barHeight: 12,
             removeOnHit: false,
             spawnRate: 240,
             globalMaxSpawnedEnemies: 16,

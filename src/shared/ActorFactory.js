@@ -7,23 +7,24 @@ SNIPER: 3,
 ORBOT: 4,
 CHUNK: 5,
 BOOMCHUNK: 6,
-PLASMAPROJECTILE: 7,
-LASERPROJECTILE: 8,
-REDLASERPROJECTILE: 9,
-PURPLELASERPROJECTILE: 10,
-MOLTENPROJECTILE: 11,
-RINGPROJECTILE: 12,
-PULSEWAVEPROJECTILE: 13,
-CONCSNMISSILE: 14,
-MAP: 15,
-ENEMYSPAWNER: 16,
-ENEMYSPAWNMARKER: 17,
-ITEMSPAWNER: 18,
-DEBUG: 19,
-SHIELDPICKUP: 20,
-ENERGYPICKUP: 21,
-PLASMAPICKUP: 22,
-MISSILEQUADPICKUP: 23,
+EXPLOSION: 7,
+PLASMAPROJECTILE: 8,
+LASERPROJECTILE: 9,
+REDLASERPROJECTILE: 10,
+PURPLELASERPROJECTILE: 11,
+MOLTENPROJECTILE: 12,
+RINGPROJECTILE: 13,
+PULSEWAVEPROJECTILE: 14,
+CONCSNMISSILE: 15,
+MAP: 16,
+ENEMYSPAWNER: 17,
+ENEMYSPAWNMARKER: 18,
+ITEMSPAWNER: 19,
+DEBUG: 20,
+SHIELDPICKUP: 21,
+ENERGYPICKUP: 22,
+PLASMAPICKUP: 23,
+MISSILEQUADPICKUP: 24,
 
 };
 
@@ -35,6 +36,7 @@ ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enem
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
+ActorFactory.ExplosionActor = context === 'renderer' ? require("renderer/actor/object/ExplosionActor") : require("logic/actor/object/ExplosionActor");
 ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
 ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
 ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
@@ -61,6 +63,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.ORBOT]: ActorFactory.OrbotActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
+[idMap.EXPLOSION]: ActorFactory.ExplosionActor,
 [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
 [idMap.LASERPROJECTILE]: ActorFactory.LaserProjectileActor,
 [idMap.REDLASERPROJECTILE]: ActorFactory.RedLaserProjectileActor,
