@@ -1,107 +1,186 @@
-var WeaponMesh = require('renderer/gameUi/WeaponMesh');
+let WeaponSwitcherItem = require('renderer/gameUi/component/WeaponSwitcherItem');
 
 function WeaponSwitcher(config){
-    Object.assign(this, config);
-    if(!this.sceneManager) throw new Error('No sceneManager defined for WeaponSwitcher!');
+    if(!config.scene) throw new Error('No scene defined for WeaponSwitcher!');
 
-    this.visible = false;
-    this.itemRotation = 0;
-    this.position = [0,0];
+    this.position = [0, 0];   
 
-    this.weapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
-    this.moveCounter = 0;
-    this.weaponsToDisplay = 5;
-    this.currentWeapon = Math.floor(this.weaponsToDisplay / 2); //the middle one
-    this.meshDistance = 24;
-    this.rotationSpeed = 3;
-    this.hidePassed = true;
-    EventEmitter.apply(this, arguments);
+    const props = {
+        index: config.index,
+        scene: config.scene,
+        activationKey: config.activationKey,
+        switchNextKey: config.switchNextKey,
+        switchPrevKey: config.switchPrevKey,
+        amountOfWeapons: config.amountOfWeapons || 7,    
+        angleBetweenItems: config.angleBetweenItems || 15,
+        availableWeapons: config.weapons,
+        rotationOffset: config.rotationOffset
+    };
 
-    this.switchWeaponToNext();
+    Object.freeze(props);
+    this.props = props;
+
+    let state = {
+        weaponItems: this._createWeaponItems(config.weapons[0]),
+        visible: true,
+        activeWeapon: config.weapons[0]
+    };
+    Object.preventExtensions(state);    
+    this.state = state;
+
+    EventEmitter.apply(this, arguments);    
 }
 
 WeaponSwitcher.extend(EventEmitter);
 
-WeaponSwitcher.prototype.update = function(){
-    if(!this.meshes){
-        this.meshes = this.createMeshes();
-    }
-
-    this.meshes.forEach(mesh => {
-        var offsetPosition = Utils.rotationToVector(this.rotation + Utils.degToRad(mesh.rotationDistance), 15);
-        var scale = (((this.weaponsToDisplay * this.meshDistance) - 1.5 * Math.abs(mesh.rotationDistance)) / (this.weaponsToDisplay * this.meshDistance)) * 1.5;
-        scale = scale > 0 ? scale : 0.2;
-        mesh.position.x = this.position[0] + offsetPosition[0];
-        mesh.position.y = this.position[1] + offsetPosition[1];
-        mesh.rotation.z = Utils.degToRad(mesh.rotationDistance);
-        mesh.scale.x = scale;
-        mesh.scale.y = scale;
-        mesh.scale.z = scale;
-
-        if (this.moveCounter > 0) {
-            mesh.rotationDistance -= this.rotationSpeed;
-        }
-
-        if (mesh.rotationDistance <= -(this.weaponsToDisplay - Math.floor(this.weaponsToDisplay / 2)) * this.meshDistance) {
-            mesh.rotationDistance += this.weaponsToDisplay * this.meshDistance;
-            var newWeaponIndex = (this.currentWeapon + Math.floor(this.weaponsToDisplay / 2)) % this.weapons.length;
-            mesh.weaponIndex = newWeaponIndex;
-            mesh.setNewWeapon(newWeaponIndex);
-        }
-    });
-
-    if (this.moveCounter > 0) {
-        this.moveCounter --;
-    }
+WeaponSwitcher.prototype.update = function(position) {
+    this.position = position;
+    this.state.weaponItems.forEach(item => item.update({
+        visible: this.state.visible,
+        position: this.position
+    }));
 };
 
-WeaponSwitcher.prototype.handleInput = function(inputState){
-    var hudActive = !!inputState[this.activationKey];
-    this.visible = hudActive;
-    if(this.meshes){
-        this.meshes.forEach(mesh => {
-            mesh.visible = this.visible;
-        });
-    }
+WeaponSwitcher.prototype.handleInput = function(inputState) {
+    this.state.visible = !!inputState[this.props.activationKey];
 
-    if (hudActive && inputState[this.switchKey] && this.moveCounter === 0){
-        this.switchWeaponToNext();
-
-    }
+    if (this.state.visible) {
+        if (inputState[this.props.switchNextKey]){
+            this.switchToNext();
+        } else if (inputState[this.props.switchPrevKey]){
+            this.switchToPrev();
+        }    
+    } 
 };
 
-//more like something like switchTo..?
-WeaponSwitcher.prototype.switchWeaponToNext = function(){
-    var oldWeapon = this.weapons[this.currentWeapon];
-    this.currentWeapon ++;
-    this.moveCounter = this.meshDistance / this.rotationSpeed;
+WeaponSwitcher.prototype.switchToByName = function(weaponName) {
 
-    if (this.currentWeapon >= this.weapons.length) {
-        this.currentWeapon = 0;
-    }
+};
 
-    this.emit({type: 'weaponSwitched', data: {
-        weapon: this.weapons[this.currentWeapon]},
-        index: this.index
+WeaponSwitcher.prototype.switchToByIndex = function(weaponIndex) {
+
+};
+
+WeaponSwitcher.prototype.switchToNext = function() {
+    //HAX //fornow
+    const multiplier = this.props.index === 0 ? 1 : -1;
+
+    this._moveSelectionByAmountOfItems(1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(-1 * multiplier);  
+
+    this.emit({
+        type: 'weaponSwitched', 
+        data: {
+            weapon: this.state.activeWeapon
+        },
+        index: this.props.index
     });
 };
 
-WeaponSwitcher.prototype.createMeshes = function(){
-    var scale = 2;
-    var meshes = [];
+WeaponSwitcher.prototype.switchToPrev = function() {
+    //HAX //fornow
+    const multiplier = this.props.index === 0 ? 1 : -1;
+    this._moveSelectionByAmountOfItems(-1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(1 * multiplier);  
 
-    for (let i = 0; i < this.weaponsToDisplay; i++){
-        var offset = (-parseInt(this.weaponsToDisplay/2) + i) * this.meshDistance;
-        var mesh = new WeaponMesh({
-            rotationDistance: offset,
-            weaponIndex: i % this.weapons.length,
-            weaponModels: this.weapons
-        });
-        meshes.push(mesh);
-        this.sceneManager.get('FlatHudScene').threeScene.add(mesh);
+    this.emit({
+        type: 'weaponSwitched', 
+        data: {
+            weapon: this.state.activeWeapon
+        },
+        index: this.props.index
+    });
+};
+
+WeaponSwitcher.prototype.getItems = function() {
+    return this.state.weaponItems;
+};
+
+
+
+WeaponSwitcher.prototype._createWeaponItems = function(firstWeapon) {
+    let weaponIndex = this.props.availableWeapons.indexOf(firstWeapon);
+    let weaponItems = [];
+    let weaponItemRotation = 0;
+
+    let start = Math.ceil(-this.props.amountOfWeapons / 2);
+    let end = Math.floor(this.props.amountOfWeapons / 2);
+
+    for (let i = 0, l = end; i <= l; i++) {
+        weaponItems[weaponItemRotation + end] = this._createWeaponSwitcherItem(weaponIndex, weaponItemRotation);
+
+        weaponIndex ++;
+        if (weaponIndex >= this.props.availableWeapons.length) {
+            weaponIndex = 0;
+        }
+
+        weaponItemRotation ++;
     }
 
-    return meshes;
+    weaponIndex = this.props.availableWeapons.indexOf(firstWeapon);
+    weaponItemRotation = 0;
+    for (let i = 0, l = start; i >= l; i--) {
+        weaponIndex --;
+        if (weaponIndex <= 0) {
+            weaponIndex = this.props.availableWeapons.length - 1;
+        }
+
+        weaponItemRotation --;
+
+        weaponItems[weaponItemRotation + end] = this._createWeaponSwitcherItem(weaponIndex, weaponItemRotation);
+    }
+
+    return weaponItems;
+}; 
+
+
+WeaponSwitcher.prototype._moveSelectionByAmountOfItems = function(amountOfItemsToMove) {    
+    this._updateItemsRotationOnWeaponChange(amountOfItemsToMove);      
+};
+
+WeaponSwitcher.prototype._createWeaponSwitcherItem = function(weaponIndex, weaponItemRotation) {
+    return new WeaponSwitcherItem({
+        availableWeapons: this.props.availableWeapons,
+        weaponIndex: weaponIndex,
+        angleBetweenItems: this.props.angleBetweenItems,
+        rotationOnArc: weaponItemRotation,
+        rotationOffset: this.props.rotationOffset,
+        rotationLimit: Math.floor(this.props.amountOfWeapons / 2),
+        visibilityLimit: 9,
+        amountOfWeapons: this.props.amountOfWeapons,
+        scene: this.props.scene,        
+    });
+};
+
+WeaponSwitcher.prototype._normalizeWeaponamountOfItemsToMove = function(amountOfItemsToMove) {
+    while (amountOfItemsToMove < 0) amountOfItemsToMove += this.props.amountOfWeapons;
+    return amountOfItemsToMove;
+};
+
+WeaponSwitcher.prototype._updateItemsRotationOnWeaponChange = function(amountOfItemsToMove) {
+    let item;
+
+    for (let i = 0, l = this.props.amountOfWeapons; i < l; i++) {            
+        item = this.state.weaponItems[i];
+        item.updateRotationOnArc(amountOfItemsToMove);        
+    }
+};
+
+WeaponSwitcher.prototype._updateActiveWeaponOnWeaponChange = function(amountOfItemsToMove){
+    let activeWeaponItemIndex = this.props.availableWeapons.indexOf(this.state.activeWeapon);
+    let newWeaponItemIndex = (activeWeaponItemIndex + amountOfItemsToMove) % this.props.amountOfWeapons;
+
+    if (newWeaponItemIndex >= this.props.availableWeapons.length) {
+        this.state.activeWeapon = this.props.availableWeapons[0];
+        return;
+    }
+
+    if (newWeaponItemIndex < 0){
+        this.state.activeWeapon = this.props.availableWeapons[this.props.availableWeapons.length-1];
+        return;
+    }
+    
+    this.state.activeWeapon = this.props.availableWeapons[newWeaponItemIndex];
 };
 
 module.exports = WeaponSwitcher;

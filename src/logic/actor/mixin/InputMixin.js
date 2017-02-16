@@ -1,5 +1,5 @@
 var InputMixin = {
-    _hudModifier: 'shift',
+    _hudModifiers: ['q', 'e'],
 
     applyLookAtAngleInput: function(inputState){
         let angleForce = 0;
@@ -41,7 +41,9 @@ var InputMixin = {
     },
 
     applyWeaponInput: function(inputState){
-        if(!inputState[this._hudModifier]){
+        let inHud = this._hudModifiers.some(element => inputState[element]);
+
+        if(!inHud){
             if (inputState.mouseLeft){
                 this.primaryWeaponSystem.shoot();
             } else {

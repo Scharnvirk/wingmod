@@ -11,10 +11,10 @@ function WeaponMesh(config){
 
     Object.assign(this, config);
 
-    if(!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
+    // if(!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
 
     this.material = ModelStore.get('hudMaterial').material;
-    this.geometry = ModelStore.get(this.weaponModels[this.weaponIndex]).geometry;
+    this.geometry = ModelStore.get(this.weaponName).geometry;
     this.visible = false;
     this.castShadow = false;
     this.receiveShadow = false;
@@ -25,9 +25,9 @@ function WeaponMesh(config){
 
 WeaponMesh.extend(BaseMesh);
 
-WeaponMesh.prototype.setNewWeapon = function(newWeaponIndex){
-    this.weaponIndex = newWeaponIndex;
-    this.geometry = ModelStore.get(this.weaponModels[this.weaponIndex]).geometry;
+WeaponMesh.prototype.setNewWeapon = function(weaponName){
+    this.weaponName = weaponName;
+    this.geometry = ModelStore.get(this.weaponName).geometry;
 };
 
 module.exports = WeaponMesh;

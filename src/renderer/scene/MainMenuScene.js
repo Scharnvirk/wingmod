@@ -103,6 +103,8 @@ MainMenuScene.prototype.createStartScene = function(){
         material: ModelStore.get('ravier').material
     });
 
+    shipMesh.geometry.translate(0, -0.5, 0);
+
     scale = 4;
     shipMesh.scale.x = scale;
     shipMesh.scale.y = scale;

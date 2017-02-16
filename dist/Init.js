@@ -25915,7 +25915,7 @@ module.exports = DropMixin;
 'use strict';
 
 var InputMixin = {
-    _hudModifier: 'shift',
+    _hudModifiers: ['q', 'e'],
 
     applyLookAtAngleInput: function applyLookAtAngleInput(inputState) {
         var angleForce = 0;
@@ -25957,7 +25957,11 @@ var InputMixin = {
     },
 
     applyWeaponInput: function applyWeaponInput(inputState) {
-        if (!inputState[this._hudModifier]) {
+        var inHud = this._hudModifiers.some(function (element) {
+            return inputState[element];
+        });
+
+        if (!inHud) {
             if (inputState.mouseLeft) {
                 this.primaryWeaponSystem.shoot();
             } else {
@@ -26721,7 +26725,7 @@ function ControlsHandler(config) {
     this.oldInputState = {};
     this.inputState = {};
 
-    this.hudKeys = ['shift', 'mouseLeft', 'mouseRight'];
+    this.hudKeys = ['q', 'e', 'mouseLeft', 'mouseRight'];
 
     EventEmitter.apply(this, arguments);
 }
@@ -26783,7 +26787,6 @@ var SceneManager = require('renderer/scene/SceneManager');
 var AssetManager = require('renderer/assetManagement/assetManager.js');
 var AiImageRenderer = require('renderer/ai/AiImageRenderer');
 var Hud = require('renderer/gameUi/Hud');
-var CanvasHud = require('renderer/gameUi/CanvasHud');
 var FlatHud = require('renderer/gameUi/FlatHud');
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 var GameState = require('renderer/GameState');
@@ -26808,24 +26811,23 @@ function Core(config) {
 Core.prototype.init = function () {
     this.assetManager = new AssetManager();
     this.assetManager.loadAll();
+    this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
-    this.createMainComponents();
-    this.initEventHandlers();
-    this.renderStats = this.createRenderStatsWatcher();
-    this.stats = this.createStatsWatcher();
-    this.startTime = Date.now();
-    this.attachToDom(this.renderStats);
-    this.attachToDom(this.stats);
-    this.attachRendererToDom(this.renderer);
+    this.configManager = new ConfigManager();
 
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
 Core.prototype.createMainComponents = function () {
-    this.configManager = new ConfigManager();
     this.renderer = this.createRenderer();
     this.inputListener = new InputListener({ renderer: this.renderer });
+
     this.sceneManager = new SceneManager({ renderer: this.renderer, core: this });
+    this.sceneManager.createScene('MainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.sceneManager.createScene('GameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
+    this.sceneManager.createScene('FlatHudScene');
+
+    this.activeScene = 'MainMenuScene';
     this.particleManager = new ParticleManager({ sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier });
     this.actorManager = new ActorManager({ sceneManager: this.sceneManager, particleManager: this.particleManager });
     this.logicBus = new LogicBus({ core: this, worker: this.logicWorker });
@@ -26833,7 +26835,6 @@ Core.prototype.createMainComponents = function () {
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({ actorManager: this.actorManager, particleManager: this.particleManager });
     this.flatHud = new FlatHud({ sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager });
-    this.canvasHud = new CanvasHud({ canvasElement: this.canvasElement, autoWidth: true });
     this.gameState = new GameState({ ui: this.ui });
 };
 
@@ -26852,8 +26853,6 @@ Core.prototype.initEventHandlers = function () {
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
     this.actorManager.on('requestShake', this.onRequestShake.bind(this));
-
-    this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
     this.flatHud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
@@ -26919,20 +26918,22 @@ Core.prototype.resetCamera = function () {
     this.sceneManager.get('FlatHudScene').resetCamera();
 };
 
-Core.prototype.resetHud = function () {
-    this.canvasHud.resize();
-};
-
 Core.prototype.getActiveScene = function () {
     return this.activeScene;
 };
 
 Core.prototype.onAssetsLoaded = function () {
     console.log('assets loaded');
-    this.activeScene = 'MainMenuScene';
-    this.sceneManager.createScene('MainMenuScene', { shadows: this.renderShadows, inputListener: this.inputListener });
-    this.sceneManager.createScene('GameScene', { shadows: this.renderShadows, inputListener: this.inputListener });
-    this.sceneManager.createScene('FlatHudScene');
+
+    this.createMainComponents();
+    this.initEventHandlers();
+    this.renderStats = this.createRenderStatsWatcher();
+    this.stats = this.createStatsWatcher();
+    this.startTime = Date.now();
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
+
     this.particleManager.createGenerators();
     this.particleManager.updateResolutionCoefficient(this.configManager.config.resolution);
 
@@ -27108,7 +27109,7 @@ Core.prototype.onGameStateChange = function (event) {
 
 module.exports = Core;
 
-},{"renderer/ConfigManager":230,"renderer/ControlsHandler":231,"renderer/GameState":233,"renderer/InputListener":234,"renderer/LogicBus":235,"renderer/actor/ActorManager":236,"renderer/ai/AiImageRenderer":273,"renderer/assetManagement/assetManager.js":274,"renderer/assetManagement/level/ChunkStore":277,"renderer/gameUi/CanvasHud":284,"renderer/gameUi/FlatHud":285,"renderer/gameUi/Hud":287,"renderer/particleSystem/ParticleManager":294,"renderer/scene/SceneManager":323}],233:[function(require,module,exports){
+},{"renderer/ConfigManager":230,"renderer/ControlsHandler":231,"renderer/GameState":233,"renderer/InputListener":234,"renderer/LogicBus":235,"renderer/actor/ActorManager":236,"renderer/ai/AiImageRenderer":273,"renderer/assetManagement/assetManager.js":274,"renderer/assetManagement/level/ChunkStore":277,"renderer/gameUi/FlatHud":284,"renderer/gameUi/Hud":286,"renderer/particleSystem/ParticleManager":294,"renderer/scene/SceneManager":323}],233:[function(require,module,exports){
 'use strict';
 
 function GameState(config) {
@@ -27150,7 +27151,8 @@ function InputListener(config) {
         83: 's',
         65: 'a',
         68: 'd',
-        16: 'shift',
+        69: 'q',
+        81: 'e',
         1001: 'scrollUp',
         1002: 'scrollDown',
         1003: 'mouseLeft',
@@ -30283,96 +30285,7 @@ module.exports = SoundLoader;
 },{}],284:[function(require,module,exports){
 'use strict';
 
-function CanvasHud(config) {
-    Object.assign(this, config);
-
-    if (!this.canvasElement) {
-        this.canvasElement = this.createCanvasElement();
-    }
-
-    this.drawContext = this.canvasElement.getContext('2d');
-
-    this.fill();
-}
-
-CanvasHud.prototype.createCanvasElement = function () {
-    var hudCanvas = document.createElement('canvas');
-    var width = document.documentElement.clientWidth;
-    var height = document.documentElement.clientHeight;
-
-    hudCanvas.width = width;
-    hudCanvas.height = width;
-
-    // document.body.appendChild( hudCanvas );
-    hudCanvas.className += 'canvasHud noPointerEvents';
-
-    return hudCanvas;
-};
-
-CanvasHud.prototype.fill = function () {
-    // this.drawContext.fillStyle = '#ffccbb';
-    // this.drawContext.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-    var context = this.drawContext;
-
-    context.font = 'Normal 40px Arial';
-    context.textAlign = 'center';
-    context.fillStyle = 'rgba(245,245,245,1)';
-
-    setInterval(function () {
-        context.fillText('Initializing...', context.canvas.width / 2 + Utils.rand(-500, 500), context.canvas.height / 2 + Utils.rand(-500, 500));
-    }, 16);
-
-    setInterval(function () {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    }, 1600);
-};
-
-CanvasHud.prototype.resize = function () {
-    if (this.autoHeight) {
-        this.canvasElement.height = document.documentElement.clientHeight;
-    }
-
-    if (this.autoWidth) {
-        this.canvasElement.width = document.documentElement.clientWidth;
-    }
-
-    if (this.buffer) {
-        this.drawBuffer(this.buffer);
-    }
-};
-
-CanvasHud.prototype.drawBuffer = function (bufferCanvas) {
-    if (!(bufferCanvas instanceof BufferCanvas)) {
-        throw new Error('CanvasHud drawBuffer requires a BufferCanvas instance!');
-    }
-
-    this.buffer = bufferCanvas;
-
-    switch (bufferCanvas.position) {
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        case 'topLeft':
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-            break;
-        default:
-            this.drawContext.drawImage(bufferCanvas.canvas, 0, 0);
-    }
-};
-
-module.exports = CanvasHud;
-
-},{}],285:[function(require,module,exports){
-'use strict';
-
 var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
-// var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config) {
     Object.assign(this, config);
@@ -30380,17 +30293,23 @@ function FlatHud(config) {
     if (!this.sceneManager) throw new Error('No sceneManager defined for FlatHud!');
     if (!this.renderer) throw new Error('No renderer defined for FlatHud!');
 
-    this.activationKey = 'shift';
-
     this.switchersConfig = [{
-        rotation: Utils.degToRad(90),
-        switchKey: 'mouseLeft'
+        index: 0,
+        rotationOffset: 90,
+        switchNextKey: 'mouseLeft',
+        switchPrevKey: 'mouseRight',
+        activationKey: 'e',
+        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
     }, {
-        rotation: Utils.degToRad(-90),
-        switchKey: 'mouseRight'
+        index: 1,
+        rotationOffset: -90,
+        switchNextKey: 'mouseLeft',
+        switchPrevKey: 'mouseRight',
+        activationKey: 'q',
+        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
     }];
 
-    this.switchers = this.createSwitchers();
+    this.switchers = this._createSwitchers();
     this.hudActive = false;
 
     EventEmitter.apply(this, arguments);
@@ -30407,8 +30326,7 @@ FlatHud.prototype.update = function () {
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(function (switcher) {
-            switcher.position = [0, positionY];
-            switcher.update();
+            switcher.update([0, positionY]);
         });
     }
 
@@ -30419,36 +30337,12 @@ FlatHud.prototype.onPlayerActorAppeared = function (actor) {
     this.actor = actor;
 };
 
-FlatHud.prototype.createSwitchers = function () {
+FlatHud.prototype.onInput = function (inputState) {
     var _this = this;
 
-    var switcherIndex = 0;
-    var switchers = [];
-    this.switchersConfig.forEach(function (switcherConfig) {
-        var switcher = _this.createSwitcher(switcherConfig, switcherIndex);
-        switchers.push(switcher);
-        switcherIndex++;
-    });
-    return switchers;
-};
-
-FlatHud.prototype.createWeaponTextSprites = function () {
-    var _this2 = this;
-
-    var switcherIndex = 0;
-    var weaponTextSprites = [];
-    this.switchersConfig.forEach(function (switcherConfig) {
-        var weaponTextSprite = _this2.createWeaponTextSprite(switcherConfig, switcherIndex);
-        weaponTextSprites.push(weaponTextSprite);
-        switcherIndex++;
-    });
-    return weaponTextSprites;
-};
-
-FlatHud.prototype.onInput = function (inputState) {
-    this.hudActive = !!inputState[this.activationKey];
     this.switchers.forEach(function (switcher) {
         switcher.handleInput(inputState);
+        _this.hudActive = _this.hudActive || !!inputState[switcher.props.activationKey];
     });
 };
 
@@ -30468,9 +30362,34 @@ FlatHud.prototype.onWeaponSwitched = function (event) {
     });
 };
 
-FlatHud.prototype.createSwitcher = function (switcherConfig, switcherIndex) {
-    switcherConfig.sceneManager = this.sceneManager;
-    switcherConfig.activationKey = this.activationKey;
+FlatHud.prototype._createWeaponTextSprites = function () {
+    var _this2 = this;
+
+    var switcherIndex = 0;
+    var weaponTextSprites = [];
+    this.switchersConfig.forEach(function (switcherConfig) {
+        var weaponTextSprite = _this2._createWeaponTextSprite(switcherConfig, switcherIndex);
+        weaponTextSprites.push(weaponTextSprite);
+        switcherIndex++;
+    });
+    return weaponTextSprites;
+};
+
+FlatHud.prototype._createSwitchers = function () {
+    var _this3 = this;
+
+    var switcherIndex = 0;
+    var switchers = [];
+    this.switchersConfig.forEach(function (switcherConfig) {
+        var switcher = _this3._createSwitcher(switcherConfig, switcherIndex);
+        switchers.push(switcher);
+        switcherIndex++;
+    });
+    return switchers;
+};
+
+FlatHud.prototype._createSwitcher = function (switcherConfig, switcherIndex) {
+    switcherConfig.scene = this.sceneManager.get('FlatHudScene');
     switcherConfig.index = switcherIndex;
 
     var switcher = new WeaponSwitcher(switcherConfig);
@@ -30481,7 +30400,7 @@ FlatHud.prototype.createSwitcher = function (switcherConfig, switcherIndex) {
 
 module.exports = FlatHud;
 
-},{"renderer/gameUi/WeaponSwitcher":289}],286:[function(require,module,exports){
+},{"renderer/gameUi/WeaponSwitcher":288}],285:[function(require,module,exports){
 'use strict';
 
 function FlatHudCamera(config) {
@@ -30510,7 +30429,7 @@ FlatHudCamera.prototype.update = function () {};
 
 module.exports = FlatHudCamera;
 
-},{}],287:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 'use strict';
 
 function Hud(config) {
@@ -30688,7 +30607,7 @@ Hud.prototype.drawShieldBarPlayer = function () {
 
 module.exports = Hud;
 
-},{}],288:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -30704,10 +30623,10 @@ function WeaponMesh(config) {
 
     Object.assign(this, config);
 
-    if (!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
+    // if(!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
 
     this.material = ModelStore.get('hudMaterial').material;
-    this.geometry = ModelStore.get(this.weaponModels[this.weaponIndex]).geometry;
+    this.geometry = ModelStore.get(this.weaponName).geometry;
     this.visible = false;
     this.castShadow = false;
     this.receiveShadow = false;
@@ -30718,128 +30637,325 @@ function WeaponMesh(config) {
 
 WeaponMesh.extend(BaseMesh);
 
-WeaponMesh.prototype.setNewWeapon = function (newWeaponIndex) {
-    this.weaponIndex = newWeaponIndex;
-    this.geometry = ModelStore.get(this.weaponModels[this.weaponIndex]).geometry;
+WeaponMesh.prototype.setNewWeapon = function (weaponName) {
+    this.weaponName = weaponName;
+    this.geometry = ModelStore.get(this.weaponName).geometry;
 };
 
 module.exports = WeaponMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":239,"renderer/assetManagement/model/ModelStore":282}],289:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":239,"renderer/assetManagement/model/ModelStore":282}],288:[function(require,module,exports){
 'use strict';
 
-var WeaponMesh = require('renderer/gameUi/WeaponMesh');
+var WeaponSwitcherItem = require('renderer/gameUi/component/WeaponSwitcherItem');
 
 function WeaponSwitcher(config) {
-    Object.assign(this, config);
-    if (!this.sceneManager) throw new Error('No sceneManager defined for WeaponSwitcher!');
+    if (!config.scene) throw new Error('No scene defined for WeaponSwitcher!');
 
-    this.visible = false;
-    this.itemRotation = 0;
     this.position = [0, 0];
 
-    this.weapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
-    this.moveCounter = 0;
-    this.weaponsToDisplay = 5;
-    this.currentWeapon = Math.floor(this.weaponsToDisplay / 2); //the middle one
-    this.meshDistance = 24;
-    this.rotationSpeed = 3;
-    this.hidePassed = true;
-    EventEmitter.apply(this, arguments);
+    var props = {
+        index: config.index,
+        scene: config.scene,
+        activationKey: config.activationKey,
+        switchNextKey: config.switchNextKey,
+        switchPrevKey: config.switchPrevKey,
+        amountOfWeapons: config.amountOfWeapons || 7,
+        angleBetweenItems: config.angleBetweenItems || 15,
+        availableWeapons: config.weapons,
+        rotationOffset: config.rotationOffset
+    };
 
-    this.switchWeaponToNext();
+    Object.freeze(props);
+    this.props = props;
+
+    var state = {
+        weaponItems: this._createWeaponItems(config.weapons[0]),
+        visible: true,
+        activeWeapon: config.weapons[0]
+    };
+    Object.preventExtensions(state);
+    this.state = state;
+
+    EventEmitter.apply(this, arguments);
 }
 
 WeaponSwitcher.extend(EventEmitter);
 
-WeaponSwitcher.prototype.update = function () {
+WeaponSwitcher.prototype.update = function (position) {
     var _this = this;
 
-    if (!this.meshes) {
-        this.meshes = this.createMeshes();
-    }
-
-    this.meshes.forEach(function (mesh) {
-        var offsetPosition = Utils.rotationToVector(_this.rotation + Utils.degToRad(mesh.rotationDistance), 15);
-        var scale = (_this.weaponsToDisplay * _this.meshDistance - 1.5 * Math.abs(mesh.rotationDistance)) / (_this.weaponsToDisplay * _this.meshDistance) * 1.5;
-        scale = scale > 0 ? scale : 0.2;
-        mesh.position.x = _this.position[0] + offsetPosition[0];
-        mesh.position.y = _this.position[1] + offsetPosition[1];
-        mesh.rotation.z = Utils.degToRad(mesh.rotationDistance);
-        mesh.scale.x = scale;
-        mesh.scale.y = scale;
-        mesh.scale.z = scale;
-
-        if (_this.moveCounter > 0) {
-            mesh.rotationDistance -= _this.rotationSpeed;
-        }
-
-        if (mesh.rotationDistance <= -(_this.weaponsToDisplay - Math.floor(_this.weaponsToDisplay / 2)) * _this.meshDistance) {
-            mesh.rotationDistance += _this.weaponsToDisplay * _this.meshDistance;
-            var newWeaponIndex = (_this.currentWeapon + Math.floor(_this.weaponsToDisplay / 2)) % _this.weapons.length;
-            mesh.weaponIndex = newWeaponIndex;
-            mesh.setNewWeapon(newWeaponIndex);
-        }
+    this.position = position;
+    this.state.weaponItems.forEach(function (item) {
+        return item.update({
+            visible: _this.state.visible,
+            position: _this.position
+        });
     });
-
-    if (this.moveCounter > 0) {
-        this.moveCounter--;
-    }
 };
 
 WeaponSwitcher.prototype.handleInput = function (inputState) {
-    var _this2 = this;
+    this.state.visible = !!inputState[this.props.activationKey];
 
-    var hudActive = !!inputState[this.activationKey];
-    this.visible = hudActive;
-    if (this.meshes) {
-        this.meshes.forEach(function (mesh) {
-            mesh.visible = _this2.visible;
-        });
-    }
-
-    if (hudActive && inputState[this.switchKey] && this.moveCounter === 0) {
-        this.switchWeaponToNext();
+    if (this.state.visible) {
+        if (inputState[this.props.switchNextKey]) {
+            this.switchToNext();
+        } else if (inputState[this.props.switchPrevKey]) {
+            this.switchToPrev();
+        }
     }
 };
 
-//more like something like switchTo..?
-WeaponSwitcher.prototype.switchWeaponToNext = function () {
-    var oldWeapon = this.weapons[this.currentWeapon];
-    this.currentWeapon++;
-    this.moveCounter = this.meshDistance / this.rotationSpeed;
+WeaponSwitcher.prototype.switchToByName = function (weaponName) {};
 
-    if (this.currentWeapon >= this.weapons.length) {
-        this.currentWeapon = 0;
-    }
+WeaponSwitcher.prototype.switchToByIndex = function (weaponIndex) {};
 
-    this.emit({ type: 'weaponSwitched', data: {
-            weapon: this.weapons[this.currentWeapon] },
-        index: this.index
+WeaponSwitcher.prototype.switchToNext = function () {
+    //HAX //fornow
+    var multiplier = this.props.index === 0 ? 1 : -1;
+
+    this._moveSelectionByAmountOfItems(1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(-1 * multiplier);
+
+    this.emit({
+        type: 'weaponSwitched',
+        data: {
+            weapon: this.state.activeWeapon
+        },
+        index: this.props.index
     });
 };
 
-WeaponSwitcher.prototype.createMeshes = function () {
-    var scale = 2;
-    var meshes = [];
+WeaponSwitcher.prototype.switchToPrev = function () {
+    //HAX //fornow
+    var multiplier = this.props.index === 0 ? 1 : -1;
+    this._moveSelectionByAmountOfItems(-1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(1 * multiplier);
 
-    for (var i = 0; i < this.weaponsToDisplay; i++) {
-        var offset = (-parseInt(this.weaponsToDisplay / 2) + i) * this.meshDistance;
-        var mesh = new WeaponMesh({
-            rotationDistance: offset,
-            weaponIndex: i % this.weapons.length,
-            weaponModels: this.weapons
-        });
-        meshes.push(mesh);
-        this.sceneManager.get('FlatHudScene').threeScene.add(mesh);
+    this.emit({
+        type: 'weaponSwitched',
+        data: {
+            weapon: this.state.activeWeapon
+        },
+        index: this.props.index
+    });
+};
+
+WeaponSwitcher.prototype.getItems = function () {
+    return this.state.weaponItems;
+};
+
+WeaponSwitcher.prototype._createWeaponItems = function (firstWeapon) {
+    var weaponIndex = this.props.availableWeapons.indexOf(firstWeapon);
+    var weaponItems = [];
+    var weaponItemRotation = 0;
+
+    var start = Math.ceil(-this.props.amountOfWeapons / 2);
+    var end = Math.floor(this.props.amountOfWeapons / 2);
+
+    for (var i = 0, l = end; i <= l; i++) {
+        weaponItems[weaponItemRotation + end] = this._createWeaponSwitcherItem(weaponIndex, weaponItemRotation);
+
+        weaponIndex++;
+        if (weaponIndex >= this.props.availableWeapons.length) {
+            weaponIndex = 0;
+        }
+
+        weaponItemRotation++;
     }
 
-    return meshes;
+    weaponIndex = this.props.availableWeapons.indexOf(firstWeapon);
+    weaponItemRotation = 0;
+    for (var _i = 0, _l = start; _i >= _l; _i--) {
+        weaponIndex--;
+        if (weaponIndex <= 0) {
+            weaponIndex = this.props.availableWeapons.length - 1;
+        }
+
+        weaponItemRotation--;
+
+        weaponItems[weaponItemRotation + end] = this._createWeaponSwitcherItem(weaponIndex, weaponItemRotation);
+    }
+
+    return weaponItems;
+};
+
+WeaponSwitcher.prototype._moveSelectionByAmountOfItems = function (amountOfItemsToMove) {
+    this._updateItemsRotationOnWeaponChange(amountOfItemsToMove);
+};
+
+WeaponSwitcher.prototype._createWeaponSwitcherItem = function (weaponIndex, weaponItemRotation) {
+    return new WeaponSwitcherItem({
+        availableWeapons: this.props.availableWeapons,
+        weaponIndex: weaponIndex,
+        angleBetweenItems: this.props.angleBetweenItems,
+        rotationOnArc: weaponItemRotation,
+        rotationOffset: this.props.rotationOffset,
+        rotationLimit: Math.floor(this.props.amountOfWeapons / 2),
+        visibilityLimit: 9,
+        amountOfWeapons: this.props.amountOfWeapons,
+        scene: this.props.scene
+    });
+};
+
+WeaponSwitcher.prototype._normalizeWeaponamountOfItemsToMove = function (amountOfItemsToMove) {
+    while (amountOfItemsToMove < 0) {
+        amountOfItemsToMove += this.props.amountOfWeapons;
+    }return amountOfItemsToMove;
+};
+
+WeaponSwitcher.prototype._updateItemsRotationOnWeaponChange = function (amountOfItemsToMove) {
+    var item = void 0;
+
+    for (var i = 0, l = this.props.amountOfWeapons; i < l; i++) {
+        item = this.state.weaponItems[i];
+        item.updateRotationOnArc(amountOfItemsToMove);
+    }
+};
+
+WeaponSwitcher.prototype._updateActiveWeaponOnWeaponChange = function (amountOfItemsToMove) {
+    var activeWeaponItemIndex = this.props.availableWeapons.indexOf(this.state.activeWeapon);
+    var newWeaponItemIndex = (activeWeaponItemIndex + amountOfItemsToMove) % this.props.amountOfWeapons;
+
+    if (newWeaponItemIndex >= this.props.availableWeapons.length) {
+        this.state.activeWeapon = this.props.availableWeapons[0];
+        return;
+    }
+
+    if (newWeaponItemIndex < 0) {
+        this.state.activeWeapon = this.props.availableWeapons[this.props.availableWeapons.length - 1];
+        return;
+    }
+
+    this.state.activeWeapon = this.props.availableWeapons[newWeaponItemIndex];
 };
 
 module.exports = WeaponSwitcher;
 
-},{"renderer/gameUi/WeaponMesh":288}],290:[function(require,module,exports){
+},{"renderer/gameUi/component/WeaponSwitcherItem":289}],289:[function(require,module,exports){
+'use strict';
+
+var WeaponMesh = require('renderer/gameUi/WeaponMesh');
+
+function WeaponSwitcherItem(config) {
+    var props = {
+        availableWeapons: config.availableWeapons,
+        amountOfWeapons: config.amountOfWeapons,
+        scene: config.scene,
+        angleBetweenItems: config.angleBetweenItems,
+        rotationOffset: config.rotationOffset,
+        rotationLimitMax: config.rotationLimit * config.angleBetweenItems,
+        rotationLimitMin: -(config.rotationLimit + 1) * config.angleBetweenItems,
+        rotationSpeed: 5,
+        visibilityLimitMax: config.visibilityLimit * config.angleBetweenItems,
+        visibilityLimitMin: -config.visibilityLimit * config.angleBetweenItems
+    };
+
+    Object.freeze(props);
+    this.props = props;
+
+    var state = {
+        weaponIndex: config.weaponIndex,
+        rotation: config.rotationOnArc * this.props.angleBetweenItems,
+        expectedRotation: config.rotationOnArc * this.props.angleBetweenItems,
+        position: []
+    };
+
+    Object.preventExtensions(state);
+    this.state = state;
+
+    this.mesh = this._createMesh(config);
+
+    this.props.scene.threeScene.add(this.mesh);
+}
+
+WeaponSwitcherItem.prototype.update = function (config) {
+    this.mesh.visible = config.visible && this.state.rotation > this.props.visibilityLimitMin && this.state.rotation < this.props.visibilityLimitMax;
+
+    this.state.position = config.position;
+
+    var offsetPosition = Utils.rotationToVector(Utils.degToRad(this.state.rotation + this.props.rotationOffset), 15);
+    this.mesh.position.x = this.state.position[0] + offsetPosition[0];
+    this.mesh.position.y = this.state.position[1] + offsetPosition[1];
+
+    this.mesh.rotation.z = Utils.degToRad(this.state.rotation - 90 + this.props.rotationOffset);
+
+    // const scale = 1.5 - Math.abs(this.state.rotation)/30;
+    // this.mesh.scale.x = scale;
+    // this.mesh.scale.y = scale;
+    // this.mesh.scale.z = scale;
+
+    if (this.state.rotation !== this.state.expectedRotation) {
+        this._updateRotationToMatchExpectedRotation();
+    }
+};
+
+WeaponSwitcherItem.prototype.updateRotationOnArc = function (expectedRotation) {
+    this.state.expectedRotation = (this.getRotationOnArc() + expectedRotation) * this.props.angleBetweenItems;
+};
+
+WeaponSwitcherItem.prototype.getRotationOnArc = function () {
+    return this.state.expectedRotation / this.props.angleBetweenItems;
+};
+
+WeaponSwitcherItem.prototype._createMesh = function () {
+    return new WeaponMesh({
+        weaponName: this.props.availableWeapons[this.state.weaponIndex]
+    });
+};
+
+WeaponSwitcherItem.prototype._updateRotationToMatchExpectedRotation = function () {
+    var rotation = this.state.rotation;
+    var expectedRotation = this.state.expectedRotation;
+    var rotationLimitMax = this.props.rotationLimitMax;
+    var rotationLimitMin = this.props.rotationLimitMin;
+
+    //upper overflow
+    if (rotation >= rotationLimitMax) {
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnUpperOverflow();
+        this.state.rotation = rotationLimitMin;
+        this.state.expectedRotation = rotationLimitMin + this.state.expectedRotation - rotationLimitMax;
+        this._updateMesh();
+    }
+
+    //lower overflow
+    if (rotation < rotationLimitMin) {
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnLowerOverflow();
+        this.state.rotation = rotationLimitMax;
+        this.state.expectedRotation = rotationLimitMax + this.state.expectedRotation + rotationLimitMax + this.props.angleBetweenItems;
+        this._updateMesh();
+    }
+
+    if (rotation < expectedRotation) {
+        this.state.rotation += this.props.rotationSpeed;
+    }
+
+    if (rotation > expectedRotation) {
+        this.state.rotation -= this.props.rotationSpeed;
+    }
+};
+
+WeaponSwitcherItem.prototype._updateMesh = function () {
+    this.mesh.setNewWeapon(this.props.availableWeapons[this.state.weaponIndex]);
+};
+
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnUpperOverflow = function () {
+    var v = this.state.weaponIndex;
+    var a = this.props.availableWeapons.length;
+    var w = this.props.amountOfWeapons;
+    return a + v >= w ? (a + v) % w : a - (w - (a + v));
+};
+
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnLowerOverflow = function () {
+    var v = this.state.weaponIndex;
+    var a = this.props.availableWeapons.length;
+    var w = this.props.amountOfWeapons;
+    return (w + v) % a;
+};
+
+module.exports = WeaponSwitcherItem;
+
+},{"renderer/gameUi/WeaponMesh":287}],290:[function(require,module,exports){
 'use strict';
 
 function ChunkMesh(config) {
@@ -32594,7 +32710,7 @@ FlatHudScene.prototype.customUpdate = function () {};
 
 module.exports = FlatHudScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":239,"renderer/assetManagement/model/ModelStore":282,"renderer/gameUi/FlatHudCamera":286,"renderer/scene/BaseScene":319}],321:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":239,"renderer/assetManagement/model/ModelStore":282,"renderer/gameUi/FlatHudCamera":285,"renderer/scene/BaseScene":319}],321:[function(require,module,exports){
 'use strict';
 
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
@@ -32848,6 +32964,8 @@ MainMenuScene.prototype.createStartScene = function () {
         geometry: ModelStore.get('ravier').geometry,
         material: ModelStore.get('ravier').material
     });
+
+    shipMesh.geometry.translate(0, -0.5, 0);
 
     scale = 4;
     shipMesh.scale.x = scale;
@@ -33554,7 +33672,7 @@ var StartHelp = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'hold SHIFT + mouse left: change primary weapon'
+                            'hold Q + mouse scroll: change primary weapon'
                         )
                     ),
                     _react2.default.createElement(
@@ -33563,7 +33681,7 @@ var StartHelp = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'hold SHIFT + mouse right: change secondary weapon'
+                            'hold E + mouse sroll: change secondary weapon'
                         )
                     )
                 ),

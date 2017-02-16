@@ -1,5 +1,4 @@
 var WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
-// var TextSprite = require('renderer/gameUi/TextSprite');
 
 function FlatHud(config){
     Object.assign(this, config);
@@ -7,19 +6,25 @@ function FlatHud(config){
     if(!this.sceneManager) throw new Error('No sceneManager defined for FlatHud!');
     if(!this.renderer) throw new Error('No renderer defined for FlatHud!');
 
-    this.activationKey = 'shift';
-    
     this.switchersConfig = [
         {
-            rotation: Utils.degToRad(90),
-            switchKey: 'mouseLeft'
+            index: 0,
+            rotationOffset: 90,
+            switchNextKey: 'mouseLeft',
+            switchPrevKey: 'mouseRight',
+            activationKey: 'e',
+            weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
         }, {
-            rotation: Utils.degToRad(-90),
-            switchKey: 'mouseRight'
+            index: 1,
+            rotationOffset: -90,
+            switchNextKey: 'mouseLeft',
+            switchPrevKey: 'mouseRight',
+            activationKey: 'q',
+            weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
         }
     ];
 
-    this.switchers = this.createSwitchers();
+    this.switchers = this._createSwitchers();
     this.hudActive = false;
 
     EventEmitter.apply(this, arguments);
@@ -36,8 +41,7 @@ FlatHud.prototype.update = function(){
         var positionY = -(actorPosition[1] * coefficient - hudSceneCamera.viewHeight / 2);
 
         this.switchers.forEach(switcher => {
-            switcher.position = [0, positionY];
-            switcher.update();
+            switcher.update([0, positionY]);
         });
     }
 
@@ -48,32 +52,10 @@ FlatHud.prototype.onPlayerActorAppeared = function(actor){
     this.actor = actor;
 };
 
-FlatHud.prototype.createSwitchers = function(){
-    var switcherIndex = 0;
-    var switchers = [];
-    this.switchersConfig.forEach(switcherConfig => {
-        var switcher = this.createSwitcher(switcherConfig, switcherIndex);
-        switchers.push(switcher);
-        switcherIndex ++;
-    });
-    return switchers;
-};
-
-FlatHud.prototype.createWeaponTextSprites = function(){
-    var switcherIndex = 0;
-    var weaponTextSprites = [];
-    this.switchersConfig.forEach(switcherConfig => {
-        var weaponTextSprite = this.createWeaponTextSprite(switcherConfig, switcherIndex);
-        weaponTextSprites.push(weaponTextSprite);
-        switcherIndex ++;
-    });
-    return weaponTextSprites;
-};
-
 FlatHud.prototype.onInput = function(inputState){
-    this.hudActive = !!inputState[this.activationKey];
     this.switchers.forEach(switcher => {
         switcher.handleInput(inputState);
+        this.hudActive = this.hudActive || !!inputState[switcher.props.activationKey];
     });
 };
 
@@ -87,18 +69,38 @@ FlatHud.prototype.onWeaponSwitched = function(event){
         this.actor.switchWeapon(changeConfig);
     }
 
-
     this.emit(
         {
             type: 'weaponSwitched',
-            data: changeConfig
+            data: changeConfig 
         }
     );
 };
 
-FlatHud.prototype.createSwitcher = function(switcherConfig, switcherIndex){
-    switcherConfig.sceneManager = this.sceneManager;
-    switcherConfig.activationKey = this.activationKey;
+FlatHud.prototype._createWeaponTextSprites = function(){
+    var switcherIndex = 0;
+    var weaponTextSprites = [];
+    this.switchersConfig.forEach(switcherConfig => {
+        var weaponTextSprite = this._createWeaponTextSprite(switcherConfig, switcherIndex);
+        weaponTextSprites.push(weaponTextSprite);
+        switcherIndex ++;
+    });
+    return weaponTextSprites;
+};
+
+FlatHud.prototype._createSwitchers = function() {
+    var switcherIndex = 0;
+    var switchers = [];
+    this.switchersConfig.forEach(switcherConfig => {
+        var switcher = this._createSwitcher(switcherConfig, switcherIndex);
+        switchers.push(switcher);
+        switcherIndex ++;
+    });
+    return switchers;
+};
+
+FlatHud.prototype._createSwitcher = function(switcherConfig, switcherIndex) {
+    switcherConfig.scene = this.sceneManager.get('FlatHudScene');
     switcherConfig.index = switcherIndex;
 
     var switcher = new WeaponSwitcher(switcherConfig);
@@ -106,5 +108,6 @@ FlatHud.prototype.createSwitcher = function(switcherConfig, switcherIndex){
 
     return switcher;
 };
+
 
 module.exports = FlatHud;

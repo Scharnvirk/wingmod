@@ -2812,7 +2812,7 @@ module.exports = DropMixin;
 'use strict';
 
 var InputMixin = {
-    _hudModifier: 'shift',
+    _hudModifiers: ['q', 'e'],
 
     applyLookAtAngleInput: function applyLookAtAngleInput(inputState) {
         var angleForce = 0;
@@ -2854,7 +2854,11 @@ var InputMixin = {
     },
 
     applyWeaponInput: function applyWeaponInput(inputState) {
-        if (!inputState[this._hudModifier]) {
+        var inHud = this._hudModifiers.some(function (element) {
+            return inputState[element];
+        });
+
+        if (!inHud) {
             if (inputState.mouseLeft) {
                 this.primaryWeaponSystem.shoot();
             } else {

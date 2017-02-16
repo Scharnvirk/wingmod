@@ -22,10 +22,10 @@ class StartHelp extends React.Component {
                     <span>{'Mouse right: fire secondary weapon system'}</span>
                 </StyledText>
                 <StyledText style={classnames('smallText', 'textDark')}>
-                    <span>{'hold SHIFT + mouse left: change primary weapon'}</span>
+                    <span>{'hold Q + mouse scroll: change primary weapon'}</span>
                 </StyledText>
                 <StyledText style={classnames('smallText', 'textDark')}>
-                    <span>{'hold SHIFT + mouse right: change secondary weapon'}</span>
+                    <span>{'hold E + mouse sroll: change secondary weapon'}</span>
                 </StyledText>
             </div>
 

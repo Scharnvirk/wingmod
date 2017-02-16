@@ -4,7 +4,7 @@
   "faces":[],
   "uvs":[],
   "materials": [{
-     "colorEmissive": [0,1,0],
+     "colorEmissive": [0.8,0.8,0.8],
      "transparent": true,
      "colorDiffuse": [1,1,1],
      "blending": "NormalBlending",

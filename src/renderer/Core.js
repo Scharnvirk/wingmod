@@ -8,7 +8,6 @@ var SceneManager = require('renderer/scene/SceneManager');
 var AssetManager = require('renderer/assetManagement/assetManager.js');
 var AiImageRenderer = require('renderer/ai/AiImageRenderer');
 var Hud = require('renderer/gameUi/Hud');
-var CanvasHud = require('renderer/gameUi/CanvasHud');
 var FlatHud = require('renderer/gameUi/FlatHud');
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 var GameState = require('renderer/GameState');
@@ -33,24 +32,23 @@ function Core(config){
 Core.prototype.init = function(){
     this.assetManager = new AssetManager();
     this.assetManager.loadAll();
+    this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
 
-    this.createMainComponents();
-    this.initEventHandlers();
-    this.renderStats = this.createRenderStatsWatcher();
-    this.stats = this.createStatsWatcher();
-    this.startTime = Date.now();
-    this.attachToDom(this.renderStats);
-    this.attachToDom(this.stats);
-    this.attachRendererToDom(this.renderer);
-
+    this.configManager = new ConfigManager();
+    
     PubSub.publish('setConfig', this.configManager.settingConfig);
 };
 
-Core.prototype.createMainComponents = function(){
-    this.configManager = new ConfigManager();
+Core.prototype.createMainComponents = function(){    
     this.renderer = this.createRenderer();
-    this.inputListener = new InputListener({renderer: this.renderer});
-    this.sceneManager = new SceneManager({renderer: this.renderer, core: this});
+    this.inputListener = new InputListener({renderer: this.renderer});    
+
+    this.sceneManager = new SceneManager({renderer: this.renderer, core: this});        
+    this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
+    this.sceneManager.createScene('FlatHudScene');
+    
+    this.activeScene = 'MainMenuScene';
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
     this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
     this.logicBus = new LogicBus({core: this, worker: this.logicWorker});
@@ -58,7 +56,6 @@ Core.prototype.createMainComponents = function(){
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
-    this.canvasHud = new CanvasHud({canvasElement: this.canvasElement, autoWidth: true});
     this.gameState = new GameState({ui: this.ui});
 };
 
@@ -78,7 +75,7 @@ Core.prototype.initEventHandlers = function(){
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
     this.actorManager.on('requestShake', this.onRequestShake.bind(this));
 
-    this.assetManager.on('assetsLoaded', this.onAssetsLoaded.bind(this));
+    
 
     this.flatHud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
@@ -142,20 +139,22 @@ Core.prototype.resetCamera = function(){
     this.sceneManager.get('FlatHudScene').resetCamera();
 };
 
-Core.prototype.resetHud = function(){
-    this.canvasHud.resize();
-};
-
 Core.prototype.getActiveScene = function(){
     return this.activeScene;
 };
 
 Core.prototype.onAssetsLoaded = function(){
     console.log('assets loaded');
-    this.activeScene = 'MainMenuScene';
-    this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
-    this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
-    this.sceneManager.createScene('FlatHudScene');
+
+    this.createMainComponents();
+    this.initEventHandlers();
+    this.renderStats = this.createRenderStatsWatcher();
+    this.stats = this.createStatsWatcher();
+    this.startTime = Date.now();
+    this.attachToDom(this.renderStats);
+    this.attachToDom(this.stats);
+    this.attachRendererToDom(this.renderer);
+
     this.particleManager.createGenerators();
     this.particleManager.updateResolutionCoefficient(this.configManager.config.resolution);
 

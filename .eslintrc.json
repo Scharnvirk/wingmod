@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "jasmine": true,
         "es6": true
     },
     "extends": "eslint:recommended",
@@ -13,7 +14,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "jasmine"
     ],
     "rules": {
         "indent": [
@@ -43,6 +45,8 @@
         "PubSub": false,
         "THREE": false,
         "THREEx": false,
-        "createjs": false
+        "createjs": false,
+        "__dirname": false,
+        "global": false
     }
 }

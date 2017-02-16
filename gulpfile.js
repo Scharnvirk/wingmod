@@ -4,9 +4,13 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var fs = require('fs');
 var nodemon = require('nodemon');
+var jasmine = require('gulp-jasmine');
+var Server = require('karma').Server;
+
 var SOURCE_PATH = 'src';
 var LOG_PATH = 'gulpLog.txt';
 var VERSION_PATH = 'version';
+var SPEC_PATH = './test/**/*.js';
 
 var buildIds = [];
 
@@ -25,8 +29,8 @@ var sources = [
 
 var customOptions = {
     transform: [
-        ["babelify", {
-            presets: ["es2015", "react"]
+        ['babelify', {
+            presets: ['es2015', 'react']
         }]
     ]
 };
@@ -41,7 +45,7 @@ function pad(value) {
 
 function buildCurrentTimeString(){
     var time = new Date();
-    return '[' + pad(time.getHours()) + ":" + pad(time.getMinutes()) + ":" + pad(time.getSeconds()) + ']';
+    return '[' + pad(time.getHours()) + ':' + pad(time.getMinutes()) + ':' + pad(time.getSeconds()) + ']';
 }
 
 function onError(buildInfo, message){
@@ -57,7 +61,7 @@ function onError(buildInfo, message){
 
 function onSuccess(config){
     var time = buildCurrentTimeString();
-    var version = JSON.parse(fs.readFileSync(VERSION_PATH, "utf8"));
+    var version = JSON.parse(fs.readFileSync(VERSION_PATH, 'utf8'));
     version.build ++;
     fs.writeFileSync(VERSION_PATH, JSON.stringify(version));
 
@@ -81,17 +85,19 @@ function rebundle(bundler, config){
 }
 
 function createBundle(config, watching){
-    var bundler = browserify(
-        Object.assign(
-            {},
-            watchify.args,
-            {
-                entries:config.src,
-                paths: ['./node_modules', './' + SOURCE_PATH]
-            },
-            customOptions
-        )
+    var browserifyConfig =  Object.assign(
+        {},
+        watchify.args,
+        {
+            entries:config.src,
+            paths: ['./node_modules', './' + SOURCE_PATH]
+        },
+        customOptions
     );
+
+    console.log(browserifyConfig);
+    
+    var bundler = browserify(browserifyConfig);
 
     if(watching){
         bundler = watchify(bundler);
@@ -124,4 +130,11 @@ gulp.task('watch', function(){
     createBundles(sources, true);
 });
 
-gulp.task('default', ['asd']);
+gulp.task('default', ['watch']);
+
+gulp.task('test', function (done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});

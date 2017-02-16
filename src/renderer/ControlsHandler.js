@@ -9,7 +9,7 @@ function ControlsHandler(config){
     this.oldInputState = {};
     this.inputState =  {};
 
-    this.hudKeys = ['shift', 'mouseLeft', 'mouseRight'];
+    this.hudKeys = ['q', 'e', 'mouseLeft', 'mouseRight'];
 
     EventEmitter.apply(this, arguments);
 }
