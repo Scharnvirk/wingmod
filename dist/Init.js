@@ -30792,7 +30792,7 @@ WeaponSwitcher.prototype._createWeaponSwitcherItem = function (weaponIndex, weap
         rotationOnArc: weaponItemRotation,
         rotationOffset: this.props.rotationOffset,
         rotationLimit: Math.floor(this.props.amountOfWeapons / 2),
-        visibilityLimit: 9,
+        visibilityLimit: 3,
         amountOfWeapons: this.props.amountOfWeapons,
         scene: this.props.scene
     });
@@ -30880,10 +30880,10 @@ WeaponSwitcherItem.prototype.update = function (config) {
 
     this.mesh.rotation.z = Utils.degToRad(this.state.rotation - 90 + this.props.rotationOffset);
 
-    // const scale = 1.5 - Math.abs(this.state.rotation)/30;
-    // this.mesh.scale.x = scale;
-    // this.mesh.scale.y = scale;
-    // this.mesh.scale.z = scale;
+    var scale = 1.5 - Math.abs(this.state.rotation) / 30;
+    this.mesh.scale.x = scale;
+    this.mesh.scale.y = scale;
+    this.mesh.scale.z = scale;
 
     if (this.state.rotation !== this.state.expectedRotation) {
         this._updateRotationToMatchExpectedRotation();

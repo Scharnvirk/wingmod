@@ -146,7 +146,7 @@ WeaponSwitcher.prototype._createWeaponSwitcherItem = function(weaponIndex, weapo
         rotationOnArc: weaponItemRotation,
         rotationOffset: this.props.rotationOffset,
         rotationLimit: Math.floor(this.props.amountOfWeapons / 2),
-        visibilityLimit: 9,
+        visibilityLimit: 3,
         amountOfWeapons: this.props.amountOfWeapons,
         scene: this.props.scene,        
     });
