@@ -86,7 +86,6 @@ class WeaponInfoContainer extends Component {
     }
 
     render() {
-        console.log('render');
         if (!this.state.visible) return null;
 
         return <div style={this.componentStyle.background}>

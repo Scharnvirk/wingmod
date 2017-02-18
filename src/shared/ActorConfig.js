@@ -162,6 +162,7 @@ var ActorConfig = {
             damage: 50,
             removeOnHit: true,
             timeout: 800,
+            constantAcceleration: 400,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'

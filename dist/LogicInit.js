@@ -1277,6 +1277,10 @@ BaseActor.prototype.processMovement = function () {
     if (this._horizontalThrust !== 0) {
         this._body.applyForceLocal([this._horizontalThrust * this.props.acceleration, 0]);
     }
+
+    if (this.props.constantAcceleration) {
+        this._body.applyForceLocal([0, this.props.constantAcceleration]);
+    }
 };
 
 BaseActor.prototype.drawDebug = function (position) {
@@ -2069,7 +2073,7 @@ function MissileLauncher(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 40;
-    this.velocity = 200;
+    this.velocity = 100;
     this.sound = 'missile';
     this.firingMode = 'alternate';
     this.volume = 0.5;
@@ -4932,8 +4936,8 @@ function ShipActor() {
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'lasgun');
-    this.setupWeaponMeshes(1, 'plasmagun');
+    this.setupWeaponMeshes(0, 'redlasgun');
+    this.setupWeaponMeshes(1, 'redlasgun');
 }
 
 ShipActor.extend(BaseActor);
@@ -5915,6 +5919,7 @@ var ActorConfig = {
             damage: 50,
             removeOnHit: true,
             timeout: 800,
+            constantAcceleration: 400,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'

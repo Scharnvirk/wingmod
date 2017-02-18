@@ -14,7 +14,8 @@ function WeaponSwitcher(config){
         amountOfWeapons: config.amountOfWeapons || 7,    
         angleBetweenItems: config.angleBetweenItems || 15,
         availableWeapons: config.weapons,
-        rotationOffset: config.rotationOffset
+        rotationOffset: config.rotationOffset,
+        invertDirection: config.invertDirection
     };
 
     Object.freeze(props);
@@ -61,12 +62,22 @@ WeaponSwitcher.prototype.switchToByIndex = function(weaponIndex) {
 
 };
 
-WeaponSwitcher.prototype.switchToNext = function() {
-    //HAX //fornow
-    const multiplier = this.props.index === 0 ? 1 : -1;
+WeaponSwitcher.prototype.notifyOfCurrentSelection = function() {
+    this.emit({
+        type: 'weaponSwitched', 
+        data: {
+            weapon: this.state.activeWeapon,
+            silent: true
+        },
+        index: this.props.index
+    });
+};
 
-    this._moveSelectionByAmountOfItems(1 * multiplier);
-    this._updateActiveWeaponOnWeaponChange(-1 * multiplier);  
+WeaponSwitcher.prototype.switchToNext = function() {
+    const multiplier = this.props.invertDirection ? -1 : 1;
+
+    this._moveSelectionByAmountOfItems( -1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange( 1 * multiplier);  
 
     this.emit({
         type: 'weaponSwitched', 
@@ -78,10 +89,10 @@ WeaponSwitcher.prototype.switchToNext = function() {
 };
 
 WeaponSwitcher.prototype.switchToPrev = function() {
-    //HAX //fornow
-    const multiplier = this.props.index === 0 ? 1 : -1;
-    this._moveSelectionByAmountOfItems(-1 * multiplier);
-    this._updateActiveWeaponOnWeaponChange(1 * multiplier);  
+    const multiplier = this.props.invertDirection ? -1 : 1;
+
+    this._moveSelectionByAmountOfItems( 1 * multiplier );
+    this._updateActiveWeaponOnWeaponChange( -1 * multiplier );  
 
     this.emit({
         type: 'weaponSwitched', 
@@ -121,7 +132,7 @@ WeaponSwitcher.prototype._createWeaponItems = function(firstWeapon) {
     weaponItemRotation = 0;
     for (let i = 0, l = start; i >= l; i--) {
         weaponIndex --;
-        if (weaponIndex <= 0) {
+        if (weaponIndex < 0) {
             weaponIndex = this.props.availableWeapons.length - 1;
         }
 

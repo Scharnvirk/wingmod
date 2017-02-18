@@ -7,7 +7,7 @@ const Action = require('../tools/Action');
 const ActionLoop = require('../tools/ActionLoop');
 const WeaponSwitcherItem = require('renderer/gameUi/component/WeaponSwitcherItem');
 
-const availableWeapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
+let availableWeapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
 
 const switcherProps = {
     amountOfWeapons: 7,    
@@ -106,18 +106,27 @@ describe ('WeaponSwitcherItem', function() {
     it ('overflows downwards', function() {        
         this.switcherItem = createSwitcherItem(0, {rotationOnArc: -4});        
 
-        this.switchItemToNextAction = new Action( () => {
+        this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(-1);                
         }, {frequency: 15, executions: 1});
 
-        ActionLoop(180, this.switchItemToNextAction, this.switcherItemUpdateAction);
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
         expect(this.switcherItem.state.rotation).toBe(30);
+    });
+
+    it ('does not overflow its weaponIndex on multiple rotations downwards', function() {    
+        this.switcherItem = createSwitcherItem(2, {availableWeapons: ['w1', 'w2', 'w3']});   
+
+        this.switchItemToPrevAction = new Action( () => {
+            this.switcherItem.updateRotationOnArc(1);                
+        }, {frequency: 5, executions: 50});
+
+        ActionLoop(500, this.switchItemToPrevAction, this.switcherItemUpdateAction);
+        expect(this.switcherItem.state.weaponIndex).not.toBeLessThan(0);
     });
 });
 
-
-    
-describe ('WeaponSwitcherItem on upper overflow,', function() {
+describe ('WeaponSwitcherItem on lower overflow,', function() {
     beforeEach(function(){
         const mockedShipPosition = [0,0];
         this.switcherItem = createSwitcherItem(0);        
@@ -179,7 +188,7 @@ describe ('WeaponSwitcherItem on upper overflow,', function() {
         }, {frequency: 15, executions: 1});
 
         ActionLoop(180, this.switchItemToNextAction, this.switcherItemUpdateAction);
-        expect(this.switcherItem.state.weaponIndex).toBe(2);
+        expect(this.switcherItem.state.weaponIndex).toBe(3);
     });
 
     it ('weaponIndex is changed when switcherItem started at position -2', function() {    
@@ -190,12 +199,34 @@ describe ('WeaponSwitcherItem on upper overflow,', function() {
         }, {frequency: 15, executions: 1});
 
         ActionLoop(180, this.switchItemToNextAction, this.switcherItemUpdateAction);
-        expect(this.switcherItem.state.weaponIndex).toBe(1);
+        expect(this.switcherItem.state.weaponIndex).toBe(3);
+    });
+
+    it ('weaponIndex is changed on overflow for two weapons', function() {    
+        this.switcherItem = createSwitcherItem(1, {rotationOnArc: 3, availableWeapons: ['w1', 'w2']});   
+
+        this.switchItemToPrevAction = new Action( () => {
+            this.switcherItem.updateRotationOnArc(1);                
+        }, {frequency: 15, executions: 1});
+
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
+        expect(this.switcherItem.state.weaponIndex).toBe(0);
+    });
+
+    it ('weaponIndex is changed on overflow for even amount of weapons', function() {    
+        this.switcherItem = createSwitcherItem(3, {rotationOnArc: 3, availableWeapons: ['w1', 'w2', 'w3', 'w4']});   
+
+        this.switchItemToPrevAction = new Action( () => {
+            this.switcherItem.updateRotationOnArc(1);                
+        }, {frequency: 15, executions: 1});
+
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
+        expect(this.switcherItem.state.weaponIndex).toBe(0); 
     });
 });
 
 
-describe ('WeaponSwitcherItem on lower overflow,', function() {
+describe ('WeaponSwitcherItem on upper overflow,', function() {
     beforeEach(function(){
         const mockedShipPosition = [0,0];
         this.switcherItem = createSwitcherItem(0);        
@@ -208,22 +239,45 @@ describe ('WeaponSwitcherItem on lower overflow,', function() {
     it ('weaponIndex is changed when switcherItem started at position 3', function() {    
         this.switcherItem = createSwitcherItem(2, {rotationOnArc: -4});   
 
-        this.switchItemToNextAction = new Action( () => {
+        this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(-1);                
         }, {frequency: 15, executions: 1});
 
-        ActionLoop(180, this.switchItemToNextAction, this.switcherItemUpdateAction);
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
         expect(this.switcherItem.state.weaponIndex).toBe(4);
     });
 
     it ('weaponIndex is changed when switcherItem started at position 3', function() {    
         this.switcherItem = createSwitcherItem(3, {rotationOnArc: -4});   
 
-        this.switchItemToNextAction = new Action( () => {
+        this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(-1);                
         }, {frequency: 15, executions: 1});
 
-        ActionLoop(180, this.switchItemToNextAction, this.switcherItemUpdateAction);
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
         expect(this.switcherItem.state.weaponIndex).toBe(0);
     });
+
+    it ('weaponIndex is changed on overflow for two weapons', function() {    
+        this.switcherItem = createSwitcherItem(1, {rotationOnArc: -4, availableWeapons: ['w1', 'w2']});   
+
+        this.switchItemToPrevAction = new Action( () => {
+            this.switcherItem.updateRotationOnArc(-1);                
+        }, {frequency: 15, executions: 1});
+
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
+        expect(this.switcherItem.state.weaponIndex).toBe(0);
+    });
+
+    it ('weaponIndex is changed on overflow for even amount of weapons', function() {    
+        this.switcherItem = createSwitcherItem(3, {rotationOnArc: -4, availableWeapons: ['w1', 'w2', 'w3', 'w4']});   
+
+        this.switchItemToPrevAction = new Action( () => {
+            this.switcherItem.updateRotationOnArc(-1);                
+        }, {frequency: 15, executions: 1});
+
+        ActionLoop(180, this.switchItemToPrevAction, this.switcherItemUpdateAction);
+        expect(this.switcherItem.state.weaponIndex).toBe(2);
+    });
+
 });

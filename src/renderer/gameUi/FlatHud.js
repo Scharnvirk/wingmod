@@ -13,14 +13,15 @@ function FlatHud(config){
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'e',
-            weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
+            weapons: ['redlasgun', 'lasgun', 'pulsewavegun', 'plasmagun', 'missilelauncher']
         }, {
             index: 1,
             rotationOffset: -90,
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'q',
-            weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
+            weapons: ['redlasgun', 'missilelauncher', 'plasmagun', 'pulsewavegun', 'lasgun'],
+            invertDirection: true
         }
     ];
 
@@ -49,7 +50,11 @@ FlatHud.prototype.update = function(){
 };
 
 FlatHud.prototype.onPlayerActorAppeared = function(actor){
-    this.actor = actor;
+    this.actor = actor;  
+};
+
+FlatHud.prototype.selectInitialWeapons = function() {
+    this.switchers.forEach(switcher => switcher.notifyOfCurrentSelection());
 };
 
 FlatHud.prototype.onInput = function(inputState){

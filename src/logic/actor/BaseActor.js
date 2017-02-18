@@ -171,6 +171,10 @@ BaseActor.prototype.processMovement = function(){
     if(this._horizontalThrust !== 0){
         this._body.applyForceLocal([this._horizontalThrust * this.props.acceleration, 0]);
     }
+
+    if (this.props.constantAcceleration) {
+        this._body.applyForceLocal([0, this.props.constantAcceleration]);
+    }
 };
 
 BaseActor.prototype.drawDebug = function(position){

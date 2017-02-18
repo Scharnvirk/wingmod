@@ -9,7 +9,7 @@ function MissileLauncher(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 40;
-    this.velocity = 200;
+    this.velocity = 100;
     this.sound = 'missile';
     this.firingMode = 'alternate';
     this.volume = 0.5;

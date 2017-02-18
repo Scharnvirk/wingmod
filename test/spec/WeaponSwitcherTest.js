@@ -9,7 +9,9 @@ const WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
 
 const availableWeapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
 
-const createSwitcher = function() {
+const createSwitcher = function(customConfig) {
+    customConfig = customConfig || {};
+
     const switcherConfig = {
         index: 0,
         rotationOffset: 90,
@@ -19,10 +21,11 @@ const createSwitcher = function() {
         weapons: availableWeapons,
         amountOfWeapons: 7,    
         angleBetweenItems: 15,
-        scene: { threeScene: {add: function(){}} }
+        scene: { threeScene: {add: function(){}} },
+        invertDirection: false
     };
 
-    const switcher = new WeaponSwitcher(switcherConfig);
+    const switcher = new WeaponSwitcher(Object.assign(switcherConfig, customConfig));
 
     return switcher;
 };
@@ -46,7 +49,7 @@ describe ('WeaponSwitcher rotation', function() {
 
     it ('works once if requested once', function() {        
         ActionLoop(180, this.switchToNextAction, this.switcherUpdateAction);
-        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart + 15);
+        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart - 15);
     });
 
     it ('works twice if requested twice with sufficient delay', function() {        
@@ -55,7 +58,7 @@ describe ('WeaponSwitcher rotation', function() {
         }, {frequency: 15, executions: 2});
 
         ActionLoop(180, this.switchToNextAction, this.switcherUpdateAction);
-        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart + 30);
+        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart + 75);
     });
 
     it ('works once if requested twice with delay too short', function() {        
@@ -64,7 +67,7 @@ describe ('WeaponSwitcher rotation', function() {
         }, {frequency: 0, executions: 2});
 
         ActionLoop(180, this.switchToNextAction, this.switcherUpdateAction);
-        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart + 30);
+        expect(this.firstSwitchersState.rotation).toBe(this.switcherRotationAtTheStart + 75);
     });
 
     it ('will overflow eventually', function() {        
@@ -145,14 +148,40 @@ describe('WeaponSwitcher current weapon', function(){
 });
 
 describe('WeaponSwitcher weapon creation:', function(){
-    beforeEach(function(){
-        this.switcher = createSwitcher();        
-    });
-
     it ('will create items in correct order', function(){
+        this.switcher = createSwitcher();        
         const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
         const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
-        expect(weaponOrder).toEqual([2,3,4,0,3,2,1,0]);
-        // console.log(weaponOrder);
+        expect(weaponOrder).toEqual([2,3,4,0,1,2,3]);
+    });
+
+    it ('will create items in correct order, if inverted', function(){
+        this.switcher = createSwitcher();        
+        const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
+        const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
+        expect(weaponOrder).toEqual([2,3,4,0,1,2,3]);
+    });
+
+    it ('will create items in correct order on subset of 3', function(){
+        const availableWeaponsSubset = ['redlasgun', 'lasgun', 'pulsewavegun'];
+        this.switcher = createSwitcher({weapons: availableWeaponsSubset});        
+        const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
+        const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
+        expect(weaponOrder).toEqual([0,1,2,0,1,2,0]);
+    });
+
+    it ('will create items in correct order on subset of 2', function(){
+        const availableWeaponsSubset = ['plasmagun', 'missilelauncher'];
+        this.switcher = createSwitcher({weapons: availableWeaponsSubset});        
+        const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
+        const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
+        expect(weaponOrder).toEqual([1,0,1,0,1,0,1]);
+    });
+
+    it ('will create items in correct order for MANY weapons', function(){
+        this.switcher = createSwitcher({amountOfWeapons: 21});        
+        const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
+        const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
+        expect(weaponOrder).toEqual([ 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0 ] );
     });
 });

@@ -77,7 +77,7 @@ WeaponSwitcherItem.prototype._updateRotationToMatchExpectedRotation = function()
     
     //upper overflow
     if (rotation >= rotationLimitMax) {
-        this.state.weaponIndex = this._calculateNewWeaponIndexOnUpperOverflow();
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnLowerOverflow();
         this.state.rotation = rotationLimitMin;
         this.state.expectedRotation = rotationLimitMin + this.state.expectedRotation - rotationLimitMax;        
         this._updateMesh();
@@ -85,7 +85,7 @@ WeaponSwitcherItem.prototype._updateRotationToMatchExpectedRotation = function()
 
     //lower overflow
     if (rotation < rotationLimitMin) {
-        this.state.weaponIndex = this._calculateNewWeaponIndexOnLowerOverflow();
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnUpperOverflow();
         this.state.rotation = rotationLimitMax;
         this.state.expectedRotation = rotationLimitMax + this.state.expectedRotation + rotationLimitMax + this.props.angleBetweenItems;
         this._updateMesh();
@@ -104,18 +104,34 @@ WeaponSwitcherItem.prototype._updateMesh = function() {
     this.mesh.setNewWeapon(this.props.availableWeapons[this.state.weaponIndex]);
 };
 
-WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnUpperOverflow = function() {
-    let v = this.state.weaponIndex;
-    let a = this.props.availableWeapons.length;
-    let w = this.props.amountOfWeapons;
-    return (a + v) >= w ? (a + v) % w : a - (w - (a + v));
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnLowerOverflow = function() {
+    let counter = 0;
+    let currentWeaponIndex = this.state.weaponIndex;
+
+    while (counter < this.props.amountOfWeapons) {
+        currentWeaponIndex --;
+        if (currentWeaponIndex < 0) {
+            currentWeaponIndex = this.props.availableWeapons.length - 1;
+        }
+        counter ++;
+    }
+
+    return currentWeaponIndex;    
 };
 
-WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnLowerOverflow = function() {
-    let v = this.state.weaponIndex;
-    let a = this.props.availableWeapons.length;
-    let w = this.props.amountOfWeapons;
-    return (w + v) % a;
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnUpperOverflow = function() {
+    let counter = 0;
+    let currentWeaponIndex = this.state.weaponIndex;
+
+    while (counter < this.props.amountOfWeapons) {
+        currentWeaponIndex ++;
+        if (currentWeaponIndex > this.props.availableWeapons.length - 1) {
+            currentWeaponIndex = 0;
+        }
+        counter ++;
+    }
+
+    return currentWeaponIndex;
 };
 
 

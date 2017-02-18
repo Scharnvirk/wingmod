@@ -24380,6 +24380,10 @@ BaseActor.prototype.processMovement = function () {
     if (this._horizontalThrust !== 0) {
         this._body.applyForceLocal([this._horizontalThrust * this.props.acceleration, 0]);
     }
+
+    if (this.props.constantAcceleration) {
+        this._body.applyForceLocal([0, this.props.constantAcceleration]);
+    }
 };
 
 BaseActor.prototype.drawDebug = function (position) {
@@ -25172,7 +25176,7 @@ function MissileLauncher(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 40;
-    this.velocity = 200;
+    this.velocity = 100;
     this.sound = 'missile';
     this.firingMode = 'alternate';
     this.volume = 0.5;
@@ -27034,6 +27038,8 @@ Core.prototype.onStartGame = function () {
         this.activeScene = 'GameScene';
     }
     PubSub.publish('hudShow');
+    this.resetCamera();
+    this.resetRenderer();
 };
 
 Core.prototype.onGotPointerLock = function () {
@@ -28826,8 +28832,8 @@ function ShipActor() {
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'lasgun');
-    this.setupWeaponMeshes(1, 'plasmagun');
+    this.setupWeaponMeshes(0, 'redlasgun');
+    this.setupWeaponMeshes(1, 'redlasgun');
 }
 
 ShipActor.extend(BaseActor);
@@ -30299,14 +30305,15 @@ function FlatHud(config) {
         switchNextKey: 'mouseLeft',
         switchPrevKey: 'mouseRight',
         activationKey: 'e',
-        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
+        weapons: ['redlasgun', 'lasgun', 'pulsewavegun', 'plasmagun', 'missilelauncher']
     }, {
         index: 1,
         rotationOffset: -90,
         switchNextKey: 'mouseLeft',
         switchPrevKey: 'mouseRight',
         activationKey: 'q',
-        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher']
+        weapons: ['redlasgun', 'missilelauncher', 'plasmagun', 'pulsewavegun', 'lasgun'],
+        invertDirection: true
     }];
 
     this.switchers = this._createSwitchers();
@@ -30335,6 +30342,12 @@ FlatHud.prototype.update = function () {
 
 FlatHud.prototype.onPlayerActorAppeared = function (actor) {
     this.actor = actor;
+};
+
+FlatHud.prototype.selectInitialWeapons = function () {
+    this.switchers.forEach(function (switcher) {
+        return switcher.notifyOfCurrentSelection();
+    });
 };
 
 FlatHud.prototype.onInput = function (inputState) {
@@ -30663,7 +30676,8 @@ function WeaponSwitcher(config) {
         amountOfWeapons: config.amountOfWeapons || 7,
         angleBetweenItems: config.angleBetweenItems || 15,
         availableWeapons: config.weapons,
-        rotationOffset: config.rotationOffset
+        rotationOffset: config.rotationOffset,
+        invertDirection: config.invertDirection
     };
 
     Object.freeze(props);
@@ -30710,12 +30724,22 @@ WeaponSwitcher.prototype.switchToByName = function (weaponName) {};
 
 WeaponSwitcher.prototype.switchToByIndex = function (weaponIndex) {};
 
-WeaponSwitcher.prototype.switchToNext = function () {
-    //HAX //fornow
-    var multiplier = this.props.index === 0 ? 1 : -1;
+WeaponSwitcher.prototype.notifyOfCurrentSelection = function () {
+    this.emit({
+        type: 'weaponSwitched',
+        data: {
+            weapon: this.state.activeWeapon,
+            silent: true
+        },
+        index: this.props.index
+    });
+};
 
-    this._moveSelectionByAmountOfItems(1 * multiplier);
-    this._updateActiveWeaponOnWeaponChange(-1 * multiplier);
+WeaponSwitcher.prototype.switchToNext = function () {
+    var multiplier = this.props.invertDirection ? -1 : 1;
+
+    this._moveSelectionByAmountOfItems(-1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(1 * multiplier);
 
     this.emit({
         type: 'weaponSwitched',
@@ -30727,10 +30751,10 @@ WeaponSwitcher.prototype.switchToNext = function () {
 };
 
 WeaponSwitcher.prototype.switchToPrev = function () {
-    //HAX //fornow
-    var multiplier = this.props.index === 0 ? 1 : -1;
-    this._moveSelectionByAmountOfItems(-1 * multiplier);
-    this._updateActiveWeaponOnWeaponChange(1 * multiplier);
+    var multiplier = this.props.invertDirection ? -1 : 1;
+
+    this._moveSelectionByAmountOfItems(1 * multiplier);
+    this._updateActiveWeaponOnWeaponChange(-1 * multiplier);
 
     this.emit({
         type: 'weaponSwitched',
@@ -30768,7 +30792,7 @@ WeaponSwitcher.prototype._createWeaponItems = function (firstWeapon) {
     weaponItemRotation = 0;
     for (var _i = 0, _l = start; _i >= _l; _i--) {
         weaponIndex--;
-        if (weaponIndex <= 0) {
+        if (weaponIndex < 0) {
             weaponIndex = this.props.availableWeapons.length - 1;
         }
 
@@ -30912,7 +30936,7 @@ WeaponSwitcherItem.prototype._updateRotationToMatchExpectedRotation = function (
 
     //upper overflow
     if (rotation >= rotationLimitMax) {
-        this.state.weaponIndex = this._calculateNewWeaponIndexOnUpperOverflow();
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnLowerOverflow();
         this.state.rotation = rotationLimitMin;
         this.state.expectedRotation = rotationLimitMin + this.state.expectedRotation - rotationLimitMax;
         this._updateMesh();
@@ -30920,7 +30944,7 @@ WeaponSwitcherItem.prototype._updateRotationToMatchExpectedRotation = function (
 
     //lower overflow
     if (rotation < rotationLimitMin) {
-        this.state.weaponIndex = this._calculateNewWeaponIndexOnLowerOverflow();
+        this.state.weaponIndex = this._calculateNewWeaponIndexOnUpperOverflow();
         this.state.rotation = rotationLimitMax;
         this.state.expectedRotation = rotationLimitMax + this.state.expectedRotation + rotationLimitMax + this.props.angleBetweenItems;
         this._updateMesh();
@@ -30939,18 +30963,34 @@ WeaponSwitcherItem.prototype._updateMesh = function () {
     this.mesh.setNewWeapon(this.props.availableWeapons[this.state.weaponIndex]);
 };
 
-WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnUpperOverflow = function () {
-    var v = this.state.weaponIndex;
-    var a = this.props.availableWeapons.length;
-    var w = this.props.amountOfWeapons;
-    return a + v >= w ? (a + v) % w : a - (w - (a + v));
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnLowerOverflow = function () {
+    var counter = 0;
+    var currentWeaponIndex = this.state.weaponIndex;
+
+    while (counter < this.props.amountOfWeapons) {
+        currentWeaponIndex--;
+        if (currentWeaponIndex < 0) {
+            currentWeaponIndex = this.props.availableWeapons.length - 1;
+        }
+        counter++;
+    }
+
+    return currentWeaponIndex;
 };
 
-WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnLowerOverflow = function () {
-    var v = this.state.weaponIndex;
-    var a = this.props.availableWeapons.length;
-    var w = this.props.amountOfWeapons;
-    return (w + v) % a;
+WeaponSwitcherItem.prototype._calculateNewWeaponIndexOnUpperOverflow = function () {
+    var counter = 0;
+    var currentWeaponIndex = this.state.weaponIndex;
+
+    while (counter < this.props.amountOfWeapons) {
+        currentWeaponIndex++;
+        if (currentWeaponIndex > this.props.availableWeapons.length - 1) {
+            currentWeaponIndex = 0;
+        }
+        counter++;
+    }
+
+    return currentWeaponIndex;
 };
 
 module.exports = WeaponSwitcherItem;
@@ -34608,7 +34648,6 @@ var WeaponInfoContainer = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            console.log('render');
             if (!this.state.visible) return null;
 
             return _react2.default.createElement(
@@ -34791,6 +34830,7 @@ var ActorConfig = {
             damage: 50,
             removeOnHit: true,
             timeout: 800,
+            constantAcceleration: 400,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'

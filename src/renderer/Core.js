@@ -253,6 +253,8 @@ Core.prototype.onStartGame = function(){
         this.activeScene = 'GameScene';
     }
     PubSub.publish('hudShow');
+    this.resetCamera();
+    this.resetRenderer();
 };
 
 Core.prototype.onGotPointerLock = function(){
