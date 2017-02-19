@@ -16,7 +16,16 @@ var SettingsMenu = React.createClass({
         });
     },
     render(){
-        return <div style={{marginTop: '100px'}} className={'bottomCenter'}>
+        const style = this.props.visible ? {
+            animationName: 'settingsFadeIn',
+            animationDuration: '1s',
+            animationFillMode: 'forwards',
+            opacity: 0
+        } : {
+            opacity: 0
+        };
+
+        return <div style={style} className={'bottomCenter'}>
 
             <div style = {{width: '350px'}} className={'centerHorizontal'}>
                 <div style = { {float:'left', marginTop: '6px'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>

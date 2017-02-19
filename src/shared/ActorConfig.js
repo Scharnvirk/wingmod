@@ -105,7 +105,7 @@ var ActorConfig = {
     PULSEWAVEPROJECTILE: {
         props: {
             hp: 2,
-            damage: 2,
+            damage: 5,
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,

@@ -61,6 +61,17 @@
     }
 }
 
+@keyframes settingsFadeIn {
+    from {
+      bottom: -10%;
+      opacity: 0;
+    }
+    to {
+      bottom: 10%;
+      opacity: 1;
+    }
+}
+
 @keyframes textAppear {
     from {
       color: rgba(255, 255, 255, 0);;

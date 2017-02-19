@@ -7,12 +7,8 @@ function WeaponMesh(config){
 
     config.rotationOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
-    // config.rotation = config.rotation || 0;
 
     Object.assign(this, config);
-
-    // if(!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
-
     this.material = ModelStore.get('hudMaterial').material;
     this.geometry = ModelStore.get(this.weaponName).geometry;
     this.visible = false;

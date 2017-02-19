@@ -26,6 +26,7 @@ var StartScreen = React.createClass({
         console.log('assetsLoadedPubsub', PubSub);
         PubSub.subscribe( 'assetsLoaded', (msg, data) => {
             this.setState({assetsLoaded: true});
+            this.render();
         });
     },
     render() {
@@ -42,7 +43,7 @@ var StartScreen = React.createClass({
                     <span style={{color: 'red'}}>{'2'}</span>
                 </StyledText>
                 <Button text={startButtonText} buttonEvent={'start'} />
-                <SettingsMenu/>
+                <SettingsMenu visible={this.state.assetsLoaded}/>
             </div>
         </div>;
     }

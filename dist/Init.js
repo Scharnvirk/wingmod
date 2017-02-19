@@ -25255,12 +25255,12 @@ function PlasmaGun(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 5;
-    this.velocity = 460;
+    this.velocity = 390;
     this.sound = 'disrupter';
     this.firingMode = 'alternate';
     this.volume = 0.5;
     this.ammoConfig = {
-        energy: 0.3
+        energy: 0.8
     };
 }
 
@@ -30624,12 +30624,8 @@ function WeaponMesh(config) {
 
     config.rotationOffset = Math.PI;
     config.weaponIndex = config.weaponIndex || 0;
-    // config.rotation = config.rotation || 0;
 
     Object.assign(this, config);
-
-    // if(!this.weaponModels) throw new Error('No weaponModels defined for WeaponMesh!');
-
     this.material = ModelStore.get('hudMaterial').material;
     this.geometry = ModelStore.get(this.weaponName).geometry;
     this.visible = false;
@@ -33538,9 +33534,18 @@ var SettingsMenu = _react2.default.createClass({
         });
     },
     render: function render() {
+        var style = this.props.visible ? {
+            animationName: 'settingsFadeIn',
+            animationDuration: '1s',
+            animationFillMode: 'forwards',
+            opacity: 0
+        } : {
+            opacity: 0
+        };
+
         return _react2.default.createElement(
             'div',
-            { style: { marginTop: '100px' }, className: 'bottomCenter' },
+            { style: style, className: 'bottomCenter' },
             _react2.default.createElement(
                 'div',
                 { style: { width: '350px' }, className: 'centerHorizontal' },
@@ -33808,6 +33813,7 @@ var StartScreen = _react2.default.createClass({
         console.log('assetsLoadedPubsub', PubSub);
         PubSub.subscribe('assetsLoaded', function (msg, data) {
             _this.setState({ assetsLoaded: true });
+            _this.render();
         });
     },
     render: function render() {
@@ -33838,7 +33844,7 @@ var StartScreen = _react2.default.createClass({
                     )
                 ),
                 _react2.default.createElement(Button, { text: startButtonText, buttonEvent: 'start' }),
-                _react2.default.createElement(SettingsMenu, null)
+                _react2.default.createElement(SettingsMenu, { visible: this.state.assetsLoaded })
             )
         );
     }
@@ -34781,7 +34787,7 @@ var ActorConfig = {
     PULSEWAVEPROJECTILE: {
         props: {
             hp: 2,
-            damage: 2,
+            damage: 5,
             removeOnHit: true,
             timeout: 30,
             collisionFixesPosition: true,
