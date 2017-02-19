@@ -33500,7 +33500,6 @@ var InitialView = _react2.default.createClass({
                 _react2.default.createElement(Viewport, null)
             ),
             _react2.default.createElement(AmmoTileContainer, null),
-            _react2.default.createElement(MessageContainer, null),
             UIcontent
         );
     }
