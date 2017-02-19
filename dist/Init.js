@@ -27171,6 +27171,7 @@ function InputListener(config) {
     this.inputState = Object.create(null);
     this.inputState.mouseRotation = 0;
     this.inputState.mouseY = 0;
+    this.inputState.mouseX = 0;
 
     this.keys = {
         87: 'w',
@@ -27212,6 +27213,7 @@ function InputListener(config) {
     this.mouseMove = function (event) {
         this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.0015;
         this.inputState.mouseY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        this.inputState.mouseX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
     };
 
     this.drag = function (event) {
@@ -32897,6 +32899,13 @@ var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var Camera = require('renderer/Camera');
 
 function MainMenuScene(config) {
+    this.cameraDefaultPositionY = -50;
+    this.cameraDefaultPositionX = 10;
+    this.cameraDefaultPositionZ = 15;
+
+    this.cameraDefaultRotationX = 1.1;
+    this.cameraDefaultRotationZ = 0.15;
+
     Object.assign(this, config);
     BaseScene.apply(this, arguments);
     this.timer = 0;
@@ -32904,6 +32913,7 @@ function MainMenuScene(config) {
     this.lightChargeTime = 300;
     this.lightChargeSpeed = 0.003;
     this.lampChargeSpeed = 0.006;
+    this.inputListener = config.inputListener;
 }
 
 MainMenuScene.extend(BaseScene);
@@ -32953,12 +32963,12 @@ MainMenuScene.prototype.create = function () {
 
 MainMenuScene.prototype.createCamera = function () {
     var camera = new Camera({ inputListener: this.inputListener });
-    camera.position.y = -50;
-    camera.position.z = 15;
-    camera.position.x = 10;
+    camera.position.y = this.cameraDefaultPositionY;
+    camera.position.z = this.cameraDefaultPositionZ;
+    camera.position.x = this.cameraDefaultPositionX;
 
-    camera.rotation.x = 1.1;
-    camera.rotation.z = 0.15;
+    camera.rotation.x = this.cameraDefaultRotationX;
+    camera.rotation.z = this.cameraDefaultRotationZ;
 
     camera.setMovementZ(camera.position.z, 0);
     return camera;
@@ -33025,6 +33035,16 @@ MainMenuScene.prototype.customUpdate = function () {
     this.lightPowerUp();
     this.doFlicker();
     this.timer++;
+
+    this.handleMouseMovement();
+};
+
+MainMenuScene.prototype.handleMouseMovement = function () {
+    this.camera.position.x = this.cameraDefaultPositionX + this.inputListener.inputState.mouseX * 0.001;
+    this.camera.position.y = this.cameraDefaultPositionY - this.inputListener.inputState.mouseY * 0.001;
+
+    this.camera.rotation.x = this.cameraDefaultRotationX - Utils.degToRad(this.inputListener.inputState.mouseY * 0.005);
+    this.camera.rotation.z = this.cameraDefaultRotationZ - Utils.degToRad(this.inputListener.inputState.mouseX * 0.005);
 };
 
 MainMenuScene.prototype.doBob = function () {
@@ -33861,7 +33881,7 @@ var Button = function (_React$Component) {
     _createClass(Button, [{
         key: 'render',
         value: function render() {
-            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'textLight', 'verticalSpacing', 'Oswald']);
+            var classes = (0, _classnames2.default)('button', ['button', 'buttonText', 'verticalSpacing', 'Oswald']);
             var buttonEvent = { buttonEvent: this.props.buttonEvent || 'noAction' };
             return _react2.default.createElement(
                 'div',

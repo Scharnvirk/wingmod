@@ -14,6 +14,7 @@ function InputListener(config){
     this.inputState = Object.create(null);
     this.inputState.mouseRotation = 0;
     this.inputState.mouseY = 0;
+    this.inputState.mouseX = 0;
 
     this.keys = {
         87: 'w',
@@ -55,6 +56,7 @@ function InputListener(config){
     this.mouseMove = function (event) {
         this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.0015;
         this.inputState.mouseY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        this.inputState.mouseX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
     };
 
     this.drag = function (event) {
