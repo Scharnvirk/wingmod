@@ -33500,6 +33500,7 @@ var InitialView = _react2.default.createClass({
                 _react2.default.createElement(Viewport, null)
             ),
             _react2.default.createElement(AmmoTileContainer, null),
+            _react2.default.createElement(MessageContainer, null),
             UIcontent
         );
     }
@@ -34266,16 +34267,9 @@ var AmmoTile = function (_Component) {
                 { style: this.componentStyle.background },
                 _react2.default.createElement('div', { style: this.createIconStyle() }),
                 _react2.default.createElement(
-                    ReactCSSTransitionGroup,
-                    {
-                        transitionName: this.gain ? 'ammoGain' : 'ammoLoss',
-                        transitionEnterTimeout: 50,
-                        transitionLeave: false },
-                    _react2.default.createElement(
-                        'div',
-                        { key: ReactUtils.generateKey(), style: this.createTextStyle() },
-                        text
-                    )
+                    'div',
+                    { key: ReactUtils.generateKey(), style: this.createTextStyle() },
+                    text
                 )
             );
         }
@@ -34448,9 +34442,7 @@ var MessageContainer = function (_Component) {
                 userDrag: 'none',
                 userSelect: 'none',
                 fontFamily: 'Oswald-Regular',
-                animationName: 'messageFade',
-                animationDuration: '3s',
-                animationFillMode: 'forwards'
+                opacity: 1
             }
         };
 
@@ -34484,15 +34476,19 @@ var MessageContainer = function (_Component) {
     }, {
         key: 'shouldComponentUpdate',
         value: function shouldComponentUpdate(nextProps, nextState) {
-            return nextState.message || Object.keys(nextState.messages).length !== Object.keys(this.state.messages).length;
+            var clear = nextState.clear;
+            nextState.clear = false;
+            return clear || nextState.message || Object.keys(nextState.messages).length !== Object.keys(this.state.messages).length;
         }
     }, {
         key: 'deleteMessage',
         value: function deleteMessage(messageIndex) {
             delete this.state.messages[messageIndex];
             this.setState({
-                messages: this.state.messages
+                messages: this.state.messages,
+                clear: true
             });
+            this.render();
         }
     }, {
         key: 'addMessage',
@@ -34500,6 +34496,7 @@ var MessageContainer = function (_Component) {
             this.state.message.index = this.currentMessageIndex;
             this.state.message.style = Object.assign({}, this.componentStyle.message);
             this.state.message.style.color = this.state.message.color;
+            this.state.message.style.opacity = 1;
             this.state.messages[this.currentMessageIndex] = this.state.message;
 
             delete this.state.message;
@@ -34518,6 +34515,7 @@ var MessageContainer = function (_Component) {
             if (this.state.message) {
                 this.addMessage();
             }
+
             Object.keys(this.state.messages).forEach(function (messageIndex) {
                 items.push(_react2.default.createElement(
                     'div',
@@ -34529,6 +34527,7 @@ var MessageContainer = function (_Component) {
                     )
                 ));
             });
+
             return _react2.default.createElement(
                 'div',
                 { style: this.componentStyle.container },

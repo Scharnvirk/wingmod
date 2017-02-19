@@ -86,18 +86,9 @@ class AmmoTile extends Component {
         if (typeof this.props.amount === 'undefined') return null;
         let text = this.props.amount + (this.props.maxAmount ? ' / ' : ' ') + (this.props.maxAmount ? this.props.maxAmount : '');
 
-
-        
-
         return <div style={this.componentStyle.background}>
             <div style={this.createIconStyle()}/>
-            <ReactCSSTransitionGroup
-                transitionName={this.gain ? 'ammoGain' : 'ammoLoss'}
-                transitionEnterTimeout={50}
-                transitionLeave={false}>
-                {<div key={ReactUtils.generateKey()} style={this.createTextStyle()}>{text}</div>}
-            </ReactCSSTransitionGroup>
-            
+            <div key={ReactUtils.generateKey()} style={this.createTextStyle()}>{text}</div>            
         </div>;
     }
 }

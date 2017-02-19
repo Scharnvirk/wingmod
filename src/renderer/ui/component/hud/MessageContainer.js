@@ -31,9 +31,7 @@ class MessageContainer extends Component {
                 userDrag: 'none',
                 userSelect: 'none',        
                 fontFamily: 'Oswald-Regular',
-                animationName: 'messageFade',
-                animationDuration: '3s',
-                animationFillMode: 'forwards'
+                opacity: 1
             }
         };
 
@@ -61,20 +59,25 @@ class MessageContainer extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.message || Object.keys(nextState.messages).length !== Object.keys(this.state.messages).length;
+        let clear = nextState.clear;
+        nextState.clear = false;
+        return clear || nextState.message || Object.keys(nextState.messages).length !== Object.keys(this.state.messages).length;
     }   
 
     deleteMessage(messageIndex) {
         delete this.state.messages[messageIndex];
         this.setState({
-            messages: this.state.messages
+            messages: this.state.messages,
+            clear: true
         });
+        this.render();
     }
 
     addMessage(){
         this.state.message.index = this.currentMessageIndex;
         this.state.message.style = Object.assign({}, this.componentStyle.message);
         this.state.message.style.color = this.state.message.color;
+        this.state.message.style.opacity = 1;
         this.state.messages[this.currentMessageIndex] = this.state.message;
         
         delete (this.state.message);            
@@ -90,6 +93,7 @@ class MessageContainer extends Component {
         if (this.state.message){
             this.addMessage();
         }
+
         Object.keys(this.state.messages).forEach(messageIndex => {
             items.push(                
                 <div key={this.state.messages[messageIndex].index} style={this.state.messages[messageIndex].style}>
@@ -97,6 +101,7 @@ class MessageContainer extends Component {
                 </div>                      
             );
         });
+
         return <div style={this.componentStyle.container}>
             {items}        
         </div>;
