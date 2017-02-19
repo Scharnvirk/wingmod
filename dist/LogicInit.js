@@ -2296,6 +2296,8 @@ MookActor.prototype.createWeapon = function () {
 };
 
 MookActor.prototype.onDeath = function () {
+    var _this = this;
+
     this.spawn({
         amount: 10,
         classId: ActorFactory.CHUNK,
@@ -2303,9 +2305,11 @@ MookActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    setTimeout(function () {
+        _this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);
 
     this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -2385,6 +2389,8 @@ OrbotActor.prototype.createWeapon = function () {
 };
 
 OrbotActor.prototype.onDeath = function () {
+    var _this = this;
+
     this.spawn({
         amount: 10,
         classId: ActorFactory.CHUNK,
@@ -2392,9 +2398,11 @@ OrbotActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    setTimeout(function () {
+        _this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);
 
     this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -2474,6 +2482,8 @@ SniperActor.prototype.createWeapon = function () {
 };
 
 SniperActor.prototype.onDeath = function () {
+    var _this = this;
+
     this.spawn({
         amount: 10,
         classId: ActorFactory.CHUNK,
@@ -2481,9 +2491,11 @@ SniperActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    setTimeout(function () {
+        _this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);
 
     this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -2953,9 +2965,13 @@ function BoomChunkActor(config) {
 BoomChunkActor.extend(ChunkActor);
 
 BoomChunkActor.prototype.onDeath = function () {
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    var _this = this;
+
+    setTimeout(function () {
+        _this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);
 };
 
 module.exports = BoomChunkActor;
@@ -3273,9 +3289,13 @@ ConcsnMissileActor.prototype.createBody = function () {
 };
 
 ConcsnMissileActor.prototype.onDeath = function () {
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    var _this = this;
+
+    setTimeout(function () {
+        _this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);
 };
 
 module.exports = ConcsnMissileActor;
@@ -4750,22 +4770,6 @@ function ExplosionActor() {
 
 ExplosionActor.extend(BaseActor);
 ExplosionActor.mixin(ParticleMixin);
-
-ExplosionActor.prototype.customUpdate = function () {
-    this.createParticle({
-        amount: 100,
-        particleClass: 'particleAdd',
-        color: 'PURPLE',
-        scale: 5,
-        alpha: 1,
-        alphaMultiplier: 0.75,
-        particleVelocity: 0,
-        particleRotation: 0,
-        lifeTime: 5,
-        spriteNumber: [0, 10],
-        speedZ: 1
-    });
-};
 
 module.exports = ExplosionActor;
 

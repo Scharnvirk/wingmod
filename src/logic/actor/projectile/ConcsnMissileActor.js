@@ -17,9 +17,11 @@ ConcsnMissileActor.prototype.createBody = function(){
 };
 
 ConcsnMissileActor.prototype.onDeath = function(){    
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    setTimeout(() => {
+        this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);   
 };
 
 

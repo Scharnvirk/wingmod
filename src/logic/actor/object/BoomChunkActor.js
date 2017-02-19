@@ -12,9 +12,11 @@ function BoomChunkActor(config){
 BoomChunkActor.extend(ChunkActor);
 
 BoomChunkActor.prototype.onDeath = function(){    
-    this.spawn({
-        classId: ActorFactory.EXPLOSION
-    });
+    setTimeout(() => {
+        this.spawn({
+            classId: ActorFactory.EXPLOSION
+        });
+    }, 100);      
 };
 
 module.exports = BoomChunkActor;
