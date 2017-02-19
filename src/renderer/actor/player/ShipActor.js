@@ -26,7 +26,7 @@ function ShipActor(){
     this.targetingFadeFactor = 100;
 
     this.setupWeaponMeshes(0, 'redlasgun');
-    this.setupWeaponMeshes(1, 'redlasgun');    
+    this.setupWeaponMeshes(1, 'plasmagun');    
 }
 
 ShipActor.extend(BaseActor);

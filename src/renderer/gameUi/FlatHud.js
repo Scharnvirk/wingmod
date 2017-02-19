@@ -13,14 +13,14 @@ function FlatHud(config){
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'e',
-            weapons: ['redlasgun', 'lasgun', 'pulsewavegun', 'plasmagun', 'missilelauncher']
+            weapons: ['redlasgun', 'lasgun', 'pulsewavegun']
         }, {
             index: 1,
             rotationOffset: -90,
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'q',
-            weapons: ['redlasgun', 'missilelauncher', 'plasmagun', 'pulsewavegun', 'lasgun'],
+            weapons: ['plasmagun', 'missilelauncher'],
             invertDirection: true
         }
     ];

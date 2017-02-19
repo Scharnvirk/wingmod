@@ -20,7 +20,7 @@ function ShipActor(config){
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
     let silent = true;
-    this.primaryWeaponSystem.switchWeapon('lasgun', silent);
+    this.primaryWeaponSystem.switchWeapon('redlasgun', silent);
     this.secondaryWeaponSystem.switchWeapon('plasmagun', silent);
 
     BaseActor.apply(this, arguments);
@@ -94,12 +94,12 @@ ShipActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
 
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 }; 
 
 ShipActor.prototype.onHit = function(shielded){
     if (shielded) {
-        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
+        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 1);
     } else {
         this.spawn({
             amount: 1,
@@ -108,7 +108,7 @@ ShipActor.prototype.onHit = function(shielded){
             angle: [0, 360],
             velocity: [50, 100]
         });
-        this.playSound(['armorHit1', 'armorHit2'], 10);
+        this.playSound(['armorHit1', 'armorHit2'], 1);
     }
 };
 

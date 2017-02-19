@@ -11,7 +11,7 @@ function PlasmaGun(config){
     this.cooldown = 7;
     this.velocity = 230;
     this.sound = 'plasmashot3';
-    this.volume = 0.5;
+    this.volume = 0.8;
     this.ammoConfig = {
         plasma: 1
     };

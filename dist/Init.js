@@ -25231,7 +25231,7 @@ function PlasmaGun(config) {
     this.cooldown = 7;
     this.velocity = 230;
     this.sound = 'plasmashot3';
-    this.volume = 0.5;
+    this.volume = 0.8;
     this.ammoConfig = {
         plasma: 1
     };
@@ -25411,7 +25411,7 @@ MookActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 MookActor.prototype.onHit = function () {
@@ -25500,7 +25500,7 @@ OrbotActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 OrbotActor.prototype.onHit = function () {
@@ -25589,7 +25589,7 @@ SniperActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 SniperActor.prototype.onHit = function () {
@@ -25739,7 +25739,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 EnemySpawnerActor.prototype.onHit = function (shielded) {
@@ -26266,7 +26266,7 @@ function ShipActor(config) {
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
     var silent = true;
-    this.primaryWeaponSystem.switchWeapon('lasgun', silent);
+    this.primaryWeaponSystem.switchWeapon('redlasgun', silent);
     this.secondaryWeaponSystem.switchWeapon('plasmagun', silent);
 
     BaseActor.apply(this, arguments);
@@ -26334,12 +26334,12 @@ ShipActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 ShipActor.prototype.onHit = function (shielded) {
     if (shielded) {
-        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
+        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 1);
     } else {
         this.spawn({
             amount: 1,
@@ -26348,7 +26348,7 @@ ShipActor.prototype.onHit = function (shielded) {
             angle: [0, 360],
             velocity: [50, 100]
         });
-        this.playSound(['armorHit1', 'armorHit2'], 10);
+        this.playSound(['armorHit1', 'armorHit2'], 1);
     }
 };
 
@@ -28833,7 +28833,7 @@ function ShipActor() {
     this.targetingFadeFactor = 100;
 
     this.setupWeaponMeshes(0, 'redlasgun');
-    this.setupWeaponMeshes(1, 'redlasgun');
+    this.setupWeaponMeshes(1, 'plasmagun');
 }
 
 ShipActor.extend(BaseActor);
@@ -30242,48 +30242,34 @@ function SoundLoader(config) {
 
 SoundLoader.prototype.loadSounds = function () {
     createjs.Sound.alternateExtensions = ['mp3'];
-    createjs.Sound.registerSound({ src: 'sounds/shortzap2.wav', id: 'shortzap2' });
-    createjs.Sound.registerSound({ src: 'sounds/blue_laser.wav', id: 'blue_laser' });
-    createjs.Sound.registerSound({ src: 'sounds/red_laser.wav', id: 'red_laser' });
-    createjs.Sound.registerSound({ src: 'sounds/plasmashot.wav', id: 'plasmashot' });
-    createjs.Sound.registerSound({ src: 'sounds/plasmashot2.wav', id: 'plasmashot2' });
-    createjs.Sound.registerSound({ src: 'sounds/plasmashot3.wav', id: 'plasmashot3' });
-    createjs.Sound.registerSound({ src: 'sounds/plasma1.wav', id: 'plasmashot4' });
-    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser1.wav', id: 'laser_charged' });
-    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser1b.wav', id: 'laser_short' });
-    createjs.Sound.registerSound({ src: 'sounds/SoundsCrate-SciFi-Laser2.wav', id: 'laser_purple' });
+    createjs.Sound.registerSound({ src: 'sounds/laser2.mp3', id: 'blue_laser' });
+    createjs.Sound.registerSound({ src: 'sounds/laser13.mp3', id: 'red_laser' });
+    createjs.Sound.registerSound({ src: 'sounds/laser3.mp3', id: 'plasmashot3' });
+    createjs.Sound.registerSound({ src: 'sounds/laser14.mp3', id: 'laser_purple' });
     createjs.Sound.registerSound({ src: 'sounds/matterhit3.wav', id: 'matterhit3' });
-    createjs.Sound.registerSound({ src: 'sounds/plasmahit.wav', id: 'plasmahit' });
-    createjs.Sound.registerSound({ src: 'sounds/molten.wav', id: 'molten' });
-    createjs.Sound.registerSound({ src: 'sounds/debris1.wav', id: 'debris1' });
-    createjs.Sound.registerSound({ src: 'sounds/debris2.wav', id: 'debris2' });
-    createjs.Sound.registerSound({ src: 'sounds/debris3.wav', id: 'debris3' });
-    createjs.Sound.registerSound({ src: 'sounds/debris4.wav', id: 'debris4' });
-    createjs.Sound.registerSound({ src: 'sounds/debris5.wav', id: 'debris5' });
-    createjs.Sound.registerSound({ src: 'sounds/debris6.wav', id: 'debris6' });
-    createjs.Sound.registerSound({ src: 'sounds/debris7.wav', id: 'debris7' });
-    createjs.Sound.registerSound({ src: 'sounds/debris8.wav', id: 'debris8' });
-    createjs.Sound.registerSound({ src: 'sounds/drone1s1.wav', id: 'drone' });
-    createjs.Sound.registerSound({ src: 'sounds/spiders1.wav', id: 'sniper' });
-    createjs.Sound.registerSound({ src: 'sounds/itds3.wav', id: 'orbot' });
-    createjs.Sound.registerSound({ src: 'sounds/spawn.wav', id: 'spawn' });
-    createjs.Sound.registerSound({ src: 'sounds/cannon_change.wav', id: 'cannon_change' });
-    createjs.Sound.registerSound({ src: 'sounds/emptyError.wav', id: 'empty' });
+    createjs.Sound.registerSound({ src: 'sounds/laser4.mp3', id: 'molten' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion5.mp3', id: 'debris1' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion2.mp3', id: 'debris2' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion3.mp3', id: 'debris3' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion4.mp3', id: 'debris4' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion6.mp3', id: 'debris5' });
+    createjs.Sound.registerSound({ src: 'sounds/explosion7.mp3', id: 'debris6' });
+    createjs.Sound.registerSound({ src: 'sounds/callout4.mp3', id: 'drone' });
+    createjs.Sound.registerSound({ src: 'sounds/callout6.mp3', id: 'sniper' });
+    createjs.Sound.registerSound({ src: 'sounds/callout2.mp3', id: 'orbot' });
+    createjs.Sound.registerSound({ src: 'sounds/powerBoom2.mp3', id: 'spawn' });
+    createjs.Sound.registerSound({ src: 'sounds/weaponChange1.mp3', id: 'cannon_change' });
+    createjs.Sound.registerSound({ src: 'sounds/emptyError.mp3', id: 'empty' });
     createjs.Sound.registerSound({ src: 'sounds/ammocon_empty.mp3', id: 'ammo_empty' });
     createjs.Sound.registerSound({ src: 'sounds/shieldcon_empty.mp3', id: 'shield_empty' });
     createjs.Sound.registerSound({ src: 'sounds/armorHit1.wav', id: 'armorHit1' });
     createjs.Sound.registerSound({ src: 'sounds/armorHit2.wav', id: 'armorHit2' });
-    createjs.Sound.registerSound({ src: 'sounds/shieldHit1.wav', id: 'shieldHit1' });
-    createjs.Sound.registerSound({ src: 'sounds/shieldHit2.wav', id: 'shieldHit2' });
-    createjs.Sound.registerSound({ src: 'sounds/shieldHit3.wav', id: 'shieldHit3' });
-    createjs.Sound.registerSound({ src: 'sounds/powerup.wav', id: 'powerup' });
+    createjs.Sound.registerSound({ src: 'sounds/shield1.mp3', id: 'shieldHit1' });
+    createjs.Sound.registerSound({ src: 'sounds/shield2.mp3', id: 'shieldHit2' });
+    createjs.Sound.registerSound({ src: 'sounds/shield3.mp3', id: 'shieldHit3' });
+    createjs.Sound.registerSound({ src: 'sounds/pickup.mp3', id: 'powerup' });
     createjs.Sound.registerSound({ src: 'sounds/distrupter_fire.wav', id: 'disrupter' });
-    createjs.Sound.registerSound({ src: 'sounds/arc_01.wav', id: 'arc1' });
-    createjs.Sound.registerSound({ src: 'sounds/arc_02.wav', id: 'arc2' });
-    createjs.Sound.registerSound({ src: 'sounds/arc_03.wav', id: 'arc3' });
-    createjs.Sound.registerSound({ src: 'sounds/arc_04.wav', id: 'arc4' });
-    createjs.Sound.registerSound({ src: 'sounds/arc_05.wav', id: 'arc5' });
-    createjs.Sound.registerSound({ src: 'sounds/bazooka.wav', id: 'missile' });
+    createjs.Sound.registerSound({ src: 'sounds/missile2.mp3', id: 'missile' });
 };
 
 module.exports = SoundLoader;
@@ -30305,14 +30291,14 @@ function FlatHud(config) {
         switchNextKey: 'mouseLeft',
         switchPrevKey: 'mouseRight',
         activationKey: 'e',
-        weapons: ['redlasgun', 'lasgun', 'pulsewavegun', 'plasmagun', 'missilelauncher']
+        weapons: ['redlasgun', 'lasgun', 'pulsewavegun']
     }, {
         index: 1,
         rotationOffset: -90,
         switchNextKey: 'mouseLeft',
         switchPrevKey: 'mouseRight',
         activationKey: 'q',
-        weapons: ['redlasgun', 'missilelauncher', 'plasmagun', 'pulsewavegun', 'lasgun'],
+        weapons: ['plasmagun', 'missilelauncher'],
         invertDirection: true
     }];
 
@@ -34863,7 +34849,7 @@ var ActorConfig = {
             removeOnHit: false,
             timeoutRandomMin: 5,
             timeoutRandomMax: 60,
-            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8']
+            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
             mass: 0.01

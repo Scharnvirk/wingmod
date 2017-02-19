@@ -66,7 +66,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 EnemySpawnerActor.prototype.onHit = function(shielded){

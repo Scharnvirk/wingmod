@@ -2128,7 +2128,7 @@ function PlasmaGun(config) {
     this.cooldown = 7;
     this.velocity = 230;
     this.sound = 'plasmashot3';
-    this.volume = 0.5;
+    this.volume = 0.8;
     this.ammoConfig = {
         plasma: 1
     };
@@ -2308,7 +2308,7 @@ MookActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 MookActor.prototype.onHit = function () {
@@ -2397,7 +2397,7 @@ OrbotActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 OrbotActor.prototype.onHit = function () {
@@ -2486,7 +2486,7 @@ SniperActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 SniperActor.prototype.onHit = function () {
@@ -2636,7 +2636,7 @@ EnemySpawnerActor.prototype.onDeath = function () {
     });
 
     this.handleDrops();
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 EnemySpawnerActor.prototype.onHit = function (shielded) {
@@ -3163,7 +3163,7 @@ function ShipActor(config) {
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
     var silent = true;
-    this.primaryWeaponSystem.switchWeapon('lasgun', silent);
+    this.primaryWeaponSystem.switchWeapon('redlasgun', silent);
     this.secondaryWeaponSystem.switchWeapon('plasmagun', silent);
 
     BaseActor.apply(this, arguments);
@@ -3231,12 +3231,12 @@ ShipActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8'], 10);
+    this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
 ShipActor.prototype.onHit = function (shielded) {
     if (shielded) {
-        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
+        this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 1);
     } else {
         this.spawn({
             amount: 1,
@@ -3245,7 +3245,7 @@ ShipActor.prototype.onHit = function (shielded) {
             angle: [0, 360],
             velocity: [50, 100]
         });
-        this.playSound(['armorHit1', 'armorHit2'], 10);
+        this.playSound(['armorHit1', 'armorHit2'], 1);
     }
 };
 
@@ -4937,7 +4937,7 @@ function ShipActor() {
     this.targetingFadeFactor = 100;
 
     this.setupWeaponMeshes(0, 'redlasgun');
-    this.setupWeaponMeshes(1, 'redlasgun');
+    this.setupWeaponMeshes(1, 'plasmagun');
 }
 
 ShipActor.extend(BaseActor);
@@ -5952,7 +5952,7 @@ var ActorConfig = {
             removeOnHit: false,
             timeoutRandomMin: 5,
             timeoutRandomMax: 60,
-            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8']
+            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
             mass: 0.01

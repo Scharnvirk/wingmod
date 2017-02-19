@@ -195,7 +195,7 @@ var ActorConfig = {
             removeOnHit: false,
             timeoutRandomMin: 5,
             timeoutRandomMax: 60,
-            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6', 'debris7', 'debris8']
+            soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
             mass: 0.01
