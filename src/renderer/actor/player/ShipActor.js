@@ -16,7 +16,7 @@ function ShipActor(){
     this.count = 0;
     this.weaponSetLocations = [[[3, -3, -0], [-3, -3, -0]], [[5, 0.5, -1.45], [-5, 0.5, -1.45]]]; 
     this.targetingLinePositions = this._createTargetingLinePositions();
-    this.weaponMaterialName = 'weaponModel';
+    this.weaponMaterialName = 'weaponModel'; 
 
     this.targetingDistance = 100;
     this.targetingMinDistance = 20;

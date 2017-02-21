@@ -110,6 +110,8 @@ ParticleConfigCreator.prototype.createPremades = function(){
         OrangeBoomMedium: require('renderer/particleSystem/premade/OrangeBoomMedium'),
         RedLaserTrail: require('renderer/particleSystem/premade/RedLaserTrail'),
         RedSparks: require('renderer/particleSystem/premade/RedSparks'),
+        GreenLaserTrail: require('renderer/particleSystem/premade/GreenLaserTrail'),
+        GreenSparks: require('renderer/particleSystem/premade/GreenSparks'),
         RedEye: require('renderer/particleSystem/premade/RedEye'),
         RedEyeBig: require('renderer/particleSystem/premade/RedEyeBig'),
         PurpleEye: require('renderer/particleSystem/premade/PurpleEye'),

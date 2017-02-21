@@ -7,6 +7,7 @@ var ModelList = {
         '/models/drone.json',
         '/models/sniper.json',
         '/models/orbot.json',
+        '/models/shulk.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
         '/models/telering_top.json',

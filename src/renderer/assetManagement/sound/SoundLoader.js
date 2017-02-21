@@ -9,6 +9,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/laser13.mp3', id:'red_laser'});
     createjs.Sound.registerSound({src:'sounds/laser3.mp3', id:'plasmashot3'});
     createjs.Sound.registerSound({src:'sounds/laser14.mp3', id:'laser_purple'});
+    createjs.Sound.registerSound({src:'sounds/laser12.mp3', id:'laser_green'});
     createjs.Sound.registerSound({src:'sounds/matterhit3.wav', id:'matterhit3'});
     createjs.Sound.registerSound({src:'sounds/laser4.mp3', id:'molten'});
     createjs.Sound.registerSound({src:'sounds/explosion5.mp3', id:'debris1'});
@@ -20,6 +21,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/callout4.mp3', id:'drone'});
     createjs.Sound.registerSound({src:'sounds/callout6.mp3', id:'sniper'});
     createjs.Sound.registerSound({src:'sounds/callout2.mp3', id:'orbot'});
+    createjs.Sound.registerSound({src:'sounds/callout1.mp3', id:'shulk'});
     createjs.Sound.registerSound({src:'sounds/powerBoom2.mp3', id:'spawn'});
     createjs.Sound.registerSound({src:'sounds/weaponChange1.mp3', id:'cannon_change'});
     createjs.Sound.registerSound({src:'sounds/emptyError.mp3', id:'empty'});

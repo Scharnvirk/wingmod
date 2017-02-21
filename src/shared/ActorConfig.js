@@ -138,6 +138,24 @@ var ActorConfig = {
         }
     },
 
+    GREENLASERPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 3,
+            removeOnHit: true,
+            timeout: 120,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
     RINGPROJECTILE: {
         props: {
             hp: 1,
@@ -159,7 +177,7 @@ var ActorConfig = {
     CONCSNMISSILE: {
         props: {
             hp: 2,
-            damage: 50,
+            damage: 25,
             removeOnHit: true,
             timeout: 800,
             constantAcceleration: 400,
@@ -243,7 +261,7 @@ var ActorConfig = {
     MOOK: {
         props: {
             drops: [{class: 'ENERGYPICKUP', probability: 0.1}],
-            danger: 2,
+            danger: 1,
             acceleration: 140,
             turnSpeed: 2,
             hp: 6,
@@ -259,6 +277,27 @@ var ActorConfig = {
             radius: 5
         }
     },
+
+    SHULK: {
+        props: {
+            drops: [{class: 'ENERGYPICKUP', probability: 0.8}, {class: 'SHIELDPICKUP', probability: 0.5}],
+            danger: 2,
+            acceleration: 700, 
+            turnSpeed: 1.5,
+            hp: 50,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip'
+        },
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 10
+        }
+    },
+
 
     ORBOT: {
         props: {
@@ -283,7 +322,7 @@ var ActorConfig = {
     SNIPER: {
         props: {
             drops: [{class: 'SHIELDPICKUP', probability: 0.2}],
-            danger: 3,
+            danger: 2,
             acceleration: 90,
             turnSpeed: 0.8,
             hp: 12,

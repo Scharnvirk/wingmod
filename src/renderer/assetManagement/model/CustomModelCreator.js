@@ -36,6 +36,19 @@ CustomModelCreator.prototype.configure = function(){
                 bumpMap: new THREE.TextureLoader().load('/models/weapons_bump.png'),
                 emissiveMap: new THREE.TextureLoader().load('/models/weapons_illumination.png')
             } )
+        },
+        'enemyModel': { 
+            material: new THREE.MeshPhongMaterial( { 
+                transparent: false,
+                color: 0x808080,
+                specular: 0x505050,
+                emissive: 0xffffff,
+                shininess: 50,
+                map: new THREE.TextureLoader().load('/models/enemies_diffuse.png'),
+                specularMap: new THREE.TextureLoader().load('/models/enemies_specular.png'),
+                bumpMap: new THREE.TextureLoader().load('/models/enemies_bump.png'),
+                emissiveMap: new THREE.TextureLoader().load('/models/enemies_illumination.png')
+            } )
         }
     };
 };

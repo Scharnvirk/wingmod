@@ -92,7 +92,7 @@ MainMenuScene.prototype.createStartScene = function(){
     var mesh = new BaseMesh({
         geometry: ModelStore.get('startmenu').geometry,
         material: this.sceneMaterial
-    });
+    }); 
     var scale = 0.5;
     mesh.scale.x = scale;
     mesh.scale.y = scale;

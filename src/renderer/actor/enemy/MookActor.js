@@ -19,10 +19,10 @@ MookActor.mixin(ShowDamageMixin);
 
 MookActor.prototype.createMeshes = function(){
     return [new BaseMesh({
-        actor: this,
+        actor: this, 
         scaleX: 1.2,
         scaleY: 1.2,
-        scaleZ: 1.2,
+        scaleZ: 1.2,  
         geometry: ModelStore.get('drone').geometry,
         material: ModelStore.get('drone').material
     })];
