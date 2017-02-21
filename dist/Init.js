@@ -25149,12 +25149,14 @@ function Blaster(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 30;
+    this.cooldown = 45;
     this.velocity = 1800;
+    this.burstCount = 3;
+    this.burstCooldown = 5;
     this.sound = 'blue_laser';
     this.firingMode = 'simultaneous';
     this.ammoConfig = {
-        energy: 2
+        energy: 1.5
     };
 }
 
@@ -32313,11 +32315,11 @@ module.exports = function (config) {
             color: 'WHITE',
             scale: Utils.rand(20, 50),
             alpha: Utils.rand(0.4, 0.9) / 10 + 0.1,
-            alphaMultiplier: 0.996,
+            alphaMultiplier: 0.98,
             particleVelocity: Utils.rand(0, 10) / 40,
             particleRotation: Utils.rand(0, 360),
             speedZ: Utils.rand(0, 5) / 500,
-            lifeTime: Utils.rand(600, 1000)
+            lifeTime: Utils.rand(60, 120)
         });
     }
 
@@ -35108,7 +35110,7 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 5,
+            damage: 4,
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,

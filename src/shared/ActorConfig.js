@@ -53,7 +53,7 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 5,
+            damage: 4,
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,

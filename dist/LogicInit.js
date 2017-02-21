@@ -2045,12 +2045,14 @@ function Blaster(config) {
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 30;
+    this.cooldown = 45;
     this.velocity = 1800;
+    this.burstCount = 3;
+    this.burstCooldown = 5;
     this.sound = 'blue_laser';
     this.firingMode = 'simultaneous';
     this.ammoConfig = {
-        energy: 2
+        energy: 1.5
     };
 }
 
@@ -6066,7 +6068,7 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 5,
+            damage: 4,
             removeOnHit: true,
             timeout: 60,
             collisionFixesPosition: true,

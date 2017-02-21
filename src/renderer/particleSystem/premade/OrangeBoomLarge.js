@@ -6,11 +6,11 @@ module.exports = function(config){
             color: 'WHITE',
             scale: Utils.rand(20, 50),
             alpha: Utils.rand(0.4, 0.9)/10 + 0.1,
-            alphaMultiplier: 0.996,
+            alphaMultiplier: 0.98,
             particleVelocity: Utils.rand(0,10) / 40,
             particleRotation: Utils.rand(0,360),
             speedZ: Utils.rand(0,5) / 500,
-            lifeTime: Utils.rand(600, 1000)
+            lifeTime: Utils.rand(60, 120)
         });
     }
 
