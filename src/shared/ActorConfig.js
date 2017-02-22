@@ -4,8 +4,8 @@ var ActorConfig = {
             canPickup: true,
             acceleration: 1000,
             turnSpeed: 6,
-            hp: 30,
-            shield: 30,
+            hp: 50,
+            shield: 50,
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
@@ -303,7 +303,7 @@ var ActorConfig = {
             danger: 2,
             acceleration: 700, 
             turnSpeed: 1.5,
-            hp: 50,
+            hp: 35,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip'
@@ -323,7 +323,7 @@ var ActorConfig = {
             danger: 3,
             acceleration: 700, 
             turnSpeed: 0.9,
-            hp: 80,
+            hp: 60,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip'
