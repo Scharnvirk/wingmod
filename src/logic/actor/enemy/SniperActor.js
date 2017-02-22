@@ -78,7 +78,7 @@ SniperActor.prototype.onDeath = function(){
 SniperActor.prototype.onHit = function(){
     this.spawn({
         amount: 1,
-        probability: 0.1,
+        probability: 0.3,
         classId: ActorFactory.CHUNK,
         angle: [0, 360],
         velocity: [50, 100]

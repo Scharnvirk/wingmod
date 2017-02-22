@@ -1,81 +1,86 @@
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
-var RingBlaster = require('logic/actor/component/weapon/RingBlaster');
+var EnemyMissileLauncher = require('logic/actor/component/weapon/EnemyMissileLauncher');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 var DropMixin = require('logic/actor/mixin/DropMixin');
 
-function OrbotActor(config){
+function MhulkActor(config){
     config = config || [];
 
     Object.assign(this, config);
 
-    this.applyConfig(ActorConfig.ORBOT);
+    this.applyConfig(ActorConfig.MHULK);
 
-    this.calloutSound = 'orbot';
+    this.calloutSound = 'mhulk';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
-
+    
     BaseActor.apply(this, arguments);
 }
 
-OrbotActor.extend(BaseActor);
-OrbotActor.mixin(BrainMixin);
-OrbotActor.mixin(DropMixin);
+MhulkActor.extend(BaseActor);
+MhulkActor.mixin(BrainMixin);
+MhulkActor.mixin(DropMixin);
 
-OrbotActor.prototype.createBrain = function(){
+MhulkActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        shootingArc: 30,
-        nearDistance: 10,
-        farDistance: 30,
-        firingDistance: 50
+        firingDistance: 800
     });
 };
 
-OrbotActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
+MhulkActor.prototype.createBody = function(){
+    return new BaseBody(this.bodyConfig); 
 };
 
-OrbotActor.prototype.customUpdate = function(){
+MhulkActor.prototype.customUpdate = function(){
     if(this.timer % 2 === 0) this.brain.update();
     this.doBrainOrders();
     this.weapon.update();
 };
 
-OrbotActor.prototype.createWeapon = function(){
-    return new RingBlaster({
+MhulkActor.prototype.createWeapon = function(){
+    return new EnemyMissileLauncher({
         actor: this,
         manager: this.manager,
+        firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: 90, offsetDistance: 0.2, fireAngle: 0},
+            {offsetAngle: -37, offsetDistance: 12.5, fireAngle: 0},
+            {offsetAngle: 37, offsetDistance: 12.5 , fireAngle: 0}
         ]
     });
 };
 
-OrbotActor.prototype.onDeath = function(){
+MhulkActor.prototype.onDeath = function(){
     this.spawn({
-        amount: 10,
+        amount: 20,
         classId: ActorFactory.CHUNK,
         angle: [0, 360],
         velocity: [50, 100]
+    });
+    this.spawn({
+        amount: 3,
+        classId: ActorFactory.BOOMCHUNK,
+        angle: [0, 360],
+        velocity: [40, 80]
     });
 
     setTimeout(() => {
         this.spawn({
             classId: ActorFactory.EXPLOSION
         });
-    }, 100);     
+    }, 100);       
 
     this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
-OrbotActor.prototype.onHit = function(){
+MhulkActor.prototype.onHit = function(){
     this.spawn({
         amount: 1,
         probability: 0.3,
@@ -86,5 +91,4 @@ OrbotActor.prototype.onHit = function(){
     this.playSound(['armorHit1', 'armorHit2'], 1);
 };
 
-
-module.exports = OrbotActor;
+module.exports = MhulkActor;

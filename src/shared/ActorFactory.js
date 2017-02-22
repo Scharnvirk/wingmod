@@ -6,27 +6,29 @@ MOOK: 2,
 SNIPER: 3,
 ORBOT: 4,
 SHULK: 5,
-CHUNK: 6,
-BOOMCHUNK: 7,
-EXPLOSION: 8,
-PLASMAPROJECTILE: 9,
-LASERPROJECTILE: 10,
-REDLASERPROJECTILE: 11,
-PURPLELASERPROJECTILE: 12,
-GREENLASERPROJECTILE: 13,
-MOLTENPROJECTILE: 14,
-RINGPROJECTILE: 15,
-PULSEWAVEPROJECTILE: 16,
-CONCSNMISSILE: 17,
-MAP: 18,
-ENEMYSPAWNER: 19,
-ENEMYSPAWNMARKER: 20,
-ITEMSPAWNER: 21,
-DEBUG: 22,
-SHIELDPICKUP: 23,
-ENERGYPICKUP: 24,
-PLASMAPICKUP: 25,
-MISSILEQUADPICKUP: 26,
+MHULK: 6,
+CHUNK: 7,
+BOOMCHUNK: 8,
+EXPLOSION: 9,
+PLASMAPROJECTILE: 10,
+LASERPROJECTILE: 11,
+REDLASERPROJECTILE: 12,
+PURPLELASERPROJECTILE: 13,
+GREENLASERPROJECTILE: 14,
+MOLTENPROJECTILE: 15,
+RINGPROJECTILE: 16,
+PULSEWAVEPROJECTILE: 17,
+CONCSNMISSILE: 18,
+ENEMYCONCSNMISSILE: 19,
+MAP: 20,
+ENEMYSPAWNER: 21,
+ENEMYSPAWNMARKER: 22,
+ITEMSPAWNER: 23,
+DEBUG: 24,
+SHIELDPICKUP: 25,
+ENERGYPICKUP: 26,
+PLASMAPICKUP: 27,
+MISSILEQUADPICKUP: 28,
 
 };
 
@@ -37,6 +39,7 @@ ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/
 ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
 ActorFactory.ShulkActor = context === 'renderer' ? require("renderer/actor/enemy/ShulkActor") : require("logic/actor/enemy/ShulkActor");
+ActorFactory.MhulkActor = context === 'renderer' ? require("renderer/actor/enemy/MhulkActor") : require("logic/actor/enemy/MhulkActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
 ActorFactory.ExplosionActor = context === 'renderer' ? require("renderer/actor/object/ExplosionActor") : require("logic/actor/object/ExplosionActor");
@@ -49,6 +52,7 @@ ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/
 ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RingProjectileActor") : require("logic/actor/projectile/RingProjectileActor");
 ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
 ActorFactory.ConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/ConcsnMissileActor") : require("logic/actor/projectile/ConcsnMissileActor");
+ActorFactory.EnemyConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyConcsnMissileActor") : require("logic/actor/projectile/EnemyConcsnMissileActor");
 ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
 ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
 ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
@@ -66,6 +70,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.SNIPER]: ActorFactory.SniperActor,
 [idMap.ORBOT]: ActorFactory.OrbotActor,
 [idMap.SHULK]: ActorFactory.ShulkActor,
+[idMap.MHULK]: ActorFactory.MhulkActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
 [idMap.EXPLOSION]: ActorFactory.ExplosionActor,
@@ -78,6 +83,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.RINGPROJECTILE]: ActorFactory.RingProjectileActor,
 [idMap.PULSEWAVEPROJECTILE]: ActorFactory.PulseWaveProjectileActor,
 [idMap.CONCSNMISSILE]: ActorFactory.ConcsnMissileActor,
+[idMap.ENEMYCONCSNMISSILE]: ActorFactory.EnemyConcsnMissileActor,
 [idMap.MAP]: ActorFactory.MapActor,
 [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
 [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,

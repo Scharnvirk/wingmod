@@ -22,6 +22,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/callout6.mp3', id:'sniper'});
     createjs.Sound.registerSound({src:'sounds/callout2.mp3', id:'orbot'});
     createjs.Sound.registerSound({src:'sounds/callout1.mp3', id:'shulk'});
+    createjs.Sound.registerSound({src:'sounds/callout7.mp3', id:'mhulk'});
     createjs.Sound.registerSound({src:'sounds/powerBoom2.mp3', id:'spawn'});
     createjs.Sound.registerSound({src:'sounds/weaponChange1.mp3', id:'cannon_change'});
     createjs.Sound.registerSound({src:'sounds/emptyError.mp3', id:'empty'});

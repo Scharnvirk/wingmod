@@ -104,7 +104,7 @@ MainMenuScene.prototype.createStartScene = function(){
     mesh.matrixAutoUpdate = false;
     mesh.updateMatrix();
 
-    this.threeScene.add(mesh);
+    this.threeScene.add(mesh); 
 
     var shipMesh = new BaseMesh({ 
         geometry: ModelStore.get('ravier').geometry,
@@ -113,7 +113,7 @@ MainMenuScene.prototype.createStartScene = function(){
 
     shipMesh.geometry.translate(0, -0.5, 0);
 
-    scale = 4;
+    scale = 3.5;
     shipMesh.scale.x = scale;
     shipMesh.scale.y = scale;
     shipMesh.scale.z = scale;

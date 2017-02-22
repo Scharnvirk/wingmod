@@ -193,6 +193,25 @@ var ActorConfig = {
         }
     },
 
+    ENEMYCONCSNMISSILE: {
+        props: {
+            hp: 1.5,
+            damage: 10,
+            removeOnHit: true,
+            timeout: 800,
+            constantAcceleration: 200,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
     CHUNK: {
         props:{
             hp: 1,
@@ -291,6 +310,26 @@ var ActorConfig = {
         },
         bodyConfig: {
             mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
+        }
+    },
+
+    MHULK: {
+        props: {
+            drops: [{class: 'MISSILEQUADPICKUP', probability: 0.8}, {class: 'MISSILEQUADPICKUP', probability: 0.2}],
+            danger: 3,
+            acceleration: 700, 
+            turnSpeed: 0.9,
+            hp: 80,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip'
+        },
+        bodyConfig: {
+            mass: 30,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
