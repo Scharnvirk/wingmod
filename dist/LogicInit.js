@@ -587,9 +587,9 @@ GameState.prototype._createInitialState = function () {
         currentWeapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'],
         ammo: {
             energy: 100,
-            plasma: 200,
+            plasma: 25,
             rads: 0,
-            missiles: 10
+            missiles: 0
         },
         ammoMax: {
             energy: 200,

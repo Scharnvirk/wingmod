@@ -30482,7 +30482,7 @@ module.exports = ChunkStore;
 "use strict";
 
 function HitmapLoader() {
-    this.loader = new THREE.XHRLoader();
+    this.loader = new THREE.FileLoader();
 }
 
 HitmapLoader.prototype.load = function (path, callback) {
