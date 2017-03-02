@@ -43,16 +43,29 @@ GameScene.prototype.create = function() {
     shadowCamera.left = Constants.RENDER_DISTANCE;
     shadowCamera.right = -Constants.RENDER_DISTANCE;
     shadowCamera.top = Constants.RENDER_DISTANCE;
-    shadowCamera.bottom = -Constants.RENDER_DISTANCE;
-
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE; 
+  
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
     this.directionalLight.shadow.bias = -0.0075;
 
     this.threeScene.add( this.directionalLight );
 
-    this.ambientLight = new THREE.AmbientLight( 0x303030, 1 );
+    this.spotLight = new THREE.SpotLight( 0xffffff, 1);
+    this.spotLight.position.set( 15, 40, 15 );
+    this.spotLight.castShadow = true;
+    this.spotLight.angle = Math.PI / 8;
+    this.spotLight.penumbra = 0.4;
+    this.spotLight.decay = 1;
+    this.spotLight.distance = 400;
+    this.spotLight.shadow.mapSize.width = 512;
+    this.spotLight.shadow.mapSize.height = 512;
+    this.spotLight.shadow.camera.near = 1;
+    this.spotLight.shadow.camera.far = 400;
 
+    this.threeScene.add(this.spotLight);
+
+    this.ambientLight = new THREE.AmbientLight( 0x404040, 1 );
     this.threeScene.add( this.ambientLight );
 
     this.threeScene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
@@ -62,10 +75,17 @@ GameScene.prototype.customUpdate = function(){
     if(this.actor){
         let position = this.actor.getPosition();
         this.directionalLight.position.x = position[0] + 100;
-        this.directionalLight.position.y = position[1] + 100;
+        this.directionalLight.position.y = position[1] + 150;
         this.directionalLight.target.position.x = position[0];
         this.directionalLight.target.position.y = position[1];
         this.directionalLight.target.updateMatrixWorld();
+        
+        let offsetPosition = this.actor.getOffsetPosition(60);
+        this.spotLight.position.x = position[0];
+        this.spotLight.position.y = position[1];
+        this.spotLight.target.position.x = position[0] + offsetPosition[0];
+        this.spotLight.target.position.y = position[1] + offsetPosition[1];
+        this.spotLight.target.updateMatrixWorld();
     }
     this.handleFlash();
 

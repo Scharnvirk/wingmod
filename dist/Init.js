@@ -30359,8 +30359,8 @@ var levelPath = '/models/levels';
 
 var ChunkList = {
     chunks: [{
-        model: levelPath + '/chunk_HangarStraight_SideSmall_1.json',
-        hitmap: levelPath + '/chunk_HangarStraight_SideSmall_1_hitmap.json'
+        model: levelPath + '/chunk_HangarStraight_SideSmall_2.json',
+        hitmap: levelPath + '/chunk_HangarStraight_SideSmall_2_hitmap.json'
     }, {
         model: levelPath + '/chunk_HangarEndcap_1.json',
         hitmap: levelPath + '/chunk_HangarEndcap_1_hitmap.json'
@@ -30822,8 +30822,8 @@ SoundLoader.prototype.loadSounds = function () {
     createjs.Sound.registerSound({ src: 'sounds/shieldcon_empty.mp3', id: 'shield_empty' });
     createjs.Sound.registerSound({ src: 'sounds/armorHit1.wav', id: 'armorHit1' });
     createjs.Sound.registerSound({ src: 'sounds/armorHit2.wav', id: 'armorHit2' });
-    createjs.Sound.registerSound({ src: 'sounds/shield1.mp3', id: 'shieldHit1' });
-    createjs.Sound.registerSound({ src: 'sounds/shield2.mp3', id: 'shieldHit2' });
+    createjs.Sound.registerSound({ src: 'sounds/shield5.mp3', id: 'shieldHit1' });
+    createjs.Sound.registerSound({ src: 'sounds/shield4.mp3', id: 'shieldHit2' });
     createjs.Sound.registerSound({ src: 'sounds/shield3.mp3', id: 'shieldHit3' });
     createjs.Sound.registerSound({ src: 'sounds/pickup.mp3', id: 'powerup' });
     createjs.Sound.registerSound({ src: 'sounds/distrupter_fire.wav', id: 'disrupter' });
@@ -31542,6 +31542,8 @@ function ChunkMesh(config) {
     config = config || {};
 
     config.geometry.dynamic = false;
+
+    config.material.shading = THREE.FlatShading;
 
     THREE.Mesh.apply(this, [config.geometry, config.material]);
 
@@ -33451,8 +33453,21 @@ GameScene.prototype.create = function () {
 
     this.threeScene.add(this.directionalLight);
 
-    this.ambientLight = new THREE.AmbientLight(0x303030, 1);
+    this.spotLight = new THREE.SpotLight(0xffffff, 1);
+    this.spotLight.position.set(15, 40, 15);
+    this.spotLight.castShadow = true;
+    this.spotLight.angle = Math.PI / 8;
+    this.spotLight.penumbra = 0.4;
+    this.spotLight.decay = 1;
+    this.spotLight.distance = 400;
+    this.spotLight.shadow.mapSize.width = 512;
+    this.spotLight.shadow.mapSize.height = 512;
+    this.spotLight.shadow.camera.near = 1;
+    this.spotLight.shadow.camera.far = 400;
 
+    this.threeScene.add(this.spotLight);
+
+    this.ambientLight = new THREE.AmbientLight(0x404040, 1);
     this.threeScene.add(this.ambientLight);
 
     this.threeScene.fog = new THREE.Fog(0x000000, Constants.RENDER_DISTANCE - 150, Constants.RENDER_DISTANCE);
@@ -33462,10 +33477,17 @@ GameScene.prototype.customUpdate = function () {
     if (this.actor) {
         var position = this.actor.getPosition();
         this.directionalLight.position.x = position[0] + 100;
-        this.directionalLight.position.y = position[1] + 100;
+        this.directionalLight.position.y = position[1] + 150;
         this.directionalLight.target.position.x = position[0];
         this.directionalLight.target.position.y = position[1];
         this.directionalLight.target.updateMatrixWorld();
+
+        var offsetPosition = this.actor.getOffsetPosition(60);
+        this.spotLight.position.x = position[0];
+        this.spotLight.position.y = position[1];
+        this.spotLight.target.position.x = position[0] + offsetPosition[0];
+        this.spotLight.target.position.y = position[1] + offsetPosition[1];
+        this.spotLight.target.updateMatrixWorld();
     }
     this.handleFlash();
 
@@ -33635,6 +33657,12 @@ MainMenuScene.prototype.resetCamera = function () {
 MainMenuScene.prototype.createStartScene = function () {
 
     this.sceneMaterial = ModelStore.get('startmenu').material;
+    // this.sceneMaterial.shading = THREE.FlatShading;
+
+    // var material1 = new THREE.MeshPhongMaterial({
+    //   color: 0x99ff00,
+    //   shading: THREE.FlatShading
+    // });
 
     var mesh = new BaseMesh({
         geometry: ModelStore.get('startmenu').geometry,

@@ -3,7 +3,9 @@ function ChunkMesh(config){
 
     config.geometry.dynamic = false;
 
-    THREE.Mesh.apply(this, [config.geometry, config.material]);
+    config.material.shading = THREE.FlatShading;   
+
+    THREE.Mesh.apply(this, [config.geometry, config.material]);  
 
     this.receiveShadow = true;
     this.castShadow = true;

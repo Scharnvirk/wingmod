@@ -30,8 +30,8 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/shieldcon_empty.mp3', id:'shield_empty'});
     createjs.Sound.registerSound({src:'sounds/armorHit1.wav', id:'armorHit1'});
     createjs.Sound.registerSound({src:'sounds/armorHit2.wav', id:'armorHit2'});
-    createjs.Sound.registerSound({src:'sounds/shield1.mp3', id:'shieldHit1'});
-    createjs.Sound.registerSound({src:'sounds/shield2.mp3', id:'shieldHit2'});
+    createjs.Sound.registerSound({src:'sounds/shield5.mp3', id:'shieldHit1'});
+    createjs.Sound.registerSound({src:'sounds/shield4.mp3', id:'shieldHit2'});
     createjs.Sound.registerSound({src:'sounds/shield3.mp3', id:'shieldHit3'});
     createjs.Sound.registerSound({src:'sounds/pickup.mp3', id:'powerup'});
     createjs.Sound.registerSound({src:'sounds/distrupter_fire.wav', id:'disrupter'});

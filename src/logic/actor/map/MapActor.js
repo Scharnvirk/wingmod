@@ -4,8 +4,8 @@ var BaseActor = require('logic/actor/BaseActor');
 function MapActor(config){
     config = config || [];
     BaseActor.apply(this, arguments);
-    Object.assign(this, config);
-}
+    Object.assign(this, config); 
+} 
 
 MapActor.extend(BaseActor);
 
@@ -19,7 +19,7 @@ MapActor.prototype.createBody = function(){
 
 MapActor.prototype.generateShapes = function(){
     var shapes = [];
-    for (let i = 0; i < 100; i++){
+    for (let i = 0; i < 100; i++){ 
         var shape = new p2.Box({
             position: [Utils.rand(-1000,1000), Utils.rand(-1000,1000)],
             height: Utils.rand(0,100),

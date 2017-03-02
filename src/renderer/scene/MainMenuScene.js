@@ -78,7 +78,7 @@ MainMenuScene.prototype.createCamera = function(){
 
     camera.setMovementZ(camera.position.z, 0);
     return camera;
-};
+}; 
 
 MainMenuScene.prototype.resetCamera = function(){
     this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -87,7 +87,13 @@ MainMenuScene.prototype.resetCamera = function(){
 
 MainMenuScene.prototype.createStartScene = function(){
 
-    this.sceneMaterial = ModelStore.get('startmenu').material;
+    this.sceneMaterial = ModelStore.get('startmenu').material;  
+    // this.sceneMaterial.shading = THREE.FlatShading; 
+
+    // var material1 = new THREE.MeshPhongMaterial({
+    //   color: 0x99ff00,
+    //   shading: THREE.FlatShading
+    // });
 
     var mesh = new BaseMesh({
         geometry: ModelStore.get('startmenu').geometry,

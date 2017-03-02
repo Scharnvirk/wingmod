@@ -430,109 +430,78 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: 221,
-        angle: Utils.degToRad(180)
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: 221,
-        angle: Utils.degToRad(180)
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 0,
-        positionY: -573,
+        positionX: -256,
+        positionY: 35,
         angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -352,
-        positionY: -573,
+        positionX: 96,
+        positionY: -125,
         angle: Utils.degToRad(0)
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ENEMYSPAWNER,
+        positionX: -96,
+        positionY: 520,
+        angle: Utils.degToRad(180)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -166,
-        positionY: 0,
+        positionX: -263,
+        positionY: 228,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -186,
-        positionY: 0,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ITEMSPAWNER,
-        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -480,
-        positionY: -10,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ITEMSPAWNER,
-        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -480,
-        positionY: 0,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ITEMSPAWNER,
-        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -480,
-        positionY: 10,
+        positionX: -263,
+        positionY: 160,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'PLASMAPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -176,
-        positionY: -352,
+        positionX: -32,
+        positionY: -52,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -75,
-        positionY: -45,
+        positionX: 128,
+        positionY: 400,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -277,
-        positionY: -45,
+        positionX: 128,
+        positionY: 428,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -75,
-        positionY: -307,
+        positionX: -163,
+        positionY: -132,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -277,
-        positionY: -307,
+        positionX: -163,
+        positionY: -100,
         angle: 0
     });
 };
@@ -3835,37 +3804,9 @@ MapCreator.prototype.createMap = function () {
     if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map createer has no chunks yet and is not ready!');
 
     this.mapLayout = [{
-        name: 'chunk_HangarEndcap_1',
-        position: [-1, 1],
-        angle: 0
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [0, 1],
-        angle: 0
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [-1, 0],
-        angle: 180
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
+        name: 'chunk_HangarStraight_SideSmall_2',
         position: [0, 0],
         angle: 0
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [-1, -1],
-        angle: 180
-    }, {
-        name: 'chunk_HangarStraight_SideSmall_1',
-        position: [0, -1],
-        angle: 0
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [-1, -2],
-        angle: 180
-    }, {
-        name: 'chunk_HangarEndcap_1',
-        position: [0, -2],
-        angle: 180
     }];
 
     return this.mapLayout;

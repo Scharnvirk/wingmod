@@ -1,20 +1,20 @@
 var HitmapLoader = require('renderer/assetManagement/level/HitmapLoader');
 
 
-function ChunkLoader(){
+function ChunkLoader(){ 
     this.batch = {};
-
+ 
     this.hitmapLoader = new HitmapLoader();
     this.jsonLoader = new THREE.JSONLoader();
 
-    EventEmitter.apply(this, arguments);
+    EventEmitter.apply(this, arguments);  
 }
 
 ChunkLoader.extend(EventEmitter);
 
 ChunkLoader.prototype.loadChunks = function(chunks){
     var loaders  = [];
-
+  
     chunks.forEach(chunk => {
         var chunkObject = this.batch[this.getModelName(chunk.model)] = {};
         var hitmapLoader = new Promise((resolve, reject) => {
