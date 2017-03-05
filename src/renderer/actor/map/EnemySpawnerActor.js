@@ -7,7 +7,7 @@ var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
 function EnemySpawnerActor(config){
-    this.applyConfig(ActorConfig.ENEMYSPAWNER);
+    this.applyConfig(ActorConfig.ENEMYSPAWNER); 
     Object.apply(this, config);
     BaseActor.apply(this, arguments);
 
@@ -83,8 +83,6 @@ EnemySpawnerActor.prototype.createTopMesh = function(){
 };
 
 EnemySpawnerActor.prototype.setupMeshes = function(){
-    this.bottomMesh.positionX = 10;
-    this.topMesh.positionX = 10;
     this.bottomMesh.material.emissiveIntensity = 0;
     this.topMesh.material.emissiveIntensity = 0;
 };
@@ -128,12 +126,17 @@ EnemySpawnerActor.prototype.doChargingAnimation = function(){
         }
     } else {
         this.rotationSpeed *= 0.98;
-
     }
     var intensity = this.state.spawnDelay > 0 ? (1 - this.state.spawnDelay / this.props.spawnRate) : 0;
     this.bottomMesh.material.emissiveIntensity = intensity;
     this.topMesh.material.emissiveIntensity = intensity;
-    this.topMesh.rotation.y += this.rotationSpeed;
+
+    if (this.bottomMesh.rotation.z !== 0){
+        this.topMesh.rotation.z += this.rotationSpeed;
+    } else {
+        this.topMesh.rotation.y += this.rotationSpeed;
+    }
+    
 };
 
 

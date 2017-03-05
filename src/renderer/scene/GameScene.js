@@ -36,14 +36,16 @@ GameScene.prototype.create = function() {
 
     this.directionalLight.castShadow = true;
 
-    var shadowCamera = this.directionalLight.shadow.camera;
+    let shadowCamera = this.directionalLight.shadow.camera;
+
+    let shadowRangeIncrease = 100; //required because large chasms increase distance due to vertical component
 
     shadowCamera.near = 1;
-    shadowCamera.far = Constants.RENDER_DISTANCE;
-    shadowCamera.left = Constants.RENDER_DISTANCE;
-    shadowCamera.right = -Constants.RENDER_DISTANCE;
-    shadowCamera.top = Constants.RENDER_DISTANCE;
-    shadowCamera.bottom = -Constants.RENDER_DISTANCE; 
+    shadowCamera.far = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.left = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.right = -Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.top = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE + shadowRangeIncrease; 
   
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;

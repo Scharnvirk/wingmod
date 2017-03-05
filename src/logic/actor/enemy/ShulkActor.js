@@ -50,10 +50,10 @@ ShulkActor.prototype.createWeapon = function(){
         manager: this.manager,
         firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: -37, offsetDistance: 12.5, fireAngle: 0},
-            {offsetAngle: 37, offsetDistance: 12.5 , fireAngle: 0},
-            {offsetAngle: -35, offsetDistance: 11.5, fireAngle: 0},
-            {offsetAngle: 35, offsetDistance: 11.5 , fireAngle: 0}
+            {offsetAngle: -37, offsetDistance: 10.5, fireAngle: 0},
+            {offsetAngle: 37, offsetDistance: 10.5 , fireAngle: 0},
+            {offsetAngle: -35, offsetDistance: 10, fireAngle: 0},
+            {offsetAngle: 35, offsetDistance: 10 , fireAngle: 0}
         ]
     });
 };

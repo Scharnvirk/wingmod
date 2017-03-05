@@ -25727,7 +25727,7 @@ ShulkActor.prototype.createWeapon = function () {
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
-        firingPoints: [{ offsetAngle: -37, offsetDistance: 12.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 12.5, fireAngle: 0 }, { offsetAngle: -35, offsetDistance: 11.5, fireAngle: 0 }, { offsetAngle: 35, offsetDistance: 11.5, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -37, offsetDistance: 10.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 10.5, fireAngle: 0 }, { offsetAngle: -35, offsetDistance: 10, fireAngle: 0 }, { offsetAngle: 35, offsetDistance: 10, fireAngle: 0 }]
     });
 };
 
@@ -28554,9 +28554,9 @@ ShulkActor.mixin(ShowDamageMixin);
 ShulkActor.prototype.createMeshes = function () {
     return [new BaseMesh({
         actor: this,
-        scaleX: 8,
-        scaleY: 8,
-        scaleZ: 8,
+        scaleX: 6,
+        scaleY: 6,
+        scaleZ: 6,
         geometry: ModelStore.get('shulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];
@@ -28817,8 +28817,6 @@ EnemySpawnerActor.prototype.createTopMesh = function () {
 };
 
 EnemySpawnerActor.prototype.setupMeshes = function () {
-    this.bottomMesh.positionX = 10;
-    this.topMesh.positionX = 10;
     this.bottomMesh.material.emissiveIntensity = 0;
     this.topMesh.material.emissiveIntensity = 0;
 };
@@ -28866,7 +28864,12 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
     var intensity = this.state.spawnDelay > 0 ? 1 - this.state.spawnDelay / this.props.spawnRate : 0;
     this.bottomMesh.material.emissiveIntensity = intensity;
     this.topMesh.material.emissiveIntensity = intensity;
-    this.topMesh.rotation.y += this.rotationSpeed;
+
+    if (this.bottomMesh.rotation.z !== 0) {
+        this.topMesh.rotation.z += this.rotationSpeed;
+    } else {
+        this.topMesh.rotation.y += this.rotationSpeed;
+    }
 };
 
 module.exports = EnemySpawnerActor;
@@ -30362,6 +30365,13 @@ var ChunkList = {
         model: levelPath + '/chunk_HangarStraight_SideSmall_2.json',
         hitmap: levelPath + '/chunk_HangarStraight_SideSmall_2_hitmap.json'
     }, {
+        model: levelPath + '/chunk_HangarStraight_SideSmall_3.json',
+        hitmap: levelPath + '/chunk_HangarStraight_SideSmall_3_hitmap.json'
+    }, {
+        model: levelPath + '/chunk_HangarStraight_SideSmall_2_terrain.json'
+    }, {
+        model: levelPath + '/chunk_HangarStraight_SideSmall_3_terrain.json'
+    }, {
         model: levelPath + '/chunk_HangarEndcap_1.json',
         hitmap: levelPath + '/chunk_HangarEndcap_1_hitmap.json'
     }, {
@@ -30395,12 +30405,17 @@ ChunkLoader.prototype.loadChunks = function (chunks) {
 
     chunks.forEach(function (chunk) {
         var chunkObject = _this.batch[_this.getModelName(chunk.model)] = {};
-        var hitmapLoader = new Promise(function (resolve, reject) {
-            _this.hitmapLoader.load(chunk.hitmap, function (faceObject) {
-                chunkObject.hitmap = faceObject;
-                resolve();
+
+        if (chunk.hitmap) {
+            var hitmapLoader = new Promise(function (resolve, reject) {
+                _this.hitmapLoader.load(chunk.hitmap, function (faceObject) {
+                    chunkObject.hitmap = faceObject;
+                    resolve();
+                });
             });
-        });
+            loaders.push(hitmapLoader);
+        }
+
         var modelLoader = new Promise(function (resolve, reject) {
             _this.jsonLoader.load(chunk.model, function (geometry, material) {
                 chunkObject.geometry = geometry;
@@ -30408,7 +30423,6 @@ ChunkLoader.prototype.loadChunks = function (chunks) {
                 resolve();
             });
         });
-        loaders.push(hitmapLoader);
         loaders.push(modelLoader);
     });
 
@@ -33440,12 +33454,14 @@ GameScene.prototype.create = function () {
 
     var shadowCamera = this.directionalLight.shadow.camera;
 
+    var shadowRangeIncrease = 100; //required because large chasms increase distance due to vertical component
+
     shadowCamera.near = 1;
-    shadowCamera.far = Constants.RENDER_DISTANCE;
-    shadowCamera.left = Constants.RENDER_DISTANCE;
-    shadowCamera.right = -Constants.RENDER_DISTANCE;
-    shadowCamera.top = Constants.RENDER_DISTANCE;
-    shadowCamera.bottom = -Constants.RENDER_DISTANCE;
+    shadowCamera.far = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.left = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.right = -Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.top = Constants.RENDER_DISTANCE + shadowRangeIncrease;
+    shadowCamera.bottom = -Constants.RENDER_DISTANCE + shadowRangeIncrease;
 
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
@@ -35666,12 +35682,12 @@ var ActorConfig = {
 
     SHULK: {
         props: {
-            drops: [{ class: 'ENERGYPICKUP', probability: 0.8 }, { class: 'SHIELDPICKUP', probability: 0.5 }],
+            drops: [{ class: 'ENERGYPICKUP', probability: 0.3 }, { class: 'SHIELDPICKUP', probability: 0.2 }],
             danger: 2,
             acceleration: 700,
             turnSpeed: 1.5,
-            hp: 35,
-            hpBarCount: 7,
+            hp: 20,
+            hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'
         },
@@ -35680,7 +35696,7 @@ var ActorConfig = {
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 7
+            radius: 6
         }
     },
 
@@ -35730,7 +35746,7 @@ var ActorConfig = {
             danger: 2,
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12,
+            hp: 10,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'
@@ -35934,7 +35950,7 @@ var Constants = {
 
     STORAGE_SIZE: 1000,
 
-    CHUNK_SIZE: 352,
+    CHUNK_SIZE: 768,
 
     MAX_SOUND_DISTANCE: 500
 };

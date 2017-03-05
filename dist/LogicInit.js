@@ -430,78 +430,134 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -256,
-        positionY: 35,
+        positionX: -175,
+        positionY: -147,
         angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 96,
-        positionY: -125,
+        positionX: 175,
+        positionY: -307,
         angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -96,
-        positionY: 520,
-        angle: Utils.degToRad(180)
+        positionX: -260,
+        positionY: 814,
+        angle: Utils.degToRad(-90)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -263,
-        positionY: 228,
+        positionX: -180,
+        positionY: -14,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -263,
-        positionY: 160,
+        positionX: -180,
+        positionY: 48,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'PLASMAPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -32,
-        positionY: -52,
+        positionX: 50,
+        positionY: -287,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: 128,
-        positionY: 400,
+        positionX: 203,
+        positionY: 236,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: 128,
-        positionY: 428,
+        positionX: -89,
+        positionY: -312,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -163,
-        positionY: -132,
+        positionX: -89,
+        positionY: -280,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -163,
-        positionY: -100,
+        positionX: 203,
+        positionY: 175,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -20,
+        positionY: 1024,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'SHIELDPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -60,
+        positionY: 1024,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -60,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -100,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'ENERGYPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -140,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -292,
+        positionY: 567,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        positionX: -292,
+        positionY: 531,
         angle: 0
     });
 };
@@ -2592,7 +2648,7 @@ ShulkActor.prototype.createWeapon = function () {
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
-        firingPoints: [{ offsetAngle: -37, offsetDistance: 12.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 12.5, fireAngle: 0 }, { offsetAngle: -35, offsetDistance: 11.5, fireAngle: 0 }, { offsetAngle: 35, offsetDistance: 11.5, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -37, offsetDistance: 10.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 10.5, fireAngle: 0 }, { offsetAngle: -35, offsetDistance: 10, fireAngle: 0 }, { offsetAngle: 35, offsetDistance: 10, fireAngle: 0 }]
     });
 };
 
@@ -3804,7 +3860,19 @@ MapCreator.prototype.createMap = function () {
     if (Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map createer has no chunks yet and is not ready!');
 
     this.mapLayout = [{
+        name: 'chunk_HangarStraight_SideSmall_3',
+        position: [0, 1],
+        angle: 0
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_3_terrain',
+        position: [0, 1],
+        angle: 0
+    }, {
         name: 'chunk_HangarStraight_SideSmall_2',
+        position: [0, 0],
+        angle: 0
+    }, {
+        name: 'chunk_HangarStraight_SideSmall_2_terrain',
         position: [0, 0],
         angle: 0
     }];
@@ -3875,6 +3943,9 @@ MapManager.prototype.createBodiesFromLayout = function (layout) {
     var bodies = [];
 
     layout.forEach(function (chunkConfig) {
+        if (!_this.chunkPrototypes[chunkConfig.name]) {
+            return;
+        }
         var newChunk = cloner.deep.copy(_this.chunkPrototypes[chunkConfig.name]);
         newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
         newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
@@ -4596,9 +4667,9 @@ ShulkActor.mixin(ShowDamageMixin);
 ShulkActor.prototype.createMeshes = function () {
     return [new BaseMesh({
         actor: this,
-        scaleX: 8,
-        scaleY: 8,
-        scaleZ: 8,
+        scaleX: 6,
+        scaleY: 6,
+        scaleZ: 6,
         geometry: ModelStore.get('shulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];
@@ -4859,8 +4930,6 @@ EnemySpawnerActor.prototype.createTopMesh = function () {
 };
 
 EnemySpawnerActor.prototype.setupMeshes = function () {
-    this.bottomMesh.positionX = 10;
-    this.topMesh.positionX = 10;
     this.bottomMesh.material.emissiveIntensity = 0;
     this.topMesh.material.emissiveIntensity = 0;
 };
@@ -4908,7 +4977,12 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
     var intensity = this.state.spawnDelay > 0 ? 1 - this.state.spawnDelay / this.props.spawnRate : 0;
     this.bottomMesh.material.emissiveIntensity = intensity;
     this.topMesh.material.emissiveIntensity = intensity;
-    this.topMesh.rotation.y += this.rotationSpeed;
+
+    if (this.bottomMesh.rotation.z !== 0) {
+        this.topMesh.rotation.z += this.rotationSpeed;
+    } else {
+        this.topMesh.rotation.y += this.rotationSpeed;
+    }
 };
 
 module.exports = EnemySpawnerActor;
@@ -6536,12 +6610,12 @@ var ActorConfig = {
 
     SHULK: {
         props: {
-            drops: [{ class: 'ENERGYPICKUP', probability: 0.8 }, { class: 'SHIELDPICKUP', probability: 0.5 }],
+            drops: [{ class: 'ENERGYPICKUP', probability: 0.3 }, { class: 'SHIELDPICKUP', probability: 0.2 }],
             danger: 2,
             acceleration: 700,
             turnSpeed: 1.5,
-            hp: 35,
-            hpBarCount: 7,
+            hp: 20,
+            hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'
         },
@@ -6550,7 +6624,7 @@ var ActorConfig = {
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 7
+            radius: 6
         }
     },
 
@@ -6600,7 +6674,7 @@ var ActorConfig = {
             danger: 2,
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12,
+            hp: 10,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'
@@ -6804,7 +6878,7 @@ var Constants = {
 
     STORAGE_SIZE: 1000,
 
-    CHUNK_SIZE: 352,
+    CHUNK_SIZE: 768,
 
     MAX_SOUND_DISTANCE: 500
 };

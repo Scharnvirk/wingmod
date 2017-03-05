@@ -63,78 +63,134 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -256,
-        positionY: 35,
+        positionX: -175,
+        positionY: -147,
         angle: Utils.degToRad(0)
     }); 
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: 96,
-        positionY: -125,
+        positionX: 175,
+        positionY: -307,
         angle: Utils.degToRad(0)
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ENEMYSPAWNER,
-        positionX: -96,
-        positionY: 520,
-        angle: Utils.degToRad(180)
+        positionX: -260,
+        positionY: 814,
+        angle: Utils.degToRad(-90)
     });
 
-    this.actorManager.addNew({
+    this.actorManager.addNew({ 
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -263,
-        positionY: 228,
+        positionX: -180,
+        positionY: -14,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -263,
-        positionY: 160,
+        positionX: -180,
+        positionY: 48,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'PLASMAPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -32,
-        positionY: -52,
+        positionX: 50,
+        positionY: -287,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: 128,
-        positionY: 400,
+        positionX: 203,
+        positionY: 236,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: 128,
-        positionY: 428,
+        positionX: -89,
+        positionY: -312,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -163,
-        positionY: -132,
+        positionX: -89,
+        positionY: -280,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -163,
-        positionY: -100,
+        positionX: 203,
+        positionY: 175,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -20,
+        positionY: 1024,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'SHIELDPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -60,
+        positionY: 1024,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -60,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -100,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -140,
+        positionY: 814,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -292,
+        positionY: 567,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: -292,
+        positionY: 531,
         angle: 0
     });
 };

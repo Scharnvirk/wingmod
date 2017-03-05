@@ -1,7 +1,7 @@
 function ChunkMesh(config){
     config = config || {};
 
-    config.geometry.dynamic = false;
+    config.geometry.dynamic = false;  
 
     config.material.shading = THREE.FlatShading;   
 

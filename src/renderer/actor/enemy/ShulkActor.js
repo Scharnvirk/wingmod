@@ -20,9 +20,9 @@ ShulkActor.mixin(ShowDamageMixin);
 ShulkActor.prototype.createMeshes = function(){
     return [new BaseMesh({
         actor: this, 
-        scaleX: 8,
-        scaleY: 8,
-        scaleZ: 8,  
+        scaleX: 6,
+        scaleY: 6,
+        scaleZ: 6,  
         geometry: ModelStore.get('shulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];

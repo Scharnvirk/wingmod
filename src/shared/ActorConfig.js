@@ -299,12 +299,12 @@ var ActorConfig = {
 
     SHULK: {
         props: {
-            drops: [{class: 'ENERGYPICKUP', probability: 0.8}, {class: 'SHIELDPICKUP', probability: 0.5}],
+            drops: [{class: 'ENERGYPICKUP', probability: 0.3}, {class: 'SHIELDPICKUP', probability: 0.2}],
             danger: 2,
             acceleration: 700, 
             turnSpeed: 1.5,
-            hp: 35,
-            hpBarCount: 7,
+            hp: 20, 
+            hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'
         },
@@ -313,7 +313,7 @@ var ActorConfig = {
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 7
+            radius: 6
         }
     },
 
@@ -364,7 +364,7 @@ var ActorConfig = {
             danger: 2,
             acceleration: 90,
             turnSpeed: 0.8,
-            hp: 12,
+            hp: 10,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip'

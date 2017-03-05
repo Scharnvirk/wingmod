@@ -1,10 +1,20 @@
 var levelPath = '/models/levels';
 
 var ChunkList = {
-    chunks: [
+    chunks: [ 
         {
             model: levelPath + '/chunk_HangarStraight_SideSmall_2.json',
             hitmap: levelPath + '/chunk_HangarStraight_SideSmall_2_hitmap.json'
+        },
+        {
+            model: levelPath + '/chunk_HangarStraight_SideSmall_3.json',
+            hitmap: levelPath + '/chunk_HangarStraight_SideSmall_3_hitmap.json'
+        },
+        {
+            model: levelPath + '/chunk_HangarStraight_SideSmall_2_terrain.json'
+        },
+        {
+            model: levelPath + '/chunk_HangarStraight_SideSmall_3_terrain.json'
         },
         {
             model: levelPath + '/chunk_HangarEndcap_1.json',

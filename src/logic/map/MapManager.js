@@ -47,6 +47,9 @@ MapManager.prototype.createBodiesFromLayout = function(layout){
     var bodies = [];
 
     layout.forEach(chunkConfig => {
+        if (!this.chunkPrototypes[chunkConfig.name]) {
+            return;
+        }
         var newChunk = cloner.deep.copy(this.chunkPrototypes[chunkConfig.name]);
         newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
         newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
