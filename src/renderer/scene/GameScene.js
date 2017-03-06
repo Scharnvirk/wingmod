@@ -47,11 +47,14 @@ GameScene.prototype.create = function() {
     shadowCamera.top = Constants.RENDER_DISTANCE + shadowRangeIncrease;
     shadowCamera.bottom = -Constants.RENDER_DISTANCE + shadowRangeIncrease; 
   
+    let fogColor = Constants.FOG_COLOR;
+
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
     this.directionalLight.shadow.bias = -0.0075;
 
     this.threeScene.add( this.directionalLight );
+    this.threeScene.background = new THREE.Color( fogColor );
 
     this.spotLight = new THREE.SpotLight( 0xffffff, 1);
     this.spotLight.position.set( 15, 40, 15 );
@@ -67,10 +70,10 @@ GameScene.prototype.create = function() {
 
     this.threeScene.add(this.spotLight);
 
-    this.ambientLight = new THREE.AmbientLight( 0x404040, 1 );
+    this.ambientLight = new THREE.AmbientLight( fogColor === 0x000000 ? 0x333333 : fogColor, 1 );
     this.threeScene.add( this.ambientLight );
 
-    this.threeScene.fog = new THREE.Fog( 0x000000, Constants.RENDER_DISTANCE-150, Constants.RENDER_DISTANCE );
+    this.threeScene.fog = new THREE.Fog( fogColor, Constants.FOG_DISTANCE_START, Constants.RENDER_DISTANCE );
 };
 
 GameScene.prototype.customUpdate = function(){

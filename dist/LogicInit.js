@@ -2255,7 +2255,7 @@ function Blaster(config) {
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 15;
-    this.velocity = 1000;
+    this.velocity = 1400;
     this.sound = 'red_laser';
     this.firingMode = 'simultaneous';
     this.ammoConfig = {
@@ -6877,6 +6877,10 @@ var Constants = {
     },
 
     STORAGE_SIZE: 1000,
+
+    FOG_COLOR: 0x000000,
+
+    FOG_DISTANCE_START: 350,
 
     CHUNK_SIZE: 768,
 

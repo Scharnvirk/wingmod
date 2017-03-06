@@ -22,6 +22,10 @@ var Constants = {
 
     STORAGE_SIZE: 1000,
 
+    FOG_COLOR: 0x000000,
+
+    FOG_DISTANCE_START: 350,
+
     CHUNK_SIZE: 768,
 
     MAX_SOUND_DISTANCE: 500

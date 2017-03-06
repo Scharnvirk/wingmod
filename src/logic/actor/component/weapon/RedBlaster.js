@@ -9,7 +9,7 @@ function Blaster(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 15;
-    this.velocity = 1000;
+    this.velocity = 1400;
     this.sound = 'red_laser';
     this.firingMode = 'simultaneous';
     this.ammoConfig = {
