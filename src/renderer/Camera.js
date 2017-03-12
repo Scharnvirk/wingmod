@@ -70,4 +70,8 @@ Camera.prototype.setMovementZ = function(newPositionZ, zoomSpeed){
     this.expectedPositionZ = newPositionZ;
 };
 
+Camera.prototype.setRenderDistance = function(renderDistance){
+    this.far = renderDistance || Constants.RENDER_DISTANCE;
+};
+
 module.exports = Camera;

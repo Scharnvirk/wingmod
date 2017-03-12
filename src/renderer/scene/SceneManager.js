@@ -37,8 +37,8 @@ SceneManager.prototype.createScene = function(sceneName, config){
         throw new Error ('No such scene for createScene: ' + sceneName);
     }
 
-    var configWithRenderer = Object.assign(config || {}, {renderer: this.renderer});
-    var newScene = new this.knownSceneClasses[sceneName](configWithRenderer);
+    var fullConfig = Object.assign(config || {}, {renderer: this.renderer, configManager: this.configManager});
+    var newScene = new this.knownSceneClasses[sceneName](fullConfig);
     newScene.create();
 
     this.activeScenes[sceneName] = newScene;

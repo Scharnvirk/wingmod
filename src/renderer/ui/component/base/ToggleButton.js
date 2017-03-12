@@ -1,8 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
 
-// var PubSub = require('pubsub-js');
-
 var ToggleButton = React.createClass({
     getInitialState(){
         return {
@@ -16,16 +14,16 @@ var ToggleButton = React.createClass({
 
         let onOffText = this.state.active ? 'ON' : 'OFF';
 
-        let buttonEvent = {
-            buttonEvent: this.props.buttonEvent || 'noAction',
+        let actionEvent = {
+            actionEvent: this.props.actionEvent || 'noAction',
             state: this.state.active
         };
 
         return <div
             onClick={()=>{
                 this.setState({active: !this.state.active});
-                buttonEvent.state = !buttonEvent.state;
-                PubSub.publish('buttonClick', buttonEvent);
+                actionEvent.state = !actionEvent.state;
+                PubSub.publish('componentAction', actionEvent);
             }}
             className={classes}
         >

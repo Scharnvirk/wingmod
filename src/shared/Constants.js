@@ -7,7 +7,7 @@ var Constants = {
 
     MAX_SHADER_UNIFORM_SIZE: 512,
 
-    RENDER_DISTANCE: 500,
+    RENDER_DISTANCE: 700,
 
     COLLISION_GROUPS: {
         SHIP: Math.pow(2,0),
@@ -24,7 +24,7 @@ var Constants = {
 
     FOG_COLOR: 0x000000,
 
-    FOG_DISTANCE_START: 350,
+    FOG_DISTANCE_START: 400,
 
     CHUNK_SIZE: 768,
 

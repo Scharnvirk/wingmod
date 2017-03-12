@@ -6,7 +6,9 @@ function ConfigManager(config){
     this.defaultConfig = {
         soundVolume: 2,
         shadow: 1,
-        resolution: 2
+        resolution: 2,
+        backgroundMode: 1,
+        renderDistance: 5
     };
 
     this.storageKey = 'wingmodConfig033';
@@ -82,7 +84,19 @@ ConfigManager.prototype.saveResolution = function(value){
 
 ConfigManager.prototype.saveSoundVolume = function(value){
     this.settingConfig.soundVolume = value;
-    this.config.soundVolume = value > 0 ? 0.8 - (1 - value * 0.3) : 0;
+    this.config.soundVolume = value > 0 ? value * 0.08 : 0;
+    this.saveToLocalStorage();
+};
+
+ConfigManager.prototype.saveBackgroundMode = function(value){
+    this.settingConfig.backgroundMode = value;
+    this.config.backgroundMode = value;
+    this.saveToLocalStorage();
+};
+
+ConfigManager.prototype.saveRenderDistance = function(value){
+    this.settingConfig.renderDistance = value;
+    this.config.renderDistance = value;
     this.saveToLocalStorage();
 };
 

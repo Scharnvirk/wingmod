@@ -547,17 +547,9 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
-        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
+        spawns: { class: 'PLASMAPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
         positionX: -292,
         positionY: 567,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ITEMSPAWNER,
-        spawns: { class: 'MISSILEQUADPICKUP', delayAfterPickup: 60 * 30, spawnedInitially: true },
-        positionX: -292,
-        positionY: 531,
         angle: 0
     });
 };
@@ -6552,14 +6544,14 @@ var ActorConfig = {
 
     ENEMYSPAWNER: {
         props: {
-            drops: [{ class: 'SHIELDPICKUP', amount: [1, 2] }, { class: 'ENERGYPICKUP', amount: [1, 2] }, { class: 'PLASMAPICKUP', amount: 1 }],
+            drops: [{ class: 'SHIELDPICKUP', amount: [1, 2] }, { class: 'ENERGYPICKUP', amount: [1, 2] }],
             danger: 4,
-            hp: 80,
+            hp: 150,
             shield: 100,
-            shieldSize: 4,
+            shieldSize: 3.5,
             shieldColor: 0x5533ff,
             hpBarCount: 7,
-            shieldBarCount: 7,
+            shieldBarCount: 5,
             barHeight: 12,
             removeOnHit: false,
             spawnRate: 240,
@@ -6863,7 +6855,7 @@ var Constants = {
 
     MAX_SHADER_UNIFORM_SIZE: 512,
 
-    RENDER_DISTANCE: 500,
+    RENDER_DISTANCE: 700,
 
     COLLISION_GROUPS: {
         SHIP: Math.pow(2, 0),
@@ -6880,7 +6872,7 @@ var Constants = {
 
     FOG_COLOR: 0x000000,
 
-    FOG_DISTANCE_START: 350,
+    FOG_DISTANCE_START: 400,
 
     CHUNK_SIZE: 768,
 

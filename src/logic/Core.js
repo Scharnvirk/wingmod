@@ -44,7 +44,7 @@ Core.prototype.createFpsCounter = function(){
             console.log('logicTicks: ', this.logicTicks);
             this.logicTicks = 0;
         }, 1000);
-    }
+    } 
 };
 
 Core.prototype.processGameLogic = function(){

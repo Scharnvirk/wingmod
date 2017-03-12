@@ -6,10 +6,10 @@ import React from 'react';
 class Button extends React.Component {
     render() {
         let classes = classnames('button', ['button', 'buttonText', 'verticalSpacing', 'Oswald']);
-        let buttonEvent = {buttonEvent: this.props.buttonEvent || 'noAction'};
+        let buttonEvent = {actionEvent: this.props.buttonEvent || 'noAction'};
         return <div
             onClick={()=>{
-                PubSub.publish('buttonClick', buttonEvent);
+                PubSub.publish('componentAction', buttonEvent);
             }}
             className={classes}
         >

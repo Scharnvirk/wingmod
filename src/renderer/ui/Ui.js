@@ -1,5 +1,4 @@
 var ReactUi = require('renderer/ui/ReactUi');
-var Core = require('renderer/Core');
 
 function Ui(config){
     Object.assign(this, config);
@@ -15,8 +14,8 @@ function Ui(config){
 Ui.extend(EventEmitter);
 
 Ui.prototype.setupButtonListener = function(){
-    PubSub.subscribe( 'buttonClick', (msg, data) => {
-        switch(data.buttonEvent){
+    PubSub.subscribe( 'componentAction', (msg, data) => {
+        switch(data.actionEvent){
         case 'start':
             this.onStartButtonClick();
             break;
@@ -32,7 +31,13 @@ Ui.prototype.setupButtonListener = function(){
         case 'soundConfig':
             this.onSoundConfig(data);
             break;
-        }
+        case 'backgroundMode':
+            this.onBackgroundModeConfig(data);
+            break;
+        case 'renderDistance':
+            this.onRenderDistanceConfig(data);
+            break;
+        }        
     } );
 };
 
@@ -88,6 +93,14 @@ Ui.prototype.onResolutionConfig = function(data){
 
 Ui.prototype.onSoundConfig = function(data){
     this.emit({type: 'soundConfig', option: data.buttonEvent, value: data.state});
+};
+
+Ui.prototype.onBackgroundModeConfig = function(data){
+    this.emit({type: 'backgroundModeConfig', option: data.buttonEvent, value: data.state});
+};
+
+Ui.prototype.onRenderDistanceConfig = function(data){
+    this.emit({type: 'renderDistanceConfig', option: data.buttonEvent, value: data.state});
 };
 
 Ui.prototype.updateState = function(state){

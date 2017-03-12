@@ -173,24 +173,16 @@ GameScene.prototype.fillScene = function(mapBodies){
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
         spawns: {class: 'ENERGYPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -140,
+        positionX: -140, 
         positionY: 814,
         angle: 0
     });
 
     this.actorManager.addNew({
         classId: ActorFactory.ITEMSPAWNER,
-        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        spawns: {class: 'PLASMAPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
         positionX: -292,
         positionY: 567,
-        angle: 0
-    });
-
-    this.actorManager.addNew({
-        classId: ActorFactory.ITEMSPAWNER,
-        spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
-        positionX: -292,
-        positionY: 531,
         angle: 0
     });
 };

@@ -47,6 +47,7 @@ Core.prototype.createMainComponents = function(){
     this.sceneManager.createScene('MainMenuScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('GameScene', {shadows: this.renderShadows, inputListener: this.inputListener});
     this.sceneManager.createScene('FlatHudScene');
+    this.sceneManager.get('GameScene').setup(this.configManager.config);
     
     this.activeScene = 'MainMenuScene';
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
@@ -61,9 +62,13 @@ Core.prototype.createMainComponents = function(){
 
 Core.prototype.initEventHandlers = function(){
     this.ui.on('startGame', this.onStartGame.bind(this));
+
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
     this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
+    this.ui.on('backgroundModeConfig', this.onBackgroundModeConfig.bind(this));
+    this.ui.on('renderDistanceConfig', this.onRenderDistanceConfig.bind(this));
+
     this.ui.on('requestPointerLock', this.onRequestPointerLock.bind(this));
 
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
@@ -74,8 +79,6 @@ Core.prototype.initEventHandlers = function(){
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
     this.actorManager.on('requestShake', this.onRequestShake.bind(this));
-
-    
 
     this.flatHud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
@@ -282,6 +285,17 @@ Core.prototype.onResolutionConfig = function(event){
 Core.prototype.onSoundConfig = function(event){
     this.configManager.saveSoundVolume(event.value);
 };
+
+Core.prototype.onBackgroundModeConfig = function(event){
+    this.configManager.saveBackgroundMode(event.value);
+    this.sceneManager.get('GameScene').setup(this.configManager.config);
+};
+
+Core.prototype.onRenderDistanceConfig = function(event){    
+    this.configManager.saveRenderDistance(event.value);
+    this.sceneManager.get('GameScene').setup(this.configManager.config);
+};
+
 
 Core.prototype.onRequestPointerLock = function(){
     this.inputListener.requestPointerLock();

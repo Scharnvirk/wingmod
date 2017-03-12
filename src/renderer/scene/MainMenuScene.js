@@ -88,13 +88,7 @@ MainMenuScene.prototype.resetCamera = function(){
 MainMenuScene.prototype.createStartScene = function(){
 
     this.sceneMaterial = ModelStore.get('startmenu').material;  
-    // this.sceneMaterial.shading = THREE.FlatShading; 
-
-    // var material1 = new THREE.MeshPhongMaterial({
-    //   color: 0x99ff00,
-    //   shading: THREE.FlatShading
-    // });
-
+    
     var mesh = new BaseMesh({
         geometry: ModelStore.get('startmenu').geometry,
         material: this.sceneMaterial
@@ -119,7 +113,7 @@ MainMenuScene.prototype.createStartScene = function(){
 
     shipMesh.geometry.translate(0, -0.5, 0);
 
-    scale = 3.5;
+    scale = 4.5;
     shipMesh.scale.x = scale;
     shipMesh.scale.y = scale;
     shipMesh.scale.z = scale;

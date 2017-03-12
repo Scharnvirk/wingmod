@@ -46,15 +46,12 @@ GameScene.prototype.create = function() {
     shadowCamera.right = -Constants.RENDER_DISTANCE + shadowRangeIncrease;
     shadowCamera.top = Constants.RENDER_DISTANCE + shadowRangeIncrease;
     shadowCamera.bottom = -Constants.RENDER_DISTANCE + shadowRangeIncrease; 
-  
-    let fogColor = Constants.FOG_COLOR;
 
     this.directionalLight.shadow.mapSize.height = 2048;
     this.directionalLight.shadow.mapSize.width = 2048;
     this.directionalLight.shadow.bias = -0.0075;
 
     this.threeScene.add( this.directionalLight );
-    this.threeScene.background = new THREE.Color( fogColor );
 
     this.spotLight = new THREE.SpotLight( 0xffffff, 1);
     this.spotLight.position.set( 15, 40, 15 );
@@ -69,11 +66,6 @@ GameScene.prototype.create = function() {
     this.spotLight.shadow.camera.far = 400;
 
     this.threeScene.add(this.spotLight);
-
-    this.ambientLight = new THREE.AmbientLight( fogColor === 0x000000 ? 0x333333 : fogColor, 1 );
-    this.threeScene.add( this.ambientLight );
-
-    this.threeScene.fog = new THREE.Fog( fogColor, Constants.FOG_DISTANCE_START, Constants.RENDER_DISTANCE );
 };
 
 GameScene.prototype.customUpdate = function(){
@@ -164,6 +156,46 @@ GameScene.prototype.resetCamera = function(){
 GameScene.prototype.onPlayerActorAppeared = function(actor){
     this.camera.actor = actor;
     this.actor = actor;
+};
+
+GameScene.prototype.setup = function(config){    
+    let fogColor = this._getFogColor(config.backgroundMode);
+    let renderDistance = this._getRenderDistance(config.renderDistance) || Constants.RENDER_DISTANCE;
+    let fogDistanceStart = renderDistance / 2;
+    this.camera.setRenderDistance(renderDistance);
+    
+    if (this.ambientLight) {
+        this.threeScene.remove(this.ambientLight);
+        this.ambientLight = null;
+    }
+
+    this.threeScene.background = new THREE.Color( fogColor );
+    this.ambientLight = new THREE.AmbientLight( fogColor === 0x000000 ? 0x333333 : fogColor, 1 );
+    this.threeScene.add(this.ambientLight);
+    this.threeScene.fog = new THREE.Fog( fogColor, fogDistanceStart, renderDistance );
+};
+
+GameScene.prototype._getRenderDistance = function(renderDistanceValue){
+    return renderDistanceValue * 70 + 230;
+};
+
+GameScene.prototype._getFogColor = function(fogSettingValue){
+    switch(fogSettingValue){
+    case 0: 
+        return Utils.makeRandomColor(20,100);
+    case 1:
+        return 0x000000;
+    case 2: 
+        return 0x514812;
+    case 3: 
+        return 0x7b7b7b;
+    case 4: 
+        return 0x3a1000;
+    case 5: 
+        return 0x037545;
+    default: 
+        return 0x000000;
+    }
 };
 
 module.exports = GameScene;
