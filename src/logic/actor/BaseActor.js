@@ -153,7 +153,7 @@ BaseActor.prototype.deathMain = function(relativeContactPoint){
     if(this.props.soundsOnDeath){
         this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
     }
-    this.gameState.removeActorByType(this.props.type);
+    this.gameState.removeActor(this.props);
     this.onDeath();
 };
 

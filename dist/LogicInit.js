@@ -318,20 +318,24 @@ Core.prototype.onNewMapBodies = function () {
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };
 
-Core.prototype.onPlayerDied = function (event) {
+Core.prototype.onPlayerDied = function () {
     var _this2 = this;
 
+    var killStats = this.gameState.getKillStats();
+
     setTimeout(function () {
-        _this2.renderBus.postMessage('gameEnded', { enemiesKilled: event.data });
+        _this2.renderBus.postMessage('gameEnded', { killStats: killStats, enemyCausingDeathIndex: 0 });
         _this2.running = false;
     }, 2000);
 };
 
-Core.prototype.onGameFinished = function (event) {
+Core.prototype.onGameFinished = function () {
     var _this3 = this;
 
+    var killStats = this.gameState.getKillStats();
+
     setTimeout(function () {
-        _this3.renderBus.postMessage('gameFinished', { enemiesKilled: event.data });
+        _this3.renderBus.postMessage('gameFinished', { killStats: killStats, enemyCausingDeathIndex: 0 });
         _this3.running = false;
     }, 500);
 };
@@ -615,7 +619,9 @@ GameState.prototype._createInitialState = function () {
             missiles: 20
         },
         existingActorsByType: {},
-        removedActorsByType: {}
+        removedActorsByType: {},
+        killStats: {},
+        lastProjectileStrikingPlayerOwnedBy: null
     };
 };
 
@@ -658,6 +664,23 @@ GameState.prototype.rechargeAmmo = function () {
     }
 };
 
+GameState.prototype.getKillStats = function () {
+    var _this = this;
+
+    var killStats = [];
+
+    Object.keys(this._state.killStats).forEach(function (enemyName) {
+        killStats.push({
+            enemyIndex: _this._state.killStats[enemyName].enemyIndex,
+            enemyName: enemyName,
+            killCount: _this._state.killStats[enemyName].killCount,
+            pointWorth: _this._state.killStats[enemyName].pointWorth
+        });
+    });
+
+    return killStats;
+};
+
 GameState.prototype.handleShieldPickup = function (amount) {
     this._state.message = {
         text: amount + ' ' + 'SHIELDS',
@@ -667,29 +690,29 @@ GameState.prototype.handleShieldPickup = function (amount) {
 };
 
 GameState.prototype.addAmmo = function (ammoConfig, withMessage) {
-    var _this = this;
+    var _this2 = this;
 
     Object.keys(ammoConfig).forEach(function (ammoType) {
-        _this._state.ammo[ammoType] += ammoConfig[ammoType];
+        _this2._state.ammo[ammoType] += ammoConfig[ammoType];
         var notify = false;
 
-        if (_this._state.ammo[ammoType] !== _this._state.ammoMax[ammoType]) {
+        if (_this2._state.ammo[ammoType] !== _this2._state.ammoMax[ammoType]) {
             notify = true;
         }
 
-        if (_this._state.ammo[ammoType] > _this._state.ammoMax[ammoType]) {
-            _this._state.ammo[ammoType] = _this._state.ammoMax[ammoType];
+        if (_this2._state.ammo[ammoType] > _this2._state.ammoMax[ammoType]) {
+            _this2._state.ammo[ammoType] = _this2._state.ammoMax[ammoType];
         }
 
         if (withMessage) {
-            _this._state.message = {
+            _this2._state.message = {
                 text: ammoConfig[ammoType] + ' ' + ammoType.toUpperCase(),
-                color: _this._props.pickupColors[ammoType]
+                color: _this2._props.pickupColors[ammoType]
             };
         }
 
         if (notify) {
-            _this._notifyOfStateChange();
+            _this2._notifyOfStateChange();
         }
     });
 };
@@ -716,11 +739,25 @@ GameState.prototype.addActorByType = function (type) {
     this._state.existingActorsByType[type]++;
 };
 
-GameState.prototype.removeActorByType = function (type) {
+GameState.prototype.removeActor = function (actorProps) {
+    actorProps = actorProps || {};
+    var type = actorProps.type;
+
     if (!this._state.existingActorsByType[type]) {
         this._state.existingActorsByType[type] = 0;
     } else {
         this._state.existingActorsByType[type]--;
+    }
+
+    if (actorProps.name) {
+        if (!this._state.killStats[actorProps.name]) {
+            this._state.killStats[actorProps.name] = {
+                killCount: 0,
+                pointWorth: actorProps.pointWorth || 0,
+                enemyIndex: actorProps.enemyIndex || 0
+            };
+        }
+        this._state.killStats[actorProps.name].killCount += 1;
     }
 };
 
@@ -745,16 +782,16 @@ GameState.prototype._cleanState = function () {
 };
 
 GameState.prototype._canFireWeapon = function (weaponName, ammoConfig) {
-    var _this2 = this;
+    var _this3 = this;
 
     var weaponExists = !!~this._state.weapons.indexOf(weaponName);
     var ammoTypes = Object.keys(ammoConfig);
     var canFire = true;
     if (weaponExists) {
         ammoTypes.forEach(function (ammoType) {
-            if (!_this2._state.ammo[ammoType] || _this2._state.ammo[ammoType] < ammoConfig[ammoType]) {
+            if (!_this3._state.ammo[ammoType] || _this3._state.ammo[ammoType] < ammoConfig[ammoType]) {
                 canFire = false;
-                _this2.sendMessage('CANNOT FIRE ' + weaponName.toUpperCase() + '; AMMO MISSING: ' + ammoType.toUpperCase() + '!', '#ff5030');
+                _this3.sendMessage('CANNOT FIRE ' + weaponName.toUpperCase() + '; AMMO MISSING: ' + ammoType.toUpperCase() + '!', '#ff5030');
             }
         });
         return canFire;
@@ -764,10 +801,10 @@ GameState.prototype._canFireWeapon = function (weaponName, ammoConfig) {
 };
 
 GameState.prototype._subtractAmmo = function (ammoConfig) {
-    var _this3 = this;
+    var _this4 = this;
 
     Object.keys(ammoConfig).forEach(function (ammoType) {
-        _this3._state.ammo[ammoType] -= ammoConfig[ammoType];
+        _this4._state.ammo[ammoType] -= ammoConfig[ammoType];
     });
 };
 
@@ -1275,7 +1312,7 @@ BaseActor.prototype.deathMain = function (relativeContactPoint) {
     if (this.props.soundsOnDeath) {
         this.manager.playSound({ sounds: this.props.soundsOnDeath, actor: this });
     }
-    this.gameState.removeActorByType(this.props.type);
+    this.gameState.removeActor(this.props);
     this.onDeath();
 };
 
@@ -6557,7 +6594,10 @@ var ActorConfig = {
             spawnRate: 240,
             globalMaxSpawnedEnemies: 16,
             enemy: true,
-            type: 'enemyMapObject'
+            type: 'enemyMapObject',
+            name: 'GATEWAY',
+            pointWorth: 1000,
+            enemyIndex: 5
         },
         bodyConfig: {
             radius: 8
@@ -6589,7 +6629,10 @@ var ActorConfig = {
             hp: 6,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'm00-K',
+            pointWorth: 20,
+            enemyIndex: 0
         },
         bodyConfig: {
             mass: 4,
@@ -6609,7 +6652,10 @@ var ActorConfig = {
             hp: 20,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'BOUNCER',
+            pointWorth: 50,
+            enemyIndex: 3
         },
         bodyConfig: {
             mass: 20,
@@ -6629,7 +6675,10 @@ var ActorConfig = {
             hp: 60,
             hpBarCount: 7,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'MAD-n355',
+            pointWorth: 80,
+            enemyIndex: 4
         },
         bodyConfig: {
             mass: 30,
@@ -6649,7 +6698,10 @@ var ActorConfig = {
             hp: 2,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'ORbot',
+            pointWorth: 10,
+            enemyIndex: 2
         },
         bodyConfig: {
             mass: 2,
@@ -6669,7 +6721,10 @@ var ActorConfig = {
             hp: 10,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'PEW2',
+            pointWorth: 30,
+            enemyIndex: 1
         },
         bodyConfig: {
             mass: 8,

@@ -7,7 +7,8 @@ class FlexBoxContainer extends Component {
         this.componentStyle = {
             container: {
                 display: 'flex', 
-                justifyContent: 'center', 
+                flexDirection: 'column',
+                justifyContent: 'space-around', 
                 position: 'absolute', 
                 width: '100%', 
                 height:'100%', 

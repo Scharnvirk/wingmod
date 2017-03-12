@@ -97,16 +97,20 @@ Core.prototype.onNewMapBodies = function(){
     this.renderBus.postMessage('newMapBodies', mapBodies);
 };
 
-Core.prototype.onPlayerDied = function(event){    
+Core.prototype.onPlayerDied = function(){     
+    const killStats = this.gameState.getKillStats();
+
     setTimeout(() => {
-        this.renderBus.postMessage('gameEnded', {enemiesKilled: event.data});
+        this.renderBus.postMessage('gameEnded', {killStats: killStats, enemyCausingDeathIndex: 0});
         this.running = false;
     }, 2000);
 };
 
-Core.prototype.onGameFinished = function(event){
+Core.prototype.onGameFinished = function(){
+    const killStats = this.gameState.getKillStats();
+
     setTimeout(() => {
-        this.renderBus.postMessage('gameFinished', {enemiesKilled: event.data});
+        this.renderBus.postMessage('gameFinished', {killStats: killStats, enemyCausingDeathIndex: 0});
         this.running = false;
     }, 500);    
 };

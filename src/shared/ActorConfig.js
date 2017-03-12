@@ -254,7 +254,10 @@ var ActorConfig = {
             spawnRate: 240,
             globalMaxSpawnedEnemies: 16,
             enemy: true,
-            type: 'enemyMapObject'
+            type: 'enemyMapObject',
+            name: 'GATEWAY',
+            pointWorth: 1000,
+            enemyIndex: 5
         },
         bodyConfig: {
             radius: 8
@@ -286,7 +289,10 @@ var ActorConfig = {
             hp: 6,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'm00-K',
+            pointWorth: 20,
+            enemyIndex: 0
         },
         bodyConfig: {
             mass: 4,
@@ -306,7 +312,10 @@ var ActorConfig = {
             hp: 20, 
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'BOUNCER',
+            pointWorth: 50,
+            enemyIndex: 3
         },
         bodyConfig: {
             mass: 20,
@@ -326,7 +335,10 @@ var ActorConfig = {
             hp: 60,
             hpBarCount: 7,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'MAD-n355',
+            pointWorth: 80,
+            enemyIndex: 4
         },
         bodyConfig: {
             mass: 30,
@@ -337,7 +349,6 @@ var ActorConfig = {
         }
     },
 
-
     ORBOT: {
         props: {
             drops: [{class: 'PLASMAPICKUP', probability: 0.1}],
@@ -347,7 +358,10 @@ var ActorConfig = {
             hp: 2,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'ORbot',
+            pointWorth: 10,
+            enemyIndex: 2
         },
         bodyConfig: {
             mass: 2,
@@ -367,7 +381,10 @@ var ActorConfig = {
             hp: 10,
             hpBarCount: 5,
             enemy: true,
-            type: 'enemyShip'
+            type: 'enemyShip',
+            name: 'PEW2',
+            pointWorth: 30,
+            enemyIndex: 1
         },
         bodyConfig: {
             mass: 8,

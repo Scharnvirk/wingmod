@@ -26,7 +26,9 @@ GameState.prototype._createInitialState = function(){
             missiles: 20
         },        
         existingActorsByType: {},
-        removedActorsByType: {}
+        removedActorsByType: {},
+        killStats: {},
+        lastProjectileStrikingPlayerOwnedBy: null
     };
 };
 
@@ -43,8 +45,6 @@ GameState.prototype._createInitialProps = function(){
         }
     };
 };
-
-
 
 GameState.prototype.update = function(){
     this._timer ++;
@@ -69,6 +69,21 @@ GameState.prototype.rechargeAmmo = function(){
     if (this._timer % this._props.ammoRechargeRate === 0) {
         this.addAmmo({energy: 1});
     }
+};
+
+GameState.prototype.getKillStats = function(){
+    let killStats = [];
+
+    Object.keys(this._state.killStats).forEach(enemyName => {
+        killStats.push({
+            enemyIndex: this._state.killStats[enemyName].enemyIndex,
+            enemyName: enemyName,
+            killCount: this._state.killStats[enemyName].killCount,
+            pointWorth: this._state.killStats[enemyName].pointWorth,
+        });
+    });
+
+    return killStats;
 };
 
 GameState.prototype.handleShieldPickup = function(amount){
@@ -128,11 +143,25 @@ GameState.prototype.addActorByType = function(type){
     this._state.existingActorsByType[type] ++;
 };
 
-GameState.prototype.removeActorByType = function(type){
+GameState.prototype.removeActor = function(actorProps){
+    actorProps = actorProps || {};
+    const type = actorProps.type;
+
     if(!this._state.existingActorsByType[type]){
         this._state.existingActorsByType[type] = 0;
     } else {
         this._state.existingActorsByType[type] --;
+    }
+
+    if(actorProps.name){
+        if (!this._state.killStats[actorProps.name]) {
+            this._state.killStats[actorProps.name] = {
+                killCount: 0,
+                pointWorth: actorProps.pointWorth || 0,
+                enemyIndex: actorProps.enemyIndex || 0
+            };
+        }
+        this._state.killStats[actorProps.name].killCount += 1;
     }
 };
 

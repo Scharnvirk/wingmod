@@ -219,14 +219,18 @@ Core.prototype.onUpdateActors = function(event){
 };
 
 Core.prototype.onGameEnded = function(event){
+    const enemyCausingDeathIndex = event.data.enemyCausingDeathIndex || 0;
+    const killStats = event.data.killStats || []; 
     this.gameEnded = true;
-    this.ui.stopGame(event.data);
+    this.ui.stopGame(enemyCausingDeathIndex, killStats);
     this.renderLoop.stop();
 };
 
-Core.prototype.onGameFinished = function(){
+Core.prototype.onGameFinished = function(event){
+    const enemyCausingDeathIndex = event.data.enemyCausingDeathIndex || 0;
+    const killStats = event.data.killStats || [];
     this.gameEnded = true;
-    this.ui.stopGameFinished();
+    this.ui.stopGameFinished(enemyCausingDeathIndex, killStats);
     this.renderLoop.stop();
 };
 

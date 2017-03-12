@@ -27,6 +27,8 @@ var InitialView = React.createClass({
                 EndScreen key={ReactUtils.generateKey()}
                 scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
                 bigText={ReactUtils.multilinize(this.props.context.bigText)}
+                enemyCausingDeathIndex={this.props.context.enemyCausingDeathIndex}
+                killStats={this.props.context.killStats}
                 />);
             break;
         }

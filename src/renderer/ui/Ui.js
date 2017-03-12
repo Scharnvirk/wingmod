@@ -53,16 +53,28 @@ Ui.prototype.setAssetsLoaded = function(state){
     this.assetsLoaded = state;
 };
 
-Ui.prototype.stopGame = function(){
-    var bigText = 'GAME OVER';
-    var scoreText = 'Don\'t worry! Next time you will do better!';
-    this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
+Ui.prototype.stopGame = function(enemyCausingDeathIndex, killStats){
+    const bigText = 'GAME OVER';
+    const scoreText = 'Don\'t worry! Next time you will do better!';
+
+    this.reactUi.changeMode('gameOverScreen', {
+        scoreText: scoreText, 
+        bigText: bigText,
+        enemyCausingDeathIndex: enemyCausingDeathIndex,
+        killStats: killStats
+    });
 };
 
-Ui.prototype.stopGameFinished = function(){
-    var bigText = 'SUCCESS!';
-    var scoreText = 'Congratulations! Thanks for trying Wingmod2!';
-    this.reactUi.changeMode('gameOverScreen', {scoreText: scoreText, bigText: bigText});
+Ui.prototype.stopGameFinished = function(enemyCausingDeathIndex, killStats){
+    const bigText = 'SUCCESS!';
+    const scoreText = 'Congratulations! Thanks for trying Wingmod2!';
+
+    this.reactUi.changeMode('gameOverScreen', {
+        scoreText: scoreText, 
+        bigText: bigText,
+        enemyCausingDeathIndex: enemyCausingDeathIndex,
+        killStats: killStats
+    });
 };
 
 Ui.prototype.onStartButtonClick = function(){
