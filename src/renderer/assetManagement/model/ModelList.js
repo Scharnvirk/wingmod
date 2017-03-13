@@ -9,6 +9,8 @@ var ModelList = {
         '/models/orbot.json',
         '/models/shulk.json',
         '/models/mhulk.json',
+        '/models/spider.json',
+        '/models/spider2.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
         '/models/telering_top.json',

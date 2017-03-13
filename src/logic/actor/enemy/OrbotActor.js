@@ -67,7 +67,7 @@ OrbotActor.prototype.onDeath = function(){
 
     setTimeout(() => {
         this.spawn({
-            classId: ActorFactory.EXPLOSION
+            classId: ActorFactory.SMALLEXPLOSION
         });
     }, 100);     
 

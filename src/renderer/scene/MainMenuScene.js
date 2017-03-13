@@ -95,7 +95,7 @@ MainMenuScene.prototype.createStartScene = function(){
     }); 
     var scale = 0.5;
     mesh.scale.x = scale;
-    mesh.scale.y = scale;
+    mesh.scale.y = scale; 
     mesh.scale.z = scale;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -104,9 +104,9 @@ MainMenuScene.prototype.createStartScene = function(){
     mesh.matrixAutoUpdate = false;
     mesh.updateMatrix();
 
-    this.threeScene.add(mesh); 
+    this.threeScene.add(mesh);  
 
-    var shipMesh = new BaseMesh({ 
+    var shipMesh = new BaseMesh({
         geometry: ModelStore.get('ravier').geometry,
         material: ModelStore.get('ravier').material
     });

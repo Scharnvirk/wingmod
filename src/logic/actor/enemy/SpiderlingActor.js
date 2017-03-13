@@ -1,31 +1,31 @@
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
-var MoltenBallThrower = require('logic/actor/component/weapon/MoltenBallThrower');
+var RedEnemyBlaster = require('logic/actor/component/weapon/RedEnemyBlaster');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 var DropMixin = require('logic/actor/mixin/DropMixin');
 
-function MookActor(config){
+function SpiderlingActor(config){
     config = config || [];
 
     Object.assign(this, config);
 
-    this.applyConfig(ActorConfig.MOOK);
+    this.applyConfig(ActorConfig.SPIDERLING);
 
-    this.calloutSound = 'drone';
+    this.calloutSound = 'spiderling';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     
     BaseActor.apply(this, arguments);
 }
 
-MookActor.extend(BaseActor);
-MookActor.mixin(BrainMixin);
-MookActor.mixin(DropMixin);
+SpiderlingActor.extend(BaseActor);
+SpiderlingActor.mixin(BrainMixin);
+SpiderlingActor.mixin(DropMixin);
 
-MookActor.prototype.createBrain = function(){
+SpiderlingActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
@@ -34,31 +34,31 @@ MookActor.prototype.createBrain = function(){
     });
 };
 
-MookActor.prototype.createBody = function(){
+SpiderlingActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-MookActor.prototype.customUpdate = function(){
+SpiderlingActor.prototype.customUpdate = function(){
     if(this.timer % 2 === 0) this.brain.update();
     this.doBrainOrders();
     this.weapon.update();
 };
 
-MookActor.prototype.createWeapon = function(){
-    return new MoltenBallThrower({
+SpiderlingActor.prototype.createWeapon = function(){
+    return new RedEnemyBlaster({
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 3.5 , fireAngle: 0}
+            {offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0},
+            {offsetAngle: 90, offsetDistance: 0.5 , fireAngle: 0}
         ]
     });
 };
 
-MookActor.prototype.onDeath = function(){
+SpiderlingActor.prototype.onDeath = function(){
     this.spawn({
-        amount: 10,
+        amount: 5,
         classId: ActorFactory.CHUNK,
         angle: [0, 360],
         velocity: [50, 100]
@@ -74,7 +74,7 @@ MookActor.prototype.onDeath = function(){
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
-MookActor.prototype.onHit = function(){
+SpiderlingActor.prototype.onHit = function(){
     this.spawn({
         amount: 1,
         probability: 0.3,
@@ -85,4 +85,4 @@ MookActor.prototype.onHit = function(){
     this.playSound(['armorHit1', 'armorHit2'], 1);
 };
 
-module.exports = MookActor;
+module.exports = SpiderlingActor;

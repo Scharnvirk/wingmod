@@ -108,6 +108,7 @@ ParticleConfigCreator.prototype.createPremades = function(){
         SmokePuffSmall: require('renderer/particleSystem/premade/SmokePuffSmall'),
         SmokePuffLargeLong: require('renderer/particleSystem/premade/SmokePuffLargeLong'),
         OrangeBoomMedium: require('renderer/particleSystem/premade/OrangeBoomMedium'),
+        OrangeBoomSmall: require('renderer/particleSystem/premade/OrangeBoomSmall'),
         RedLaserTrail: require('renderer/particleSystem/premade/RedLaserTrail'),
         RedSparks: require('renderer/particleSystem/premade/RedSparks'),
         GreenLaserTrail: require('renderer/particleSystem/premade/GreenLaserTrail'),

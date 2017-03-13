@@ -43,7 +43,7 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
     this.state.spawnDelay = this.props.spawnRate;
 
     this.spawn({
-        classId: ActorFactory.ENEMYSPAWNMARKER,
+        classId: ActorFactory.ENEMYSPAWNMARKER, 
         angle: [0, 0],
         velocity: [0, 0]
     });

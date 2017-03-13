@@ -42,7 +42,8 @@ GameState.prototype._createInitialProps = function(){
             missiles: '#ff4d4d',
             coolant: '#8bc9ff',
             shield: '#66aaff'
-        }
+        },
+        enemyMessageColor: '#ffffff'
     };
 };
 
@@ -154,14 +155,7 @@ GameState.prototype.removeActor = function(actorProps){
     }
 
     if(actorProps.name){
-        if (!this._state.killStats[actorProps.name]) {
-            this._state.killStats[actorProps.name] = {
-                killCount: 0,
-                pointWorth: actorProps.pointWorth || 0,
-                enemyIndex: actorProps.enemyIndex || 0
-            };
-        }
-        this._state.killStats[actorProps.name].killCount += 1;
+        this._removeNamedActor(actorProps);
     }
 };
 
@@ -171,6 +165,23 @@ GameState.prototype.getActorCountByType = function(type){
     }
 
     return this._state.existingActorsByType[type];
+};
+
+GameState.prototype._removeNamedActor = function(actorProps){
+    if (!this._state.killStats[actorProps.name]) {
+        this._state.killStats[actorProps.name] = {
+            killCount: 0,
+            pointWorth: actorProps.pointWorth || 0,
+            enemyIndex: actorProps.enemyIndex || 0
+        };
+    }
+    this._state.killStats[actorProps.name].killCount += 1;
+
+    this._state.message = {
+        text: actorProps.name + ': ' + actorProps.pointWorth + ' POINTS',
+        color: this._props.enemyMessageColor
+    };
+    this._notifyOfStateChange();
 };
 
 GameState.prototype._notifyOfStateChange = function(){

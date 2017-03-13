@@ -37,7 +37,7 @@ OrbotActor.prototype.customUpdate = function(){
 OrbotActor.prototype.onSpawn = function(){};
 
 OrbotActor.prototype.onDeath = function(){
-    this.createPremade({premadeName: 'OrangeBoomMedium'});
+    this.createPremade({premadeName: 'OrangeBoomSmall'});
     this.requestUiFlash('white');
     this.requestShake();
 };

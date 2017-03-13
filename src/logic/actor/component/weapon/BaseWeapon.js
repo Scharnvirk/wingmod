@@ -3,6 +3,8 @@ function BaseWeapon(config){
     this.burstCooldown = 0;
     this.cooldown = 100;
     this.recoil = 0;
+    this.randomAngle = 0;
+    this.projectileCount = 1;
     this.velocity = 10;
     this.sound = null;
     this.name = config.name || 'baseWeapon';
@@ -78,17 +80,21 @@ BaseWeapon.prototype.processActiveWeapon = function(){
 BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
     var position = this.actor.getPosition();
     var angle = this.actor.getAngle();
+    let randomAngle = Utils.degToRad(this.randomAngle);
     var offsetPosition = Utils.angleToVector(
         angle + Utils.degToRad(firingPointConfig.offsetAngle),
         firingPointConfig.offsetDistance
     );
-    this.actor.manager.addNew({
-        classId: this.projectileClass,
-        positionX: position[0] + offsetPosition[0],
-        positionY: position[1] + offsetPosition[1],
-        angle: angle + firingPointConfig.fireAngle,
-        velocity: this.velocity
-    });
+    
+    for (let i = 0; i < this.projectileCount;i++) {
+        this.actor.manager.addNew({
+            classId: this.projectileClass,
+            positionX: position[0] + offsetPosition[0],
+            positionY: position[1] + offsetPosition[1],
+            angle: angle + firingPointConfig.fireAngle + Utils.rand(0, randomAngle*1000)/1000 - randomAngle/2,
+            velocity: this.velocity
+        });
+    }    
 };
 
 BaseWeapon.prototype.handleFiringSimultaneous = function(){

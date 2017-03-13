@@ -30,7 +30,21 @@ var ActorConfig = {
         },
         bodyConfig: {
             radius: 40,
-            mass: 5
+            mass: 4
+        }
+    },
+
+    SMALLEXPLOSION: {
+        props:{
+            hp: 1000,
+            damage: 5,
+            removeOnHit: true,
+            timeout: 1,
+            type: 'explosion'
+        },
+        bodyConfig: {
+            radius: 20,
+            mass: 2
         }
     },
 
@@ -77,6 +91,24 @@ var ActorConfig = {
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.3,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
+    REDLASERENEMYPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 2,
+            removeOnHit: true,
+            timeout: 180,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
         },
         bodyConfig: {
             radius: 1,
@@ -290,7 +322,7 @@ var ActorConfig = {
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
-            name: 'm00-K',
+            name: 'DRONE',
             pointWorth: 20,
             enemyIndex: 0
         },
@@ -309,11 +341,11 @@ var ActorConfig = {
             danger: 2,
             acceleration: 700, 
             turnSpeed: 1.5,
-            hp: 20, 
+            hp: 25, 
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
-            name: 'BOUNCER',
+            name: 'LOW GUARD',
             pointWorth: 50,
             enemyIndex: 3
         },
@@ -323,6 +355,55 @@ var ActorConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 6
+        }
+    },
+
+    SPIDER: {
+        props: {
+            drops: [
+                {class: 'SPIDERLING', probability: 0.8},
+                {class: 'SPIDERLING', probability: 0.6},
+                {class: 'SPIDERLING', probability: 0.4},
+                {class: 'SPIDERLING', probability: 0.2},
+                {class: 'ENERGYPICKUP', probability: 0.4}
+            ],
+            danger: 2,
+            acceleration: 2200, 
+            turnSpeed: 2,
+            hp: 14, 
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'SPIDER',
+            pointWorth: 60,
+            enemyIndex: 6
+        },
+        bodyConfig: {
+            mass: 25,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 6
+        }
+    },
+
+    SPIDERLING: {
+        props: {
+            drops: [],
+            danger: 1,
+            acceleration: 80, 
+            turnSpeed: 1,
+            hp: 2, 
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip'
+        },
+        bodyConfig: {
+            mass: 4,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 3
         }
     },
 
@@ -336,7 +417,7 @@ var ActorConfig = {
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'MAD-n355',
+            name: 'HIGH GUARD',
             pointWorth: 80,
             enemyIndex: 4
         },
@@ -359,7 +440,7 @@ var ActorConfig = {
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
-            name: 'ORbot',
+            name: 'ORBOT',
             pointWorth: 10,
             enemyIndex: 2
         },
@@ -382,7 +463,7 @@ var ActorConfig = {
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
-            name: 'PEW2',
+            name: 'WATCHMAN',
             pointWorth: 30,
             enemyIndex: 1
         },

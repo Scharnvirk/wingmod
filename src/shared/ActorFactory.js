@@ -7,28 +7,32 @@ SNIPER: 3,
 ORBOT: 4,
 SHULK: 5,
 MHULK: 6,
-CHUNK: 7,
-BOOMCHUNK: 8,
-EXPLOSION: 9,
-PLASMAPROJECTILE: 10,
-LASERPROJECTILE: 11,
-REDLASERPROJECTILE: 12,
-PURPLELASERPROJECTILE: 13,
-GREENLASERPROJECTILE: 14,
-MOLTENPROJECTILE: 15,
-RINGPROJECTILE: 16,
-PULSEWAVEPROJECTILE: 17,
-CONCSNMISSILE: 18,
-ENEMYCONCSNMISSILE: 19,
-MAP: 20,
-ENEMYSPAWNER: 21,
-ENEMYSPAWNMARKER: 22,
-ITEMSPAWNER: 23,
-DEBUG: 24,
-SHIELDPICKUP: 25,
-ENERGYPICKUP: 26,
-PLASMAPICKUP: 27,
-MISSILEQUADPICKUP: 28,
+SPIDER: 7,
+SPIDERLING: 8,
+CHUNK: 9,
+BOOMCHUNK: 10,
+EXPLOSION: 11,
+SMALLEXPLOSION: 12,
+PLASMAPROJECTILE: 13,
+LASERPROJECTILE: 14,
+REDLASERPROJECTILE: 15,
+REDLASERENEMYPROJECTILE: 16,
+PURPLELASERPROJECTILE: 17,
+GREENLASERPROJECTILE: 18,
+MOLTENPROJECTILE: 19,
+RINGPROJECTILE: 20,
+PULSEWAVEPROJECTILE: 21,
+CONCSNMISSILE: 22,
+ENEMYCONCSNMISSILE: 23,
+MAP: 24,
+ENEMYSPAWNER: 25,
+ENEMYSPAWNMARKER: 26,
+ITEMSPAWNER: 27,
+DEBUG: 28,
+SHIELDPICKUP: 29,
+ENERGYPICKUP: 30,
+PLASMAPICKUP: 31,
+MISSILEQUADPICKUP: 32,
 
 };
 
@@ -40,12 +44,16 @@ ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enem
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
 ActorFactory.ShulkActor = context === 'renderer' ? require("renderer/actor/enemy/ShulkActor") : require("logic/actor/enemy/ShulkActor");
 ActorFactory.MhulkActor = context === 'renderer' ? require("renderer/actor/enemy/MhulkActor") : require("logic/actor/enemy/MhulkActor");
+ActorFactory.SpiderActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderActor") : require("logic/actor/enemy/SpiderActor");
+ActorFactory.SpiderlingActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderlingActor") : require("logic/actor/enemy/SpiderlingActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
 ActorFactory.ExplosionActor = context === 'renderer' ? require("renderer/actor/object/ExplosionActor") : require("logic/actor/object/ExplosionActor");
+ActorFactory.SmallExplosionActor = context === 'renderer' ? require("renderer/actor/object/SmallExplosionActor") : require("logic/actor/object/SmallExplosionActor");
 ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
 ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
 ActorFactory.RedLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserProjectileActor") : require("logic/actor/projectile/RedLaserProjectileActor");
+ActorFactory.RedLaserEnemyProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/RedLaserEnemyProjectileActor") : require("logic/actor/projectile/RedLaserEnemyProjectileActor");
 ActorFactory.PurpleLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PurpleLaserProjectileActor") : require("logic/actor/projectile/PurpleLaserProjectileActor");
 ActorFactory.GreenLaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/GreenLaserProjectileActor") : require("logic/actor/projectile/GreenLaserProjectileActor");
 ActorFactory.MoltenProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MoltenProjectileActor") : require("logic/actor/projectile/MoltenProjectileActor");
@@ -71,12 +79,16 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.ORBOT]: ActorFactory.OrbotActor,
 [idMap.SHULK]: ActorFactory.ShulkActor,
 [idMap.MHULK]: ActorFactory.MhulkActor,
+[idMap.SPIDER]: ActorFactory.SpiderActor,
+[idMap.SPIDERLING]: ActorFactory.SpiderlingActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
 [idMap.EXPLOSION]: ActorFactory.ExplosionActor,
+[idMap.SMALLEXPLOSION]: ActorFactory.SmallExplosionActor,
 [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
 [idMap.LASERPROJECTILE]: ActorFactory.LaserProjectileActor,
 [idMap.REDLASERPROJECTILE]: ActorFactory.RedLaserProjectileActor,
+[idMap.REDLASERENEMYPROJECTILE]: ActorFactory.RedLaserEnemyProjectileActor,
 [idMap.PURPLELASERPROJECTILE]: ActorFactory.PurpleLaserProjectileActor,
 [idMap.GREENLASERPROJECTILE]: ActorFactory.GreenLaserProjectileActor,
 [idMap.MOLTENPROJECTILE]: ActorFactory.MoltenProjectileActor,

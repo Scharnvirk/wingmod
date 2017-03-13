@@ -35,9 +35,11 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
 
     if (rand < 1) {
         enemyType = ActorFactory.MHULK;
-    } else if (rand >= 1 && rand < 3) {
+    } else if (rand >= 1 && rand < 2) {
         enemyType = ActorFactory.SHULK;
-    } else if (rand >= 3 && rand < 7) {
+    } else if (rand >= 2 && rand < 4) {
+        enemyType = ActorFactory.SPIDER;
+    } else if (rand >= 4 && rand < 7) {
         enemyType = ActorFactory.MOOK;
     } else if (rand >= 7 && rand < 10){
         enemyType = ActorFactory.SNIPER;

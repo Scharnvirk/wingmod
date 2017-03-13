@@ -41,7 +41,7 @@ SniperActor.prototype.customUpdate = function(){
 SniperActor.prototype.onSpawn = function(){};
 
 SniperActor.prototype.onDeath = function(){
-    this.createPremade({premadeName: 'OrangeBoomMedium'});
+    this.createPremade({premadeName: 'OrangeBoomSmall'});
     this.requestUiFlash('white');
     this.requestShake();
 };
