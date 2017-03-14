@@ -4,9 +4,11 @@ class KillRow extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.enemyIconScale = 10;
-
         this.countTime = 500; //miliseconds
+
+        let iconSizeMultiplier = 1 / props.enemyCount;
+
+        this.enemyIconScale = Math.min(iconSizeMultiplier * 65, 20);
 
         this.componentStyle = {
             row: {
@@ -19,15 +21,15 @@ class KillRow extends Component {
 
             text: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '2vw',
+                fontSize: '3vh',
                 color: 'white',
-                width: '40%',
+                width: '50%',
                 textAlign: 'right'
             },
 
             number: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '2vw',
+                fontSize: '3vh',
                 color: 'white',
                 width: '25%'
             },
@@ -53,7 +55,7 @@ class KillRow extends Component {
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 alignItems: 'center',
-                width: '40%'
+                width: '60%'
             }
         };
 

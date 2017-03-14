@@ -4,32 +4,30 @@ var KillRow = require('renderer/ui/component/endGame/KillRow');
 var DiedRow = require('renderer/ui/component/endGame/DiedRow');
 var Summary = require('renderer/ui/component/endGame/Summary');
 
-class EndGameWindow extends Component {
+class EndGamePanel extends Component {
     constructor(props, context) {
         super(props, context);
 
         this.testKillStats = [
             {enemyIndex: 0, enemyName: 'M00-k', killCount: 5, pointWorth: 20},
             {enemyIndex: 1, enemyName: 'PEW2', killCount: 13, pointWorth: 30},
-            {enemyIndex: 2, enemyName: 'ORBOT', killCount: 113, pointWorth: 10},
+            {enemyIndex: 2, enemyName: 'ORBOT', killCount: 13, pointWorth: 10},
             {enemyIndex: 3, enemyName: 'BOUNCER', killCount: 5, pointWorth: 50},
-            {enemyIndex: 4, enemyName: 'MADN-355', killCount: 5, pointWorth: 80},
-            {enemyIndex: 5, enemyName: 'GATEWAY', killCount: 3, pointWorth: 1000}
+            {enemyIndex: 4, enemyName: 'MADN-355', killCount: 5, pointWorth: 80}
         ];
 
         this.componentStyle = {
-            window: {
+            panel: {
                 display: 'flex', 
                 flexDirection: 'column',
-                justifyContent: 'space-between',
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',      
-                width: '60vw',
-                height: '60vh' 
+                justifyContent: 'space-between',    
+                width: '90%',
+                height: '90%' 
             },
 
             titleText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '4vw',
+                fontSize: '6vh',
                 color: 'white'
             },
 
@@ -37,21 +35,14 @@ class EndGameWindow extends Component {
                 display: 'flex', 
                 flexDirection: 'column',
                 alignItems: 'center',
-                height: '40vh'
-            },
-
-            header: {
-                display: 'none', 
-                flexDirection: 'column',
-                alignItems: 'center',
-                height: '15vh'
+                height: '80%'
             },
 
             summary: {
                 display: 'flex', 
                 flexDirection: 'column',
                 alignItems: 'center',
-                height: '15vh'
+                height: '20%'
             }
         };
 
@@ -67,10 +58,7 @@ class EndGameWindow extends Component {
 
     render() {
         if (!this.state.visible) return null;
-        return <div style={this.componentStyle.window}>
-            <div style={this.componentStyle.header}>
-                <DiedRow enemyCausingDeathIndex={this.props.enemyCausingDeathIndex}/>
-            </div>
+        return <div style={this.componentStyle.panel}>
             <div style={this.componentStyle.killTable}>
                 {this._createKillRows(this.props.killStats)}
             </div>
@@ -81,7 +69,7 @@ class EndGameWindow extends Component {
     }
 
     _createKillRows(killData){
-        killData = killData || [];
+        killData = killData || this.testKillStats;
 
         if (killData.length === 0) {
             setTimeout(() => {
@@ -98,6 +86,7 @@ class EndGameWindow extends Component {
                 enemyName={killRow.enemyName} 
                 killCount={killRow.killCount} 
                 pointWorth={killRow.pointWorth}
+                enemyCount={killData.length}
             />);
             i++;
         });
@@ -106,4 +95,4 @@ class EndGameWindow extends Component {
     }
 }
 
-module.exports = EndGameWindow;
+module.exports = EndGamePanel;

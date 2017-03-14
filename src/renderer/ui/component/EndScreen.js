@@ -1,8 +1,9 @@
 import classnames from 'classnames';
 import React from 'react';
 
+var Window = require('renderer/ui/component/base/Window');
 var FlexBoxContainer = require('renderer/ui/component/base/FlexBoxContainer');
-var EndGameWindow = require('renderer/ui/component/endGame/EndGameWindow');
+var EndGamePanel = require('renderer/ui/component/endGame/EndGamePanel');
 var StyledText = require('renderer/ui/component/base/StyledText');
 
 class EndScreen extends React.Component {
@@ -18,8 +19,11 @@ class EndScreen extends React.Component {
                 <StyledText style={'smallText'}>
                     {'Press F5 to restart'}
                 </StyledText>
-            </div>;
-            <EndGameWindow enemyCausingDeathIndex={this.props.enemyCausingDeathIndex} killStats={this.props.killStats} />
+            </div>
+
+            <Window title='RESULTS'>
+                <EndGamePanel enemyCausingDeathIndex={this.props.enemyCausingDeathIndex} killStats={this.props.killStats} />
+            </Window> 
         </FlexBoxContainer>;
     }
 }
