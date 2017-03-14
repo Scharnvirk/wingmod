@@ -30,7 +30,9 @@ MhulkActor.prototype.createBrain = function(){
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 800
+        firingDistance: 500,
+        shootingArc: 30,
+        leadSkill: 0.4
     });
 };
 

@@ -138,7 +138,7 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls){
 };
 
 MookBrain.prototype.seesPlayerAction = function(){
-    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, 1);
+    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, this.leadSkill);
     this.gotoPoint = this.playerActor.getPosition();
     let distance = Utils.distanceBetweenActors(this.actor, this.playerActor);
 

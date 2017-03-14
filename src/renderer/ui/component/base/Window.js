@@ -10,9 +10,12 @@ class Window extends Component {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',      
                 width: '60vw',
                 height: '60vh' 
+            },
+
+            borderContainer: {
+                opacity: 0.8
             },
 
             topBarLeft: {
@@ -118,16 +121,19 @@ class Window extends Component {
         let title = this.props.title || 'NO TITLE';
 
         return <div style={{position: 'relative'}}>
-            <div style={this.componentStyle.title}>{title}</div>
-            <div style={this.componentStyle.titlebackgroundLeft}/>
-            <div style={this.componentStyle.titlebackgroundRight}/>
-            <div style={this.componentStyle.topBarLeft}/>
-            <div style={this.componentStyle.topBarRight}/>
-            <div style={this.componentStyle.leftTopSideBar}/>
-            <div style={this.componentStyle.rightTopSideBar}/>
-            <div style={this.componentStyle.bottomBar}/>
-            <div style={this.componentStyle.leftBottomSideBar}/>
-            <div style={this.componentStyle.rightBottomSideBar}/>
+            <div style={this.componentStyle.borderContainer}>
+                <div style={this.componentStyle.title}>{title}</div>
+                <div style={this.componentStyle.titlebackgroundLeft}/>
+                <div style={this.componentStyle.titlebackgroundRight}/>
+                <div style={this.componentStyle.topBarLeft}/>
+                <div style={this.componentStyle.topBarRight}/>
+                <div style={this.componentStyle.leftTopSideBar}/>
+                <div style={this.componentStyle.rightTopSideBar}/>
+                <div style={this.componentStyle.bottomBar}/>
+                <div style={this.componentStyle.leftBottomSideBar}/>
+                <div style={this.componentStyle.rightBottomSideBar}/>
+            </div>
+
             <div style={this.componentStyle.window}>
                 {this.props.children}
             </div>

@@ -25608,7 +25608,7 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls) {
 };
 
 MookBrain.prototype.seesPlayerAction = function () {
-    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, 1);
+    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, this.leadSkill);
     this.gotoPoint = this.playerActor.getPosition();
     var distance = Utils.distanceBetweenActors(this.actor, this.playerActor);
 
@@ -26278,7 +26278,9 @@ MhulkActor.prototype.createBrain = function () {
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 800
+        firingDistance: 500,
+        shootingArc: 30,
+        leadSkill: 0.4
     });
 };
 
@@ -27360,7 +27362,7 @@ BoomChunkActor.prototype.onDeath = function () {
 
     setTimeout(function () {
         _this.spawn({
-            classId: ActorFactory.EXPLOSION
+            classId: ActorFactory.SMALLEXPLOSION
         });
     }, 100);
 };
@@ -36542,9 +36544,12 @@ var Window = function (_Component) {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
                 width: '60vw',
                 height: '60vh'
+            },
+
+            borderContainer: {
+                opacity: 0.8
             },
 
             topBarLeft: {
@@ -36657,18 +36662,22 @@ var Window = function (_Component) {
                 { style: { position: 'relative' } },
                 _react2.default.createElement(
                     'div',
-                    { style: this.componentStyle.title },
-                    title
+                    { style: this.componentStyle.borderContainer },
+                    _react2.default.createElement(
+                        'div',
+                        { style: this.componentStyle.title },
+                        title
+                    ),
+                    _react2.default.createElement('div', { style: this.componentStyle.titlebackgroundLeft }),
+                    _react2.default.createElement('div', { style: this.componentStyle.titlebackgroundRight }),
+                    _react2.default.createElement('div', { style: this.componentStyle.topBarLeft }),
+                    _react2.default.createElement('div', { style: this.componentStyle.topBarRight }),
+                    _react2.default.createElement('div', { style: this.componentStyle.leftTopSideBar }),
+                    _react2.default.createElement('div', { style: this.componentStyle.rightTopSideBar }),
+                    _react2.default.createElement('div', { style: this.componentStyle.bottomBar }),
+                    _react2.default.createElement('div', { style: this.componentStyle.leftBottomSideBar }),
+                    _react2.default.createElement('div', { style: this.componentStyle.rightBottomSideBar })
                 ),
-                _react2.default.createElement('div', { style: this.componentStyle.titlebackgroundLeft }),
-                _react2.default.createElement('div', { style: this.componentStyle.titlebackgroundRight }),
-                _react2.default.createElement('div', { style: this.componentStyle.topBarLeft }),
-                _react2.default.createElement('div', { style: this.componentStyle.topBarRight }),
-                _react2.default.createElement('div', { style: this.componentStyle.leftTopSideBar }),
-                _react2.default.createElement('div', { style: this.componentStyle.rightTopSideBar }),
-                _react2.default.createElement('div', { style: this.componentStyle.bottomBar }),
-                _react2.default.createElement('div', { style: this.componentStyle.leftBottomSideBar }),
-                _react2.default.createElement('div', { style: this.componentStyle.rightBottomSideBar }),
                 _react2.default.createElement(
                     'div',
                     { style: this.componentStyle.window },
@@ -37978,7 +37987,7 @@ var ActorConfig = {
             turnSpeed: 1,
             removeOnHit: false,
             timeoutRandomMin: 5,
-            timeoutRandomMax: 60,
+            timeoutRandomMax: 20,
             soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {

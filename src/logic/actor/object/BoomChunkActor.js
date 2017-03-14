@@ -14,7 +14,7 @@ BoomChunkActor.extend(ChunkActor);
 BoomChunkActor.prototype.onDeath = function(){    
     setTimeout(() => {
         this.spawn({
-            classId: ActorFactory.EXPLOSION
+            classId: ActorFactory.SMALLEXPLOSION
         });
     }, 100);      
 };

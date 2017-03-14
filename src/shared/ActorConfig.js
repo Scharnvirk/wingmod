@@ -263,7 +263,7 @@ var ActorConfig = {
             turnSpeed: 1,
             removeOnHit: false,
             timeoutRandomMin: 5,
-            timeoutRandomMax: 60,
+            timeoutRandomMax: 20,
             soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
