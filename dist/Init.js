@@ -25390,7 +25390,7 @@ WeaponSystem.prototype.createMissilelauncher = function (name) {
 
 module.exports = WeaponSystem;
 
-},{"logic/actor/component/weapon/Blaster":195,"logic/actor/component/weapon/MissileLauncher":198,"logic/actor/component/weapon/PlasmaGun":201,"logic/actor/component/weapon/PulseWaveGun":202,"logic/actor/component/weapon/RedBlaster":203}],191:[function(require,module,exports){
+},{"logic/actor/component/weapon/Blaster":195,"logic/actor/component/weapon/MissileLauncher":198,"logic/actor/component/weapon/PlasmaGun":202,"logic/actor/component/weapon/PulseWaveGun":203,"logic/actor/component/weapon/RedBlaster":204}],191:[function(require,module,exports){
 'use strict';
 
 function BaseBrain(config) {
@@ -25419,7 +25419,6 @@ BaseBrain.prototype.getPlayerPosition = function () {
 BaseBrain.prototype.getPlayerPositionWithLead = function () {
     var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
     var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-
 
     var p = this.actor.getPosition();
     var tp = this.playerActor.getPosition();
@@ -25478,6 +25477,7 @@ function MookBrain(config) {
     config.nearDistance = config.nearDistance || 40;
     config.farDistance = config.farDistance || 90;
     config.firingDistance = config.firingDistance || 200;
+    config.leadSkill = config.leadSkill || 1;
 
     Object.assign(this, config);
     BaseBrain.apply(this, arguments);
@@ -26081,7 +26081,7 @@ function MoltenHeavyThrower(config) {
     this.burstCooldown = 10;
     this.cooldown = 60;
     this.recoil = 100;
-    this.velocity = 240;
+    this.velocity = 200;
     this.projectileCount = 3;
     this.randomAngle = 10;
     this.sound = 'molten';
@@ -26093,6 +26093,32 @@ MoltenHeavyThrower.extend(BaseWeapon);
 module.exports = MoltenHeavyThrower;
 
 },{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],201:[function(require,module,exports){
+'use strict';
+
+var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
+var ActorFactory = require('shared/ActorFactory')('logic');
+
+function MoltenLightThrower(config) {
+    Object.assign(this, config);
+
+    this.projectileClass = ActorFactory.MOLTENPROJECTILE;
+
+    BaseWeapon.apply(this, arguments);
+
+    this.burstCount = 2;
+    this.burstCooldown = 20;
+    this.cooldown = 60;
+    this.recoil = 100;
+    this.velocity = 140;
+    this.sound = 'molten';
+    this.volume = 0.4;
+}
+
+MoltenLightThrower.extend(BaseWeapon);
+
+module.exports = MoltenLightThrower;
+
+},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],202:[function(require,module,exports){
 'use strict';
 
 var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
@@ -26118,7 +26144,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],202:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],203:[function(require,module,exports){
 'use strict';
 
 var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
@@ -26145,7 +26171,7 @@ PlasmaGun.extend(BaseWeapon);
 
 module.exports = PlasmaGun;
 
-},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],203:[function(require,module,exports){
+},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],204:[function(require,module,exports){
 'use strict';
 
 var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
@@ -26170,28 +26196,6 @@ function Blaster(config) {
 Blaster.extend(BaseWeapon);
 
 module.exports = Blaster;
-
-},{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],204:[function(require,module,exports){
-'use strict';
-
-var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
-var ActorFactory = require('shared/ActorFactory')('logic');
-
-function RedEnemyBlaster(config) {
-    Object.assign(this, config);
-
-    this.projectileClass = ActorFactory.REDLASERENEMYPROJECTILE;
-
-    BaseWeapon.apply(this, arguments);
-
-    this.cooldown = 80;
-    this.velocity = 300;
-    this.sound = 'red_laser';
-}
-
-RedEnemyBlaster.extend(BaseWeapon);
-
-module.exports = RedEnemyBlaster;
 
 },{"logic/actor/component/weapon/BaseWeapon":194,"shared/ActorFactory":373}],205:[function(require,module,exports){
 'use strict';
@@ -26371,7 +26375,8 @@ MookActor.prototype.createBrain = function () {
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 140
+        firingDistance: 140,
+        leadSkill: 0
     });
 };
 
@@ -26555,7 +26560,8 @@ ShulkActor.prototype.createBrain = function () {
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 180
+        firingDistance: 180,
+        leadSkill: 0.3
     });
 };
 
@@ -26655,7 +26661,8 @@ SniperActor.prototype.createBrain = function () {
         shootingArc: 8,
         nearDistance: 200,
         farDistance: 300,
-        firingDistance: 400
+        firingDistance: 400,
+        leadSkill: 0.5
     });
 };
 
@@ -26748,7 +26755,8 @@ SpiderActor.prototype.createBrain = function () {
         shootingArc: 50,
         nearDistance: 20,
         farDistance: 50,
-        firingDistance: 200
+        firingDistance: 200,
+        leadSkill: 1.2
     });
 };
 
@@ -26802,7 +26810,7 @@ module.exports = SpiderActor;
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
-var RedEnemyBlaster = require('logic/actor/component/weapon/RedEnemyBlaster');
+var MoltenLightThrower = require('logic/actor/component/weapon/MoltenLightThrower');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
@@ -26831,7 +26839,11 @@ SpiderlingActor.prototype.createBrain = function () {
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 140
+        shootingArc: 50,
+        nearDistance: 20,
+        farDistance: 50,
+        firingDistance: 100,
+        leadSkill: 0
     });
 };
 
@@ -26846,11 +26858,11 @@ SpiderlingActor.prototype.customUpdate = function () {
 };
 
 SpiderlingActor.prototype.createWeapon = function () {
-    return new RedEnemyBlaster({
+    return new MoltenLightThrower({
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
-        firingPoints: [{ offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 0.5, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: 0, offsetDistance: 0, fireAngle: 0 }]
     });
 };
 
@@ -26887,7 +26899,7 @@ SpiderlingActor.prototype.onHit = function () {
 
 module.exports = SpiderlingActor;
 
-},{"logic/actor/BaseActor":188,"logic/actor/component/ai/MookBrain":192,"logic/actor/component/body/BaseBody":193,"logic/actor/component/weapon/RedEnemyBlaster":204,"logic/actor/mixin/BrainMixin":218,"logic/actor/mixin/DropMixin":219,"shared/ActorConfig":372,"shared/ActorFactory":373}],214:[function(require,module,exports){
+},{"logic/actor/BaseActor":188,"logic/actor/component/ai/MookBrain":192,"logic/actor/component/body/BaseBody":193,"logic/actor/component/weapon/MoltenLightThrower":201,"logic/actor/mixin/BrainMixin":218,"logic/actor/mixin/DropMixin":219,"shared/ActorConfig":372,"shared/ActorFactory":373}],214:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -37875,8 +37887,8 @@ var ActorConfig = {
         props: {
             drops: [{ class: 'ENERGYPICKUP', probability: 0.3 }, { class: 'SHIELDPICKUP', probability: 0.2 }],
             danger: 2,
-            acceleration: 700,
-            turnSpeed: 1.5,
+            acceleration: 500,
+            turnSpeed: 0.75,
             hp: 25,
             hpBarCount: 5,
             enemy: true,
@@ -37921,7 +37933,7 @@ var ActorConfig = {
         props: {
             drops: [],
             danger: 1,
-            acceleration: 80,
+            acceleration: 160,
             turnSpeed: 1,
             hp: 2,
             hpBarCount: 5,
@@ -37942,7 +37954,7 @@ var ActorConfig = {
             drops: [{ class: 'MISSILEQUADPICKUP', probability: 0.8 }, { class: 'MISSILEQUADPICKUP', probability: 0.2 }],
             danger: 3,
             acceleration: 700,
-            turnSpeed: 0.9,
+            turnSpeed: 0.75,
             hp: 60,
             hpBarCount: 7,
             enemy: true,

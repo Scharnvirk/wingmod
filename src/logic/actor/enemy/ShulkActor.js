@@ -30,7 +30,8 @@ ShulkActor.prototype.createBrain = function(){
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 180
+        firingDistance: 180,
+        leadSkill: 0.3
     });
 };
 

@@ -22,8 +22,6 @@ BaseBrain.prototype.getPlayerPosition = function(){
 };
 
 BaseBrain.prototype.getPlayerPositionWithLead = function(leadSpeed = 1, leadSkill = 0){
-
-
     var p = this.actor.getPosition();
     var tp = this.playerActor.getPosition();
     var tv = this.playerActor.getVelocity();

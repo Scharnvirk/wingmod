@@ -33,7 +33,8 @@ SniperActor.prototype.createBrain = function(){
         shootingArc: 8,
         nearDistance: 200,
         farDistance: 300,
-        firingDistance: 400
+        firingDistance: 400,
+        leadSkill: 0.5
     });
 };
 

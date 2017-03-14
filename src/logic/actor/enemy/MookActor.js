@@ -30,7 +30,8 @@ MookActor.prototype.createBrain = function(){
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 140
+        firingDistance: 140,
+        leadSkill: 0
     });
 };
 

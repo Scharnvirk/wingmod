@@ -6,6 +6,7 @@ function MookBrain(config){
     config.nearDistance = config.nearDistance || 40;
     config.farDistance = config.farDistance || 90;
     config.firingDistance = config.firingDistance || 200;
+    config.leadSkill = config.leadSkill || 1;
 
     Object.assign(this, config);
     BaseBrain.apply(this, arguments);

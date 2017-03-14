@@ -339,8 +339,8 @@ var ActorConfig = {
         props: {
             drops: [{class: 'ENERGYPICKUP', probability: 0.3}, {class: 'SHIELDPICKUP', probability: 0.2}],
             danger: 2,
-            acceleration: 700, 
-            turnSpeed: 1.5,
+            acceleration: 500, 
+            turnSpeed: 0.75,
             hp: 25, 
             hpBarCount: 5,
             enemy: true,
@@ -391,7 +391,7 @@ var ActorConfig = {
         props: {
             drops: [],
             danger: 1,
-            acceleration: 80, 
+            acceleration: 160, 
             turnSpeed: 1,
             hp: 2, 
             hpBarCount: 5,
@@ -412,7 +412,7 @@ var ActorConfig = {
             drops: [{class: 'MISSILEQUADPICKUP', probability: 0.8}, {class: 'MISSILEQUADPICKUP', probability: 0.2}],
             danger: 3,
             acceleration: 700, 
-            turnSpeed: 0.9,
+            turnSpeed: 0.75,
             hp: 60,
             hpBarCount: 7,
             enemy: true,

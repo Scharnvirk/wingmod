@@ -33,7 +33,8 @@ SpiderActor.prototype.createBrain = function(){
         shootingArc: 50,
         nearDistance: 20,
         farDistance: 50,
-        firingDistance: 200
+        firingDistance: 200,
+        leadSkill: 1.2
     });
 };
 

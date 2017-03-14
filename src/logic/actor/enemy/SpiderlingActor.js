@@ -1,7 +1,7 @@
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
-var RedEnemyBlaster = require('logic/actor/component/weapon/RedEnemyBlaster');
+var MoltenLightThrower = require('logic/actor/component/weapon/MoltenLightThrower');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
@@ -30,7 +30,11 @@ SpiderlingActor.prototype.createBrain = function(){
         actor: this,
         manager: this.manager,
         playerActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 140
+        shootingArc: 50,
+        nearDistance: 20,
+        farDistance: 50,
+        firingDistance: 100,
+        leadSkill: 0
     });
 };
 
@@ -45,13 +49,12 @@ SpiderlingActor.prototype.customUpdate = function(){
 };
 
 SpiderlingActor.prototype.createWeapon = function(){
-    return new RedEnemyBlaster({
+    return new MoltenLightThrower({
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 0.5 , fireAngle: 0}
+            {offsetAngle: 0, offsetDistance: 0, fireAngle: 0}
         ]
     });
 };
