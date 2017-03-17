@@ -8,7 +8,7 @@ var FullScreenEffect = require('renderer/ui/component/base/FullScreenEffect');
 var Viewport = require('renderer/ui/component/base/Viewport');
 var AmmoTileContainer = require('renderer/ui/component/hud/AmmoTileContainer');
 var MessageContainer = require('renderer/ui/component/hud/MessageContainer');
-var WeaponInfoContainer = require('renderer/ui/component/hud/WeaponInfoContainer');
+var WeaponInfoContainer = require('renderer/ui/component/hud/WeaponInfoContainer'); 
 
 var ReactUtils = require('renderer/ui/ReactUtils');
 
@@ -23,13 +23,14 @@ var InitialView = React.createClass({
             UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);
             break;
         case 'gameOverScreen':
-            UIcontent.push(<
-                EndScreen key={ReactUtils.generateKey()}
+            UIcontent.push(<EndScreen 
+                key={ReactUtils.generateKey()}
                 scoreText={ReactUtils.multilinize(this.props.context.scoreText)}
                 bigText={ReactUtils.multilinize(this.props.context.bigText)}
                 enemyCausingDeathIndex={this.props.context.enemyCausingDeathIndex}
                 killStats={this.props.context.killStats}
-                />);
+                isBrowserMobile={this.props.isBrowserMobile}
+            />);
             break;
         }
 

@@ -8,6 +8,13 @@ var StyledText = require('renderer/ui/component/base/StyledText');
 
 class EndScreen extends React.Component {
     render() {
+
+        const restartElement = this.props.isBrowserMobile ? 
+        null :
+        <StyledText style={'smallText'}>
+            {'Press F5 to restart'}
+        </StyledText>;
+
         return <FlexBoxContainer>
             <div className={classnames('class', ['centerHorizontal'])}>
                 <StyledText style={'titleText'}>
@@ -16,9 +23,7 @@ class EndScreen extends React.Component {
                 <StyledText style={'smallText'}>
                     {this.props.scoreText}
                 </StyledText>
-                <StyledText style={'smallText'}>
-                    {'Press F5 to restart'}
-                </StyledText>
+                {restartElement}
             </div>
 
             <Window title='RESULTS'>

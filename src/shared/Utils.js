@@ -5,6 +5,14 @@ var Utils = {
         return check;
     },
 
+    isBrowserFirefox: function() {
+        return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    },
+
+    isBrowserEdge: function() {
+        return navigator.userAgent.indexOf('Edge') > -1;
+    },
+
     degToRad: function(degrees){
         return degrees * (Math.PI / 180);
     },

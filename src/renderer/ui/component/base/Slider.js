@@ -16,6 +16,7 @@ class Slider extends Component {
                 pointerEvents: 'all',
                 backgroundImage: 'url("gfx/button_background.png")',
                 backgroundSize: 'contain',
+                backgroundRepeat: 'none',
                 filter: 'drop-shadow(3px 3px 3px #000)'
             },
 

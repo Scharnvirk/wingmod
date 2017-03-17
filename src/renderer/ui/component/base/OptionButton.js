@@ -17,6 +17,7 @@ class OptionButton extends React.Component {
                 animationName: 'buttonHoverOut',
                 backgroundImage: 'url("gfx/button_background.png")',
                 backgroundSize: 'contain',
+                backgroundRepeat: 'none',
                 filter: 'drop-shadow(3px 3px 3px #000)',
                 textAlign: 'center',
                 verticalAlign: 'middle',

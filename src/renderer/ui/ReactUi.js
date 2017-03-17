@@ -30,16 +30,16 @@ ReactUi.prototype.changeMode = function(newMode, context){
                 gameViewport.addClass('noPointerEvents');
             }
 
-            this.InitialView = <InitialView mode={newMode} context={context}/>;
+            this.InitialView = <InitialView mode={newMode} context={context} isBrowserMobile={this.isBrowserMobile}/>;
             this.render();
         }
         break;
     case 'gameOverScreen':
-        this.InitialView = <InitialView mode={newMode} context={context}/>;
+        this.InitialView = <InitialView mode={newMode} context={context} isBrowserMobile={this.isBrowserMobile}/>;
         this.render();
         break;
     case 'helpScreen':
-        this.InitialView = <InitialView mode={newMode} context={context}/>;
+        this.InitialView = <InitialView mode={newMode} context={context} isBrowserMobile={this.isBrowserMobile}/>;
         this.render();
         break;
     }

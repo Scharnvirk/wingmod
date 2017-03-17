@@ -56,10 +56,11 @@ Ui.prototype.setAssetsLoaded = function(state){
 
 Ui.prototype.stopGame = function(enemyCausingDeathIndex, killStats){
     const bigText = 'GAME OVER';
-    const scoreText = 'Don\'t worry! Next time you will do better!';
+    const pcScoreText = 'Don\'t worry! Next time you will do better!';
+    const mobileScoreText = 'You can try playing the game on the PC!';
 
     this.reactUi.changeMode('gameOverScreen', {
-        scoreText: scoreText, 
+        scoreText: this.isBrowserMobile ? mobileScoreText : pcScoreText, 
         bigText: bigText,
         enemyCausingDeathIndex: enemyCausingDeathIndex,
         killStats: killStats
