@@ -15,7 +15,7 @@ GameScene.extend(EventEmitter);
 GameScene.prototype.fillScene = function(mapBodies){
 
     this.actorManager.addNew({
-        classId: ActorFactory.SHIP,
+        classId: this.isBrowserMobile ? ActorFactory.DEMOSHIP : ActorFactory.SHIP,
         positionX: 0,
         positionY: 0,
         angle: 0

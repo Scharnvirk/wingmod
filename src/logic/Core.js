@@ -6,8 +6,12 @@ var GameScene = require('logic/GameScene');
 var GameState = require('logic/GameState');
 var WorldAiMapExtractor = require('logic/WorldAiMapExtractor');
 
-function Core(worker){
-    this.createMainComponents(worker);
+function Core(config){
+    if(!config.worker) throw new Error('Logic core initialization failure!');
+
+    this.isBrowserMobile = config.isBrowserMobile;
+
+    this.createMainComponents(config.worker);
     this.createEventHandlers();
     this.createFpsCounter();
 
@@ -20,7 +24,14 @@ Core.prototype.createMainComponents = function(worker){
     this.gameState = new GameState();
     this.actorManager = new ActorManager({world: this.world, gameState: this.gameState});
     this.mapManager = new MapManager();
-    this.scene = new GameScene({world: this.world, actorManager: this.actorManager, mapManager: this.mapManager});
+
+    this.scene = new GameScene({
+        world: this.world,
+        actorManager: this.actorManager,
+        mapManager: this.mapManager,
+        isBrowserMobile: this.isBrowserMobile
+    });
+
     this.worldAiMapXtractor = new WorldAiMapExtractor({world: this.world});
 };
 

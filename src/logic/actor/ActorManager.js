@@ -1,8 +1,12 @@
 var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorTypes = require('shared/ActorTypes');
 
 function ActorManager(config){
     config = config || {};
-    this.storage = Object.create(null);
+
+    this._storage = this._createStorage(); 
+    this._playerType = ActorTypes.getPlayerType();
+
     this.world = null;
     this.factory = config.factory || ActorFactory.getInstance();
     this.currentId = 1;
@@ -26,10 +30,6 @@ function ActorManager(config){
 ActorManager.extend(EventEmitter);
 
 ActorManager.prototype.addNew = function(config){
-    if (Object.keys(this.storage).length >= Constants.STORAGE_SIZE){
-        throw new Error('Actor manager storage is full! Cannot create new Actor!');
-    }
-
     var actor = this.factory.create(
         Object.assign(config, {
             manager: this,
@@ -41,7 +41,7 @@ ActorManager.prototype.addNew = function(config){
 
     actor.parent = config.parent;
     
-    this.storage[this.currentId] = actor;
+    this._storage[actor.getType()][this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.getBody());
     actor.onSpawn();
@@ -53,14 +53,17 @@ ActorManager.prototype.update = function(inputState){
     this.timer ++;
 
     for (let i = 0; i < this.playerActors.length; i++){
-        if(this.storage[this.playerActors[i]]){
-            this.storage[this.playerActors[i]].playerUpdate(inputState);
+        if(this._storage[this._playerType][this.playerActors[i]]){
+            this._storage[this._playerType][this.playerActors[i]].playerUpdate(inputState);
         }
     }
 
-    for (let actorId in this.storage) {
-        this.storage[actorId].update();
+    for (let actorType in ActorTypes.types) {
+        for (let actorId in this._storage[actorType]) {
+            this._storage[actorType][actorId].update();
+        }
     }
+    
 
     this.sendActorStateChanges();
 };
@@ -69,12 +72,12 @@ ActorManager.prototype.attachPlayer = function(actor){
     this.playerActors.push(actor.id);
 };
 
-ActorManager.prototype.removeActorAt = function(actorId){
-    delete this.storage[actorId];
+ActorManager.prototype.removeActorAt = function(actor){
+    delete this._storage[actor.getType()][actor.id];
 };
 
 ActorManager.prototype.actorDied = function(actor){
-    delete this.storage[actor.id];
+    delete this._storage[actor.getType()][actor.id];
     this.world.prepareBodyForDeath(actor.getBody());
 };
 
@@ -89,7 +92,7 @@ ActorManager.prototype.endGame = function(){
 };
 
 ActorManager.prototype.getFirstPlayerActor = function(){
-    return this.storage[this.playerActors[0]];
+    return this._storage['playerShip'][this.playerActors[0]]; //todo - zamienic to na szukanie po playerActors
 };
 
 ActorManager.prototype.updateActorState = function(actor){
@@ -122,11 +125,25 @@ ActorManager.prototype.playSound = function(config){
     }
 };
 
-ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){ //wyleci
+ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){
     var playerActor = this.getFirstPlayerActor();
     if (playerActor){
         playerActor.switchWeapon(weaponConfig);
     }
+};
+
+ActorManager.prototype.getActorsByType = function(type){
+    return this._storage[type];
+};
+
+ActorManager.prototype._createStorage = function() {
+    let storage = Object.create(null);
+
+    Object.keys(ActorTypes.types).forEach(actorType => {
+        storage[actorType] = Object.create(null);
+    });
+
+    return storage;
 };
 
 module.exports = ActorManager;

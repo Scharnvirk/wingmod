@@ -1,5 +1,26 @@
-var ActorConfig = {
+const ActorConfig = {
     SHIP: {
+        props: {
+            canPickup: true,
+            acceleration: 1000,
+            turnSpeed: 6,
+            hp: 50,
+            shield: 50,
+            hpBarCount: 10,
+            shieldBarCount: 10,
+            isPlayer: true,
+            type: 'playerShip'
+        },
+        bodyConfig: {
+            mass: 4,
+            damping: 0.85,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
+        }
+    },
+
+    DEMOSHIP: {
         props: {
             canPickup: true,
             acceleration: 1000,
@@ -250,7 +271,7 @@ var ActorConfig = {
             turnSpeed: 1,
             removeOnHit: false,
             timeoutRandomMin: 25,
-            timeoutRandomMax: 100,
+            timeoutRandomMax: 100
         },
         bodyConfig: {
             mass: 0.01

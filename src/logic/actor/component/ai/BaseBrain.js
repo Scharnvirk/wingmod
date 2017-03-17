@@ -1,10 +1,17 @@
+var ActorTypes = require('shared/ActorTypes');
+
 function BaseBrain(config){
     config = config || [];
 
     Object.assign(this, config);
 
     if(!this.actor) throw new Error('No actor for a Brain!');
+    if(!this.gameState) throw new Error('No gameState for a Brain!');
     if(!this.manager) throw new Error('No manager for a Brain!');
+
+    this.detectEnemies = !this.enemyActor;
+    this.enemyTypes = this.enemyTypes || [ActorTypes.getPlayerType()];
+    this.enemyDetectionFrequency = 60;
 
     this.orders = {
         thrust: 0, //backward < 0; forward > 0
@@ -13,18 +20,51 @@ function BaseBrain(config){
         shoot: false,
         lookAtPosition: null,
     };
+
+    this.timer = 0;    
 }
 
-BaseBrain.prototype.update = function(){};
+BaseBrain.prototype.update = function(){
+    if( this.timer % this.enemyDetectionFrequency === 0 && this.detectEnemies) {
+        this.enemyActor = this.getClosestEnemy();
+    }
+    
+    this.customUpdate();
 
-BaseBrain.prototype.getPlayerPosition = function(){
-    return this.playerActor.getPosition();
+    this.timer ++;
 };
 
-BaseBrain.prototype.getPlayerPositionWithLead = function(leadSpeed = 1, leadSkill = 0){
+BaseBrain.prototype.customUpdate = function(){};
+
+BaseBrain.prototype.getClosestEnemy = function(){
+    let enemyActors, enemyActor, distance, currentlyClosestActor, minimumDistance = Infinity;
+    
+    for (let i = 0; i < this.enemyTypes.length; i++){
+        enemyActors = this.manager.getActorsByType(this.enemyTypes[i]);
+        for (let enemyActorId in enemyActors) {
+            enemyActor = enemyActors[enemyActorId];
+            distance = Utils.distanceBetweenActors(enemyActor, this.actor);
+
+            if (distance < minimumDistance) {
+                minimumDistance = distance;
+                if ( !this.isWallBetween(this.actor.getPosition(), enemyActor.getPosition()) ) {
+                    currentlyClosestActor = enemyActor;
+                }
+            }
+        }
+    }
+
+    return currentlyClosestActor;
+};
+
+BaseBrain.prototype.getEnemyPosition = function(){
+    return this.enemyActor.getPosition();
+};
+
+BaseBrain.prototype.getEnemyPositionWithLead = function(leadSpeed = 1, leadSkill = 0){
     var p = this.actor.getPosition();
-    var tp = this.playerActor.getPosition();
-    var tv = this.playerActor.getVelocity();
+    var tp = this.enemyActor.getPosition();
+    var tv = this.enemyActor.getVelocity();
     var lv = this.actor.getAngleVector(leadSpeed);
 
     var lead = Math.sqrt( leadSkill * ( ((tp[0]-p[0])*(tp[0]-p[0]) + (tp[1]-p[1])*(tp[1]-p[1])) / (lv[0]*lv[0] + lv[1]*lv[1])) );

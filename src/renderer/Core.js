@@ -20,6 +20,7 @@ function Core(config){
     this.HEIGHT = document.documentElement.clientHeight;
     this.FRAMERATE = 60;
 
+    this.isBrowserMobile = config.isBrowserMobile;
     this.ui = config.ui;
     this.logicWorker = config.logicWorker;
     this.viewportElement = document.getElementById('viewport');

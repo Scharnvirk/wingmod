@@ -12,13 +12,17 @@ function Init() {}
 
 Init.prototype.start = function(){
     domready(function (){
-        var ui = new Ui();
+
+        var isBrowserMobile = Utils.isBrowserMobile();
+
+        var ui = new Ui({isBrowserMobile: isBrowserMobile});
 
         var logicWorker = new Worker('dist/LogicInit.js');
 
         var core = new Core({
             logicWorker: logicWorker,
             ui: ui,
+            isBrowserMobile: isBrowserMobile
         });
 
         ui.gameCore = core;

@@ -1,5 +1,6 @@
 var ActorList = [
     'actor/player/ShipActor',
+    'actor/player/DemoShipActor',
     'actor/enemy/MookActor',
     'actor/enemy/SniperActor',
     'actor/enemy/OrbotActor',

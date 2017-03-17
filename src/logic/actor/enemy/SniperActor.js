@@ -29,7 +29,8 @@ SniperActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor(),
+        gameState: this.gameState,
+        enemyActor: this.manager.getFirstPlayerActor(),
         shootingArc: 8,
         nearDistance: 200,
         farDistance: 300,

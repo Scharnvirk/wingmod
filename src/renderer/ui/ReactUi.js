@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom';
 
 var InitialView = require('renderer/ui/component/InitialView');
 
-function ReactUi(){
+function ReactUi(config){
     Utils.mixin(this, THREE.EventDispatcher);
-    this.InitialView = <InitialView/>;
+    this.isBrowserMobile = config.isBrowserMobile;
+    this.InitialView = <InitialView isBrowserMobile={this.isBrowserMobile}/>;
     this.render();
     EventEmitter.apply(this, arguments);
 }
@@ -21,11 +22,9 @@ ReactUi.prototype.render = function(){
 };
 
 ReactUi.prototype.changeMode = function(newMode, context){
-    var additionalConfig = context || null;
-
     switch(newMode){
     case 'running':
-        if (this.InitialView.props.mode === 'helpScreen'){
+        if (this.InitialView.props.mode === 'helpScreen' || this.isBrowserMobile){
             let gameViewport = document.getElementById('gameViewport');
             if(!gameViewport.classList.contains('noPointerEvents')){
                 gameViewport.addClass('noPointerEvents');

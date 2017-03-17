@@ -72,6 +72,10 @@ BaseActor.prototype.getBody = function(){
     return this._body;
 };
 
+BaseActor.prototype.getType = function(){
+    return this.props.type || 'noType';
+};
+
 BaseActor.prototype.setThrust = function(thrust){
     this._thrust = thrust;
 };
@@ -128,7 +132,7 @@ BaseActor.prototype.update = function(){
 };
 
 BaseActor.prototype.remove = function(){
-    this.manager.removeActorAt(this.id);
+    this.manager.removeActorAt(this);
 };
 
 BaseActor.prototype.handlePickup = function(){};

@@ -11,7 +11,6 @@ function MookBrain(config){
     Object.assign(this, config);
     BaseBrain.apply(this, arguments);
 
-    this.timer = 0;
     this.activationTime = Utils.rand(100,150);
 
     this.preferredTurn = 1;
@@ -46,18 +45,18 @@ MookBrain.prototype.createWallDetectionParameters = function(){
 
 };
 
-MookBrain.prototype.update = function(){
-    if(this.playerActor && this.playerActor._body){
-        this.timer ++;
+MookBrain.prototype.customUpdate = function(){
+    var nearbyWalls = this.detectNearbyWallsFast();
+
+    if(this.enemyActor && this.enemyActor._body){
 
         if (this.timer % 30 === 0){
             this.preferredTurn *= -1;
         }
 
-        var nearbyWalls = this.detectNearbyWallsFast();
         let actorPosition = this.actor.getPosition();
 
-        if (this.isWallBetween(actorPosition, this.playerActor.getPosition())){
+        if (this.isWallBetween(actorPosition, this.enemyActor.getPosition())){
             if (this.gotoPoint){
                 if (!this.isWallBetween(actorPosition, this.gotoPoint)) {
                     this.seesGotoPointAction(nearbyWalls);
@@ -69,10 +68,12 @@ MookBrain.prototype.update = function(){
                 this.freeRoamActon(nearbyWalls);
             }
         } else {
-            this.seesPlayerAction();
+            this.seesEnemyAction();
         }
 
         this.avoidWalls(nearbyWalls);
+    } else {
+        this.freeRoamActon(nearbyWalls);
     }
 };
 
@@ -137,10 +138,10 @@ MookBrain.prototype.avoidWalls = function (nearbyWalls){
     }
 };
 
-MookBrain.prototype.seesPlayerAction = function(){
-    this.orders.lookAtPosition = this.getPlayerPositionWithLead(this.actor.weapon.velocity, this.leadSkill);
-    this.gotoPoint = this.playerActor.getPosition();
-    let distance = Utils.distanceBetweenActors(this.actor, this.playerActor);
+MookBrain.prototype.seesEnemyAction = function(){
+    this.orders.lookAtPosition = this.getEnemyPositionWithLead(this.actor.weapon.velocity, this.leadSkill);
+    this.gotoPoint = this.enemyActor.getPosition();
+    let distance = Utils.distanceBetweenActors(this.actor, this.enemyActor);
 
     this.orders.thrust = 0;
     if (distance > this.farDistance) {
@@ -208,9 +209,9 @@ MookBrain.prototype.seesGotoPointAction = function(nearbyWalls){
 };
 
 MookBrain.prototype.shootAction = function(){
-    let inArc = Utils.pointInArc(this.actor.getPosition(), this.playerActor.getPosition(), this.actor.getAngle(), this.shootingArc);
-    let playerLive = this.playerActor.state.hp > 0;
-    this.orders.shoot = inArc && playerLive;
+    let inArc = Utils.pointInArc(this.actor.getPosition(), this.enemyActor.getPosition(), this.actor.getAngle(), this.shootingArc);
+    let enemyLive = this.enemyActor.state.hp > 0;
+    this.orders.shoot = inArc && enemyLive;
 };
 
 MookBrain.prototype.randomStrafeAction = function(){

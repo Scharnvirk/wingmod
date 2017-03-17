@@ -17,7 +17,7 @@ var InitialView = React.createClass({
         let UIcontent = [];
         switch(this.props.mode || 'startScreen'){
         case 'startScreen':
-            UIcontent.push(<StartScreen key={ReactUtils.generateKey()} />);
+            UIcontent.push(<StartScreen key={ReactUtils.generateKey()} isBrowserMobile={this.props.isBrowserMobile}/>);
             break;
         case 'helpScreen':
             UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);

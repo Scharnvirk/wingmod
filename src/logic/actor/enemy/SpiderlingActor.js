@@ -29,7 +29,8 @@ SpiderlingActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor(),
+        gameState: this.gameState,
+        enemyActor: this.manager.getFirstPlayerActor(),
         shootingArc: 50,
         nearDistance: 20,
         farDistance: 50,

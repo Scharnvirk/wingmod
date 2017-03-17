@@ -6,5 +6,8 @@ if('function'===typeof importScripts){
     importScripts('../../lib/p2.js');
     importScripts('../../lib/threex.loop.js');
     var LogicCore = require('logic/Core');
-    self.core = new LogicCore(self);
+    self.core = new LogicCore({
+        worker: self, 
+        isBrowserMobile: Utils.isBrowserMobile()
+     });
 }

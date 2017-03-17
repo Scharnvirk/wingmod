@@ -11,8 +11,8 @@ class Slider extends Component {
                 display: 'flex', 
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '200px',
-                height: '40px',
+                width: '25vmin',
+                height: '5vmin',
                 pointerEvents: 'all',
                 backgroundImage: 'url("gfx/button_background.png")',
                 backgroundSize: 'contain',
@@ -20,7 +20,7 @@ class Slider extends Component {
             },
 
             sliderContainer: {
-                width: '186px'
+                width: '23.5vmin'
             }
         };
 

@@ -1,10 +1,11 @@
 var ReactUi = require('renderer/ui/ReactUi');
 
 function Ui(config){
-    Object.assign(this, config);
-    this.reactUi = new ReactUi();
-    this.gameCore = null;
+    this.isBrowserMobile = config.isBrowserMobile;
 
+    this.reactUi = new ReactUi({isBrowserMobile: this.isBrowserMobile});
+    this.gameCore = null;
+    
     this.assetsLoaded = false;
 
     this.setupButtonListener();
@@ -78,9 +79,13 @@ Ui.prototype.stopGameFinished = function(enemyCausingDeathIndex, killStats){
 };
 
 Ui.prototype.onStartButtonClick = function(){
-    if(this.assetsLoaded){
-        this.reactUi.changeMode('helpScreen');
-        this.emit({type: 'requestPointerLock'});
+    if (this.assetsLoaded) {
+        if (this.isBrowserMobile) {
+            this.gotPointerLock();
+        } else {
+            this.reactUi.changeMode('helpScreen');
+            this.emit({type: 'requestPointerLock'});
+        }        
     }
 };
 

@@ -29,7 +29,8 @@ MookActor.prototype.createBrain = function(){
     return new MookBrain({
         actor: this,
         manager: this.manager,
-        playerActor: this.manager.getFirstPlayerActor(),
+        gameState: this.gameState,
+        enemyActor: this.manager.getFirstPlayerActor(),
         firingDistance: 140,
         leadSkill: 0
     });

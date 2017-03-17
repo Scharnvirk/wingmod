@@ -9,12 +9,12 @@ function PlasmaGun(config){
     BaseWeapon.apply(this, arguments);
 
     this.cooldown = 5;
-    this.velocity = 390;
+    this.velocity = 500;
     this.sound = 'disrupter';
     this.firingMode = 'alternate';
     this.volume = 0.5;
     this.ammoConfig = {
-        energy: 0.8,
+        energy: 0.4,
     };    
 }
 

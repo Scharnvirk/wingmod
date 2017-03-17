@@ -178,10 +178,10 @@
   filter: drop-shadow(3px 3px 3px #000);  
 }
 
-.button:hover{
+.buttonHover:hover{
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
-  animation-name: buttonHover;
+  animation-name: buttonHover !important;
   cursor: pointer; cursor: hand;  
 }
 
@@ -377,17 +377,18 @@
 
 .horizontal-slider {
   width: 100%;
-  max-width: 500px;
-  height: 40px;
+  max-width: 50vmin;
+  height: 6vmin;
+  line-height: 4vmin;
 }
 
 .vertical-slider {
-  height: 380px;
-  width: 40px;
+  height: 55vmin;
+  width: 6vmin;
 }
 
 .handle {
-  font-size: 1em;
+  font-size: 2.6vmin;
   text-align: center;
   font-family: 'Oswald-Regular';
   color: white;
@@ -395,10 +396,6 @@
   background-image: url("gfx/hex.png");
   background-repeat: no-repeat;
   background-size: contain;
-}
-
-.handle.active {
-  /*background-color: grey;*/
 }
 
 .bar {
@@ -423,14 +420,14 @@
   top: 45%;
   height: 10%;
   margin-left: 2px;
-  margin-right: 33px;
+  margin-right: 4vmin;
 }
 
 .horizontal-slider .handle {
-  top: 5px;
-  width: 35px;
-  height: 35px;
-  line-height: 32px;
+  top: 1vmin;
+  width: 4.6vmin;
+  height: 4vmin;
+  line-height: 4vmin;
 }
 
 .highlight {
