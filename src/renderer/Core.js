@@ -58,7 +58,7 @@ Core.prototype.createMainComponents = function(){
     this.aiImageRenderer = new AiImageRenderer();
     this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
     this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
-    this.gameState = new GameState({ui: this.ui});
+    this.gameState = new GameState({ui: this.ui}); 
 };
 
 Core.prototype.initEventHandlers = function(){

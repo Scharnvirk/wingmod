@@ -53,7 +53,7 @@ Core.prototype.createFpsCounter = function(){
     if(Constants.SHOW_FPS){
         setInterval(()=>{
             console.log('logicTicks: ', this.logicTicks);
-            this.logicTicks = 0;
+            this.logicTicks = 0; 
         }, 1000);
     } 
 };
