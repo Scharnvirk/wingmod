@@ -19,7 +19,6 @@ class FlexBoxContainer extends Component {
 
     render() {
         const style = Object.assign(this.componentStyle.container, this.props.style);
-        console.log(style);
         return <div style={style}>
             {this.props.children}
         </div>;

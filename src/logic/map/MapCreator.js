@@ -7,9 +7,7 @@ function MapCreator(config){
 
 MapCreator.extend(EventEmitter);  
 
-MapCreator.prototype.createMap = function(){
-    if(Object.keys(this.chunkPrototypes).length === 0) throw new Error('Map createer has no chunks yet and is not ready!');
-
+MapCreator.prototype.createMap = function(){    
     this.mapLayout = [
         {
             name: 'chunk_HangarStraight_SideSmall_3',

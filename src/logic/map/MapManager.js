@@ -21,18 +21,27 @@ MapManager.prototype.fixFaceVerticesOrder = function(hitmap){
 };
 
 MapManager.prototype.extractXZFromHitmap = function(hitmap){
-    return hitmap.map(face => face.map(vertex => {
-        return [vertex[0], vertex[2]];
-    })
+    return hitmap.map(face => face.map(
+        vertex => {
+            return [vertex[0], vertex[2]];
+        })
     );
 };
 
 MapManager.prototype.loadChunkHitmaps = function(hitmaps){
-    for (var hitmapName in hitmaps){
-        this.chunkPrototypes[hitmapName] = new MapChunk({
-            hitmap: this.fixFaceVerticesOrder(this.extractXZFromHitmap(hitmaps[hitmapName]))
+    let hitmapShapes, chunkPrototypeCollection;
+
+    for (let hitmapName in hitmaps){
+        chunkPrototypeCollection = [];
+        hitmapShapes = this.fixFaceVerticesOrder(this.extractXZFromHitmap(hitmaps[hitmapName]));
+        hitmapShapes.forEach(shape => {
+            chunkPrototypeCollection.push(new MapChunk({
+                vertices: shape
+            }));
         });
+        this.chunkPrototypes[hitmapName] = chunkPrototypeCollection;
     }
+
     this.mapCreator.setPrototypeChunks(this.chunkPrototypes);
 };
 
@@ -44,17 +53,20 @@ MapManager.prototype.createMap = function(){
 };
 
 MapManager.prototype.createBodiesFromLayout = function(layout){
-    var bodies = [];
+    let bodies = [], newBody;
 
     layout.forEach(chunkConfig => {
         if (!this.chunkPrototypes[chunkConfig.name]) {
             return;
         }
-        var newChunk = cloner.deep.copy(this.chunkPrototypes[chunkConfig.name]);
-        newChunk.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
-        newChunk.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
-        newChunk.body.angle = Utils.degToRad(chunkConfig.angle);
-        bodies.push(newChunk.body);
+
+        this.chunkPrototypes[chunkConfig.name].forEach(chunkShape => {
+            newBody = cloner.deep.copy(chunkShape);
+            newBody.body.position[0] = chunkConfig.position[0] * Constants.CHUNK_SIZE;
+            newBody.body.position[1] = chunkConfig.position[1] * Constants.CHUNK_SIZE;
+            newBody.body.angle = Utils.degToRad(chunkConfig.angle);
+            bodies.push(newBody.body);
+        });
     });
 
     return bodies;

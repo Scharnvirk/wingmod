@@ -23,7 +23,6 @@ var ActorList = [
     'actor/projectile/PulseWaveProjectileActor',
     'actor/projectile/ConcsnMissileActor',
     'actor/projectile/EnemyConcsnMissileActor',
-    'actor/map/MapActor',
     'actor/map/EnemySpawnerActor',
     'actor/map/EnemySpawnMarkerActor',
     'actor/map/ItemSpawnerActor',

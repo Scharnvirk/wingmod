@@ -25,15 +25,14 @@ RINGPROJECTILE: 21,
 PULSEWAVEPROJECTILE: 22,
 CONCSNMISSILE: 23,
 ENEMYCONCSNMISSILE: 24,
-MAP: 25,
-ENEMYSPAWNER: 26,
-ENEMYSPAWNMARKER: 27,
-ITEMSPAWNER: 28,
-DEBUG: 29,
-SHIELDPICKUP: 30,
-ENERGYPICKUP: 31,
-PLASMAPICKUP: 32,
-MISSILEQUADPICKUP: 33,
+ENEMYSPAWNER: 25,
+ENEMYSPAWNMARKER: 26,
+ITEMSPAWNER: 27,
+DEBUG: 28,
+SHIELDPICKUP: 29,
+ENERGYPICKUP: 30,
+PLASMAPICKUP: 31,
+MISSILEQUADPICKUP: 32,
 
 };
 
@@ -63,7 +62,6 @@ ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/ac
 ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
 ActorFactory.ConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/ConcsnMissileActor") : require("logic/actor/projectile/ConcsnMissileActor");
 ActorFactory.EnemyConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyConcsnMissileActor") : require("logic/actor/projectile/EnemyConcsnMissileActor");
-ActorFactory.MapActor = context === 'renderer' ? require("renderer/actor/map/MapActor") : require("logic/actor/map/MapActor");
 ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
 ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
 ActorFactory.ItemSpawnerActor = context === 'renderer' ? require("renderer/actor/map/ItemSpawnerActor") : require("logic/actor/map/ItemSpawnerActor");
@@ -99,7 +97,6 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.PULSEWAVEPROJECTILE]: ActorFactory.PulseWaveProjectileActor,
 [idMap.CONCSNMISSILE]: ActorFactory.ConcsnMissileActor,
 [idMap.ENEMYCONCSNMISSILE]: ActorFactory.EnemyConcsnMissileActor,
-[idMap.MAP]: ActorFactory.MapActor,
 [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
 [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
 [idMap.ITEMSPAWNER]: ActorFactory.ItemSpawnerActor,
