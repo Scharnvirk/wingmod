@@ -9,7 +9,7 @@ class Button extends React.Component {
             button: {
                 display: 'flex', 
                 justifyContent: 'center',
-                width: '30vmin',
+                width: '29.99vmin', //god why
                 height: '6vmin',
                 pointerEvents: 'all',
                 animationDuration: '0.1s',

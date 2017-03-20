@@ -27,7 +27,7 @@ class EndGamePanel extends Component {
 
             titleText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '6vh',
+                fontSize: '6vmin',
                 color: 'white'
             },
 

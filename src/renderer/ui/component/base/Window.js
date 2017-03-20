@@ -10,8 +10,8 @@ class Window extends Component {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: '60vw',
-                height: '60vh' 
+                width: '90vmin',
+                height: '60vmin' 
             },
 
             borderContainer: {
@@ -20,14 +20,14 @@ class Window extends Component {
 
             topBarLeft: {
                 width: '30%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 background: 'white',
                 position: 'absolute'
             },
 
             topBarRight: {
                 width: '30%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 right: '0',
                 background: 'white',
                 position: 'absolute'
@@ -35,21 +35,21 @@ class Window extends Component {
 
             bottomBar: {
                 width: '100%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 bottom: '0',
                 background: 'white',
                 position: 'absolute'
             },
 
             leftTopSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
                 position: 'absolute'
             },
 
             rightTopSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 right: '0',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
@@ -57,7 +57,7 @@ class Window extends Component {
             },
 
             leftBottomSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 bottom: '0',
                 background: 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))',
@@ -65,7 +65,7 @@ class Window extends Component {
             },
 
             rightBottomSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 right: '0',
                 bottom: '0',
@@ -99,7 +99,7 @@ class Window extends Component {
             title: {
                 textAlign: 'center',
                 fontFamily: 'Oswald-Regular',
-                fontSize: '4vh',
+                fontSize: '4vmin',
                 color: 'white',
                 height: '10%',
                 top: '-4.6%',

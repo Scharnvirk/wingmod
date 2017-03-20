@@ -7,14 +7,14 @@ class Summary extends Component {
         this.componentStyle = {
             totalText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '5vh',
+                fontSize: '5vmin',
                 color: 'white',
                 textAlign: 'center'
             },
 
             flavourText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 textAlign: 'center'
             }

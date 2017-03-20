@@ -58,9 +58,3 @@ var StartScreen = React.createClass({
 });
 
 module.exports = StartScreen;
-
-/**
- *            
-            
- * 
- */

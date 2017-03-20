@@ -36166,12 +36166,6 @@ var StartScreen = _react2.default.createClass({
 
 module.exports = StartScreen;
 
-/**
- *            
-            
- * 
- */
-
 },{"classnames":2,"react":185,"renderer/ui/ReactUtils":349,"renderer/ui/component/SettingsMenu":353,"renderer/ui/component/base/Button":356,"renderer/ui/component/base/FlexBoxContainer":357,"renderer/ui/component/base/StyledText":361,"renderer/ui/component/base/Window":364,"renderer/ui/component/endGame/EndGamePanel":366}],356:[function(require,module,exports){
 'use strict';
 
@@ -36205,7 +36199,7 @@ var Button = function (_React$Component) {
             button: {
                 display: 'flex',
                 justifyContent: 'center',
-                width: '30vmin',
+                width: '29.99vmin', //god why
                 height: '6vmin',
                 pointerEvents: 'all',
                 animationDuration: '0.1s',
@@ -36732,8 +36726,8 @@ var Window = function (_Component) {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: '60vw',
-                height: '60vh'
+                width: '90vmin',
+                height: '60vmin'
             },
 
             borderContainer: {
@@ -36742,14 +36736,14 @@ var Window = function (_Component) {
 
             topBarLeft: {
                 width: '30%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 background: 'white',
                 position: 'absolute'
             },
 
             topBarRight: {
                 width: '30%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 right: '0',
                 background: 'white',
                 position: 'absolute'
@@ -36757,21 +36751,21 @@ var Window = function (_Component) {
 
             bottomBar: {
                 width: '100%',
-                height: '0.5vh',
+                height: '0.5vmin',
                 bottom: '0',
                 background: 'white',
                 position: 'absolute'
             },
 
             leftTopSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
                 position: 'absolute'
             },
 
             rightTopSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 right: '0',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
@@ -36779,7 +36773,7 @@ var Window = function (_Component) {
             },
 
             leftBottomSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 bottom: '0',
                 background: 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))',
@@ -36787,7 +36781,7 @@ var Window = function (_Component) {
             },
 
             rightBottomSideBar: {
-                width: '0.5vh',
+                width: '0.5vmin',
                 height: '50px',
                 right: '0',
                 bottom: '0',
@@ -36821,7 +36815,7 @@ var Window = function (_Component) {
             title: {
                 textAlign: 'center',
                 fontFamily: 'Oswald-Regular',
-                fontSize: '4vh',
+                fontSize: '4vmin',
                 color: 'white',
                 height: '10%',
                 top: '-4.6%',
@@ -36918,7 +36912,7 @@ var DiedRow = function (_Component) {
 
             text: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '5vh',
+                fontSize: '5vmin',
                 color: 'white'
             },
 
@@ -36926,8 +36920,8 @@ var DiedRow = function (_Component) {
                 background: 'url("gfx/enemiesIcons.png") -###vh 0px',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                width: _this.enemyIconScale + 'vh',
-                height: _this.enemyIconScale + 'vh'
+                width: _this.enemyIconScale + 'vmin',
+                height: _this.enemyIconScale + 'vmin'
             }
         };
 
@@ -37011,7 +37005,7 @@ var EndGamePanel = function (_Component) {
 
             titleText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '6vh',
+                fontSize: '6vmin',
                 color: 'white'
             },
 
@@ -37137,7 +37131,7 @@ var KillRow = function (_Component) {
 
             text: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 width: '50%',
                 textAlign: 'right'
@@ -37145,17 +37139,17 @@ var KillRow = function (_Component) {
 
             number: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 width: '25%'
             },
 
             enemyIcon: {
-                background: 'url("gfx/enemiesIcons.png") -###vh 0px',
+                background: 'url("gfx/enemiesIcons.png") -###vmin 0px',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                width: _this.enemyIconScale + 'vh',
-                height: _this.enemyIconScale + 'vh'
+                width: _this.enemyIconScale + 'vmin',
+                height: _this.enemyIconScale + 'vmin'
             },
 
             iconSection: {
@@ -37280,14 +37274,14 @@ var Summary = function (_Component) {
         _this.componentStyle = {
             totalText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '5vh',
+                fontSize: '5vmin',
                 color: 'white',
                 textAlign: 'center'
             },
 
             flavourText: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 textAlign: 'center'
             }

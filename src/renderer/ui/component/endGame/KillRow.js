@@ -21,7 +21,7 @@ class KillRow extends Component {
 
             text: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 width: '50%',
                 textAlign: 'right'
@@ -29,17 +29,17 @@ class KillRow extends Component {
 
             number: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '3vh',
+                fontSize: '3vmin',
                 color: 'white',
                 width: '25%'
             },
 
             enemyIcon: {
-                background: 'url("gfx/enemiesIcons.png") -###vh 0px',
+                background: 'url("gfx/enemiesIcons.png") -###vmin 0px',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                width: this.enemyIconScale + 'vh',
-                height: this.enemyIconScale + 'vh'
+                width: this.enemyIconScale + 'vmin',
+                height: this.enemyIconScale + 'vmin'
             },
 
             iconSection: {

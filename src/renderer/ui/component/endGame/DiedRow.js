@@ -17,7 +17,7 @@ class DiedRow extends Component {
 
             text: {
                 fontFamily: 'Oswald-Regular',
-                fontSize: '5vh',
+                fontSize: '5vmin',
                 color: 'white'
             },
 
@@ -25,8 +25,8 @@ class DiedRow extends Component {
                 background: 'url("gfx/enemiesIcons.png") -###vh 0px',
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                width: this.enemyIconScale + 'vh',
-                height: this.enemyIconScale + 'vh'
+                width: this.enemyIconScale + 'vmin',
+                height: this.enemyIconScale + 'vmin'
             }
         };
 
