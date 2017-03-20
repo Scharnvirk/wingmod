@@ -18,6 +18,7 @@ var ModelList = {
         '/models/lasgun.json',
         '/models/redlasgun.json',
         '/models/plasmagun.json',
+        '/models/plasmablast.json',
         '/models/pulsewavegun.json',
         '/models/missilelauncher.json',
         '/models/hudMaterial.json',

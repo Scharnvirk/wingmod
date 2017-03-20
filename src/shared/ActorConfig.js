@@ -85,6 +85,39 @@ const ActorConfig = {
         }
     },
 
+    PLASMABLASTPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 3,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['plasmabig1'],
+            type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 2,
+            mass: 1
+        }
+    },
+
+    PLASMABLASTMINIPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 5,
+            removeOnHit: true,
+            timeoutRandomMin: 10,
+            timeoutRandomMax: 20,
+            soundsOnDeath: ['matterhit3'],
+            collisionFixesPosition: true,
+            type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 2,
+            mass: 1
+        }
+    },
+
     LASERPROJECTILE: {
         props: {
             hp: 1,

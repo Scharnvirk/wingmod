@@ -40,6 +40,7 @@ ActorManager.prototype.addNew = function(config){
     );
 
     actor.parent = config.parent;
+    actor.applySpawnConfig(config.spawnConfig);
     
     this._storage[actor.getType()][this.currentId] = actor;
     this.currentId ++;
@@ -76,9 +77,9 @@ ActorManager.prototype.removeActorAt = function(actor){
     delete this._storage[actor.getType()][actor.id];
 };
 
-ActorManager.prototype.actorDied = function(actor){
+ActorManager.prototype.actorDied = function(actor, deathType){
     delete this._storage[actor.getType()][actor.id];
-    this.world.prepareBodyForDeath(actor.getBody());
+    this.world.prepareBodyForDeath(actor.getBody(), deathType);
 };
 
 ActorManager.prototype.endGame = function(){

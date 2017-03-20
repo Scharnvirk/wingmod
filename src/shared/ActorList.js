@@ -13,6 +13,8 @@ var ActorList = [
     'actor/object/ExplosionActor',
     'actor/object/SmallExplosionActor',
     'actor/projectile/PlasmaProjectileActor',
+    'actor/projectile/PlasmaBlastProjectileActor',
+    'actor/projectile/PlasmaBlastMiniProjectileActor',
     'actor/projectile/LaserProjectileActor',
     'actor/projectile/RedLaserProjectileActor',
     'actor/projectile/RedLaserEnemyProjectileActor',

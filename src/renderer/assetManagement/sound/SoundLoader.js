@@ -10,6 +10,8 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/laser3.mp3', id:'plasmashot3'});
     createjs.Sound.registerSound({src:'sounds/laser14.mp3', id:'laser_purple'});
     createjs.Sound.registerSound({src:'sounds/laser12.mp3', id:'laser_green'});
+    createjs.Sound.registerSound({src:'sounds/laser15.mp3', id:'plasmabig1'});
+    createjs.Sound.registerSound({src:'sounds/laser16.mp3', id:'plasmabig2'});
     createjs.Sound.registerSound({src:'sounds/matterhit3.wav', id:'matterhit3'});
     createjs.Sound.registerSound({src:'sounds/laser4.mp3', id:'molten'});
     createjs.Sound.registerSound({src:'sounds/explosion5.mp3', id:'debris1'});

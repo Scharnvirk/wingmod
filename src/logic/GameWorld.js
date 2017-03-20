@@ -71,7 +71,7 @@ GameWorld.prototype.countEnemies = function(){
     return enemies;
 };
 
-GameWorld.prototype.prepareBodyForDeath = function(body){
+GameWorld.prototype.prepareBodyForDeath = function(body, deathType){
     var deadTransferArray = this.deadTransferArray;
     var currentDeadsLength = deadTransferArray.length / 5; //because there are 5 properties in one-dimensional array
 
@@ -80,6 +80,7 @@ GameWorld.prototype.prepareBodyForDeath = function(body){
     deadTransferArray[currentDeadsLength*5+2] = body.position[0];
     deadTransferArray[currentDeadsLength*5+3] = body.position[1];
     deadTransferArray[currentDeadsLength*5+4] = body.angle;
+    deadTransferArray[currentDeadsLength*5+5] = deathType;
 
     this.removeBody(body);
 };

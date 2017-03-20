@@ -1,7 +1,7 @@
 var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
 var ActorFactory = require('shared/ActorFactory')('logic');
 
-function PlasmaGun(config){
+function PulseWaveGun(config){
     Object.assign(this, config);
 
     this.projectileClass = ActorFactory.PULSEWAVEPROJECTILE;
@@ -18,6 +18,6 @@ function PlasmaGun(config){
     };    
 }
 
-PlasmaGun.extend(BaseWeapon);
+PulseWaveGun.extend(BaseWeapon);
 
-module.exports = PlasmaGun;
+module.exports = PulseWaveGun;

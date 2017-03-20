@@ -76,8 +76,20 @@ BaseActor.prototype.getCamera = function(){
     return this._manager.getCamera();
 };
 
+BaseActor.prototype.handleDeath = function(deathType){
+    switch(deathType){
+    case Constants.DEATH_TYPES.HIT: 
+        this.onDeath();
+        break;
+    case Constants.DEATH_TYPES.TIMEOUT: 
+        this.onTimeout();
+        break;
+    }
+};
 
 BaseActor.prototype.onDeath = function(){};
+
+BaseActor.prototype.onTimeout = function(){};
 
 BaseActor.prototype.onSpawn = function(){};
 

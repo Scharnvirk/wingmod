@@ -40,6 +40,12 @@ BaseActor.prototype.applyConfig = function(config){
     this.bodyConfig.collisionType = this.props.type;
 };
 
+BaseActor.prototype.applySpawnConfig = function(spawnConfig){
+    for (let property in spawnConfig){
+        this[property] = Object.assign(this[property], spawnConfig[property]);
+    }
+};
+
 BaseActor.prototype.getPosition = function(){
     return this._body.position;
 };
@@ -97,6 +103,10 @@ BaseActor.prototype.getMass = function(){
     return this._body.mass;
 };
 
+BaseActor.prototype.getOffsetPosition = function(distanceOffset, angleOffset){
+    return Utils.rotationToVector(this.angle + (angleOffset || 0), (distanceOffset || 0));
+};
+
 BaseActor.prototype.playSound = function(sounds, volume){
     this.manager.playSound({sounds:sounds, actor: this, volume: volume || 1});
 };
@@ -109,12 +119,12 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     this._updateHpAndShieldOnCollision(otherActor, relativeContactPoint);
 
     if (this.state.hp <= 0 || this.props.removeOnHit){
-        this.deathMain(relativeContactPoint);
+        this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
     }
 
     if (otherActor && this.state.pickup && otherActor.state.canPickup) {
         otherActor.handlePickup(this.state.pickup);
-        this.deathMain(relativeContactPoint);
+        this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
     }
 
     this.manager.updateActorState(this);
@@ -125,7 +135,7 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
 BaseActor.prototype.update = function(){
     this.timer ++;
     if(this.timer > this.props.timeout){
-        this.deathMain();
+        this.deathMain(null, Constants.DEATH_TYPES.TIMEOUT);
     }
     this.customUpdate();
     this.processMovement();
@@ -149,16 +159,24 @@ BaseActor.prototype.onSpawn = function(){};
 
 BaseActor.prototype.onDeath = function(){};
 
-BaseActor.prototype.deathMain = function(relativeContactPoint){
+BaseActor.prototype.onTimeout = function(){};
+
+BaseActor.prototype.deathMain = function(relativeContactPoint, deathType){
+    if (this.state.alreadyRemoved) {
+        return;
+    }
+
+    this.state.alreadyRemoved = true;
+
     if (this.props.collisionFixesPosition && relativeContactPoint) {
         this._body.position = relativeContactPoint;
     }
-    this.manager.actorDied(this);
-    if(this.props.soundsOnDeath){
-        this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
-    }
+
+    this.manager.actorDied(this, deathType);
+
+    this._handleDeath(deathType);
+
     this.gameState.removeActor(this.props);
-    this.onDeath();
 };
 
 BaseActor.prototype.processMovement = function(){
@@ -198,16 +216,18 @@ BaseActor.prototype.spawn = function(config){
     config.velocity = config.velocity || 0;
     config.classId = config.classId || ActorFactory.DEBUG;
     config.probability = (config.probability || 1) * 100;
-    
+    config.offsetPosition = this.getOffsetPosition(config.spawnOffset || 0);
+
     for(let i = 0; i < Utils.randArray(config.amount); i++){        
         if (config.probability === 100 || Utils.rand(1, 100) <= config.probability){
             this.manager.addNew({
                 classId: config.classId,
-                positionX: this._body.position[0],
-                positionY: this._body.position[1],
-                angle: Utils.randArray(config.angle),
+                positionX: config.offsetPosition[0] + this._body.position[0],
+                positionY: config.offsetPosition[1] + this._body.position[1],
+                angle: this.angle + Utils.degToRad(Utils.randArray(config.angle)),
                 velocity: Utils.randArray(config.velocity),
-                parent: this
+                parent: this,
+                spawnConfig: config.customConfig
             });
         }
     }
@@ -225,6 +245,20 @@ BaseActor.prototype._createState = function(state){
     let newProps = Object.assign({}, this.props);
     let newState = Object.assign({}, state);
     return Object.assign(newProps, newState);    
+};
+
+BaseActor.prototype._handleDeath = function(deathType){
+    switch(deathType){
+    case Constants.DEATH_TYPES.HIT: 
+        if(this.props.soundsOnDeath){
+            this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
+        }
+        this.onDeath();
+        break;
+    case Constants.DEATH_TYPES.TIMEOUT: 
+        this.onTimeout();
+        break;
+    }
 };
 
 BaseActor.prototype._updateHpAndShieldOnCollision = function(otherActor, relativeContactPoint){

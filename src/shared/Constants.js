@@ -20,6 +20,11 @@ var Constants = {
         TERRAIN: Math.pow(2,10),
     },
 
+    DEATH_TYPES: {
+        HIT: 0,
+        TIMEOUT: 1
+    },
+
     STORAGE_SIZE: 1000,
 
     FOG_COLOR: 0x000000,

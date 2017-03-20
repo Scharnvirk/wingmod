@@ -35,6 +35,9 @@ transferArray[i*5+1] = body.classId;
 transferArray[i*5+2] = body.position[0];
 transferArray[i*5+3] = body.position[1];
 transferArray[i*5+4] = body.rotation;
+
+for deadDataArray:
+deadDataArray[i*5+5] = deathType;
 */
 ActorManager.prototype.updateFromLogic = function(messageObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
@@ -61,7 +64,7 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
     }
 
     for(let i = 0; i < messageObject.deadActorCount; i++){
-        this.deleteActor(deadDataArray[i*5], deadDataArray[i*5 + 2], deadDataArray[i*5 + 3]);
+        this.deleteActor(deadDataArray[i*6], deadDataArray[i*6 + 2], deadDataArray[i*6 + 3], deadDataArray[i*6 + 5]);
     }
 };
 
@@ -80,11 +83,11 @@ ActorManager.prototype.attachPlayer = function(actor){
     });
 };
 
-ActorManager.prototype.deleteActor = function(actorId, positionX, positionY){
+ActorManager.prototype.deleteActor = function(actorId, positionX, positionY, deathType){
     var actor = this.storage[actorId];
     if (actor){
         actor.setPosition(positionX, positionY);
-        actor.onDeath();
+        actor.handleDeath(deathType);
         actor.removeFromScene(this.sceneManager.getCoreActiveScene().threeScene);
     }
     delete this.storage[actorId];
