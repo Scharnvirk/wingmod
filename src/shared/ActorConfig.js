@@ -394,7 +394,20 @@ const ActorConfig = {
             type: 'enemyMapObject',
             name: 'GATEWAY',
             pointWorth: 1000,
-            enemyIndex: 5
+            enemyIndex: 5,
+            spawnPool: ['MOOK', 'MOOK', 'ORBOT', 'SNIPER'],
+            spawnPoolAdditions: {
+                60: 'SHULK',
+                120: 'SHULK',
+                150: 'SPIDER',
+                180: 'MHULK',
+                210: 'SPIDER',
+                240: 'MHULK',
+                300: 'LHULK',
+                330: 'SHULK',
+                360: 'SPIDER',
+                390: 'LHULK'
+            }
         },
         bodyConfig: {
             radius: 8

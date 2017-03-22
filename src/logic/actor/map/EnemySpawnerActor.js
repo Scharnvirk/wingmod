@@ -19,14 +19,14 @@ EnemySpawnerActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
-EnemySpawnerActor.prototype.customUpdate = function(){
+EnemySpawnerActor.prototype.customUpdate = function() {
     if (this.state.spawnDelay > 0){
         this.state.spawnDelay -- ;
     } else {
         let timeCondition = Utils.rand( Math.min(this.timer/60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
         let limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
         if ( timeCondition && limitCondition ){
-            this.createEnemySpawnMarker();
+            this.createEnemySpawnMarker(this._pickEnemyClassToSpawn());
         } 
     }
         
@@ -37,21 +37,30 @@ EnemySpawnerActor.prototype.customUpdate = function(){
         }
         this.manager.updateActorState(this);
     }
+
+    if (this.timer % 60 === 0) {
+        this._updateSpawnPool();
+    }
 };
 
-EnemySpawnerActor.prototype.createEnemySpawnMarker = function(){
+EnemySpawnerActor.prototype.createEnemySpawnMarker = function(enemyClass) {
     this.state.spawnDelay = this.props.spawnRate;
 
     this.spawn({
         classId: ActorFactory.ENEMYSPAWNMARKER, 
         angle: [0, 0],
-        velocity: [0, 0]
+        velocity: [0, 0],
+        customConfig: {
+            props: {
+                enemyClass: enemyClass
+            }
+        }
     });
 
     this.manager.updateActorState(this);
 };
 
-EnemySpawnerActor.prototype.onDeath = function(){
+EnemySpawnerActor.prototype.onDeath = function() {
     this.spawn({
         amount: 40,
         classId: ActorFactory.CHUNK,
@@ -69,7 +78,7 @@ EnemySpawnerActor.prototype.onDeath = function(){
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
-EnemySpawnerActor.prototype.onHit = function(shielded){
+EnemySpawnerActor.prototype.onHit = function(shielded) {
     if (shielded) {
         this.playSound(['shieldHit1', 'shieldHit2', 'shieldHit3'], 10);
     } else {
@@ -82,6 +91,33 @@ EnemySpawnerActor.prototype.onHit = function(shielded){
         });
         this.playSound(['armorHit1', 'armorHit2'], 10);
     }
+};
+
+EnemySpawnerActor.prototype._pickEnemyClassToSpawn = function() {
+    return this.state.spawnPool[Utils.rand(0, this.state.spawnPool.length -1)];
+};
+
+EnemySpawnerActor.prototype._updateSpawnPool = function() {
+    if (!this.state.nextSpawn && Object.keys(this.props.spawnPoolAdditions.length > 0)) {
+        this.state.nextSpawn = this._getNextSpawn();
+    }
+
+    if (this.state.nextSpawn) {
+        if (this.timer % (this.state.nextSpawn.spawnTime * 60) === 0) {
+            this.state.spawnPool.push(this.state.nextSpawn.spawnClass);
+            this.state.nextSpawn = null;
+        }
+    }    
+};
+
+
+EnemySpawnerActor.prototype._getNextSpawn = function() {
+    const spawnTimes = Object.keys(this.props.spawnPoolAdditions);
+    const nextSpawnTime = spawnTimes[0];
+    const nextSpawnClass = this.props.spawnPoolAdditions[nextSpawnTime];
+    delete this.props.spawnPoolAdditions[nextSpawnTime];
+
+    return {spawnTime: nextSpawnTime, spawnClass: nextSpawnClass};
 };
 
 module.exports = EnemySpawnerActor;

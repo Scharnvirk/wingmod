@@ -28,32 +28,13 @@ EnemySpawnMarkerActor.prototype.createBody = function(){
     });
 };
 
-EnemySpawnMarkerActor.prototype.createEnemy = function(){
-    var enemyType, mobsToSpawn = 1;
+EnemySpawnMarkerActor.prototype.createEnemy = function(){    
+    const enemiesToSpawn = this.props.enemyClass === 'ORBOT' ? 2 : 1;
 
-    var rand = Utils.rand(0,11);
-
-    if (rand < 1) {
-        enemyType = ActorFactory.MHULK;
-    } else if (rand >= 1 && rand < 2) {
-        enemyType = ActorFactory.SHULK;
-    } else if (rand >= 2 && rand < 4) {
-        enemyType = ActorFactory.SPIDER;
-    } else if (rand >= 4 && rand < 7) {
-        enemyType = ActorFactory.MOOK;
-    } else if (rand >= 7 && rand < 10){
-        enemyType = ActorFactory.SNIPER;
-    } else if (rand === 10){
-        enemyType = ActorFactory.ORBOT;
-        mobsToSpawn = 2;
-    } else if (rand === 11){
-        enemyType = ActorFactory.LHULK;
-    }
-
-    if(!this.created){
+    if (!this.created) {
         this.spawn({
-            amount: mobsToSpawn,
-            classId: enemyType,
+            amount: enemiesToSpawn,
+            classId: ActorFactory[this.props.enemyClass],
             angle: [0, 360],
             velocity: [50, 100]
         });

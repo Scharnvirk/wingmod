@@ -3431,32 +3431,12 @@ EnemySpawnMarkerActor.prototype.createBody = function () {
 };
 
 EnemySpawnMarkerActor.prototype.createEnemy = function () {
-    var enemyType,
-        mobsToSpawn = 1;
-
-    var rand = Utils.rand(0, 11);
-
-    if (rand < 1) {
-        enemyType = ActorFactory.MHULK;
-    } else if (rand >= 1 && rand < 2) {
-        enemyType = ActorFactory.SHULK;
-    } else if (rand >= 2 && rand < 4) {
-        enemyType = ActorFactory.SPIDER;
-    } else if (rand >= 4 && rand < 7) {
-        enemyType = ActorFactory.MOOK;
-    } else if (rand >= 7 && rand < 10) {
-        enemyType = ActorFactory.SNIPER;
-    } else if (rand === 10) {
-        enemyType = ActorFactory.ORBOT;
-        mobsToSpawn = 2;
-    } else if (rand === 11) {
-        enemyType = ActorFactory.LHULK;
-    }
+    var enemiesToSpawn = this.props.enemyClass === 'ORBOT' ? 2 : 1;
 
     if (!this.created) {
         this.spawn({
-            amount: mobsToSpawn,
-            classId: enemyType,
+            amount: enemiesToSpawn,
+            classId: ActorFactory[this.props.enemyClass],
             angle: [0, 360],
             velocity: [50, 100]
         });
@@ -3499,7 +3479,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         var timeCondition = Utils.rand(Math.min(this.timer / 60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
         var limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
         if (timeCondition && limitCondition) {
-            this.createEnemySpawnMarker();
+            this.createEnemySpawnMarker(this._pickEnemyClassToSpawn());
         }
     }
 
@@ -3510,15 +3490,24 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         }
         this.manager.updateActorState(this);
     }
+
+    if (this.timer % 60 === 0) {
+        this._updateSpawnPool();
+    }
 };
 
-EnemySpawnerActor.prototype.createEnemySpawnMarker = function () {
+EnemySpawnerActor.prototype.createEnemySpawnMarker = function (enemyClass) {
     this.state.spawnDelay = this.props.spawnRate;
 
     this.spawn({
         classId: ActorFactory.ENEMYSPAWNMARKER,
         angle: [0, 0],
-        velocity: [0, 0]
+        velocity: [0, 0],
+        customConfig: {
+            props: {
+                enemyClass: enemyClass
+            }
+        }
     });
 
     this.manager.updateActorState(this);
@@ -3555,6 +3544,32 @@ EnemySpawnerActor.prototype.onHit = function (shielded) {
         });
         this.playSound(['armorHit1', 'armorHit2'], 10);
     }
+};
+
+EnemySpawnerActor.prototype._pickEnemyClassToSpawn = function () {
+    return this.state.spawnPool[Utils.rand(0, this.state.spawnPool.length - 1)];
+};
+
+EnemySpawnerActor.prototype._updateSpawnPool = function () {
+    if (!this.state.nextSpawn && Object.keys(this.props.spawnPoolAdditions.length > 0)) {
+        this.state.nextSpawn = this._getNextSpawn();
+    }
+
+    if (this.state.nextSpawn) {
+        if (this.timer % (this.state.nextSpawn.spawnTime * 60) === 0) {
+            this.state.spawnPool.push(this.state.nextSpawn.spawnClass);
+            this.state.nextSpawn = null;
+        }
+    }
+};
+
+EnemySpawnerActor.prototype._getNextSpawn = function () {
+    var spawnTimes = Object.keys(this.props.spawnPoolAdditions);
+    var nextSpawnTime = spawnTimes[0];
+    var nextSpawnClass = this.props.spawnPoolAdditions[nextSpawnTime];
+    delete this.props.spawnPoolAdditions[nextSpawnTime];
+
+    return { spawnTime: nextSpawnTime, spawnClass: nextSpawnClass };
 };
 
 module.exports = EnemySpawnerActor;
@@ -8147,7 +8162,20 @@ var ActorConfig = {
             type: 'enemyMapObject',
             name: 'GATEWAY',
             pointWorth: 1000,
-            enemyIndex: 5
+            enemyIndex: 5,
+            spawnPool: ['MOOK', 'MOOK', 'ORBOT', 'SNIPER'],
+            spawnPoolAdditions: {
+                60: 'SHULK',
+                120: 'SHULK',
+                150: 'SPIDER',
+                180: 'MHULK',
+                210: 'SPIDER',
+                240: 'MHULK',
+                300: 'LHULK',
+                330: 'SHULK',
+                360: 'SPIDER',
+                390: 'LHULK'
+            }
         },
         bodyConfig: {
             radius: 8
