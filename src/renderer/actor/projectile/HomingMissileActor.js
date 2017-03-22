@@ -2,29 +2,41 @@ var BaseActor = require('renderer/actor/BaseActor');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var MissileMesh = require('renderer/actor/component/mesh/MissileMesh');
 
-function ConcsnMissileActor(){
+function HomingMissileActor(){
     BaseActor.apply(this, arguments);
 }
 
-ConcsnMissileActor.extend(BaseActor);
-ConcsnMissileActor.mixin(ParticleMixin);
+HomingMissileActor.extend(BaseActor);
+HomingMissileActor.mixin(ParticleMixin);
 
-ConcsnMissileActor.prototype.createMeshes = function(){
+HomingMissileActor.prototype.createMeshes = function(){
     return [new MissileMesh({actor: this, scaleX: 2, scaleY: 2, scaleZ: 2})]; 
 };
 
-ConcsnMissileActor.prototype.customUpdate = function(){
+HomingMissileActor.prototype.customUpdate = function(){
     let offsetPosition = this.getOffsetPosition(-8);
     this.createParticle({
         particleClass: 'particleAdd',
         offsetPositionX: offsetPosition[0],
         offsetPositionY: offsetPosition[1],
-        color: 'YELLOW',
-        scale: 3,
+        color: 'BLUE',
+        scale: 4,
         alpha: 1,
         alphaMultiplier: 0.8,
         particleVelocity: 2,
-        lifeTime: 20
+        lifeTime: 30
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
+        color: 'WHITE',
+        scale: 2,
+        alpha: 1,
+        alphaMultiplier: 0.8,
+        particleVelocity: 2,
+        lifeTime: 30
     });
 
     this.createParticle({
@@ -40,14 +52,14 @@ ConcsnMissileActor.prototype.customUpdate = function(){
     });
 };
 
-ConcsnMissileActor.prototype.onDeath = function(){
+HomingMissileActor.prototype.onDeath = function(){
     var offsetPosition = this.getOffsetPosition(-10);
     this.createPremade({premadeName: 'OrangeBoomLarge', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
     this.requestUiFlash('white');
     this.requestShake();
 };
 
-ConcsnMissileActor.prototype.onSpawn = function(){
+HomingMissileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
         color: 'RED',
@@ -68,4 +80,4 @@ ConcsnMissileActor.prototype.onSpawn = function(){
     });
 };
 
-module.exports = ConcsnMissileActor;
+module.exports = HomingMissileActor;

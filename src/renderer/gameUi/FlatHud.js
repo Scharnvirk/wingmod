@@ -20,7 +20,7 @@ function FlatHud(config){
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'q',
-            weapons: ['plasmagun', 'missilelauncher', 'plasmablast'],
+            weapons: ['plasmagun', 'missilelauncher', 'plasmablast', 'homingmissilelauncher'], 
             invertDirection: true
         }
     ];

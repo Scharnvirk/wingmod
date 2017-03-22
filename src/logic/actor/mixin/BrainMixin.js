@@ -1,7 +1,7 @@
 var BrainMixin = {
     doBrainOrders: function(){
         if (this.brain.orders.lookAtPosition) {
-            this.lookAtPosition(this.brain.orders.lookAtPosition);
+            this._lookAtPosition(this.brain.orders.lookAtPosition);
             if (this.brain.orders.turn !== 0) {
                 this.setAngleForce(this.brain.orders.turn);
             }
@@ -18,7 +18,7 @@ var BrainMixin = {
             this.weapon.stopShooting();
         }
     },
-    lookAtPosition: function(position){
+    _lookAtPosition: function(position){
         let angleVector = this.getAngleVector();
         let actorPosition = this.getPosition();
         let angle =  Utils.angleBetweenPointsFromCenter(angleVector, [position[0] - actorPosition[0], position[1] - actorPosition[1]]);

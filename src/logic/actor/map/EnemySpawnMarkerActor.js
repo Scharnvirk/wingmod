@@ -31,7 +31,7 @@ EnemySpawnMarkerActor.prototype.createBody = function(){
 EnemySpawnMarkerActor.prototype.createEnemy = function(){
     var enemyType, mobsToSpawn = 1;
 
-    var rand = Utils.rand(0,10);
+    var rand = Utils.rand(0,11);
 
     if (rand < 1) {
         enemyType = ActorFactory.MHULK;
@@ -46,6 +46,8 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
     } else if (rand === 10){
         enemyType = ActorFactory.ORBOT;
         mobsToSpawn = 2;
+    } else if (rand === 11){
+        enemyType = ActorFactory.LHULK;
     }
 
     if(!this.created){

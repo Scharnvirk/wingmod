@@ -8,33 +8,36 @@ SNIPER: 4,
 ORBOT: 5,
 SHULK: 6,
 MHULK: 7,
-SPIDER: 8,
-SPIDERLING: 9,
-CHUNK: 10,
-BOOMCHUNK: 11,
-EXPLOSION: 12,
-SMALLEXPLOSION: 13,
-PLASMAPROJECTILE: 14,
-PLASMABLASTPROJECTILE: 15,
-PLASMABLASTMINIPROJECTILE: 16,
-LASERPROJECTILE: 17,
-REDLASERPROJECTILE: 18,
-REDLASERENEMYPROJECTILE: 19,
-PURPLELASERPROJECTILE: 20,
-GREENLASERPROJECTILE: 21,
-MOLTENPROJECTILE: 22,
-RINGPROJECTILE: 23,
-PULSEWAVEPROJECTILE: 24,
-CONCSNMISSILE: 25,
-ENEMYCONCSNMISSILE: 26,
-ENEMYSPAWNER: 27,
-ENEMYSPAWNMARKER: 28,
-ITEMSPAWNER: 29,
-DEBUG: 30,
-SHIELDPICKUP: 31,
-ENERGYPICKUP: 32,
-PLASMAPICKUP: 33,
-MISSILEQUADPICKUP: 34,
+LHULK: 8,
+SPIDER: 9,
+SPIDERLING: 10,
+CHUNK: 11,
+BOOMCHUNK: 12,
+EXPLOSION: 13,
+SMALLEXPLOSION: 14,
+PLASMAPROJECTILE: 15,
+PLASMABLASTPROJECTILE: 16,
+PLASMABLASTMINIPROJECTILE: 17,
+LASERPROJECTILE: 18,
+REDLASERPROJECTILE: 19,
+REDLASERENEMYPROJECTILE: 20,
+PURPLELASERPROJECTILE: 21,
+GREENLASERPROJECTILE: 22,
+MOLTENPROJECTILE: 23,
+RINGPROJECTILE: 24,
+PULSEWAVEPROJECTILE: 25,
+CONCSNMISSILE: 26,
+ENEMYCONCSNMISSILE: 27,
+HOMINGMISSILE: 28,
+ENEMYHOMINGMISSILE: 29,
+ENEMYSPAWNER: 30,
+ENEMYSPAWNMARKER: 31,
+ITEMSPAWNER: 32,
+DEBUG: 33,
+SHIELDPICKUP: 34,
+ENERGYPICKUP: 35,
+PLASMAPICKUP: 36,
+MISSILEQUADPICKUP: 37,
 
 };
 
@@ -47,6 +50,7 @@ ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enem
 ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
 ActorFactory.ShulkActor = context === 'renderer' ? require("renderer/actor/enemy/ShulkActor") : require("logic/actor/enemy/ShulkActor");
 ActorFactory.MhulkActor = context === 'renderer' ? require("renderer/actor/enemy/MhulkActor") : require("logic/actor/enemy/MhulkActor");
+ActorFactory.LhulkActor = context === 'renderer' ? require("renderer/actor/enemy/LhulkActor") : require("logic/actor/enemy/LhulkActor");
 ActorFactory.SpiderActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderActor") : require("logic/actor/enemy/SpiderActor");
 ActorFactory.SpiderlingActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderlingActor") : require("logic/actor/enemy/SpiderlingActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
@@ -66,6 +70,8 @@ ActorFactory.RingProjectileActor = context === 'renderer' ? require("renderer/ac
 ActorFactory.PulseWaveProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PulseWaveProjectileActor") : require("logic/actor/projectile/PulseWaveProjectileActor");
 ActorFactory.ConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/ConcsnMissileActor") : require("logic/actor/projectile/ConcsnMissileActor");
 ActorFactory.EnemyConcsnMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyConcsnMissileActor") : require("logic/actor/projectile/EnemyConcsnMissileActor");
+ActorFactory.HomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/HomingMissileActor") : require("logic/actor/projectile/HomingMissileActor");
+ActorFactory.EnemyHomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyHomingMissileActor") : require("logic/actor/projectile/EnemyHomingMissileActor");
 ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
 ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
 ActorFactory.ItemSpawnerActor = context === 'renderer' ? require("renderer/actor/map/ItemSpawnerActor") : require("logic/actor/map/ItemSpawnerActor");
@@ -84,6 +90,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.ORBOT]: ActorFactory.OrbotActor,
 [idMap.SHULK]: ActorFactory.ShulkActor,
 [idMap.MHULK]: ActorFactory.MhulkActor,
+[idMap.LHULK]: ActorFactory.LhulkActor,
 [idMap.SPIDER]: ActorFactory.SpiderActor,
 [idMap.SPIDERLING]: ActorFactory.SpiderlingActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
@@ -103,6 +110,8 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.PULSEWAVEPROJECTILE]: ActorFactory.PulseWaveProjectileActor,
 [idMap.CONCSNMISSILE]: ActorFactory.ConcsnMissileActor,
 [idMap.ENEMYCONCSNMISSILE]: ActorFactory.EnemyConcsnMissileActor,
+[idMap.HOMINGMISSILE]: ActorFactory.HomingMissileActor,
+[idMap.ENEMYHOMINGMISSILE]: ActorFactory.EnemyHomingMissileActor,
 [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
 [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
 [idMap.ITEMSPAWNER]: ActorFactory.ItemSpawnerActor,

@@ -7,38 +7,38 @@ var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
-function MhulkActor(){
-    this.applyConfig(ActorConfig.MHULK);
+function LhulkActor(){
+    this.applyConfig(ActorConfig.LHULK);
     BaseActor.apply(this, arguments);    
 }
 
-MhulkActor.extend(BaseActor);
-MhulkActor.mixin(ParticleMixin); 
-MhulkActor.mixin(BobMixin);
-MhulkActor.mixin(ShowDamageMixin);
+LhulkActor.extend(BaseActor);
+LhulkActor.mixin(ParticleMixin);
+LhulkActor.mixin(BobMixin);
+LhulkActor.mixin(ShowDamageMixin);
 
-MhulkActor.prototype.createMeshes = function(){
+LhulkActor.prototype.createMeshes = function(){
     return [new BaseMesh({
         actor: this, 
-        scaleX: 3.8,
-        scaleY: 3.8,
-        scaleZ: 3.8,  
-        geometry: ModelStore.get('mhulk').geometry,
+        scaleX: 4.2,
+        scaleY: 4.2,
+        scaleZ: 4.2,  
+        geometry: ModelStore.get('lhulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];
 };
 
-MhulkActor.prototype.customUpdate = function(){
+LhulkActor.prototype.customUpdate = function(){
     this.doBob();
     this.showDamage();
 };
 
-MhulkActor.prototype.onSpawn = function(){};
+LhulkActor.prototype.onSpawn = function(){};
 
-MhulkActor.prototype.onDeath = function(){
+LhulkActor.prototype.onDeath = function(){
     this.createPremade({premadeName: 'OrangeBoomLarge'});
     this.requestUiFlash('white');
     this.requestShake();
 };
 
-module.exports = MhulkActor;
+module.exports = LhulkActor;

@@ -14,7 +14,7 @@ EnemyConcsnMissileActor.prototype.createMeshes = function(){
 };
 
 EnemyConcsnMissileActor.prototype.customUpdate = function(){
-    let offsetPosition = this.getOffsetPosition(-5);
+    let offsetPosition = this.getOffsetPosition(-8);
     this.createParticle({
         particleClass: 'particleAdd',
         offsetPositionX: offsetPosition[0],

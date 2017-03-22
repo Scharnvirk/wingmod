@@ -7,8 +7,9 @@ var ModelList = {
         '/models/drone.json',
         '/models/sniper.json',
         '/models/orbot.json',
-        '/models/shulk.json',
+        '/models/shulk.json', 
         '/models/mhulk.json',
+        '/models/lhulk.json',
         '/models/spider.json',
         '/models/spider2.json',
         '/models/chunk.json',
@@ -21,6 +22,7 @@ var ModelList = {
         '/models/plasmablast.json',
         '/models/pulsewavegun.json',
         '/models/missilelauncher.json',
+        '/models/homingmissilelauncher.json',
         '/models/hudMaterial.json',
         '/models/flatHudMaterial.json',
         '/models/missile.json'

@@ -25,6 +25,8 @@ var Constants = {
         TIMEOUT: 1
     },
 
+    HOMING_LOCK_ACQUIRE_FREQUENCY: 10,
+
     STORAGE_SIZE: 1000,
 
     FOG_COLOR: 0x000000,

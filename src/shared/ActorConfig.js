@@ -279,13 +279,39 @@ const ActorConfig = {
         }
     },
 
+    HOMINGMISSILE: {
+        props: {
+            hp: 2,
+            damage: 25,
+            removeOnHit: true,
+            timeout: 800,
+            acceleration: 650,
+            constantAcceleration: 0,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile',
+            homingAgainst: ['enemyShip', 'enemyMapObject'],
+            homingRange: 1000,
+            homingArc: 30,
+            turnSpeed: 2
+        },
+        bodyConfig: {
+            radius: 2,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4,
+            damping: 0.995
+        }
+    },
+
     ENEMYCONCSNMISSILE: {
         props: {
             hp: 1.5,
             damage: 10,
             removeOnHit: true,
             timeout: 800,
-            constantAcceleration: 200,
+            acceleration: 650,
+            constantAcceleration: 300,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'enemyProjectile'
@@ -295,6 +321,31 @@ const ActorConfig = {
             mass: 0.5,
             ccdSpeedThreshold: 1,
             ccdIterations: 4
+        }
+    },
+
+    ENEMYHOMINGMISSILE: {
+        props: {
+            hp: 1.5,
+            damage: 10,
+            removeOnHit: true,
+            timeout: 800,
+            acceleration: 650,
+            constantAcceleration: 0,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile',
+            homingAgainst: ['playerShip'],
+            homingRange: 1000,
+            homingArc: 30,
+            turnSpeed: 2
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.5,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4,
+            damping: 0.995
         }
     },
 
@@ -481,6 +532,29 @@ const ActorConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 10
+        }
+    },
+
+    LHULK: {
+        props: {
+            drops: [{class: 'MISSILEQUADPICKUP', probability: 1}, {class: 'MISSILEQUADPICKUP', probability: 0.75}, {class: 'MISSILEQUADPICKUP', probability: 0.5}, {class: 'MISSILEQUADPICKUP', probability: 0.25}],
+            danger: 3,
+            acceleration: 700, 
+            turnSpeed: 0.5,
+            hp: 90,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'GRAND GUARD',
+            pointWorth: 200,
+            enemyIndex: 4
+        },
+        bodyConfig: {
+            mass: 40,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 11
         }
     },
 
