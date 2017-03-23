@@ -67,7 +67,7 @@ LhulkActor.prototype.onDeath = function(){
         velocity: [50, 100]
     });
     this.spawn({
-        amount: 8,
+        amount: 10,
         classId: ActorFactory.BOOMCHUNK,
         angle: [0, 360],
         velocity: [60, 120]

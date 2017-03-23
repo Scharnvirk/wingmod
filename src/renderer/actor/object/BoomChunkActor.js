@@ -8,7 +8,7 @@ function BoomChunkActor(){
 BoomChunkActor.extend(ChunkActor);
 BoomChunkActor.mixin(ParticleMixin);
 
-BoomChunkActor.prototype.onDeath = function(){
+BoomChunkActor.prototype.onTimeout = function(){
     this.createPremade({premadeName: 'OrangeBoomLarge'});
     this.requestUiFlash('white');
     this.requestShake();

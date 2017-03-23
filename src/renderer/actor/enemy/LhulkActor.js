@@ -20,9 +20,9 @@ LhulkActor.mixin(ShowDamageMixin);
 LhulkActor.prototype.createMeshes = function(){
     return [new BaseMesh({
         actor: this, 
-        scaleX: 4.2,
-        scaleY: 4.2,
-        scaleZ: 4.2,  
+        scaleX: 5.2,
+        scaleY: 5.2,
+        scaleZ: 5.2,  
         geometry: ModelStore.get('lhulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];

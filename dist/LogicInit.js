@@ -2703,7 +2703,7 @@ LhulkActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
     this.spawn({
-        amount: 8,
+        amount: 10,
         classId: ActorFactory.BOOMCHUNK,
         angle: [0, 360],
         velocity: [60, 120]
@@ -3963,12 +3963,14 @@ function BoomChunkActor(config) {
 
 BoomChunkActor.extend(ChunkActor);
 
-BoomChunkActor.prototype.onDeath = function () {
+BoomChunkActor.prototype.onTimeout = function () {
     var _this = this;
 
     setTimeout(function () {
         _this.spawn({
-            classId: ActorFactory.SMALLEXPLOSION
+            classId: ActorFactory.SMALLEXPLOSION,
+            angle: [0, 360],
+            velocity: [60, 120]
         });
     }, 100);
 };
@@ -5471,9 +5473,9 @@ LhulkActor.mixin(ShowDamageMixin);
 LhulkActor.prototype.createMeshes = function () {
     return [new BaseMesh({
         actor: this,
-        scaleX: 4.2,
-        scaleY: 4.2,
-        scaleZ: 4.2,
+        scaleX: 5.2,
+        scaleY: 5.2,
+        scaleZ: 5.2,
         geometry: ModelStore.get('lhulk').geometry,
         material: ModelStore.get('enemyModel').material
     })];
@@ -6220,7 +6222,7 @@ function BoomChunkActor() {
 BoomChunkActor.extend(ChunkActor);
 BoomChunkActor.mixin(ParticleMixin);
 
-BoomChunkActor.prototype.onDeath = function () {
+BoomChunkActor.prototype.onTimeout = function () {
     this.createPremade({ premadeName: 'OrangeBoomLarge' });
     this.requestUiFlash('white');
     this.requestShake();
@@ -8136,7 +8138,7 @@ var ActorConfig = {
             turnSpeed: 1,
             removeOnHit: false,
             timeoutRandomMin: 5,
-            timeoutRandomMax: 20,
+            timeoutRandomMax: 30,
             soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
@@ -8316,13 +8318,13 @@ var ActorConfig = {
             danger: 3,
             acceleration: 700,
             turnSpeed: 0.5,
-            hp: 90,
+            hp: 120,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
             name: 'GRAND GUARD',
             pointWorth: 200,
-            enemyIndex: 4
+            enemyIndex: 7
         },
         bodyConfig: {
             mass: 40,
@@ -8359,9 +8361,9 @@ var ActorConfig = {
     SNIPER: {
         props: {
             drops: [{ class: 'SHIELDPICKUP', probability: 0.2 }],
-            danger: 2,
+            danger: 1,
             acceleration: 90,
-            turnSpeed: 0.8,
+            turnSpeed: 0.65,
             hp: 10,
             hpBarCount: 5,
             enemy: true,

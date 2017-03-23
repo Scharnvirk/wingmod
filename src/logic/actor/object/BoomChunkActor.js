@@ -11,10 +11,12 @@ function BoomChunkActor(config){
 
 BoomChunkActor.extend(ChunkActor);
 
-BoomChunkActor.prototype.onDeath = function(){    
+BoomChunkActor.prototype.onTimeout = function(){    
     setTimeout(() => {
         this.spawn({
-            classId: ActorFactory.SMALLEXPLOSION
+            classId: ActorFactory.SMALLEXPLOSION,
+            angle: [0, 360],
+            velocity: [60, 120]
         });
     }, 100);      
 };

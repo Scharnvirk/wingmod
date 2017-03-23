@@ -368,7 +368,7 @@ const ActorConfig = {
             turnSpeed: 1,
             removeOnHit: false,
             timeoutRandomMin: 5,
-            timeoutRandomMax: 20,
+            timeoutRandomMax: 30,
             soundsOnDeath: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6']
         },
         bodyConfig: {
@@ -554,13 +554,13 @@ const ActorConfig = {
             danger: 3,
             acceleration: 700, 
             turnSpeed: 0.5,
-            hp: 90,
+            hp: 120,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
             name: 'GRAND GUARD',
             pointWorth: 200,
-            enemyIndex: 4
+            enemyIndex: 7
         },
         bodyConfig: {
             mass: 40,
@@ -597,9 +597,9 @@ const ActorConfig = {
     SNIPER: {
         props: {
             drops: [{class: 'SHIELDPICKUP', probability: 0.2}],
-            danger: 2,
+            danger: 1,
             acceleration: 90,
-            turnSpeed: 0.8,
+            turnSpeed: 0.65,
             hp: 10,
             hpBarCount: 5,
             enemy: true,
