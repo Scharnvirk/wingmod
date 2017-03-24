@@ -552,9 +552,9 @@ const ActorConfig = {
         props: {
             drops: [{class: 'MISSILEQUADPICKUP', probability: 1}, {class: 'MISSILEQUADPICKUP', probability: 0.75}, {class: 'MISSILEQUADPICKUP', probability: 0.5}, {class: 'MISSILEQUADPICKUP', probability: 0.25}],
             danger: 3,
-            acceleration: 700, 
+            acceleration: 1200, 
             turnSpeed: 0.5,
-            hp: 120,
+            hp: 140,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -563,7 +563,7 @@ const ActorConfig = {
             enemyIndex: 7
         },
         bodyConfig: {
-            mass: 40,
+            mass: 50,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

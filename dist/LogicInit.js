@@ -409,9 +409,9 @@ GameScene.prototype.fillScene = function (mapBodies) {
         angle: 0
     });
 
-    // let i; 
+    // let i;  
 
-    // for (i = 0; i < 1; i++){
+    // for (i = 0; i < 5; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.LHULK,
     //         positionX: Utils.rand(-100, 100),
@@ -2651,7 +2651,7 @@ function LhulkActor(config) {
 
     this.applyConfig(ActorConfig.LHULK);
 
-    this.calloutSound = 'mhulk';
+    this.calloutSound = 'lhulk';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
 
@@ -2668,7 +2668,7 @@ LhulkActor.prototype.createBrain = function () {
         manager: this.manager,
         gameState: this.gameState,
         enemyActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 500,
+        firingDistance: 1500,
         shootingArc: 30,
         leadSkill: 0.4
     });
@@ -2689,7 +2689,7 @@ LhulkActor.prototype.createWeapon = function () {
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
-        firingPoints: [{ offsetAngle: -37, offsetDistance: 13.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 13.5, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -57, offsetDistance: 14.5, fireAngle: 0 }, { offsetAngle: 57, offsetDistance: 14.5, fireAngle: 0 }]
     });
 };
 
@@ -8316,9 +8316,9 @@ var ActorConfig = {
         props: {
             drops: [{ class: 'MISSILEQUADPICKUP', probability: 1 }, { class: 'MISSILEQUADPICKUP', probability: 0.75 }, { class: 'MISSILEQUADPICKUP', probability: 0.5 }, { class: 'MISSILEQUADPICKUP', probability: 0.25 }],
             danger: 3,
-            acceleration: 700,
+            acceleration: 1200,
             turnSpeed: 0.5,
-            hp: 120,
+            hp: 140,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -8327,7 +8327,7 @@ var ActorConfig = {
             enemyIndex: 7
         },
         bodyConfig: {
-            mass: 40,
+            mass: 50,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

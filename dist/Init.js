@@ -26451,7 +26451,7 @@ function LhulkActor(config) {
 
     this.applyConfig(ActorConfig.LHULK);
 
-    this.calloutSound = 'mhulk';
+    this.calloutSound = 'lhulk';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
 
@@ -26468,7 +26468,7 @@ LhulkActor.prototype.createBrain = function () {
         manager: this.manager,
         gameState: this.gameState,
         enemyActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 500,
+        firingDistance: 1500,
         shootingArc: 30,
         leadSkill: 0.4
     });
@@ -26489,7 +26489,7 @@ LhulkActor.prototype.createWeapon = function () {
         actor: this,
         manager: this.manager,
         firingMode: 'alternate',
-        firingPoints: [{ offsetAngle: -37, offsetDistance: 13.5, fireAngle: 0 }, { offsetAngle: 37, offsetDistance: 13.5, fireAngle: 0 }]
+        firingPoints: [{ offsetAngle: -57, offsetDistance: 14.5, fireAngle: 0 }, { offsetAngle: 57, offsetDistance: 14.5, fireAngle: 0 }]
     });
 };
 
@@ -33049,6 +33049,7 @@ SoundLoader.prototype.loadSounds = function () {
     createjs.Sound.registerSound({ src: 'sounds/callout7.mp3', id: 'mhulk' });
     createjs.Sound.registerSound({ src: 'sounds/callout9.mp3', id: 'spider' });
     createjs.Sound.registerSound({ src: 'sounds/callout10.mp3', id: 'spiderling' });
+    createjs.Sound.registerSound({ src: 'sounds/callout12.mp3', id: 'lhulk' });
     createjs.Sound.registerSound({ src: 'sounds/powerBoom2.mp3', id: 'spawn' });
     createjs.Sound.registerSound({ src: 'sounds/weaponChange1.mp3', id: 'cannon_change' });
     createjs.Sound.registerSound({ src: 'sounds/emptyError.mp3', id: 'empty' });
@@ -39452,9 +39453,9 @@ var ActorConfig = {
         props: {
             drops: [{ class: 'MISSILEQUADPICKUP', probability: 1 }, { class: 'MISSILEQUADPICKUP', probability: 0.75 }, { class: 'MISSILEQUADPICKUP', probability: 0.5 }, { class: 'MISSILEQUADPICKUP', probability: 0.25 }],
             danger: 3,
-            acceleration: 700,
+            acceleration: 1200,
             turnSpeed: 0.5,
-            hp: 120,
+            hp: 140,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -39463,7 +39464,7 @@ var ActorConfig = {
             enemyIndex: 7
         },
         bodyConfig: {
-            mass: 40,
+            mass: 50,
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,

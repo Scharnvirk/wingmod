@@ -3,7 +3,7 @@ function SoundLoader(config){
     Object.assign(this, config);
 }
 
-SoundLoader.prototype.loadSounds = function(){
+SoundLoader.prototype.loadSounds = function(){ 
     createjs.Sound.alternateExtensions = ['mp3']; 
     createjs.Sound.registerSound({src:'sounds/laser2.mp3', id:'blue_laser'});
     createjs.Sound.registerSound({src:'sounds/laser13.mp3', id:'red_laser'});
@@ -27,6 +27,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/callout7.mp3', id:'mhulk'});
     createjs.Sound.registerSound({src:'sounds/callout9.mp3', id:'spider'}); 
     createjs.Sound.registerSound({src:'sounds/callout10.mp3', id:'spiderling'});
+    createjs.Sound.registerSound({src:'sounds/callout12.mp3', id:'lhulk'});
     createjs.Sound.registerSound({src:'sounds/powerBoom2.mp3', id:'spawn'});
     createjs.Sound.registerSound({src:'sounds/weaponChange1.mp3', id:'cannon_change'});
     createjs.Sound.registerSound({src:'sounds/emptyError.mp3', id:'empty'});

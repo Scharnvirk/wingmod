@@ -21,9 +21,9 @@ GameScene.prototype.fillScene = function(mapBodies){
         angle: 0
     });
 
-    // let i;  
+    // let i;   
 
-    // for (i = 0; i < 1; i++){
+    // for (i = 0; i < 5; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.LHULK,
     //         positionX: Utils.rand(-100, 100),

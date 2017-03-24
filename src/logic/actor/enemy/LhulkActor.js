@@ -14,7 +14,7 @@ function LhulkActor(config){
 
     this.applyConfig(ActorConfig.LHULK);
 
-    this.calloutSound = 'mhulk';
+    this.calloutSound = 'lhulk';
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     
@@ -31,7 +31,7 @@ LhulkActor.prototype.createBrain = function(){
         manager: this.manager,
         gameState: this.gameState,
         enemyActor: this.manager.getFirstPlayerActor(),
-        firingDistance: 500,
+        firingDistance: 1500,
         shootingArc: 30,
         leadSkill: 0.4
     });
@@ -53,8 +53,8 @@ LhulkActor.prototype.createWeapon = function(){
         manager: this.manager,
         firingMode: 'alternate',
         firingPoints: [
-            {offsetAngle: -37, offsetDistance: 13.5, fireAngle: 0},
-            {offsetAngle: 37, offsetDistance: 13.5 , fireAngle: 0}
+            {offsetAngle: -57, offsetDistance: 14.5, fireAngle: 0},
+            {offsetAngle: 57, offsetDistance: 14.5 , fireAngle: 0}
         ]
     });
 };
