@@ -8490,8 +8490,8 @@ var ActorConfig = {
             enemy: true,
             type: 'enemyShip',
             name: 'CHASER',
-            pointWorth: 20,
-            enemyIndex: 0
+            pointWorth: 25,
+            enemyIndex: 8
         },
         bodyConfig: {
             mass: 4,
