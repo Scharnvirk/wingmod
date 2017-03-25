@@ -2,8 +2,12 @@ var BrainMixin = {
     doBrainOrders: function(){
         if (this.brain.orders.lookAtPosition) {
             this._lookAtPosition(this.brain.orders.lookAtPosition);
-            if (this.brain.orders.turn !== 0) {
+            if (this.brain.orders.turn > 0) {
                 this.setAngleForce(this.brain.orders.turn);
+                this.orders.horizontalThrust = -1;
+            } else if (this.brain.orders.turn < 0) {
+                this.setAngleForce(this.brain.orders.turn);
+                this.orders.horizontalThrust = 1;
             }
         } else {
             this.setAngleForce(this.brain.orders.turn);

@@ -9,7 +9,7 @@ RedLaserEnemyProjectileActor.extend(BaseActor);
 RedLaserEnemyProjectileActor.mixin(ParticleMixin);
 
 RedLaserEnemyProjectileActor.prototype.customUpdate = function(){
-    this.createPremade({premadeName: 'RedLaserTrail'});
+    this.createPremade({premadeName: 'RedLaserSmallTrail'});
 };
 
 RedLaserEnemyProjectileActor.prototype.onDeath = function(){

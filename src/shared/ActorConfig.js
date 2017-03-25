@@ -157,7 +157,7 @@ const ActorConfig = {
     REDLASERENEMYPROJECTILE: {
         props: {
             hp: 1,
-            damage: 2,
+            damage: 1,
             removeOnHit: true,
             timeout: 180,
             collisionFixesPosition: true,
@@ -166,7 +166,7 @@ const ActorConfig = {
         },
         bodyConfig: {
             radius: 1,
-            mass: 0.3,
+            mass: 0.2,
             ccdSpeedThreshold: 1,
             ccdIterations: 4
         }
@@ -395,7 +395,7 @@ const ActorConfig = {
             name: 'GATEWAY',
             pointWorth: 1000,
             enemyIndex: 5,
-            spawnPool: ['MOOK', 'MOOK', 'ORBOT', 'SNIPER'],
+            spawnPool: ['CHASER', 'MOOK', 'ORBOT', 'SNIPER'],
             spawnPoolAdditions: {
                 60: 'SHULK',
                 120: 'SHULK',
@@ -441,6 +441,29 @@ const ActorConfig = {
             enemy: true,
             type: 'enemyShip',
             name: 'DRONE',
+            pointWorth: 20,
+            enemyIndex: 0
+        },
+        bodyConfig: {
+            mass: 4,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5
+        }
+    },
+
+    CHASER: {
+        props: {
+            drops: [{class: 'ENERGYPICKUP', probability: 0.1}],
+            danger: 1,
+            acceleration: 1000,
+            turnSpeed: 7,
+            hp: 6,
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'CHASER',
             pointWorth: 20,
             enemyIndex: 0
         },
