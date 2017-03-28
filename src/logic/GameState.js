@@ -11,8 +11,8 @@ GameState.extend(EventEmitter);
 
 GameState.prototype._createInitialState = function(){
     return {
-        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher', 'homingmissilelauncher', 'plasmablast'],
-        currentWeapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher', 'homingmissilelauncher', 'plasmablast'],
+        weapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher', 'homingmissilelauncher', 'plasmablast', 'emdgun'],
+        currentWeapons: ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher', 'homingmissilelauncher', 'plasmablast', 'emdgun'],
         ammo: {
             energy: 100,
             plasma: 25,

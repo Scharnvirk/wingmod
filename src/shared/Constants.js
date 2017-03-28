@@ -25,7 +25,7 @@ var Constants = {
         TIMEOUT: 1
     },
 
-    HOMING_LOCK_ACQUIRE_FREQUENCY: 10,
+    HOMING_LOCK_ACQUIRE_FREQUENCY: 3,
 
     STORAGE_SIZE: 1000,
 

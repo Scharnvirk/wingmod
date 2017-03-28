@@ -85,6 +85,28 @@ const ActorConfig = {
         }
     },
 
+    EMDPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 3,
+            removeOnHit: true,
+            timeout: 300,
+            acceleration: 1200,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile',
+            homingAgainst: ['enemyShip', 'enemyMapObject'],
+            homingRange: 1000,
+            homingArc: 30,
+            turnSpeed: 0.8 
+        },
+        bodyConfig: {
+            radius: 2,
+            mass: 1,
+            damping: 0.995
+        }
+    },
+
     PLASMABLASTPROJECTILE: {
         props: {
             hp: 1,
@@ -263,7 +285,7 @@ const ActorConfig = {
     CONCSNMISSILE: {
         props: {
             hp: 2,
-            damage: 25,
+            damage: 15,
             removeOnHit: true,
             timeout: 800,
             constantAcceleration: 400,
@@ -282,7 +304,7 @@ const ActorConfig = {
     HOMINGMISSILE: {
         props: {
             hp: 2,
-            damage: 25,
+            damage: 15,
             removeOnHit: true,
             timeout: 800,
             acceleration: 650,
@@ -436,7 +458,7 @@ const ActorConfig = {
             danger: 1,
             acceleration: 140,
             turnSpeed: 2,
-            hp: 6,
+            hp: 4,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -459,7 +481,7 @@ const ActorConfig = {
             danger: 1,
             acceleration: 1000,
             turnSpeed: 7,
-            hp: 6,
+            hp: 4,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -482,7 +504,7 @@ const ActorConfig = {
             danger: 2,
             acceleration: 500, 
             turnSpeed: 0.75,
-            hp: 25, 
+            hp: 15, 
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -511,7 +533,7 @@ const ActorConfig = {
             danger: 2,
             acceleration: 2200, 
             turnSpeed: 2,
-            hp: 14, 
+            hp: 10, 
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -554,7 +576,7 @@ const ActorConfig = {
             danger: 3,
             acceleration: 700, 
             turnSpeed: 0.75,
-            hp: 60,
+            hp: 40,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -577,7 +599,7 @@ const ActorConfig = {
             danger: 3,
             acceleration: 1200, 
             turnSpeed: 0.5,
-            hp: 140,
+            hp: 100,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -623,7 +645,7 @@ const ActorConfig = {
             danger: 1,
             acceleration: 90,
             turnSpeed: 0.65,
-            hp: 10,
+            hp: 7,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',

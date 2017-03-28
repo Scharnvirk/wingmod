@@ -4,6 +4,8 @@ var HomingMixin = {
             this._homingTarget = this._findClosestTarget();
         }
 
+        //todo: poprawny retargeting
+
         if (this._homingTarget) {
             let lookAtPosition = this._getTargetPositionWithLead(250, 1);
             this._lookAtPosition(lookAtPosition);            
@@ -86,7 +88,8 @@ var HomingMixin = {
                 point[0] -= diff[0] / detectionPointCount;
                 point[1] -= diff[1] / detectionPointCount;
                 if (this._isPositionInWall(point)){
-                    return true;
+                    this._homingTarget = false;
+                    return true;                    
                 }
             }
         }

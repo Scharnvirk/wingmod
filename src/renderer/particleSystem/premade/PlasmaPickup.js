@@ -1,4 +1,4 @@
-module.exports = function(config){
+module.exports = function(config){    
     config.particleManager.createParticle('particleAdd',{
         positionX: config.position[0] + Utils.rand(-3,3)/5,
         positionY: config.position[1] + Utils.rand(-3,3)/5,

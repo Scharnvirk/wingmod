@@ -19,6 +19,7 @@ var ModelList = {
         '/models/levels/startmenu.json',
         '/models/lasgun.json',
         '/models/redlasgun.json',
+        '/models/emdgun.json',
         '/models/plasmagun.json',
         '/models/plasmablast.json',
         '/models/pulsewavegun.json',

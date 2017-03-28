@@ -1,23 +1,23 @@
 var BaseWeapon = require('logic/actor/component/weapon/BaseWeapon');
 var ActorFactory = require('shared/ActorFactory')('logic');
 
-function MissileLauncher(config){
+function EmdGun(config){
     Object.assign(this, config);
 
-    this.projectileClass = ActorFactory.CONCSNMISSILE;
+    this.projectileClass = ActorFactory.EMDPROJECTILE;
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 40;
-    this.velocity = 180;
-    this.sound = 'missile';
+    this.cooldown = 10;
+    this.velocity = 500; 
+    this.sound = 'disrupter';
     this.firingMode = 'alternate';
-    this.volume = 0.5;
+    this.volume = 0.8;
     this.ammoConfig = {
-        missiles: 1
+        energy: 1
     };
 }
 
-MissileLauncher.extend(BaseWeapon);
+EmdGun.extend(BaseWeapon);
 
-module.exports = MissileLauncher;
+module.exports = EmdGun;

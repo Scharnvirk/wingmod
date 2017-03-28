@@ -1,4 +1,5 @@
 var PlasmaGun = require('logic/actor/component/weapon/PlasmaGun');
+var EmdGun = require('logic/actor/component/weapon/EmdGun');
 var PlasmaBlast = require('logic/actor/component/weapon/PlasmaBlast');
 var Blaster = require('logic/actor/component/weapon/Blaster');
 var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
@@ -97,6 +98,16 @@ WeaponSystem.prototype.createPlasmagun = function(name){
         gameState: this.gameState
     });
 };
+
+WeaponSystem.prototype.createEmdgun = function(name){
+    return new EmdGun({
+        actor: this.actor,
+        firingPoints: this.firingPoints,
+        name: name,
+        gameState: this.gameState
+    });
+};
+
 
 WeaponSystem.prototype.createPlasmablast = function(name){
     return new PlasmaBlast({

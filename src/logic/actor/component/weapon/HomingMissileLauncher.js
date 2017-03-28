@@ -8,14 +8,14 @@ function HomingMissileLauncher(config){
 
     BaseWeapon.apply(this, arguments);
 
-    this.cooldown = 40;
+    this.cooldown = 80;
     this.velocity = 0;
     this.sound = 'missile';
     this.firingMode = 'alternate';
     this.volume = 0.5;
     this.ammoConfig = {
         missiles: 1,
-        energy: 10
+        energy: 4
     };
 }
 

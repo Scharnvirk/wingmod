@@ -124,7 +124,9 @@ ParticleConfigCreator.prototype.createPremades = function(){
         EnergyPickup: require('renderer/particleSystem/premade/EnergyPickup'),
         ShieldPickup: require('renderer/particleSystem/premade/ShieldPickup'),
         PlasmaPickup: require('renderer/particleSystem/premade/PlasmaPickup'),
-        MissileQuadPickup: require('renderer/particleSystem/premade/MissileQuadPickup')
+        MissileQuadPickup: require('renderer/particleSystem/premade/MissileQuadPickup'),
+        BlueBoom: require('renderer/particleSystem/premade/BlueBoom'),
+        EmdTrail: require('renderer/particleSystem/premade/EmdTrail')
     };
 };
 
