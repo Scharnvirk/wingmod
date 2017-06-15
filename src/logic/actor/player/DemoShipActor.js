@@ -2,7 +2,7 @@ var ShipActor = require('logic/actor/player/ShipActor');
 var ActorConfig = require('shared/ActorConfig');
 var MookBrain = require('logic/actor/component/ai/MookBrain');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
-var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
+var Weapon = require('logic/actor/component/weapon/Weapon');
 var ActorTypes = require('shared/ActorTypes');
 
 function DemoShipActor(){

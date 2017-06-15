@@ -21,7 +21,7 @@ function Camera(config){
     this.rotation.y = 0;
 
     this.zOffset = 60;
-}
+} 
 
 Camera.extend(THREE.PerspectiveCamera);
 

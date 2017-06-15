@@ -1,6 +1,7 @@
 var BaseActor = require('logic/actor/BaseActor');
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var ActorFactory = require('shared/ActorFactory')('logic');
+var EnemyConfig = require('shared/EnemyConfig');
 
 function EnemySpawnMarkerActor(config){
     Object.assign(this, config);
@@ -34,7 +35,8 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
     if (!this.created) {
         this.spawn({
             amount: enemiesToSpawn,
-            classId: ActorFactory[this.props.enemyClass],
+            classId: ActorFactory.ENEMY,
+            subclassId: EnemyConfig.getSubclassIdFor(this.props.enemyClass),
             angle: [0, 360],
             velocity: [50, 100]
         });

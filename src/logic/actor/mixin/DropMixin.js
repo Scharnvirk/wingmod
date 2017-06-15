@@ -1,10 +1,10 @@
 var ActorFactory = require('shared/ActorFactory')('logic');
 
 var DropMixin = {
-    handleDrops: function(){
-        if ( !(this.props.drops instanceof Array) ) return;
+    handleDrops: function(dropConfig){
+        if ( !(dropConfig instanceof Array) ) return;
 
-        this.props.drops.forEach(drop => {
+        dropConfig.forEach(drop => {
             this.spawn({
                 amount: drop.amount || 1,
                 probability: drop.probability || 1,

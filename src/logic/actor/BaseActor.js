@@ -18,6 +18,7 @@ function BaseActor(config){
     this._body.velocity = Utils.angleToVector(config.angle, config.velocity || 0);
     this._body.actorId = this.id;
     this._body.classId = config.classId;
+    this._body.subclassId = config.subclassId;
 
     this._stepAngle = Utils.radToDeg((this.props.turnSpeed || 0) / Constants.LOGIC_REFRESH_RATE);
     this._thrust = 0;
@@ -210,7 +211,7 @@ BaseActor.prototype.drawDebug = function(position){
 };
 
 BaseActor.prototype.spawn = function(config){    
-    config = config || {};
+    config = Object.assign({}, config || {});
     config.amount = config.amount || 1;
     config.angle = config.angle || 0;
     config.velocity = config.velocity || 0;
@@ -222,6 +223,7 @@ BaseActor.prototype.spawn = function(config){
         if (config.probability === 100 || Utils.rand(1, 100) <= config.probability){
             this.manager.addNew({
                 classId: config.classId,
+                subclassId: config.subclassId,
                 positionX: config.offsetPosition[0] + this._body.position[0],
                 positionY: config.offsetPosition[1] + this._body.position[1],
                 angle: this.angle + Utils.degToRad(Utils.randArray(config.angle)),

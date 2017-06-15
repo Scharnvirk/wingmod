@@ -7,7 +7,7 @@ const Action = require('../tools/Action');
 const ActionLoop = require('../tools/ActionLoop');
 const WeaponSwitcher = require('renderer/gameUi/WeaponSwitcher');
 
-const availableWeapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
+const availableWeapons = ['PLASMA_CANNON', 'BLUE_BLASTER', 'RED_BLASTER', 'PULSE_WAVE_GUN', 'CONCUSSION_MISSILE_LAUNCHER'];
 
 const createSwitcher = function(customConfig) {
     customConfig = customConfig || {};
@@ -163,7 +163,7 @@ describe('WeaponSwitcher weapon creation:', function(){
     });
 
     it ('will create items in correct order on subset of 3', function(){
-        const availableWeaponsSubset = ['redlasgun', 'lasgun', 'pulsewavegun'];
+        const availableWeaponsSubset = ['RED_BLASTER', 'BLUE_BLASTER', 'PULSE_WAVE_GUN'];
         this.switcher = createSwitcher({weapons: availableWeaponsSubset});        
         const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
         const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);
@@ -171,7 +171,7 @@ describe('WeaponSwitcher weapon creation:', function(){
     });
 
     it ('will create items in correct order on subset of 2', function(){
-        const availableWeaponsSubset = ['plasmagun', 'missilelauncher'];
+        const availableWeaponsSubset = ['PLASMA_CANNON', 'CONCUSSION_MISSILE_LAUNCHER'];
         this.switcher = createSwitcher({weapons: availableWeaponsSubset});        
         const generatedWeapons = this.switcher._createWeaponItems(this.switcher.props.availableWeapons[0]);
         const weaponOrder = generatedWeapons.map(weapon => weapon.state.weaponIndex);

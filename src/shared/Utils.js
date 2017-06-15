@@ -165,6 +165,14 @@ var Utils = {
             actor1._body.position[1],
             actor2._body.position[1]
         );
+    },
+
+    //expects each key and value to be unique; intended for name:id mappings and such. 
+    objectSwitchKeysAndValues: function(object){
+        return Object.keys(object).reduce((carry, objectKey) => {
+            carry[object[objectKey]] = objectKey;
+            return carry;
+        }, {});
     }
 };
 

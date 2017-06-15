@@ -29,37 +29,48 @@ ActorManager.prototype.update = function(){
     }
 };
 
-/*
-transferArray[i*5] = body.actorId;
-transferArray[i*5+1] = body.classId;
-transferArray[i*5+2] = body.position[0];
-transferArray[i*5+3] = body.position[1];
-transferArray[i*5+4] = body.rotation;
+/* 
+DATA TRANSFER FORMAT
 
-for deadDataArray:
-deadDataArray[i*5+5] = deathType;
+configTransferArray[i*3] = body.actorId;
+configTransferArray[i*3+1] = body.classId;
+configTransferArray[i*3+2] = body.subclassId;
+
+positionTransferArray[i*3] = body.position[0];
+positionTransferArray[i*3+1] = body.position[1];
+positionTransferArray[i*3+2] = body.rotation;
+
+deadDataArray[i*6] = body.actorId;
+deadDataArray[i*6+1] = body.classId; //unused
+deadDataArray[i*6+2] = body.position[0];
+deadDataArray[i*6+3] = body.position[1];
+deadDataArray[i*6+4] = body.rotation;
+deadDataArray[i*6+5] = deathType;
 */
+
 ActorManager.prototype.updateFromLogic = function(messageObject){
     this.lastPhysicsTime = this.currentPhysicsTime;
     this.currentPhysicsTime = Date.now();
-    var dataArray = messageObject.transferArray;
-    var deadDataArray = messageObject.deadTransferArray;
+    const positionArray = messageObject.positionTransferArray;
+    const configArray = messageObject.configTransferArray;
+    const deadDataArray = messageObject.deadTransferArray;
 
     for(let i = 0; i < messageObject.actorCount; i++){
-        let actor = this.storage[dataArray[i*5]];
+        let actor = this.storage[configArray[i*3]];
         if(!actor){
-            if(dataArray[i*5+1] > 0){
+            if(configArray[i*3+1] > 0){
                 this.createActor({
-                    actorId: dataArray[i*5],
-                    classId: dataArray[i*5+1],
-                    positionX: dataArray[i*5+2],
-                    positionY: dataArray[i*5+3],
-                    rotation: dataArray[i*5+4],
+                    actorId: configArray[i*3],
+                    classId: configArray[i*3+1],
+                    subclassId: configArray[i*3+2],
+                    positionX: positionArray[i*3],
+                    positionY: positionArray[i*3+1],
+                    rotation: positionArray[i*3+2],
                     manager: this
                 });
             }
         } else {
-            actor.updateFromLogic(dataArray[i*5+2], dataArray[i*5+3], dataArray[i*5+4]);
+            actor.updateFromLogic(positionArray[i*3], positionArray[i*3 + 1], positionArray[i*3 + 2]);
         }
     }
 

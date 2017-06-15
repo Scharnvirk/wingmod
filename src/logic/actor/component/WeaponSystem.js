@@ -1,11 +1,6 @@
-var PlasmaGun = require('logic/actor/component/weapon/PlasmaGun');
-var EmdGun = require('logic/actor/component/weapon/EmdGun');
-var PlasmaBlast = require('logic/actor/component/weapon/PlasmaBlast');
-var Blaster = require('logic/actor/component/weapon/Blaster');
-var RedBlaster = require('logic/actor/component/weapon/RedBlaster');
-var PulseWaveGun = require('logic/actor/component/weapon/PulseWaveGun');
-var MissileLauncher = require('logic/actor/component/weapon/MissileLauncher');
-var HomingMissileLauncher = require('logic/actor/component/weapon/HomingMissileLauncher');
+var Weapon = require('logic/actor/component/weapon/Weapon');
+
+const WeaponConfig = require('shared/WeaponConfig');
 
 function WeaponSystem(config){
     Object.assign(this, config);
@@ -20,17 +15,19 @@ function WeaponSystem(config){
     if (!this.gameState) throw new Error('No gameState for Logic WeaponSystem!');
 }
 
-
 WeaponSystem.prototype._createWeapons = function(){
     let weapons = [];
     let weaponNames = this.gameState.getWeapons();
     weaponNames.forEach(weaponName => {
-        let creatorFunctionName = 'create' + Utils.firstToUpper(weaponName);
-        if (creatorFunctionName && this[creatorFunctionName] instanceof Function){
-            weapons[weaponName] = this[creatorFunctionName](weaponName);
-        } else {
-            throw new Error('Could not find a creator for weapon: ' + weaponName + '. Expected creator name: ' + creatorFunctionName);
+        if (!WeaponConfig[weaponName]){
+            throw new Error('Could not find a config for weapon: ' + weaponName + '.');
         }
+        weapons[weaponName] = new Weapon(Object.assign(WeaponConfig[weaponName], {
+            actor: this.actor,
+            firingPoints: this.firingPoints,
+            gameState: this.gameState,
+            weaponName: weaponName
+        }));
     });
     return weapons;
 };
@@ -70,79 +67,6 @@ WeaponSystem.prototype.update = function(){
     if (this.weapons[this.currentWeapon]) {
         this.weapons[this.currentWeapon].update();
     }
-};
-
-WeaponSystem.prototype.createLasgun = function(name){
-    return new Blaster({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createRedlasgun = function(name){
-    return new RedBlaster({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createPlasmagun = function(name){
-    return new PlasmaGun({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createEmdgun = function(name){
-    return new EmdGun({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-
-WeaponSystem.prototype.createPlasmablast = function(name){
-    return new PlasmaBlast({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createPulsewavegun = function(name){
-    return new PulseWaveGun({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createMissilelauncher = function(name){
-    return new MissileLauncher({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
-};
-
-WeaponSystem.prototype.createHomingmissilelauncher = function(name){
-    return new HomingMissileLauncher({
-        actor: this.actor,
-        firingPoints: this.firingPoints,
-        name: name,
-        gameState: this.gameState
-    });
 };
 
 module.exports = WeaponSystem;

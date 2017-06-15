@@ -1,7 +1,10 @@
 function GameWorld(config){
     p2.World.apply(this, arguments);
 
-    this.transferArray = new Float32Array(Constants.STORAGE_SIZE * 5); //this holds transfer data for all actors, needs to be ultra-fast
+    this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
+    //WATCH OUT FOR SIZE!!! UP TO 64K items!
+
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
 
     config = config || {};
@@ -27,24 +30,27 @@ GameWorld.extend(p2.World);
     The format is otherwise identical.
 */
 GameWorld.prototype.makeUpdateData = function(){
-    var transferArray = this.transferArray;
+    var positionTransferArray = this.positionTransferArray;
+    var configTransferArray = this.configTransferArray;
     var transferrableActorCount = 0;
 
     for(let i = 0, l = this.bodies.length; i < l; i ++){
         let body = this.bodies[i];
         if(body.actor){
-            transferArray[transferrableActorCount*5] = body.actorId;
-            transferArray[transferrableActorCount*5+1] = body.classId;
-            transferArray[transferrableActorCount*5+2] = body.position[0];
-            transferArray[transferrableActorCount*5+3] = body.position[1];
-            transferArray[transferrableActorCount*5+4] = body.angle;
+            configTransferArray[transferrableActorCount*3] = body.actorId;
+            configTransferArray[transferrableActorCount*3+1] = body.classId;
+            configTransferArray[transferrableActorCount*3+2] = body.subclassId;
+            positionTransferArray[transferrableActorCount*3] = body.position[0];
+            positionTransferArray[transferrableActorCount*3+1] = body.position[1];
+            positionTransferArray[transferrableActorCount*3+2] = body.angle;
             transferrableActorCount ++;
         }
     }
 
     return {
         actorCount: transferrableActorCount,
-        transferArray: this.transferArray,
+        positionTransferArray: this.positionTransferArray,
+        configTransferArray: this.configTransferArray,
         deadActorCount: this.deadTransferArray.length / 5,
         deadTransferArray: this.deadTransferArray
     };

@@ -3,43 +3,35 @@
 var idMap = {
     SHIP: 1,
 DEMOSHIP: 2,
-MOOK: 3,
-CHASER: 4,
-SNIPER: 5,
-ORBOT: 6,
-SHULK: 7,
-MHULK: 8,
-LHULK: 9,
-SPIDER: 10,
-SPIDERLING: 11,
-CHUNK: 12,
-BOOMCHUNK: 13,
-EXPLOSION: 14,
-SMALLEXPLOSION: 15,
-EMDPROJECTILE: 16,
-PLASMAPROJECTILE: 17,
-PLASMABLASTPROJECTILE: 18,
-PLASMABLASTMINIPROJECTILE: 19,
-LASERPROJECTILE: 20,
-REDLASERPROJECTILE: 21,
-REDLASERENEMYPROJECTILE: 22,
-PURPLELASERPROJECTILE: 23,
-GREENLASERPROJECTILE: 24,
-MOLTENPROJECTILE: 25,
-RINGPROJECTILE: 26,
-PULSEWAVEPROJECTILE: 27,
-CONCSNMISSILE: 28,
-ENEMYCONCSNMISSILE: 29,
-HOMINGMISSILE: 30,
-ENEMYHOMINGMISSILE: 31,
-ENEMYSPAWNER: 32,
-ENEMYSPAWNMARKER: 33,
-ITEMSPAWNER: 34,
-DEBUG: 35,
-SHIELDPICKUP: 36,
-ENERGYPICKUP: 37,
-PLASMAPICKUP: 38,
-MISSILEQUADPICKUP: 39,
+ENEMY: 3,
+CHUNK: 4,
+BOOMCHUNK: 5,
+EXPLOSION: 6,
+SMALLEXPLOSION: 7,
+EMDPROJECTILE: 8,
+PLASMAPROJECTILE: 9,
+PLASMABLASTPROJECTILE: 10,
+PLASMABLASTMINIPROJECTILE: 11,
+LASERPROJECTILE: 12,
+REDLASERPROJECTILE: 13,
+REDLASERENEMYPROJECTILE: 14,
+PURPLELASERPROJECTILE: 15,
+GREENLASERPROJECTILE: 16,
+MOLTENPROJECTILE: 17,
+RINGPROJECTILE: 18,
+PULSEWAVEPROJECTILE: 19,
+CONCSNMISSILE: 20,
+ENEMYCONCSNMISSILE: 21,
+HOMINGMISSILE: 22,
+ENEMYHOMINGMISSILE: 23,
+ENEMYSPAWNER: 24,
+ENEMYSPAWNMARKER: 25,
+ITEMSPAWNER: 26,
+DEBUG: 27,
+SHIELDPICKUP: 28,
+ENERGYPICKUP: 29,
+PLASMAPICKUP: 30,
+MISSILEQUADPICKUP: 31,
 
 };
 
@@ -47,15 +39,7 @@ function ActorFactory(context, actorDependencies){
     this.actorDependencies = actorDependencies;
     ActorFactory.ShipActor = context === 'renderer' ? require("renderer/actor/player/ShipActor") : require("logic/actor/player/ShipActor");
 ActorFactory.DemoShipActor = context === 'renderer' ? require("renderer/actor/player/DemoShipActor") : require("logic/actor/player/DemoShipActor");
-ActorFactory.MookActor = context === 'renderer' ? require("renderer/actor/enemy/MookActor") : require("logic/actor/enemy/MookActor");
-ActorFactory.ChaserActor = context === 'renderer' ? require("renderer/actor/enemy/ChaserActor") : require("logic/actor/enemy/ChaserActor");
-ActorFactory.SniperActor = context === 'renderer' ? require("renderer/actor/enemy/SniperActor") : require("logic/actor/enemy/SniperActor");
-ActorFactory.OrbotActor = context === 'renderer' ? require("renderer/actor/enemy/OrbotActor") : require("logic/actor/enemy/OrbotActor");
-ActorFactory.ShulkActor = context === 'renderer' ? require("renderer/actor/enemy/ShulkActor") : require("logic/actor/enemy/ShulkActor");
-ActorFactory.MhulkActor = context === 'renderer' ? require("renderer/actor/enemy/MhulkActor") : require("logic/actor/enemy/MhulkActor");
-ActorFactory.LhulkActor = context === 'renderer' ? require("renderer/actor/enemy/LhulkActor") : require("logic/actor/enemy/LhulkActor");
-ActorFactory.SpiderActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderActor") : require("logic/actor/enemy/SpiderActor");
-ActorFactory.SpiderlingActor = context === 'renderer' ? require("renderer/actor/enemy/SpiderlingActor") : require("logic/actor/enemy/SpiderlingActor");
+ActorFactory.EnemyActor = context === 'renderer' ? require("renderer/actor/enemy/EnemyActor") : require("logic/actor/enemy/EnemyActor");
 ActorFactory.ChunkActor = context === 'renderer' ? require("renderer/actor/object/ChunkActor") : require("logic/actor/object/ChunkActor");
 ActorFactory.BoomChunkActor = context === 'renderer' ? require("renderer/actor/object/BoomChunkActor") : require("logic/actor/object/BoomChunkActor");
 ActorFactory.ExplosionActor = context === 'renderer' ? require("renderer/actor/object/ExplosionActor") : require("logic/actor/object/ExplosionActor");
@@ -89,15 +73,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
     this.actorMap = {
         [idMap.SHIP]: ActorFactory.ShipActor,
 [idMap.DEMOSHIP]: ActorFactory.DemoShipActor,
-[idMap.MOOK]: ActorFactory.MookActor,
-[idMap.CHASER]: ActorFactory.ChaserActor,
-[idMap.SNIPER]: ActorFactory.SniperActor,
-[idMap.ORBOT]: ActorFactory.OrbotActor,
-[idMap.SHULK]: ActorFactory.ShulkActor,
-[idMap.MHULK]: ActorFactory.MhulkActor,
-[idMap.LHULK]: ActorFactory.LhulkActor,
-[idMap.SPIDER]: ActorFactory.SpiderActor,
-[idMap.SPIDERLING]: ActorFactory.SpiderlingActor,
+[idMap.ENEMY]: ActorFactory.EnemyActor,
 [idMap.CHUNK]: ActorFactory.ChunkActor,
 [idMap.BOOMCHUNK]: ActorFactory.BoomChunkActor,
 [idMap.EXPLOSION]: ActorFactory.ExplosionActor,

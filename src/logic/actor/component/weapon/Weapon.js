@@ -1,4 +1,4 @@
-function BaseWeapon(config){
+function Weapon(config){
     this.burstCount = 1;
     this.burstCooldown = 0;
     this.cooldown = 100;
@@ -10,19 +10,7 @@ function BaseWeapon(config){
     this.name = config.name || 'baseWeapon';
     this.gameState = config.gameState;    
     this.defaultEmptyTiming = 60;
-
     this.ammoConfig = {};
-
-    /*example:
-        this.firingPoints = [
-            {offsetAngle: 90, offsetDistance:20, fireAngle: 0}
-            {offsetAngle: +90, offsetDistance:20, fireAngle: 0}
-        ]
-        this.firingMode = 'alternate' | 'simultaneous'
-        all properties are relative to actor's body; this example will create
-        a weapon firing two shots forward from side mounts.
-    */
-
     this.firingPoints = [];
     this.firingMode = 'simultaneous';
     this.currentFiringPoint = 0;
@@ -37,13 +25,13 @@ function BaseWeapon(config){
     if(!this.actor) throw new Error('No actor for a Weapon!');
 }
 
-BaseWeapon.prototype.update = function(){
+Weapon.prototype.update = function(){
     if (this.timer > 0) {
         this.timer --;
     } else {
         if (this.shooting) {
             let canShoot = !this.gameState || this.gameState.requestShoot(this.weaponName, this.ammoConfig);
-            if (canShoot) {
+            if(canShoot){
                 this.processActiveWeapon();
             } else {
                 this.shotsFired = 99999;
@@ -54,15 +42,15 @@ BaseWeapon.prototype.update = function(){
     }
 };
 
-BaseWeapon.prototype.shoot = function(){
+Weapon.prototype.shoot = function(){
     this.shooting = true;
 };
 
-BaseWeapon.prototype.stopShooting = function(){
+Weapon.prototype.stopShooting = function(){
     this.shooting = false;
 };
 
-BaseWeapon.prototype.processActiveWeapon = function(){
+Weapon.prototype.processActiveWeapon = function(){
     switch (this.firingMode){
     case 'alternate':
         this.handleFiringAlternate();
@@ -77,7 +65,7 @@ BaseWeapon.prototype.processActiveWeapon = function(){
     }
 };
 
-BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
+Weapon.prototype.fireProjectile = function(firingPointConfig){
     var position = this.actor.getPosition();
     var angle = this.actor.getAngle();
     let randomAngle = Utils.degToRad(this.randomAngle);
@@ -95,9 +83,9 @@ BaseWeapon.prototype.fireProjectile = function(firingPointConfig){
             velocity: this.velocity
         });
     }    
-}; 
+};
 
-BaseWeapon.prototype.handleFiringSimultaneous = function(){
+Weapon.prototype.handleFiringSimultaneous = function(){
     this.firingPoints.forEach(this.fireProjectile.bind(this));
     this.timer += this.burstCooldown;
     this.actor.applyRecoil(this.recoil);
@@ -107,7 +95,7 @@ BaseWeapon.prototype.handleFiringSimultaneous = function(){
     }
 };
 
-BaseWeapon.prototype.handleFiringAlternate = function(){
+Weapon.prototype.handleFiringAlternate = function(){
     this.currentFiringPoint ++;
     if (this.currentFiringPoint >= this.firingPoints.length){
         this.currentFiringPoint = 0;
@@ -122,4 +110,4 @@ BaseWeapon.prototype.handleFiringAlternate = function(){
     }
 };
 
-module.exports = BaseWeapon;
+module.exports = Weapon;

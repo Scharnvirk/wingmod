@@ -15,7 +15,7 @@ module.exports = function (karma) {
         ],
         // urlRoot: '/__karma/',
         files: [
-            'lib/three77.js',
+            'lib/three84.js',
             {pattern: process.cwd() + SPEC_PATH, watched: true, included: true, served: true}
         ],
         preprocessors: {

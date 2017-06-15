@@ -13,14 +13,14 @@ function FlatHud(config){
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'e',
-            weapons: ['redlasgun', 'lasgun', 'pulsewavegun', 'emdgun']
+            weapons: ['RED_BLASTER', 'BLUE_BLASTER', 'PULSE_WAVE_GUN', 'EMD_GUN']
         }, {
             index: 1,
             rotationOffset: -90,
             switchNextKey: 'mouseLeft',
             switchPrevKey: 'mouseRight',
             activationKey: 'q',
-            weapons: ['plasmagun', 'missilelauncher', 'plasmablast', 'homingmissilelauncher'], 
+            weapons: ['PLASMA_CANNON', 'CONCUSSION_MISSILE_LAUNCHER', 'PLASMA_BLAST', 'HOMING_MISSILE_LAUNCHER'], 
             invertDirection: true
         }
     ];

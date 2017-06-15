@@ -4,6 +4,7 @@ var ShieldMesh = require('renderer/actor/component/mesh/ShieldMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var BaseActor = require('renderer/actor/BaseActor');
 var ActorConfig = require('shared/ActorConfig');
+var WeaponConfig = require('shared/WeaponConfig');
 
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
@@ -25,8 +26,8 @@ function ShipActor(){
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, 'redlasgun');
-    this.setupWeaponMeshes(1, 'plasmagun');    
+    this.setupWeaponMeshes(0, WeaponConfig.RED_BLASTER);
+    this.setupWeaponMeshes(1, WeaponConfig.PLASMA_CANNON);    
 }
 
 ShipActor.extend(BaseActor);
@@ -61,12 +62,12 @@ ShipActor.prototype.switchWeapon = function(changeConfig){
     for (let i = 0, l = this.weaponSetLocations[changeConfig.index].length; i < l; i++){
         let meshIndexLocation = (l * changeConfig.index + i) + this.protectedMeshes; //zeroth is reserved for ship
         let mesh = this.getMeshAt(meshIndexLocation);
-        mesh.geometry = ModelStore.get(changeConfig.weapon).geometry;
+        mesh.geometry = ModelStore.get(WeaponConfig[changeConfig.weapon].modelName).geometry;
         mesh.material = ModelStore.get('weaponModel').material; 
     }
 };
 
-ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, scales){
+ShipActor.prototype.setupWeaponMeshes = function(slotNumber, weaponConfig, scales){
     var defaultScale = 1;
     scales = scales || [];
 
@@ -75,13 +76,14 @@ ShipActor.prototype.setupWeaponMeshes = function(slotNumber, geometryName, scale
     }
 
     for (let i = 0, l = this.weaponSetLocations[slotNumber].length; i < l; i++){
-        var meshIndexLocation = (l * slotNumber + i) + this.protectedMeshes; //zeroth is reserved for ship
+        let meshIndexLocation = (l * slotNumber + i) + this.protectedMeshes; //zeroth is reserved for ship
+
         let mesh = new BaseMesh({
             actor: this,
             scaleX: scales[0] || defaultScale,
             scaleY: scales[1] || defaultScale,
             scaleZ: scales[2] || defaultScale,
-            geometry: ModelStore.get(geometryName).geometry,
+            geometry: ModelStore.get(weaponConfig.modelName).geometry,
             material: ModelStore.get(this.weaponMaterialName).material,
             rotationOffset: Utils.degToRad(-90),
             positionOffset:[this.weaponSetLocations[slotNumber][i][0], this.weaponSetLocations[slotNumber][i][1], this.weaponSetLocations[slotNumber][i][2]]

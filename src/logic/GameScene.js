@@ -1,4 +1,6 @@
 var ActorFactory = require('shared/ActorFactory')('logic');
+var ActorConfig = require('shared/ActorConfig');
+var EnemyConfig = require('shared/EnemyConfig');
 var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function GameScene(config){
@@ -25,10 +27,11 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.CHASER,
+    //         classId: ActorFactory.ENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('SPIDER'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0
+    //         angle: 0          
     //     });
     // }
 

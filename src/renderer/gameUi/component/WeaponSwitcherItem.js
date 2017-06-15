@@ -1,4 +1,5 @@
 var WeaponMesh = require('renderer/gameUi/WeaponMesh');
+var WeaponConfig = require('shared/WeaponConfig');
 
 function WeaponSwitcherItem(config) {    
     const props = {
@@ -26,7 +27,6 @@ function WeaponSwitcherItem(config) {
 
     Object.preventExtensions(state);    
     this.state = state;
-
     this.mesh = this._createMesh(config);
 
     this.props.scene.threeScene.add(this.mesh); 
@@ -61,11 +61,13 @@ WeaponSwitcherItem.prototype.getRotationOnArc = function() {
     return this.state.expectedRotation / this.props.angleBetweenItems;  
 };
 
-
-
 WeaponSwitcherItem.prototype._createMesh = function(){
+    if (!this.props.availableWeapons[this.state.weaponIndex]) {        
+        console.warn('invalid weapon index! Will create a default weapon mesh! Specified weapon index was: ', this.state.weaponIndex, 'but is now defaulted to 0');
+        this.state.weaponIndex = 0;
+    }
     return new WeaponMesh({
-        weaponName: this.props.availableWeapons[this.state.weaponIndex]
+        modelName: WeaponConfig[this.props.availableWeapons[this.state.weaponIndex]].modelName
     });    
 };
 

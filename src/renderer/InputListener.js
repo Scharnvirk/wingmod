@@ -54,7 +54,7 @@ function InputListener(config){
     };
 
     this.mouseMove = function (event) {
-        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.0015;
+        this.inputState.mouseRotation -= (event.movementX || event.mozMovementX || event.webkitMovementX || 0) * 0.0007;
         this.inputState.mouseY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
         this.inputState.mouseX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
     };

@@ -2,12 +2,13 @@
 global.Utils = require('shared/Utils');
 global.Constants = require('shared/Constants');
 global.EventEmitter = require('shared/EventEmitter');
+global.WeaponConfig = require('shared/WeaponConfig');
 
 const Action = require('../tools/Action');
 const ActionLoop = require('../tools/ActionLoop');
 const WeaponSwitcherItem = require('renderer/gameUi/component/WeaponSwitcherItem');
 
-let availableWeapons = ['plasmagun', 'lasgun', 'redlasgun', 'pulsewavegun', 'missilelauncher'];
+let availableWeapons = ['PLASMA_CANNON', 'BLUE_BLASTER', 'RED_BLASTER', 'PULSE_WAVE_GUN', 'CONCUSSION_MISSILE_LAUNCHER'];
 
 const switcherProps = {
     amountOfWeapons: 7,    
@@ -115,7 +116,7 @@ describe ('WeaponSwitcherItem', function() {
     });
 
     it ('does not overflow its weaponIndex on multiple rotations downwards', function() {    
-        this.switcherItem = createSwitcherItem(2, {availableWeapons: ['w1', 'w2', 'w3']});   
+        this.switcherItem = createSwitcherItem(2, {availableWeapons: ['PLASMA_CANNON', 'BLUE_BLASTER', 'RED_BLASTER']});   
 
         this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(1);                
@@ -203,7 +204,7 @@ describe ('WeaponSwitcherItem on lower overflow,', function() {
     });
 
     it ('weaponIndex is changed on overflow for two weapons', function() {    
-        this.switcherItem = createSwitcherItem(1, {rotationOnArc: 3, availableWeapons: ['w1', 'w2']});   
+        this.switcherItem = createSwitcherItem(1, {rotationOnArc: 3, availableWeapons: ['PLASMA_CANNON', 'BLUE_BLASTER']});   
 
         this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(1);                
@@ -214,7 +215,7 @@ describe ('WeaponSwitcherItem on lower overflow,', function() {
     });
 
     it ('weaponIndex is changed on overflow for even amount of weapons', function() {    
-        this.switcherItem = createSwitcherItem(3, {rotationOnArc: 3, availableWeapons: ['w1', 'w2', 'w3', 'w4']});   
+        this.switcherItem = createSwitcherItem(3, {rotationOnArc: 3, availableWeapons: ['PLASMA_CANNON', 'BLUE_BLASTER', 'RED_BLASTER', 'PULSE_WAVE_GUN']});   
 
         this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(1);                
@@ -259,7 +260,7 @@ describe ('WeaponSwitcherItem on upper overflow,', function() {
     });
 
     it ('weaponIndex is changed on overflow for two weapons', function() {    
-        this.switcherItem = createSwitcherItem(1, {rotationOnArc: -4, availableWeapons: ['w1', 'w2']});   
+        this.switcherItem = createSwitcherItem(1, {rotationOnArc: -4, availableWeapons: ['PLASMA_CANNON', 'BLUE_BLASTER']});   
 
         this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(-1);                
@@ -270,7 +271,7 @@ describe ('WeaponSwitcherItem on upper overflow,', function() {
     });
 
     it ('weaponIndex is changed on overflow for even amount of weapons', function() {    
-        this.switcherItem = createSwitcherItem(3, {rotationOnArc: -4, availableWeapons: ['w1', 'w2', 'w3', 'w4']});   
+        this.switcherItem = createSwitcherItem(3, {rotationOnArc: -4, availableWeapons: ['PLASMA_CANNON', 'BLUE_BLASTER', 'RED_BLASTER', 'PULSE_WAVE_GUN']});   
 
         this.switchItemToPrevAction = new Action( () => {
             this.switcherItem.updateRotationOnArc(-1);                

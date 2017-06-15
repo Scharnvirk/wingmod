@@ -1,5 +1,6 @@
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
+var WeaponConfig = require('shared/WeaponConfig');
 
 function WeaponMesh(config){
     BaseMesh.apply(this, arguments);
@@ -10,7 +11,7 @@ function WeaponMesh(config){
 
     Object.assign(this, config);
     this.material = ModelStore.get('hudMaterial').material;
-    this.geometry = ModelStore.get(this.weaponName).geometry;
+    this.geometry = ModelStore.get(this.modelName).geometry;
     this.visible = false;
     this.castShadow = false;
     this.receiveShadow = false;
@@ -23,7 +24,8 @@ WeaponMesh.extend(BaseMesh);
 
 WeaponMesh.prototype.setNewWeapon = function(weaponName){
     this.weaponName = weaponName;
-    this.geometry = ModelStore.get(this.weaponName).geometry;
+    this.geometry = ModelStore.get(WeaponConfig[this.weaponName].modelName).geometry;
 };
 
 module.exports = WeaponMesh;
+
