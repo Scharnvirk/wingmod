@@ -39746,7 +39746,7 @@ var WeaponConfig = {
     },
     PLASMA_BLAST: {
         projectileClass: ActorFactory.PLASMABLASTPROJECTILE,
-        cooldown: 1, //90
+        cooldown: 90,
         velocity: 200,
         sound: 'plasmabig2',
         firingMode: 'alternate',
@@ -39755,7 +39755,7 @@ var WeaponConfig = {
         name: 'PLASMA BLAST',
         modelName: 'plasmablast',
         ammoConfig: {
-            plasma: 0 //3
+            plasma: 3
         }
     },
     PLASMA_CANNON: {
