@@ -32,6 +32,7 @@ SHIELDPICKUP: 28,
 ENERGYPICKUP: 29,
 PLASMAPICKUP: 30,
 MISSILEQUADPICKUP: 31,
+WEAPONPICKUP: 32,
 
 };
 
@@ -68,6 +69,7 @@ ActorFactory.ShieldPickupActor = context === 'renderer' ? require("renderer/acto
 ActorFactory.EnergyPickupActor = context === 'renderer' ? require("renderer/actor/pickup/EnergyPickupActor") : require("logic/actor/pickup/EnergyPickupActor");
 ActorFactory.PlasmaPickupActor = context === 'renderer' ? require("renderer/actor/pickup/PlasmaPickupActor") : require("logic/actor/pickup/PlasmaPickupActor");
 ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer/actor/pickup/MissileQuadPickupActor") : require("logic/actor/pickup/MissileQuadPickupActor");
+ActorFactory.WeaponPickupActor = context === 'renderer' ? require("renderer/actor/pickup/WeaponPickupActor") : require("logic/actor/pickup/WeaponPickupActor");
 
 
     this.actorMap = {
@@ -102,6 +104,7 @@ ActorFactory.MissileQuadPickupActor = context === 'renderer' ? require("renderer
 [idMap.ENERGYPICKUP]: ActorFactory.EnergyPickupActor,
 [idMap.PLASMAPICKUP]: ActorFactory.PlasmaPickupActor,
 [idMap.MISSILEQUADPICKUP]: ActorFactory.MissileQuadPickupActor,
+[idMap.WEAPONPICKUP]: ActorFactory.WeaponPickupActor,
 
     };
 }

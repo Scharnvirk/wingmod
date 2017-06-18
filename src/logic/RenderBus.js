@@ -16,16 +16,13 @@ RenderBus.prototype.handleMessage = function(message){
         this.core.onStart(message);
         break;
     case 'aiImageDone':
-        this.core.onAiImageDone(message);
+        this.core.onAiImageDone(message); 
         break;
     case 'inputState':
         this.core.onInputState(message);
         break;
     case 'mapHitmapsLoaded':
         this.core.onMapHitmapsLoaded(message);
-        break;
-    case 'weaponSwitched':
-        this.core.onWeaponSwitched(message);
         break;
     }
 };

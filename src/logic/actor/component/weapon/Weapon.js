@@ -43,6 +43,7 @@ Weapon.prototype.update = function(){
 };
 
 Weapon.prototype.shoot = function(){
+    if (this.noneType) return;
     this.shooting = true;
 };
 

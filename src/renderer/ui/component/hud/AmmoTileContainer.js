@@ -9,12 +9,13 @@ class AmmoTileContainer extends Component {
 
         this.componentStyle = {
             background: {
-                width: '13vw',
-                height: '100%',
+                height: '10%',
                 right: '0px',
                 position: 'fixed',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'row',
+                justifyContent: 'center',
+                width: '100%'
             }
         };
 
@@ -24,14 +25,14 @@ class AmmoTileContainer extends Component {
         };
 
         this.knownAmmoTypes = [
-            'plasma', 'energy', 'rads', 'missiles'
+            'plasma', 'energy', 'missiles', 'coolant', 'rads'
         ];
     }
 
     componentWillMount() {
-        PubSub.subscribe( 'hudStateChange', (msg, data) => {
+        PubSub.subscribe( 'hudStateChange', (msg, weaponInfo) => {
             this.setState({
-                ammo: data
+                ammo: weaponInfo
             });
         });
         PubSub.subscribe( 'hudShow', () => {
@@ -43,19 +44,19 @@ class AmmoTileContainer extends Component {
 
     componentWillReceiveProps() {}
 
-    createAmmoTiles(ammoConfig) {
-        if(!ammoConfig || ammoConfig.length === 0){
+    createAmmoTiles(weaponInfo) {
+        if(!weaponInfo || weaponInfo.length === 0){
             return [];
         }
         var ammoConfigs = [];
 
-        ammoConfigs = Object.keys(ammoConfig.ammo).map(ammoType => {
+        ammoConfigs = Object.keys(weaponInfo.ammo).map(ammoType => {
             if (this.knownAmmoTypes.indexOf(ammoType) < 0) return null;
             return <AmmoTile
                 key={ammoType}
                 type={ammoType}
-                amount={Math.ceil(ammoConfig.ammo[ammoType] || 0)}
-                maxAmount={ammoConfig.ammoMax[ammoType]}
+                amount={Math.ceil(weaponInfo.ammo[ammoType] || 0)}
+                maxAmount={weaponInfo.ammoMax[ammoType]}
             />;
         });
 

@@ -1,5 +1,5 @@
 var InputMixin = {
-    _hudModifiers: ['q', 'e'],
+    _lastInputState: {},
 
     applyLookAtAngleInput: function(inputState){
         let angleForce = 0;
@@ -41,24 +41,46 @@ var InputMixin = {
     },
 
     applyWeaponInput: function(inputState){
-        let inHud = this._hudModifiers.some(element => inputState[element]);
-
-        if(!inHud){
-            if (inputState.mouseLeft){
-                this.primaryWeaponSystem.shoot();
-            } else {
-                this.primaryWeaponSystem.stopShooting();
-            }
-
-            if (inputState.mouseRight){
-                this.secondaryWeaponSystem.shoot();
-            } else {
-                this.secondaryWeaponSystem.stopShooting();
-            }
+        if (inputState.mouseLeft){
+            this.primaryWeaponSystem.shoot();
         } else {
             this.primaryWeaponSystem.stopShooting();
+        }
+
+        if (inputState.mouseRight){
+            this.secondaryWeaponSystem.shoot();
+        } else {
             this.secondaryWeaponSystem.stopShooting();
         }
+
+        if (!inputState.q && this._lastInputState.q > 0) {            
+            if (!this.secondaryWeaponSystem.isBlocked()){
+                this.secondaryWeaponSystem.switchWeaponToNext();
+            } else {
+                this.secondaryWeaponSystem.unlockWeaponSwitch();
+            }
+            
+        }
+
+        if (!inputState.e && this._lastInputState.e > 0) {
+            if (!this.primaryWeaponSystem.isBlocked()){
+                this.primaryWeaponSystem.switchWeaponToNext();
+            } else {
+                this.primaryWeaponSystem.unlockWeaponSwitch();
+            }
+        }
+
+        if (inputState.q && this._lastInputState.q > 0) {
+            this.secondaryWeaponSystem.enablePickup();
+        }
+
+        if (inputState.e && this._lastInputState.e > 0) {
+            this.primaryWeaponSystem.enablePickup();
+        }
+    },
+
+    saveLastInput: function(inputState){
+        this._lastInputState = Object.assign({}, inputState);
     }
 };
 

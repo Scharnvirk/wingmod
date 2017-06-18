@@ -16,7 +16,9 @@ class KillRow extends Component {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: '100%'                
+                width: '100%',
+                margin: '1vh',
+                background: 'linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0))'                
             },
 
             text: {
@@ -39,7 +41,8 @@ class KillRow extends Component {
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
                 width: this.enemyIconScale + 'vmin',
-                height: this.enemyIconScale + 'vmin'
+                height: this.enemyIconScale + 'vmin',
+                filter: 'grayscale(1)'
             },
 
             iconSection: {

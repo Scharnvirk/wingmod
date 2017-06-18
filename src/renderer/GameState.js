@@ -7,7 +7,11 @@ function GameState(config){
 
 GameState.prototype.update = function(newState){
     this._state = newState;
-    this._ui.updateState(newState);
+    this._ui.updateState(newState); 
+};
+
+GameState.prototype.getWeaponSystem = function(index){
+    return this._state.weaponSystems && this._state.weaponSystems[index];
 };
 
 module.exports = GameState;

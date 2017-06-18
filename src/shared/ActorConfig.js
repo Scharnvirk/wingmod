@@ -454,6 +454,22 @@ const ActorConfig = {
         }
     },
 
+    WEAPONPICKUP: {
+        props:{
+            pickup: 'weapon',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+            type: 'pickup'
+        },
+        bodyConfig: {
+            radius: 4,
+            mass: 0.000001,
+            damping: 0.65
+        }
+    },
+
     SHIELDPICKUP: {
         props:{
             pickup: 'shield',
@@ -466,7 +482,7 @@ const ActorConfig = {
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75
+            damping: 0.65
         }
     },
 
@@ -482,7 +498,7 @@ const ActorConfig = {
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75
+            damping: 0.65
         }
     },
 
@@ -498,7 +514,7 @@ const ActorConfig = {
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75
+            damping: 0.65
         }
     },
 
@@ -514,7 +530,7 @@ const ActorConfig = {
         bodyConfig: {
             radius: 4,
             mass: 0.000001,
-            damping: 0.75
+            damping: 0.65
         }
     }
 };

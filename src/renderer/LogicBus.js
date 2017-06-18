@@ -33,6 +33,9 @@ LogicBus.prototype.handleMessage = function(message){
         break;
     case 'gameStateChange':
         this.core.onGameStateChange(message);
+        break;    
+    case 'weaponSwitched':
+        this.core.onWeaponSwitched(message);
         break;
     }
 };

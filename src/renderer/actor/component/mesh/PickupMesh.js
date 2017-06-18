@@ -1,23 +1,27 @@
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
-function QuadMissileMesh(config){
+function PickupMesh(config){
     BaseMesh.apply(this, arguments);
     this.rotationOffset = Math.PI;
 
     config = config || {};
-    config.geometry = ModelStore.get('missilelauncher').geometry;
+    config.geometry = ModelStore.get(config.modelName).geometry;
     config.material = ModelStore.get('weaponModel').material;
     Object.assign(this, config);
+
+    this.scaleX = config.scale || 2;
+    this.scaleY = config.scale || 2;
+    this.scaleZ = config.scale || 2;
 
     this.spinSpeed = [0, 0, 0.05];
 
     this.castShadow = true;
 }
 
-QuadMissileMesh.extend(BaseMesh);
+PickupMesh.extend(BaseMesh);
 
-QuadMissileMesh.prototype.update = function(){
+PickupMesh.prototype.update = function(){
     let position = this.actor.getPosition();
     let rotation = this.actor.getRotation();
     if (this.actor) {
@@ -32,4 +36,4 @@ QuadMissileMesh.prototype.update = function(){
     this.customUpdate();
 };
 
-module.exports = QuadMissileMesh;
+module.exports = PickupMesh;

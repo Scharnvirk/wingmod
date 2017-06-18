@@ -1,6 +1,6 @@
 var BaseActor = require('renderer/actor/BaseActor');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
-var QuadMissileMesh = require('renderer/actor/component/mesh/QuadMissileMesh');
+var PickupMesh = require('renderer/actor/component/mesh/PickupMesh');
 
 function MissileQuadPickupActor(){
     BaseActor.apply(this, arguments);
@@ -10,7 +10,12 @@ MissileQuadPickupActor.extend(BaseActor);
 MissileQuadPickupActor.mixin(ParticleMixin);
 
 MissileQuadPickupActor.prototype.createMeshes = function(){
-    return [new QuadMissileMesh({actor: this, scaleX: 1.4, scaleY: 1.4, scaleZ: 1.4})]; 
+    return [
+        new PickupMesh({
+            actor: this,
+            modelName: 'missilelauncher'
+        })
+    ]; 
 };
 
 MissileQuadPickupActor.prototype.onDeath = function(){

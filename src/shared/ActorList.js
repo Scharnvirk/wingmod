@@ -29,7 +29,8 @@ var ActorList = [
     'actor/pickup/ShieldPickupActor',
     'actor/pickup/EnergyPickupActor',
     'actor/pickup/PlasmaPickupActor',
-    'actor/pickup/MissileQuadPickupActor'
+    'actor/pickup/MissileQuadPickupActor',
+    'actor/pickup/WeaponPickupActor',
 ];
 
 module.exports = ActorList;

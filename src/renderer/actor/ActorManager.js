@@ -4,6 +4,8 @@ function ActorManager(config){
     config = config || {};
     this.storage = Object.create(null);
 
+    this.playerActors = [];
+
     this.scene = null;
     this.framerate = config.framerate || 60;
 
@@ -11,6 +13,7 @@ function ActorManager(config){
 
     if(!this.particleManager) throw new Error('No particleManager for Renderer ActorManager!');
     if(!this.sceneManager) throw new Error('No sceneManager for Renderer ActorManager!');
+    if(!this.gameState) throw new Error('No gameState for Renderer ActorManager!');
 
     this.factory = config.factory || ActorFactory.getInstance({particleManager: this.particleManager});
     this.currentPhysicsTime = Date.now();
@@ -79,7 +82,11 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
     }
 };
 
-ActorManager.prototype.createActor = function(config){
+ActorManager.prototype.getGameState = function() {
+    return this.gameState;
+};
+
+ActorManager.prototype.createActor = function(config) {
     var actor = this.factory.create(config);
 
     this.storage[config.actorId] = actor;
@@ -87,14 +94,16 @@ ActorManager.prototype.createActor = function(config){
     actor.onSpawn();
 };
 
-ActorManager.prototype.attachPlayer = function(actor){
+ActorManager.prototype.attachPlayer = function(actor) {
     this.emit({
         type: 'playerActorAppeared',
         data: actor
     });
+
+    this.playerActors.push(actor.id);
 };
 
-ActorManager.prototype.deleteActor = function(actorId, positionX, positionY, deathType){
+ActorManager.prototype.deleteActor = function(actorId, positionX, positionY, deathType) {
     var actor = this.storage[actorId];
     if (actor){
         actor.setPosition(positionX, positionY);
@@ -104,7 +113,7 @@ ActorManager.prototype.deleteActor = function(actorId, positionX, positionY, dea
     delete this.storage[actorId];
 };
 
-ActorManager.prototype.handleActorStateChange = function(newActorStates){
+ActorManager.prototype.handleActorStateChange = function(newActorStates) {
     Object.keys(newActorStates).forEach(actorId => {
         let actor = this.storage[actorId];
         if (actor){
@@ -113,7 +122,7 @@ ActorManager.prototype.handleActorStateChange = function(newActorStates){
     });
 };
 
-ActorManager.prototype.requestUiFlash = function(flashType){
+ActorManager.prototype.requestUiFlash = function(flashType) {
     this.emit({
         type:'requestUiFlash',
         data: flashType
@@ -121,13 +130,13 @@ ActorManager.prototype.requestUiFlash = function(flashType){
 };
 
 
-ActorManager.prototype.requestShake = function(){
+ActorManager.prototype.requestShake = function() {
     this.emit({
         type:'requestShake'
     });
 };
 
-ActorManager.prototype.getEnemies = function(){
+ActorManager.prototype.getEnemies = function() {
     let enemies = [];
     Object.keys(this.storage).forEach(actorId => {
         if (this.storage[actorId].props.enemy) {
@@ -137,8 +146,22 @@ ActorManager.prototype.getEnemies = function(){
     return enemies;
 };
 
-ActorManager.prototype.getCamera = function(){
+ActorManager.prototype.getCamera = function() {
     return this.sceneManager.getCoreActiveScene().getCamera();
+};
+
+ActorManager.prototype.switchPlayerWeapons = function(changeConfig) {
+    this.playerActors.forEach(playerActorId => {
+        const playerActor = this.storage[playerActorId];
+        playerActor.switchWeapons && playerActor.switchWeapons(changeConfig);
+    });
+};
+
+ActorManager.prototype.updatePlayerWeapons = function(weaponSystemsConfig) {
+    this.playerActors.forEach(playerActorId => {
+        const playerActor = this.storage[playerActorId];
+        playerActor && playerActor.switchWeapons && playerActor.updateWeapons(weaponSystemsConfig);
+    });
 };
 
 module.exports = ActorManager;

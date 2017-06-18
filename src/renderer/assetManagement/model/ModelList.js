@@ -1,5 +1,6 @@
 var ModelList = {
     models: [
+        '/models/none.json',
         '/models/ship.json',
         '/models/ravier.json',
         '/models/ravier_gunless.json',

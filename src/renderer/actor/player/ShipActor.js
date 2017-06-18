@@ -15,7 +15,7 @@ function ShipActor(){
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[3, -3, -0], [-3, -3, -0]], [[5, 0.5, -1.45], [-5, 0.5, -1.45]]]; 
+    this.weaponSetLocations = [[[5, 0.5, -1.45], [-5, 0.5, -1.45]], [[3, -3, -0], [-3, -3, -0]]]; 
     this.targetingLinePositions = this._createTargetingLinePositions();
     this.weaponMaterialName = 'weaponModel'; 
 
@@ -26,8 +26,10 @@ function ShipActor(){
     this.targetingOffset = 0;
     this.targetingFadeFactor = 100;
 
-    this.setupWeaponMeshes(0, WeaponConfig.RED_BLASTER);
-    this.setupWeaponMeshes(1, WeaponConfig.PLASMA_CANNON);    
+    this.defaultPrimaryWeapon = 'RED_BLASTER';
+    this.defaultSecondaryWeapon = 'NONE';
+
+    this._setupWeapons();
 }
 
 ShipActor.extend(BaseActor);
@@ -58,22 +60,36 @@ ShipActor.prototype.onDeath = function(){
     this.requestShake();
 };
 
-ShipActor.prototype.switchWeapon = function(changeConfig){
-    for (let i = 0, l = this.weaponSetLocations[changeConfig.index].length; i < l; i++){
-        let meshIndexLocation = (l * changeConfig.index + i) + this.protectedMeshes; //zeroth is reserved for ship
+ShipActor.prototype.switchWeapons = function(changeConfig) {
+    for (let i = 0, l = this.weaponSetLocations[changeConfig.weaponSystemIndex].length; i < l; i++){
+        let meshIndexLocation = (l * changeConfig.weaponSystemIndex + i) + this.protectedMeshes; //zeroth is reserved for ship
         let mesh = this.getMeshAt(meshIndexLocation);
-        mesh.geometry = ModelStore.get(WeaponConfig[changeConfig.weapon].modelName).geometry;
+        mesh.geometry = ModelStore.get(WeaponConfig[changeConfig.weaponName].modelName).geometry;
         mesh.material = ModelStore.get('weaponModel').material; 
     }
 };
 
-ShipActor.prototype.setupWeaponMeshes = function(slotNumber, weaponConfig, scales){
-    var defaultScale = 1;
-    scales = scales || [];
+ShipActor.prototype.updateWeapons = function(weaponSystemsConfig) {
+    this.weaponSetLocations.forEach((weaponSetLocation, weaponSystemsConfigIndex) => {
+        weaponSetLocation.forEach((location, locationIndex) => {
+            let meshIndexLocation = (weaponSystemsConfigIndex * this.weaponSetLocations[weaponSystemsConfigIndex].length + locationIndex) + this.protectedMeshes; //zeroth is reserved for ship
+            let mesh = this.getMeshAt(meshIndexLocation);
+            const currentWeaponSystemsConfig = weaponSystemsConfig[weaponSystemsConfigIndex];
+            const weaponConfig = WeaponConfig[currentWeaponSystemsConfig.weapons[currentWeaponSystemsConfig.currentWeaponIndex]];
+            if (!weaponConfig) throw new Error('Missing weapon configuration for ' + weaponConfig);
+            mesh.geometry = ModelStore.get(weaponConfig.modelName).geometry;
+            mesh.material = ModelStore.get('weaponModel').material; 
+        });
+    }); 
+};
 
-    if (slotNumber >= this.weaponSetLocations.length){
-        throw new Error('This actor does not have a weapon slot of number', slotNumber);
-    }
+ShipActor.prototype.setupWeaponMeshes = function(slotNumber, weaponName, scales){
+    const defaultScale = 1;
+    const weaponConfig = WeaponConfig[weaponName];
+    scales = scales || [];
+    
+    if (!weaponConfig) throw new Error('Unknown weapon: ' + weaponName);
+    if (slotNumber >= this.weaponSetLocations.length) throw new Error('This actor does not have a weapon slot of number ' + slotNumber);
 
     for (let i = 0, l = this.weaponSetLocations[slotNumber].length; i < l; i++){
         let meshIndexLocation = (l * slotNumber + i) + this.protectedMeshes; //zeroth is reserved for ship
@@ -225,6 +241,14 @@ ShipActor.prototype._createTargetingLinePositions = function(){
     let targetingLinePositions = [];
     this.weaponSetLocations.forEach(weaponConfig => weaponConfig.forEach(finalWeaponConfig => targetingLinePositions.push(finalWeaponConfig)));
     return targetingLinePositions;
+};
+
+ShipActor.prototype._setupWeapons = function(){  
+    const primaryWeaponSystem = this.getManager().getGameState().getWeaponSystem(0);
+    const secondaryWeaponSystem = this.getManager().getGameState().getWeaponSystem(1);
+
+    this.setupWeaponMeshes(0, primaryWeaponSystem && primaryWeaponSystem[0] || this.defaultPrimaryWeapon );
+    this.setupWeaponMeshes(1, secondaryWeaponSystem && secondaryWeaponSystem[0] || this.defaultSecondaryWeapon );    
 };
 
 module.exports = ShipActor;

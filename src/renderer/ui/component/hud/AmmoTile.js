@@ -29,7 +29,7 @@ class AmmoTile extends Component {
 
         this.componentStyle = {
             background: {
-                width: '12.5vw',
+                width: '9vw',
                 height: '1.5vw',
                 position: 'relative',
                 margin: '0.5vw 0.5vw 0.5vw 0.5vw',

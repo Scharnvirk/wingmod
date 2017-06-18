@@ -1,6 +1,59 @@
 const ActorFactory = require('shared/ActorFactory')('renderer');
 
+const WEAPON_MAP = {
+    BLUE_BLASTER: 1,
+    EMD_GUN: 2,
+    RED_BLASTER: 3,
+    PLASMA_BLAST: 4,
+    PLASMA_CANNON: 5,
+    PULSE_WAVE_GUN: 6,
+    HOMING_MISSILE_LAUNCHER: 7,
+    CONCUSSION_MISSILE_LAUNCHER: 8,
+
+    ENEMY_HOMING_MISSILE_LAUNCHER: 9,
+    ENEMY_CONCUSSION_MISSILE_LAUNCHER: 10,
+    GREEN_BLASTER: 11,    
+    MINI_RED_BLASTER: 12,
+    MOLTEN_BALL_THROWER: 13,
+    MOLTEN_BALL_SHOTGUN: 14,
+    MOLTEN_BALL_LIGHT_THROWER: 15,
+    SLOW_PULSE_WAVE_GUN: 16,
+    PURPLE_BLASTER: 17,
+
+    NONE: 999
+};
+
+const ID_MAP = Utils.objectSwitchKeysAndValues(WEAPON_MAP);
+
+const getNameById = function(id) {
+    const className = ID_MAP[id];
+    if (!className) throw new Error('Missing weapon name for subclassId ' + id);        
+    return className;
+};
+
+const getById = function(id) {
+    const config = WeaponConfig[ID_MAP[id]];
+    if (!config) throw new Error('Missing weapon config for subclassId ' + id);        
+    return config;
+};
+
+const getSubclassIdFor = function(className) {
+    const id = WEAPON_MAP[className];
+    if (!id) throw new Error('Missing weapon config for ' + className);        
+    return id;
+};
+
 const WeaponConfig = {
+    getById: getById,
+    getNameById: getNameById,
+    getSubclassIdFor: getSubclassIdFor,
+
+    NONE: {
+        projectileClass: ActorFactory.LASERPROJECTILE,
+        noneType: true,
+        modelName: 'none',
+        name: 'EMPTY SLOT'
+    },
     BLUE_BLASTER: {
         projectileClass: ActorFactory.LASERPROJECTILE,
         cooldown: 45,
@@ -22,7 +75,7 @@ const WeaponConfig = {
         sound: 'disrupter',
         firingMode: 'alternate',
         volume: 0.8,
-        name: 'ELECTROMAGNETIC DISCHARGE RIFLE',
+        name: 'EMD RIFLE',
         modelName: 'emdgun',
         ammoConfig: {
             energy:  1.5,

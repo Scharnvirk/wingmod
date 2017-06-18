@@ -9,7 +9,7 @@ function BaseMesh(config){
     this.rotationOffset = 0;
     this.positionOffset = config.positionOffset || [0, 0, 0];
 
-    Object.assign(this, config);
+    Object.assign(this, config); 
 
     this.scale.x = config.scaleX;
     this.scale.y = config.scaleY;

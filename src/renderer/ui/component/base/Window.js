@@ -19,17 +19,17 @@ class Window extends Component {
             },
 
             topBarLeft: {
-                width: '30%',
+                width: '41%',
                 height: '0.5vmin',
-                background: 'white',
+                background: 'linear-gradient(to left, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
                 position: 'absolute'
             },
 
             topBarRight: {
-                width: '30%',
+                width: '41%',
                 height: '0.5vmin',
                 right: '0',
-                background: 'white',
+                background: 'linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
                 position: 'absolute'
             },
 
@@ -37,20 +37,20 @@ class Window extends Component {
                 width: '100%',
                 height: '0.5vmin',
                 bottom: '0',
-                background: 'white',
+                background: 'linear-gradient(to right,  rgba(255, 255, 255, 0), rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 255, 255, 0))',
                 position: 'absolute'
             },
 
             leftTopSideBar: {
                 width: '0.5vmin',
-                height: '50px',
+                height: '0px',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
                 position: 'absolute'
             },
 
             rightTopSideBar: {
                 width: '0.5vmin',
-                height: '50px',
+                height: '0px',
                 right: '0',
                 background: 'linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))',
                 position: 'absolute'                
@@ -58,7 +58,7 @@ class Window extends Component {
 
             leftBottomSideBar: {
                 width: '0.5vmin',
-                height: '50px',
+                height: '0px',
                 bottom: '0',
                 background: 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))',
                 position: 'absolute'
@@ -66,7 +66,7 @@ class Window extends Component {
 
             rightBottomSideBar: {
                 width: '0.5vmin',
-                height: '50px',
+                height: '0px',
                 right: '0',
                 bottom: '0',
                 background: 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))',
@@ -81,7 +81,8 @@ class Window extends Component {
                 top: '-4.6%',
                 backgroundImage: 'url("gfx/button_background_oneside.png")',
                 backgroundSize: 'cover',
-                position: 'absolute'   
+                position: 'absolute',
+                display: 'none'   
             },
 
             titlebackgroundRight: {
@@ -93,7 +94,8 @@ class Window extends Component {
                 backgroundImage: 'url("gfx/button_background_oneside.png")',
                 backgroundSize: 'cover',
                 transform: 'rotate(180deg)',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'
             },
 
             title: {

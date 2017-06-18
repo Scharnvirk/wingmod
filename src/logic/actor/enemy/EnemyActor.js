@@ -6,7 +6,9 @@ var WeaponConfig = require('shared/WeaponConfig');
 var EnemyConfig = require('shared/EnemyConfig');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 
-function EnemyActor(config){
+const ActorFactory = require('shared/ActorFactory')('logic');
+
+function EnemyActor(config){ 
     config = config || [];
 
     Object.assign(this, config);
@@ -53,6 +55,8 @@ EnemyActor.prototype.createWeapon = function(){
 EnemyActor.prototype.onDeath = function(){
     if (!this.props.logic.onDeath) return;
     this._handleEvent(this.props.logic.onDeath);
+
+    this._dropWeapon();
 };
 
 EnemyActor.prototype.onHit = function(){
@@ -83,6 +87,20 @@ EnemyActor.prototype._spawn = function(spawnConfig) {
             this.spawn(object);
         }
     });
+};
+
+EnemyActor.prototype._dropWeapon = function() {
+    //HAX!!! should be config property in ActorConfig... but for now...
+    if(Utils.rand(0,100) > 94){
+        this.spawn({
+            probability: 1,
+            classId: ActorFactory.WEAPONPICKUP,
+            subclassId: Utils.rand(1,8),
+            angle: [0, 360],
+            velocity: [15, 20]
+        });
+    }
+    
 };
 
 module.exports = EnemyActor;

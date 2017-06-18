@@ -13,7 +13,7 @@ function EnemySpawnerActor(config){
 }
 
 EnemySpawnerActor.extend(BaseActor);
-EnemySpawnerActor.mixin(DropMixin); 
+EnemySpawnerActor.mixin(DropMixin);
 
 EnemySpawnerActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);

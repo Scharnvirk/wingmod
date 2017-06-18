@@ -6,8 +6,6 @@ var EnemyConfig = require('shared/EnemyConfig');
 function EnemySpawnMarkerActor(config){
     Object.assign(this, config);
     BaseActor.apply(this, arguments);
-
-    this.bossSpawnRate = 180;
 }
 
 EnemySpawnMarkerActor.extend(BaseActor);

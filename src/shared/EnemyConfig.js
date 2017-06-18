@@ -75,7 +75,7 @@ const EnemyConfig = {
                             probability: 0.2,
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -161,7 +161,7 @@ const EnemyConfig = {
                             probability: 0.2,
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -248,7 +248,7 @@ const EnemyConfig = {
                             probability: 0.3,
                             classId: ActorFactory.SHIELDPICKUP,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -341,12 +341,12 @@ const EnemyConfig = {
                             classId: ActorFactory.ENERGYPICKUP,
                             probability: 0.3,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         },{
                             classId: ActorFactory.SHIELDPICKUP,
                             probability: 0.5,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -438,12 +438,12 @@ const EnemyConfig = {
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             probability: 0.8,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         },{
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             probability: 0.2,
                             angle: [0, 360],
-                            velocity: [50, 100]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -535,37 +535,37 @@ const EnemyConfig = {
                             probability: 1,
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 0.75,
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 0.5,
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 0.25,
                             classId: ActorFactory.MISSILEQUADPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 1,
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 0.66,
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         },{
                             probability: 0.33,
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [60, 120]
+                            velocity: [15, 20]
                         }
                     ],
                     sounds: {
@@ -674,7 +674,7 @@ const EnemyConfig = {
                         },{
                             classId: ActorFactory.ENERGYPICKUP,
                             angle: [0, 360],
-                            velocity: [50, 100],
+                            velocity: [15, 20],
                             probability: 0.4
                         }
                     ],
@@ -840,7 +840,7 @@ const EnemyConfig = {
                         },{
                             classId: ActorFactory.PLASMAPICKUP,
                             angle: [0, 360],
-                            velocity: [50, 100],
+                            velocity: [15, 20],
                             probability: 0.1
                         }
                     ],

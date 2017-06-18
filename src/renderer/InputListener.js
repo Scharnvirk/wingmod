@@ -38,7 +38,7 @@ function InputListener(config){
             return;
         }
         if (this.keys.hasOwnProperty(event.keyCode)) {
-            this.inputState[this.keys[event.keyCode]] = 1;
+            this.inputState[this.keys[event.keyCode]] ++;
         }
     };
 

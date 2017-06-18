@@ -19,10 +19,6 @@ function ShipActor(config){
     this.primaryWeaponSystem = this.createPrimaryWeaponSystem();
     this.secondaryWeaponSystem = this.createSecondaryWeaponSystem();
 
-    let silent = true;
-    this.primaryWeaponSystem.switchWeapon('RED_BLASTER', silent);
-    this.secondaryWeaponSystem.switchWeapon('PLASMA_CANNON', silent);
-
     BaseActor.apply(this, arguments);
 }
 
@@ -44,6 +40,7 @@ ShipActor.prototype.playerUpdate = function(inputState){
         this.applyThrustInput(inputState);
         this.applyLookAtAngleInput(inputState);
         this.applyWeaponInput(inputState);
+        this.saveLastInput(inputState);
     }
 };
 
@@ -52,32 +49,23 @@ ShipActor.prototype.createPrimaryWeaponSystem = function(){
         actor: this,
         gameState: this.gameState,
         firingPoints: [
-            {offsetAngle: -50, offsetDistance: 4, fireAngle: 0},
-            {offsetAngle: 50, offsetDistance: 4, fireAngle: 0}
-        ]
+            {offsetAngle: -40, offsetDistance: 8, fireAngle: 0},
+            {offsetAngle: 40, offsetDistance: 8 , fireAngle: 0}
+        ],
+        weaponSystemIndex: 0
     });
 };
 
 ShipActor.prototype.createSecondaryWeaponSystem = function(){
     return new WeaponSystem({
         actor: this,
-        gameState: this.gameState,
+        gameState: this.gameState,        
         firingPoints: [
-            {offsetAngle: -40, offsetDistance: 8, fireAngle: 0},
-            {offsetAngle: 40, offsetDistance: 8 , fireAngle: 0}
-        ]
+            {offsetAngle: -50, offsetDistance: 4, fireAngle: 0},
+            {offsetAngle: 50, offsetDistance: 4, fireAngle: 0}
+        ],
+        weaponSystemIndex: 1
     });
-};
-
-ShipActor.prototype.switchWeapon = function(weaponConfig){
-    switch(weaponConfig.index){
-    case 0:
-        this.primaryWeaponSystem.switchWeapon(weaponConfig.weapon);
-        break;
-    case 1:
-        this.secondaryWeaponSystem.switchWeapon(weaponConfig.weapon);
-        break;
-    }
 };
 
 ShipActor.prototype.onDeath = function(){

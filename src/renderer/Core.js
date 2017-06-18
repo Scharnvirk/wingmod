@@ -8,7 +8,6 @@ var SceneManager = require('renderer/scene/SceneManager');
 var AssetManager = require('renderer/assetManagement/assetManager.js');
 var AiImageRenderer = require('renderer/ai/AiImageRenderer');
 var Hud = require('renderer/gameUi/Hud');
-var FlatHud = require('renderer/gameUi/FlatHud');
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
 var GameState = require('renderer/GameState');
 
@@ -50,15 +49,14 @@ Core.prototype.createMainComponents = function(){
     this.sceneManager.createScene('FlatHudScene');
     this.sceneManager.get('GameScene').setup(this.configManager.config);
     
+    this.gameState = new GameState({ui: this.ui}); 
     this.activeScene = 'MainMenuScene';
     this.particleManager = new ParticleManager({sceneManager: this.sceneManager, resolutionCoefficient: 1, particleLimitMultiplier: this.particleLimitMultiplier});
-    this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager});
+    this.actorManager = new ActorManager({sceneManager: this.sceneManager, particleManager: this.particleManager, gameState: this.gameState});
     this.logicBus = new LogicBus({core: this, worker: this.logicWorker});
     this.controlsHandler = new ControlsHandler({inputListener: this.inputListener, logicBus: this.logicBus});
     this.aiImageRenderer = new AiImageRenderer();
-    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});
-    this.flatHud = new FlatHud({sceneManager: this.sceneManager, renderer: this.renderer, configManager: this.configManager});
-    this.gameState = new GameState({ui: this.ui}); 
+    this.hud = new Hud({actorManager: this.actorManager, particleManager: this.particleManager});    
 };
 
 Core.prototype.initEventHandlers = function(){
@@ -75,19 +73,15 @@ Core.prototype.initEventHandlers = function(){
     this.inputListener.on('gotPointerLock', this.onGotPointerLock.bind(this));
     this.inputListener.on('lostPointerLock', this.onLostPointerLock.bind(this));
 
-    this.controlsHandler.on('hud', this.onFlatHud.bind(this));
-
     this.actorManager.on('playerActorAppeared', this.onPlayerActorAppeared.bind(this));
     this.actorManager.on('requestUiFlash', this.onRequestUiFlash.bind(this));
     this.actorManager.on('requestShake', this.onRequestShake.bind(this));
-
-    this.flatHud.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 };
 
 Core.prototype.createRenderStatsWatcher = function(){
     var stats = new THREEx.RendererStats();
     stats.domElement.style.position = 'fixed';
-    stats.domElement.style.top = 0;
+    stats.domElement.style.top = '30%';
     stats.domElement.style['z-index'] = 999999999;
     return stats;
 };
@@ -95,7 +89,7 @@ Core.prototype.createRenderStatsWatcher = function(){
 Core.prototype.createStatsWatcher = function(){
     var stats = new Stats();
     stats.domElement.style.position = 'fixed';
-    stats.domElement.style.left = '100px';
+    stats.domElement.style.top = '20%';
     stats.domElement.style['z-index'] = 999999999;
     return stats;
 };
@@ -140,7 +134,7 @@ Core.prototype.resetRenderer = function(){
 
 Core.prototype.resetCamera = function(){
     this.sceneManager.get(this.activeScene).resetCamera();
-    this.sceneManager.get('FlatHudScene').resetCamera();
+    // this.sceneManager.get('FlatHudScene').resetCamera();
 };
 
 Core.prototype.getActiveScene = function(){
@@ -192,7 +186,7 @@ Core.prototype.render = function(){
     this.sceneManager.update();
     this.renderTicks++;
     this.sceneManager.render(this.activeScene);
-    this.flatHud.update();
+    // this.flatHud.update();
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -211,7 +205,7 @@ Core.prototype.onPlayerActorAppeared = function(event){
     var actor = event.data;
     actor.inputListener = this.inputListener;
     this.hud.onPlayerActorAppeared(actor);
-    this.flatHud.onPlayerActorAppeared(actor);
+    // this.flatHud.onPlayerActorAppeared(actor);
     this.sceneManager.get(this.activeScene).onPlayerActorAppeared(actor);
 };
 
@@ -331,12 +325,8 @@ Core.prototype.onPlaySound = function(event){
     }
 };
 
-Core.prototype.onFlatHud = function(event){
-    this.flatHud.onInput(event.data);
-};
-
 Core.prototype.onWeaponSwitched = function(event){
-    this.logicBus.postMessage('weaponSwitched', event.data);
+    this.actorManager.switchPlayerWeapons(event.data);
 };
 
 Core.prototype.onMapDone = function(event){
@@ -345,6 +335,7 @@ Core.prototype.onMapDone = function(event){
 
 Core.prototype.onGameStateChange = function(event){
     this.gameState.update(event.data);
+    this.actorManager.updatePlayerWeapons(event.data.weaponSystems);
 };
 
 module.exports = Core;

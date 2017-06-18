@@ -59,6 +59,10 @@ BaseActor.prototype.getMeshAt = function(index){
     return this._meshes[index];
 };
 
+BaseActor.prototype.getManager = function(){
+    return this._manager;
+};
+
 BaseActor.prototype.getOffsetPosition = function(distanceOffset, angleOffset){
     return Utils.rotationToVector(this._rotation + (angleOffset || 0), (distanceOffset || 0));
 };

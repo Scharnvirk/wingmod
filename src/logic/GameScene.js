@@ -1,6 +1,7 @@
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
 var EnemyConfig = require('shared/EnemyConfig');
+var WeaponConfig = require('shared/WeaponConfig');
 var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function GameScene(config){
@@ -25,10 +26,10 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // let i;
 
-    // for (i = 0; i < 1; i++){
+    // for (i = 0; i < 5; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ENEMY,
-    //         subclassId: EnemyConfig.getSubclassIdFor('SPIDER'),
+    //         classId: ActorFactory.WEAPONPICKUP,
+    //         subclassId: Utils.rand(1,8),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0          

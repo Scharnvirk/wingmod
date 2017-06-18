@@ -44,6 +44,7 @@ Core.prototype.createEventHandlers = function(){
 
     this.actorManager.on('actorStateChange', this.onActorStateChange.bind(this));
     this.actorManager.on('playSound', this.onPlaySound.bind(this));
+    this.actorManager.on('weaponSwitched', this.onWeaponSwitched.bind(this));
 
     this.gameState.on('gameStateChange', this.onGameStateChange.bind(this));
 };
@@ -143,7 +144,8 @@ Core.prototype.onPlaySound = function(event){
 };
 
 Core.prototype.onWeaponSwitched = function(event){
-    this.actorManager.switchPlayerWeapon(event.data);
+    this.renderBus.postMessage('weaponSwitched', event.data);
+    // this.actorManager.switchPlayerWeapon(event.data);
 };
 
 Core.prototype.onGameStateChange = function(event){

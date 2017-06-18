@@ -53,6 +53,7 @@ var InitialView = React.createClass({
             </FullScreenEffect>
 
             <AmmoTileContainer/>
+            <WeaponInfoContainer/>
             <MessageContainer/>
             {UIcontent}
         </div>;

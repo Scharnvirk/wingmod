@@ -124,8 +124,10 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     }
 
     if (otherActor && this.state.pickup && otherActor.state.canPickup) {
-        otherActor.handlePickup(this.state.pickup);
-        this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        const pickedUp = otherActor.handlePickup(this.state, this.subclassId);
+        if (pickedUp) {
+            this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        }        
     }
 
     this.manager.updateActorState(this);

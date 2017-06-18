@@ -65,7 +65,6 @@ ActorManager.prototype.update = function(inputState){
         }
     }
     
-
     this.sendActorStateChanges();
 };
 
@@ -126,11 +125,15 @@ ActorManager.prototype.playSound = function(config){
     }
 };
 
-ActorManager.prototype.switchPlayerWeapon = function(weaponConfig){
-    var playerActor = this.getFirstPlayerActor();
-    if (playerActor){
-        playerActor.switchWeapon(weaponConfig);
-    }
+ActorManager.prototype.onPlayerWeaponSwitched = function(weaponSystemIndex, weaponName) {
+    this.emit({
+        type: 'weaponSwitched',
+        data: {
+            weaponSystemIndex: weaponSystemIndex,
+            weaponName: weaponName
+        }
+    });
+    this.gameState.switchWeapon(weaponSystemIndex);
 };
 
 ActorManager.prototype.getActorsByType = function(type){
