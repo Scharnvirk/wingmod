@@ -10,9 +10,9 @@ function PickupMesh(config){
     config.material = ModelStore.get('weaponModel').material;
     Object.assign(this, config);
 
-    this.scaleX = config.scale || 2;
-    this.scaleY = config.scale || 2;
-    this.scaleZ = config.scale || 2;
+    this.scale.x = config.scaleX || 4;
+    this.scale.y = config.scaleY || 4;
+    this.scale.z = config.scaleZ || 4;
 
     this.spinSpeed = [0, 0, 0.05];
 

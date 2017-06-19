@@ -8,7 +8,9 @@ function ItemSpawnerActor(config){
     this.applyConfig(ActorConfig.ITEMSPAWNER);
     BaseActor.apply(this, arguments);
 
-    this.props.spawns = config.spawns || this.props.spawns;
+    this.isSpawner = true;
+
+    this.props.spawns = config.spawns || this.props.spawns; 
 
     this.state.spawnDelay = this.props.spawns && this.props.spawns.spawnedInitially ? 0 : -1;
 }

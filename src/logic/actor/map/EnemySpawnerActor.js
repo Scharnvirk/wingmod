@@ -2,7 +2,6 @@ var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
-var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function EnemySpawnerActor(config){
     Object.assign(this, config);
@@ -13,7 +12,6 @@ function EnemySpawnerActor(config){
 }
 
 EnemySpawnerActor.extend(BaseActor);
-EnemySpawnerActor.mixin(DropMixin);
 
 EnemySpawnerActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
@@ -74,7 +72,6 @@ EnemySpawnerActor.prototype.onDeath = function() {
         velocity: [50, 100]
     });
 
-    this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 

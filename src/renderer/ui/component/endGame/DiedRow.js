@@ -16,7 +16,7 @@ class DiedRow extends Component {
             },
 
             text: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '5vmin',
                 color: 'white'
             },

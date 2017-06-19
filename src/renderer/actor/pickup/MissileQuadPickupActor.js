@@ -13,7 +13,7 @@ MissileQuadPickupActor.prototype.createMeshes = function(){
     return [
         new PickupMesh({
             actor: this,
-            modelName: 'missilelauncher'
+            modelName: 'missilelauncher2'
         })
     ]; 
 };

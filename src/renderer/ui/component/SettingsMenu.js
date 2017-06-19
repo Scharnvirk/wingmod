@@ -19,7 +19,7 @@ class SettingsMenu extends Component {
                 justifyContent: 'flex-end'
             },
             settingText: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 color: '#666666',
                 textAlign: 'center',
                 letterSpacing: '0.35vmin',

@@ -20,7 +20,7 @@ var componentStyle = {
         color: 'white',
         textShadow: '1vmin 1vmin 1vmin rgba(0, 0, 0, 0.2)',
         whiteSpace: 'nowrap',
-        fontFamily: 'Oswald-Regular',
+        fontFamily: 'Oswald-ExtraLight',
         WebkitTouchCallout: 'none',
         WebkitUserSelect: 'none',
         khtmlUserSelect: 'none',

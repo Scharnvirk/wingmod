@@ -44,9 +44,10 @@ class AmmoTile extends Component {
             },
             text: {
                 position: 'absolute',
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '1.25vw',
                 right: '2.5vw',
+                marginTop: '0.2vw'
             }
         };
     }

@@ -184,8 +184,12 @@ Server.prototype.createRoutes = function(paths) {
         }.bind(this);
     }.bind(this));
 
-    routes['/fonts/Oswald-Regular.ttf'] = function(req, res) {
-        res.send(this.getFromCache('/fonts/Oswald-Regular.ttf') );
+    routes['/fonts/Oswald-ExtraLight.ttf'] = function(req, res) {
+        res.send(this.getFromCache('/fonts/Oswald-ExtraLight.ttf') );
+    }.bind(this);
+
+    routes['/fonts/Oswald-ExtraLight.ttf'] = function(req, res) {
+        res.send(this.getFromCache('/fonts/Oswald-ExtraLight.ttf') );
     }.bind(this);
 
     return routes;

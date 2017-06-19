@@ -49,8 +49,8 @@ ShipActor.prototype.createPrimaryWeaponSystem = function(){
         actor: this,
         gameState: this.gameState,
         firingPoints: [
-            {offsetAngle: -40, offsetDistance: 8, fireAngle: 0},
-            {offsetAngle: 40, offsetDistance: 8 , fireAngle: 0}
+            {offsetAngle: -40, offsetDistance: 7.5, fireAngle: 0},
+            {offsetAngle: 40, offsetDistance: 7.5 , fireAngle: 0}
         ],
         weaponSystemIndex: 0
     });

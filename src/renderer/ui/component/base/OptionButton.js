@@ -24,7 +24,7 @@ class OptionButton extends React.Component {
                 lineHeight: '6vmin',
                 fontSize: '3vmin',
                 letterSpacing: '0.5vmin',
-                fontFamily: 'Oswald-Regular'
+                fontFamily: 'Oswald-ExtraLight'
             }
         };
 

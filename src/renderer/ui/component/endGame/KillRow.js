@@ -17,12 +17,12 @@ class KillRow extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
-                margin: '1vh',
+                margin: '0.2vh',
                 background: 'linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0))'                
             },
 
             text: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '3vmin',
                 color: 'white',
                 width: '50%',
@@ -30,7 +30,7 @@ class KillRow extends Component {
             },
 
             number: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '3vmin',
                 color: 'white',
                 width: '25%'
@@ -104,8 +104,8 @@ class KillRow extends Component {
                 <div style={enemyIconStyle}></div>
             </div>
             <div style={this.componentStyle.textSection}>
-                <div style={this.componentStyle.text}>{this.props.enemyName}</div>
-                <div style={this.componentStyle.number}>{'x' + this.state.currentKillCount}</div>
+                <div style={this.componentStyle.text}>{this.props.enemyName + ' '}</div>
+                <div style={this.componentStyle.number}>{' x ' + this.state.currentKillCount}</div>
                 <div style={this.componentStyle.number}>{this.state.currentPointWorth + (this.props.header ? '' :  ' $')}</div>
             </div>
         </div>;

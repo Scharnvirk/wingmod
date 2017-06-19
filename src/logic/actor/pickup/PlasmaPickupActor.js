@@ -7,7 +7,7 @@ function PlasmaPickupActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMAPICKUP);
     BaseActor.apply(this, arguments);
-    if(this.parent){
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }

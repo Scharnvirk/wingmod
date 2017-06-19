@@ -62,12 +62,12 @@ var PickupMixin = {
             const pickupingWeaponSystemIndex = secondaryOpenSlotInfo.isOpen ? 1 : 0;
 
             let weaponIndex;
-            if (openSlotInfo.firstOpenSlot) {
+            if (openSlotInfo.forcedPickup) {
+                weaponIndex = pickupingWeaponSystem.getCurrentWeaponIndex();
+            } else if (openSlotInfo.firstOpenSlot) {
                 weaponIndex = 0;
             } else if (openSlotInfo.secondOpenSlot) {
                 weaponIndex = 1;
-            } else if (openSlotInfo.forcedPickup) {
-                weaponIndex = pickupingWeaponSystem.getCurrentWeaponIndex();
             } else {
                 this.gameState.informOfNoFreeWeaponSlots();
                 return false;
@@ -75,7 +75,10 @@ var PickupMixin = {
 
             this.gameState.replaceWeapon(pickupingWeaponSystemIndex, weaponIndex, weaponSubclassId);
             pickupingWeaponSystem.replaceWeapon(weaponIndex, weaponSubclassId);
-            pickupingWeaponSystem.blockWeaponSwitch();
+
+            if (openSlotInfo.forcedPickup) {
+                pickupingWeaponSystem.blockWeaponSwitch();
+            }
 
             return true;
         } else {

@@ -11,7 +11,7 @@ function WeaponPickupActor(config){
     this.props.weaponConfig = WeaponConfig.getById(config.subclassId);
 
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }

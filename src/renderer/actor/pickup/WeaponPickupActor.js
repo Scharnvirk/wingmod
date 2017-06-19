@@ -15,7 +15,10 @@ WeaponPickupActor.prototype.createMeshes = function(){
     return [
         new PickupMesh({
             actor: this,
-            modelName: this.modelName
+            modelName: this.modelName,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            scaleZ: 1.5,
         })
     ];
 };

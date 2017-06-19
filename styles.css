@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Oswald-Regular';
-    src: url('fonts/Oswald-Regular.ttf');
+    font-family: 'Oswald-ExtraLight';
+    src: url('fonts/Oswald-ExtraLight.ttf');
 }
 
 @font-face {
@@ -206,7 +206,7 @@
 }
 
 .Oswald{
-  font-family: 'Oswald-Regular'
+  font-family: 'Oswald-ExtraLight'
 }
 
 .titleText{
@@ -390,7 +390,7 @@
 .handle {
   font-size: 2.6vmin;
   text-align: center;
-  font-family: 'Oswald-Regular';
+  font-family: 'Oswald-ExtraLight';
   color: white;
   cursor: pointer;
   background-image: url("gfx/hex.png");

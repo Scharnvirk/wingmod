@@ -15,7 +15,7 @@ function ShipActor(){
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[5, 0.5, -1.45], [-5, 0.5, -1.45]], [[3, -3, -0], [-3, -3, -0]]]; 
+    this.weaponSetLocations = [[[5, 1.5, -1.45], [-5, 1.5, -1.45]], [[3, -2, -0], [-3, -2, -0]]];
     this.targetingLinePositions = this._createTargetingLinePositions();
     this.weaponMaterialName = 'weaponModel'; 
 

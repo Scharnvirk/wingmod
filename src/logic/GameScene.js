@@ -24,9 +24,9 @@ GameScene.prototype.fillScene = function(mapBodies){
         angle: 0
     });
 
-    // let i;
+    let i;
 
-    // for (i = 0; i < 5; i++){
+    // for (i = 0; i < 10; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.WEAPONPICKUP,
     //         subclassId: Utils.rand(1,8),

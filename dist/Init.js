@@ -22923,7 +22923,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":3,"pubsub-js":4,"renderer/Core":231,"renderer/ui/Ui":338,"shared/Constants":364,"shared/EventEmitter":366,"shared/Utils":367}],185:[function(require,module,exports){
+},{"domready":3,"pubsub-js":4,"renderer/Core":230,"renderer/ui/Ui":337,"shared/Constants":363,"shared/EventEmitter":365,"shared/Utils":366}],185:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -23212,7 +23212,7 @@ BaseActor.prototype._updateHpAndShieldOnCollision = function (otherActor, relati
 
 module.exports = BaseActor;
 
-},{"shared/ActorFactory":362}],186:[function(require,module,exports){
+},{"shared/ActorFactory":361}],186:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -23368,7 +23368,7 @@ WeaponSystem.prototype.update = function () {
 
 module.exports = WeaponSystem;
 
-},{"logic/actor/component/weapon/Weapon":191,"shared/WeaponConfig":368}],188:[function(require,module,exports){
+},{"logic/actor/component/weapon/Weapon":191,"shared/WeaponConfig":367}],188:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = require('shared/ActorTypes');
@@ -23488,7 +23488,7 @@ BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
 
 module.exports = BaseBrain;
 
-},{"shared/ActorTypes":363}],189:[function(require,module,exports){
+},{"shared/ActorTypes":362}],189:[function(require,module,exports){
 'use strict';
 
 var BaseBrain = require('logic/actor/component/ai/BaseBrain');
@@ -24134,7 +24134,7 @@ EnemyActor.prototype._dropWeapon = function () {
 
 module.exports = EnemyActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/ai/MookBrain":189,"logic/actor/component/body/BaseBody":190,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":196,"shared/ActorFactory":362,"shared/EnemyConfig":365,"shared/WeaponConfig":368}],193:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/ai/MookBrain":189,"logic/actor/component/body/BaseBody":190,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":196,"shared/ActorFactory":361,"shared/EnemyConfig":364,"shared/WeaponConfig":367}],193:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -24145,8 +24145,6 @@ var EnemyConfig = require('shared/EnemyConfig');
 function EnemySpawnMarkerActor(config) {
     Object.assign(this, config);
     BaseActor.apply(this, arguments);
-
-    this.bossSpawnRate = 180;
 }
 
 EnemySpawnMarkerActor.extend(BaseActor);
@@ -24187,14 +24185,13 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorFactory":362,"shared/EnemyConfig":365}],194:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorFactory":361,"shared/EnemyConfig":364}],194:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
-var DropMixin = require('logic/actor/mixin/DropMixin');
 
 function EnemySpawnerActor(config) {
     Object.assign(this, config);
@@ -24205,7 +24202,6 @@ function EnemySpawnerActor(config) {
 }
 
 EnemySpawnerActor.extend(BaseActor);
-EnemySpawnerActor.mixin(DropMixin);
 
 EnemySpawnerActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
@@ -24266,7 +24262,6 @@ EnemySpawnerActor.prototype.onDeath = function () {
         velocity: [50, 100]
     });
 
-    this.handleDrops();
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 };
 
@@ -24313,7 +24308,7 @@ EnemySpawnerActor.prototype._getNextSpawn = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/DropMixin":197,"shared/ActorConfig":361,"shared/ActorFactory":362}],195:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/ActorFactory":361}],195:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -24325,6 +24320,8 @@ function ItemSpawnerActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.ITEMSPAWNER);
     BaseActor.apply(this, arguments);
+
+    this.isSpawner = true;
 
     this.props.spawns = config.spawns || this.props.spawns;
 
@@ -24365,7 +24362,7 @@ ItemSpawnerActor.prototype.onPickupTaken = function () {
 
 module.exports = ItemSpawnerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361,"shared/ActorFactory":362}],196:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/ActorFactory":361}],196:[function(require,module,exports){
 "use strict";
 
 var BrainMixin = {
@@ -24410,31 +24407,6 @@ var BrainMixin = {
 module.exports = BrainMixin;
 
 },{}],197:[function(require,module,exports){
-'use strict';
-
-var ActorFactory = require('shared/ActorFactory')('logic');
-
-var DropMixin = {
-    handleDrops: function handleDrops(dropConfig) {
-        var _this = this;
-
-        if (!(dropConfig instanceof Array)) return;
-
-        dropConfig.forEach(function (drop) {
-            _this.spawn({
-                amount: drop.amount || 1,
-                probability: drop.probability || 1,
-                classId: ActorFactory[drop.class],
-                angle: [0, 360],
-                velocity: [50, 100]
-            });
-        });
-    }
-};
-
-module.exports = DropMixin;
-
-},{"shared/ActorFactory":362}],198:[function(require,module,exports){
 "use strict";
 
 var HomingMixin = {
@@ -24569,7 +24541,7 @@ var HomingMixin = {
 
 module.exports = HomingMixin;
 
-},{}],199:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 "use strict";
 
 var InputMixin = {
@@ -24659,7 +24631,7 @@ var InputMixin = {
 
 module.exports = InputMixin;
 
-},{}],200:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 'use strict';
 
 var PickupMixin = {
@@ -24731,12 +24703,12 @@ var PickupMixin = {
             var pickupingWeaponSystemIndex = secondaryOpenSlotInfo.isOpen ? 1 : 0;
 
             var weaponIndex = void 0;
-            if (openSlotInfo.firstOpenSlot) {
+            if (openSlotInfo.forcedPickup) {
+                weaponIndex = pickupingWeaponSystem.getCurrentWeaponIndex();
+            } else if (openSlotInfo.firstOpenSlot) {
                 weaponIndex = 0;
             } else if (openSlotInfo.secondOpenSlot) {
                 weaponIndex = 1;
-            } else if (openSlotInfo.forcedPickup) {
-                weaponIndex = pickupingWeaponSystem.getCurrentWeaponIndex();
             } else {
                 this.gameState.informOfNoFreeWeaponSlots();
                 return false;
@@ -24744,7 +24716,10 @@ var PickupMixin = {
 
             this.gameState.replaceWeapon(pickupingWeaponSystemIndex, weaponIndex, weaponSubclassId);
             pickupingWeaponSystem.replaceWeapon(weaponIndex, weaponSubclassId);
-            pickupingWeaponSystem.blockWeaponSwitch();
+
+            if (openSlotInfo.forcedPickup) {
+                pickupingWeaponSystem.blockWeaponSwitch();
+            }
 
             return true;
         } else {
@@ -24756,7 +24731,7 @@ var PickupMixin = {
 
 module.exports = PickupMixin;
 
-},{}],201:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require('logic/actor/object/ChunkActor');
@@ -24786,7 +24761,7 @@ BoomChunkActor.prototype.onTimeout = function () {
 
 module.exports = BoomChunkActor;
 
-},{"logic/actor/object/ChunkActor":202,"shared/ActorConfig":361,"shared/ActorFactory":362}],202:[function(require,module,exports){
+},{"logic/actor/object/ChunkActor":201,"shared/ActorConfig":360,"shared/ActorFactory":361}],201:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24818,7 +24793,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],203:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],202:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24840,7 +24815,7 @@ ExplosionActor.prototype.createBody = function () {
 
 module.exports = ExplosionActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],204:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],203:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24862,7 +24837,7 @@ SmallExplosionActor.prototype.createBody = function () {
 
 module.exports = SmallExplosionActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],205:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],204:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24874,7 +24849,7 @@ function EnergyPickupActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.ENERGYPICKUP);
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }
@@ -24893,7 +24868,7 @@ EnergyPickupActor.prototype.onDeath = function () {
 
 module.exports = EnergyPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],206:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],205:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24905,7 +24880,7 @@ function MissileQuadPickupActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.MISSILEQUADPICKUP);
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }
@@ -24924,7 +24899,7 @@ MissileQuadPickupActor.prototype.onDeath = function () {
 
 module.exports = MissileQuadPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],207:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],206:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24936,7 +24911,7 @@ function PlasmaPickupActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMAPICKUP);
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }
@@ -24955,7 +24930,7 @@ PlasmaPickupActor.prototype.onDeath = function () {
 
 module.exports = PlasmaPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],208:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],207:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24967,7 +24942,7 @@ function ShieldPickupActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.SHIELDPICKUP);
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }
@@ -24986,7 +24961,7 @@ ShieldPickupActor.prototype.onDeath = function () {
 
 module.exports = ShieldPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],209:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],208:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25002,7 +24977,7 @@ function WeaponPickupActor(config) {
     this.props.weaponConfig = WeaponConfig.getById(config.subclassId);
 
     BaseActor.apply(this, arguments);
-    if (this.parent) {
+    if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
 }
@@ -25021,7 +24996,7 @@ WeaponPickupActor.prototype.onDeath = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361,"shared/WeaponConfig":368}],210:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/WeaponConfig":367}],209:[function(require,module,exports){
 'use strict';
 
 var ShipActor = require('logic/actor/player/ShipActor');
@@ -25070,7 +25045,7 @@ DemoShipActor.prototype.createWeapon = function () {
 
 module.exports = DemoShipActor;
 
-},{"logic/actor/component/ai/MookBrain":189,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":196,"logic/actor/player/ShipActor":211,"shared/ActorConfig":361,"shared/ActorTypes":363}],211:[function(require,module,exports){
+},{"logic/actor/component/ai/MookBrain":189,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":196,"logic/actor/player/ShipActor":210,"shared/ActorConfig":360,"shared/ActorTypes":362}],210:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25123,7 +25098,7 @@ ShipActor.prototype.createPrimaryWeaponSystem = function () {
     return new WeaponSystem({
         actor: this,
         gameState: this.gameState,
-        firingPoints: [{ offsetAngle: -40, offsetDistance: 8, fireAngle: 0 }, { offsetAngle: 40, offsetDistance: 8, fireAngle: 0 }],
+        firingPoints: [{ offsetAngle: -40, offsetDistance: 7.5, fireAngle: 0 }, { offsetAngle: 40, offsetDistance: 7.5, fireAngle: 0 }],
         weaponSystemIndex: 0
     });
 };
@@ -25171,7 +25146,7 @@ ShipActor.prototype.onHit = function (shielded) {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/WeaponSystem":187,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/InputMixin":199,"logic/actor/mixin/PickupMixin":200,"shared/ActorConfig":361,"shared/ActorFactory":362}],212:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/WeaponSystem":187,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/InputMixin":198,"logic/actor/mixin/PickupMixin":199,"shared/ActorConfig":360,"shared/ActorFactory":361}],211:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25204,7 +25179,7 @@ ConcsnMissileActor.prototype.onDeath = function () {
 
 module.exports = ConcsnMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361,"shared/ActorFactory":362}],213:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/ActorFactory":361}],212:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25232,7 +25207,7 @@ EmdProjectileActor.prototype.customUpdate = function () {
 
 module.exports = EmdProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":361}],214:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":197,"shared/ActorConfig":360}],213:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25265,7 +25240,7 @@ EnemyConcsnMissileActor.prototype.onDeath = function () {
 
 module.exports = EnemyConcsnMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361,"shared/ActorFactory":362}],215:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/ActorFactory":361}],214:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25304,7 +25279,7 @@ EnemyHomingMissileActor.prototype.onDeath = function () {
 
 module.exports = EnemyHomingMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":361,"shared/ActorFactory":362}],216:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":197,"shared/ActorConfig":360,"shared/ActorFactory":361}],215:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25326,7 +25301,7 @@ GreenLaserProjectileActor.prototype.createBody = function () {
 
 module.exports = GreenLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],217:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],216:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25365,7 +25340,7 @@ HomingMissileActor.prototype.onDeath = function () {
 
 module.exports = HomingMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":361,"shared/ActorFactory":362}],218:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":197,"shared/ActorConfig":360,"shared/ActorFactory":361}],217:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25387,7 +25362,7 @@ LaserProjectileActor.prototype.createBody = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],219:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],218:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25409,7 +25384,7 @@ MoltenProjectileActor.prototype.createBody = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],220:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],219:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25431,7 +25406,7 @@ PlasmaBlastMiniProjectile.prototype.createBody = function () {
 
 module.exports = PlasmaBlastMiniProjectile;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],221:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],220:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25473,7 +25448,7 @@ PlasmaBlastProjectileActor.prototype._explode = function () {
 
 module.exports = PlasmaBlastProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361,"shared/ActorFactory":362}],222:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360,"shared/ActorFactory":361}],221:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25495,7 +25470,7 @@ PlasmaProjectileActor.prototype.createBody = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],223:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],222:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25522,7 +25497,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
 
 module.exports = PulseWaveProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],224:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],223:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25544,7 +25519,7 @@ PurpleLaserProjectileActor.prototype.createBody = function () {
 
 module.exports = PurpleLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],225:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],224:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25566,7 +25541,7 @@ RedLaserEnemyProjectileActor.prototype.createBody = function () {
 
 module.exports = RedLaserEnemyProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],226:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],225:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25588,7 +25563,7 @@ RedLaserProjectileActor.prototype.createBody = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],227:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],226:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25615,7 +25590,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
 module.exports = RingProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":361}],228:[function(require,module,exports){
+},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":360}],227:[function(require,module,exports){
 'use strict';
 
 function Camera(config) {
@@ -25694,7 +25669,7 @@ Camera.prototype.setRenderDistance = function (renderDistance) {
 
 module.exports = Camera;
 
-},{}],229:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
 var sprintf = require('sprintf');
@@ -25801,7 +25776,7 @@ ConfigManager.prototype.saveRenderDistance = function (value) {
 
 module.exports = ConfigManager;
 
-},{"sprintf":183}],230:[function(require,module,exports){
+},{"sprintf":183}],229:[function(require,module,exports){
 'use strict';
 
 function ControlsHandler(config) {
@@ -25864,7 +25839,7 @@ ControlsHandler.prototype.sendUpdate = function () {
 
 module.exports = ControlsHandler;
 
-},{}],231:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 
 var ConfigManager = require('renderer/ConfigManager');
@@ -26212,7 +26187,7 @@ Core.prototype.onGameStateChange = function (event) {
 
 module.exports = Core;
 
-},{"renderer/ConfigManager":229,"renderer/ControlsHandler":230,"renderer/GameState":232,"renderer/InputListener":233,"renderer/LogicBus":234,"renderer/actor/ActorManager":235,"renderer/ai/AiImageRenderer":280,"renderer/assetManagement/assetManager.js":281,"renderer/assetManagement/level/ChunkStore":284,"renderer/gameUi/Hud":292,"renderer/particleSystem/ParticleManager":297,"renderer/scene/SceneManager":335}],232:[function(require,module,exports){
+},{"renderer/ConfigManager":228,"renderer/ControlsHandler":229,"renderer/GameState":231,"renderer/InputListener":232,"renderer/LogicBus":233,"renderer/actor/ActorManager":234,"renderer/ai/AiImageRenderer":279,"renderer/assetManagement/assetManager.js":280,"renderer/assetManagement/level/ChunkStore":283,"renderer/gameUi/Hud":291,"renderer/particleSystem/ParticleManager":296,"renderer/scene/SceneManager":334}],231:[function(require,module,exports){
 'use strict';
 
 function GameState(config) {
@@ -26233,7 +26208,7 @@ GameState.prototype.getWeaponSystem = function (index) {
 
 module.exports = GameState;
 
-},{}],233:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 
 function InputListener(config) {
@@ -26440,7 +26415,7 @@ InputListener.prototype.initPointerLock = function () {
 
 module.exports = InputListener;
 
-},{}],234:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 'use strict';
 
 var WorkerBus = require('shared/WorkerBus');
@@ -26487,7 +26462,7 @@ LogicBus.prototype.handleMessage = function (message) {
 
 module.exports = LogicBus;
 
-},{"shared/WorkerBus":369}],235:[function(require,module,exports){
+},{"shared/WorkerBus":368}],234:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -26665,7 +26640,7 @@ ActorManager.prototype.updatePlayerWeapons = function (weaponSystemsConfig) {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":362}],236:[function(require,module,exports){
+},{"shared/ActorFactory":361}],235:[function(require,module,exports){
 'use strict';
 
 var BaseStateChangeHandler = require('renderer/actor/component/stateChangeHandler/BaseStateChangeHandler');
@@ -26847,7 +26822,7 @@ BaseActor.prototype._createState = function (state) {
 
 module.exports = BaseActor;
 
-},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":245}],237:[function(require,module,exports){
+},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":244}],236:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -26878,7 +26853,7 @@ DebugActor.prototype.customUpdate = function () {
 
 module.exports = DebugActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],238:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],237:[function(require,module,exports){
 'use strict';
 
 function BaseMesh(config) {
@@ -26921,7 +26896,7 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],239:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -26943,7 +26918,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],240:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],239:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -26965,7 +26940,7 @@ MissileMesh.extend(BaseMesh);
 
 module.exports = MissileMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],241:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],240:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -26980,9 +26955,9 @@ function PickupMesh(config) {
     config.material = ModelStore.get('weaponModel').material;
     Object.assign(this, config);
 
-    this.scaleX = config.scale || 2;
-    this.scaleY = config.scale || 2;
-    this.scaleZ = config.scale || 2;
+    this.scale.x = config.scaleX || 4;
+    this.scale.y = config.scaleY || 4;
+    this.scale.z = config.scaleZ || 4;
 
     this.spinSpeed = [0, 0, 0.05];
 
@@ -27008,7 +26983,7 @@ PickupMesh.prototype.update = function () {
 
 module.exports = PickupMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],242:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],241:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27030,7 +27005,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],243:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],242:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27157,7 +27132,7 @@ ShieldMesh.prototype._createFragmentShader = function () {
 
 module.exports = ShieldMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],244:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],243:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27178,7 +27153,7 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],245:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],244:[function(require,module,exports){
 "use strict";
 
 function BaseStateChangeHandler(config) {
@@ -27196,7 +27171,7 @@ BaseStateChangeHandler.prototype.customUpdate = function () {};
 
 module.exports = BaseStateChangeHandler;
 
-},{}],246:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
@@ -27257,7 +27232,7 @@ EnemyActor.prototype.onDeath = function () {
 
 module.exports = EnemyActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/ShipMesh":244,"renderer/actor/mixin/BobMixin":250,"renderer/actor/mixin/ParticleMixin":251,"renderer/actor/mixin/ShowDamageMixin":252,"renderer/assetManagement/model/ModelStore":289,"shared/EnemyConfig":365}],247:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/ShipMesh":243,"renderer/actor/mixin/BobMixin":249,"renderer/actor/mixin/ParticleMixin":250,"renderer/actor/mixin/ShowDamageMixin":251,"renderer/assetManagement/model/ModelStore":288,"shared/EnemyConfig":364}],246:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27339,7 +27314,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],248:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],247:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27481,7 +27456,7 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/BaseMesh":238,"renderer/actor/component/mesh/ShieldMesh":243,"renderer/actor/mixin/ParticleMixin":251,"renderer/assetManagement/model/ModelStore":289,"shared/ActorConfig":361}],249:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/BaseMesh":237,"renderer/actor/component/mesh/ShieldMesh":242,"renderer/actor/mixin/ParticleMixin":250,"renderer/assetManagement/model/ModelStore":288,"shared/ActorConfig":360}],248:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27494,7 +27469,7 @@ ItemSpawnerActor.extend(BaseActor);
 
 module.exports = ItemSpawnerActor;
 
-},{"renderer/actor/BaseActor":236}],250:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235}],249:[function(require,module,exports){
 "use strict";
 
 var BobMixin = {
@@ -27515,7 +27490,7 @@ var BobMixin = {
 
 module.exports = BobMixin;
 
-},{}],251:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 'use strict';
 
 var ParticleMixin = {
@@ -27549,7 +27524,7 @@ var ParticleMixin = {
 
 module.exports = ParticleMixin;
 
-},{}],252:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 'use strict';
 
 var ShowDamageMixin = {
@@ -27579,7 +27554,7 @@ var ShowDamageMixin = {
 
 module.exports = ShowDamageMixin;
 
-},{}],253:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require('renderer/actor/object/ChunkActor');
@@ -27600,7 +27575,7 @@ BoomChunkActor.prototype.onTimeout = function () {
 
 module.exports = BoomChunkActor;
 
-},{"renderer/actor/mixin/ParticleMixin":251,"renderer/actor/object/ChunkActor":254}],254:[function(require,module,exports){
+},{"renderer/actor/mixin/ParticleMixin":250,"renderer/actor/object/ChunkActor":253}],253:[function(require,module,exports){
 'use strict';
 
 var ChunkMesh = require('renderer/actor/component/mesh/ChunkMesh');
@@ -27654,7 +27629,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/ChunkMesh":239,"renderer/actor/mixin/ParticleMixin":251}],255:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/ChunkMesh":238,"renderer/actor/mixin/ParticleMixin":250}],254:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27669,7 +27644,7 @@ ExplosionActor.mixin(ParticleMixin);
 
 module.exports = ExplosionActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],256:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],255:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27684,7 +27659,7 @@ SmallExplosionActor.mixin(ParticleMixin);
 
 module.exports = SmallExplosionActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],257:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],256:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27717,7 +27692,7 @@ EnergyPickupActor.prototype.customUpdate = function () {
 
 module.exports = EnergyPickupActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],258:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],257:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27734,7 +27709,7 @@ MissileQuadPickupActor.mixin(ParticleMixin);
 MissileQuadPickupActor.prototype.createMeshes = function () {
     return [new PickupMesh({
         actor: this,
-        modelName: 'missilelauncher'
+        modelName: 'missilelauncher2'
     })];
 };
 
@@ -27758,7 +27733,7 @@ MissileQuadPickupActor.prototype.customUpdate = function () {
 
 module.exports = MissileQuadPickupActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/PickupMesh":241,"renderer/actor/mixin/ParticleMixin":251}],259:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/PickupMesh":240,"renderer/actor/mixin/ParticleMixin":250}],258:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27791,7 +27766,7 @@ PlasmaPickupActor.prototype.customUpdate = function () {
 
 module.exports = PlasmaPickupActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],260:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],259:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27824,7 +27799,7 @@ ShieldPickupActor.prototype.customUpdate = function () {
 
 module.exports = ShieldPickupActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],261:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],260:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27843,7 +27818,10 @@ WeaponPickupActor.mixin(ParticleMixin);
 WeaponPickupActor.prototype.createMeshes = function () {
     return [new PickupMesh({
         actor: this,
-        modelName: this.modelName
+        modelName: this.modelName,
+        scaleX: 1.5,
+        scaleY: 1.5,
+        scaleZ: 1.5
     })];
 };
 
@@ -27867,7 +27845,7 @@ WeaponPickupActor.prototype.customUpdate = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/PickupMesh":241,"renderer/actor/mixin/ParticleMixin":251,"shared/WeaponConfig":368}],262:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/PickupMesh":240,"renderer/actor/mixin/ParticleMixin":250,"shared/WeaponConfig":367}],261:[function(require,module,exports){
 'use strict';
 
 var ActorConfig = require('shared/ActorConfig');
@@ -27882,7 +27860,7 @@ DemoShipActor.extend(ShipActor);
 
 module.exports = DemoShipActor;
 
-},{"renderer/actor/player/ShipActor":263,"shared/ActorConfig":361}],263:[function(require,module,exports){
+},{"renderer/actor/player/ShipActor":262,"shared/ActorConfig":360}],262:[function(require,module,exports){
 'use strict';
 
 var RavierMesh = require('renderer/actor/component/mesh/RavierMesh');
@@ -27902,7 +27880,7 @@ function ShipActor() {
     BaseActor.apply(this, arguments);
 
     this.count = 0;
-    this.weaponSetLocations = [[[5, 0.5, -1.45], [-5, 0.5, -1.45]], [[3, -3, -0], [-3, -3, -0]]];
+    this.weaponSetLocations = [[[5, 1.5, -1.45], [-5, 1.5, -1.45]], [[3, -2, -0], [-3, -2, -0]]];
     this.targetingLinePositions = this._createTargetingLinePositions();
     this.weaponMaterialName = 'weaponModel';
 
@@ -28145,7 +28123,7 @@ ShipActor.prototype._setupWeapons = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/BaseMesh":238,"renderer/actor/component/mesh/RavierMesh":242,"renderer/actor/component/mesh/ShieldMesh":243,"renderer/actor/mixin/BobMixin":250,"renderer/actor/mixin/ParticleMixin":251,"renderer/actor/mixin/ShowDamageMixin":252,"renderer/assetManagement/model/ModelStore":289,"shared/ActorConfig":361,"shared/WeaponConfig":368}],264:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/BaseMesh":237,"renderer/actor/component/mesh/RavierMesh":241,"renderer/actor/component/mesh/ShieldMesh":242,"renderer/actor/mixin/BobMixin":249,"renderer/actor/mixin/ParticleMixin":250,"renderer/actor/mixin/ShowDamageMixin":251,"renderer/assetManagement/model/ModelStore":288,"shared/ActorConfig":360,"shared/WeaponConfig":367}],263:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28220,7 +28198,7 @@ ConcsnMissileActor.prototype.onSpawn = function () {
 
 module.exports = ConcsnMissileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/MissileMesh":240,"renderer/actor/mixin/ParticleMixin":251}],265:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/MissileMesh":239,"renderer/actor/mixin/ParticleMixin":250}],264:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28280,7 +28258,7 @@ EmdProjectileActor.prototype.onSpawn = function () {
 
 module.exports = EmdProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],266:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],265:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28355,7 +28333,7 @@ EnemyConcsnMissileActor.prototype.onSpawn = function () {
 
 module.exports = EnemyConcsnMissileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/MissileMesh":240,"renderer/actor/mixin/ParticleMixin":251}],267:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/MissileMesh":239,"renderer/actor/mixin/ParticleMixin":250}],266:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28442,7 +28420,7 @@ EnemyHomingMissileActor.prototype.onSpawn = function () {
 
 module.exports = EnemyHomingMissileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/MissileMesh":240,"renderer/actor/mixin/ParticleMixin":251}],268:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/MissileMesh":239,"renderer/actor/mixin/ParticleMixin":250}],267:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28502,7 +28480,7 @@ GreenLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = GreenLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],269:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],268:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28589,7 +28567,7 @@ HomingMissileActor.prototype.onSpawn = function () {
 
 module.exports = HomingMissileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/component/mesh/MissileMesh":240,"renderer/actor/mixin/ParticleMixin":251}],270:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/component/mesh/MissileMesh":239,"renderer/actor/mixin/ParticleMixin":250}],269:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28634,7 +28612,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],271:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],270:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28680,7 +28658,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],272:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],271:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28709,7 +28687,7 @@ PlasmaBlastMiniProjectileActor.prototype.onTimeout = function () {
 
 module.exports = PlasmaBlastMiniProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],273:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],272:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28779,7 +28757,7 @@ PlasmaBlastProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaBlastProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],274:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],273:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28839,7 +28817,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],275:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],274:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28967,7 +28945,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PulseWaveProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251,"shared/ActorConfig":361}],276:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250,"shared/ActorConfig":360}],275:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29012,7 +28990,7 @@ PurpleLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PurpleLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],277:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],276:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29057,7 +29035,7 @@ RedLaserEnemyProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserEnemyProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],278:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],277:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29102,7 +29080,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251}],279:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250}],278:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29233,7 +29211,7 @@ RingProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RingProjectileActor;
 
-},{"renderer/actor/BaseActor":236,"renderer/actor/mixin/ParticleMixin":251,"shared/ActorConfig":361}],280:[function(require,module,exports){
+},{"renderer/actor/BaseActor":235,"renderer/actor/mixin/ParticleMixin":250,"shared/ActorConfig":360}],279:[function(require,module,exports){
 'use strict';
 
 function AiImageRenderer() {
@@ -29351,7 +29329,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
 
 module.exports = AiImageRenderer;
 
-},{}],281:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 'use strict';
 
 var ModelLoader = require('renderer/assetManagement/model/ModelLoader');
@@ -29431,7 +29409,7 @@ AssetManager.prototype.chunksLoaded = function (event) {
 
 module.exports = AssetManager;
 
-},{"renderer/assetManagement/level/ChunkList":282,"renderer/assetManagement/level/ChunkLoader":283,"renderer/assetManagement/level/ChunkStore":284,"renderer/assetManagement/model/CustomModelCreator":286,"renderer/assetManagement/model/ModelList":287,"renderer/assetManagement/model/ModelLoader":288,"renderer/assetManagement/model/ModelStore":289,"renderer/assetManagement/sound/SoundLoader":290}],282:[function(require,module,exports){
+},{"renderer/assetManagement/level/ChunkList":281,"renderer/assetManagement/level/ChunkLoader":282,"renderer/assetManagement/level/ChunkStore":283,"renderer/assetManagement/model/CustomModelCreator":285,"renderer/assetManagement/model/ModelList":286,"renderer/assetManagement/model/ModelLoader":287,"renderer/assetManagement/model/ModelStore":288,"renderer/assetManagement/sound/SoundLoader":289}],281:[function(require,module,exports){
 'use strict';
 
 var levelPath = '/models/levels';
@@ -29458,7 +29436,7 @@ var ChunkList = {
 
 module.exports = ChunkList;
 
-},{}],283:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 'use strict';
 
 var HitmapLoader = require('renderer/assetManagement/level/HitmapLoader');
@@ -29525,7 +29503,7 @@ ChunkLoader.prototype.getModelName = function (path) {
 
 module.exports = ChunkLoader;
 
-},{"renderer/assetManagement/level/HitmapLoader":285}],284:[function(require,module,exports){
+},{"renderer/assetManagement/level/HitmapLoader":284}],283:[function(require,module,exports){
 "use strict";
 
 var ChunkStore = {
@@ -29568,7 +29546,7 @@ var ChunkStore = {
 
 module.exports = ChunkStore;
 
-},{}],285:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 "use strict";
 
 function HitmapLoader() {
@@ -29700,7 +29678,7 @@ HitmapLoader.prototype.addVerticesToFaces = function (vertices, faces) {
 
 module.exports = HitmapLoader;
 
-},{}],286:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 'use strict';
 
 function CustomModelCreator() {
@@ -29779,16 +29757,16 @@ CustomModelCreator.prototype.clearBatch = function () {
 
 module.exports = CustomModelCreator;
 
-},{}],287:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 'use strict';
 
 var ModelList = {
-    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/emdgun.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/missilelauncher.json', '/models/homingmissilelauncher.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json']
+    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/emdgun.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/missilelauncher.json', '/models/missilelauncher2.json', '/models/homingmissilelauncher.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json']
 };
 
 module.exports = ModelList;
 
-},{}],288:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 'use strict';
 
 function ModelLoader() {
@@ -29841,7 +29819,7 @@ ModelLoader.prototype.getDefaultTexturePath = function (path) {
 
 module.exports = ModelLoader;
 
-},{}],289:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 "use strict";
 
 var ModelStore = {
@@ -29877,7 +29855,7 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],290:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 'use strict';
 
 function SoundLoader(config) {
@@ -29927,7 +29905,7 @@ SoundLoader.prototype.loadSounds = function () {
 
 module.exports = SoundLoader;
 
-},{}],291:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 'use strict';
 
 function FlatHudCamera(config) {
@@ -29956,7 +29934,7 @@ FlatHudCamera.prototype.update = function () {};
 
 module.exports = FlatHudCamera;
 
-},{}],292:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 'use strict';
 
 function Hud(config) {
@@ -30134,7 +30112,7 @@ Hud.prototype.drawShieldBarPlayer = function () {
 
 module.exports = Hud;
 
-},{}],293:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 'use strict';
 
 function ChunkMesh(config) {
@@ -30173,7 +30151,7 @@ ChunkMesh.prototype.setRotation = function (rotation) {
 
 module.exports = ChunkMesh;
 
-},{}],294:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 'use strict';
 
 function FlatHudParticleGenerator(config) {
@@ -30283,7 +30261,7 @@ FlatHudParticleGenerator.prototype.updateResolutionCoefficient = function (resol
 
 module.exports = FlatHudParticleGenerator;
 
-},{}],295:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 'use strict';
 
 var ParticleShaders = require('renderer/particleSystem/ParticleShaders');
@@ -30421,7 +30399,7 @@ ParticleConfigCreator.prototype.createPremades = function () {
 
 module.exports = ParticleConfigCreator;
 
-},{"renderer/particleSystem/ParticleShaders":298,"renderer/particleSystem/premade/BlueBoom":299,"renderer/particleSystem/premade/BlueLaserTrail":300,"renderer/particleSystem/premade/BlueSparks":301,"renderer/particleSystem/premade/EmdTrail":302,"renderer/particleSystem/premade/EnergyPickup":303,"renderer/particleSystem/premade/EngineGlowMedium":304,"renderer/particleSystem/premade/EngineGlowSmall":305,"renderer/particleSystem/premade/GreenBoomLarge":306,"renderer/particleSystem/premade/GreenBoomTiny":307,"renderer/particleSystem/premade/GreenLaserTrail":308,"renderer/particleSystem/premade/GreenSparks":309,"renderer/particleSystem/premade/GreenTrail":310,"renderer/particleSystem/premade/GreenTrailLarge":311,"renderer/particleSystem/premade/MissileQuadPickup":312,"renderer/particleSystem/premade/OrangeBoomLarge":313,"renderer/particleSystem/premade/OrangeBoomMedium":314,"renderer/particleSystem/premade/OrangeBoomSmall":315,"renderer/particleSystem/premade/OrangeBoomTiny":316,"renderer/particleSystem/premade/OrangeTrail":317,"renderer/particleSystem/premade/PlasmaPickup":318,"renderer/particleSystem/premade/PurpleEye":319,"renderer/particleSystem/premade/PurpleLaserTrail":320,"renderer/particleSystem/premade/PurpleSparks":321,"renderer/particleSystem/premade/RedEye":322,"renderer/particleSystem/premade/RedEyeBig":323,"renderer/particleSystem/premade/RedLaserSmallTrail":324,"renderer/particleSystem/premade/RedLaserTrail":325,"renderer/particleSystem/premade/RedSparks":326,"renderer/particleSystem/premade/ShieldPickup":327,"renderer/particleSystem/premade/SmokePuffLargeLong":328,"renderer/particleSystem/premade/SmokePuffSmall":329,"renderer/particleSystem/premade/WeaponPickup":330}],296:[function(require,module,exports){
+},{"renderer/particleSystem/ParticleShaders":297,"renderer/particleSystem/premade/BlueBoom":298,"renderer/particleSystem/premade/BlueLaserTrail":299,"renderer/particleSystem/premade/BlueSparks":300,"renderer/particleSystem/premade/EmdTrail":301,"renderer/particleSystem/premade/EnergyPickup":302,"renderer/particleSystem/premade/EngineGlowMedium":303,"renderer/particleSystem/premade/EngineGlowSmall":304,"renderer/particleSystem/premade/GreenBoomLarge":305,"renderer/particleSystem/premade/GreenBoomTiny":306,"renderer/particleSystem/premade/GreenLaserTrail":307,"renderer/particleSystem/premade/GreenSparks":308,"renderer/particleSystem/premade/GreenTrail":309,"renderer/particleSystem/premade/GreenTrailLarge":310,"renderer/particleSystem/premade/MissileQuadPickup":311,"renderer/particleSystem/premade/OrangeBoomLarge":312,"renderer/particleSystem/premade/OrangeBoomMedium":313,"renderer/particleSystem/premade/OrangeBoomSmall":314,"renderer/particleSystem/premade/OrangeBoomTiny":315,"renderer/particleSystem/premade/OrangeTrail":316,"renderer/particleSystem/premade/PlasmaPickup":317,"renderer/particleSystem/premade/PurpleEye":318,"renderer/particleSystem/premade/PurpleLaserTrail":319,"renderer/particleSystem/premade/PurpleSparks":320,"renderer/particleSystem/premade/RedEye":321,"renderer/particleSystem/premade/RedEyeBig":322,"renderer/particleSystem/premade/RedLaserSmallTrail":323,"renderer/particleSystem/premade/RedLaserTrail":324,"renderer/particleSystem/premade/RedSparks":325,"renderer/particleSystem/premade/ShieldPickup":326,"renderer/particleSystem/premade/SmokePuffLargeLong":327,"renderer/particleSystem/premade/SmokePuffSmall":328,"renderer/particleSystem/premade/WeaponPickup":329}],295:[function(require,module,exports){
 'use strict';
 
 function ParticleGenerator(config) {
@@ -30556,7 +30534,7 @@ ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCo
 
 module.exports = ParticleGenerator;
 
-},{}],297:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 'use strict';
 
 var ParticleConfigCreator = require('renderer/particleSystem/ParticleConfigCreator');
@@ -30633,7 +30611,7 @@ ParticleManager.prototype.updateResolutionCoefficient = function (coefficient) {
 
 module.exports = ParticleManager;
 
-},{"renderer/particleSystem/FlatHudParticleGenerator":294,"renderer/particleSystem/ParticleConfigCreator":295,"renderer/particleSystem/ParticleGenerator":296}],298:[function(require,module,exports){
+},{"renderer/particleSystem/FlatHudParticleGenerator":293,"renderer/particleSystem/ParticleConfigCreator":294,"renderer/particleSystem/ParticleGenerator":295}],297:[function(require,module,exports){
 'use strict';
 
 var ParticleShaders = {
@@ -30747,7 +30725,7 @@ var ParticleShaders = {
 
 module.exports = ParticleShaders;
 
-},{}],299:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30788,7 +30766,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],300:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30823,7 +30801,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],301:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30891,7 +30869,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],302:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -30951,7 +30929,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],303:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31010,7 +30988,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],304:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31041,7 +31019,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],305:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31072,7 +31050,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],306:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31143,7 +31121,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],307:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31200,7 +31178,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],308:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31235,7 +31213,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],309:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31303,7 +31281,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],310:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31335,7 +31313,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],311:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31394,7 +31372,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],312:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31425,7 +31403,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],313:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31496,7 +31474,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],314:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31567,7 +31545,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],315:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31638,7 +31616,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],316:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31695,7 +31673,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],317:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31728,7 +31706,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],318:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31787,7 +31765,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],319:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31819,7 +31797,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],320:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31854,7 +31832,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],321:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31922,7 +31900,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],322:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31953,7 +31931,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],323:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31984,7 +31962,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],324:[function(require,module,exports){
+},{}],323:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32019,7 +31997,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],325:[function(require,module,exports){
+},{}],324:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32054,7 +32032,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],326:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32122,7 +32100,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],327:[function(require,module,exports){
+},{}],326:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32179,7 +32157,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],328:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32197,7 +32175,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],329:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32215,7 +32193,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],330:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32259,7 +32237,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],331:[function(require,module,exports){
+},{}],330:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -32330,7 +32308,7 @@ BaseScene.prototype.testMesh = function (meshClass, scale) {
 
 module.exports = BaseScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289}],332:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288}],331:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
@@ -32384,7 +32362,7 @@ FlatHudScene.prototype.customUpdate = function () {};
 
 module.exports = FlatHudScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289,"renderer/gameUi/FlatHudCamera":291,"renderer/scene/BaseScene":331}],333:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288,"renderer/gameUi/FlatHudCamera":290,"renderer/scene/BaseScene":330}],332:[function(require,module,exports){
 'use strict';
 
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
@@ -32589,7 +32567,7 @@ GameScene.prototype._getFogColor = function (fogSettingValue) {
 
 module.exports = GameScene;
 
-},{"renderer/Camera":228,"renderer/assetManagement/level/ChunkStore":284,"renderer/map/ChunkMesh":293,"renderer/scene/BaseScene":331}],334:[function(require,module,exports){
+},{"renderer/Camera":227,"renderer/assetManagement/level/ChunkStore":283,"renderer/map/ChunkMesh":292,"renderer/scene/BaseScene":330}],333:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
@@ -32803,7 +32781,7 @@ MainMenuScene.prototype.lightPowerUp = function () {
 
 module.exports = MainMenuScene;
 
-},{"renderer/Camera":228,"renderer/actor/component/mesh/BaseMesh":238,"renderer/assetManagement/model/ModelStore":289,"renderer/scene/BaseScene":331}],335:[function(require,module,exports){
+},{"renderer/Camera":227,"renderer/actor/component/mesh/BaseMesh":237,"renderer/assetManagement/model/ModelStore":288,"renderer/scene/BaseScene":330}],334:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
@@ -32880,7 +32858,7 @@ SceneManager.prototype.getCoreActiveScene = function () {
 
 module.exports = SceneManager;
 
-},{"renderer/scene/BaseScene":331,"renderer/scene/FlatHudScene":332,"renderer/scene/GameScene":333,"renderer/scene/MainMenuScene":334}],336:[function(require,module,exports){
+},{"renderer/scene/BaseScene":330,"renderer/scene/FlatHudScene":331,"renderer/scene/GameScene":332,"renderer/scene/MainMenuScene":333}],335:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -32941,7 +32919,7 @@ ReactUi.prototype.changeMode = function (newMode, context) {
 
 module.exports = ReactUi;
 
-},{"classnames":2,"react":182,"react-dom":6,"renderer/ui/component/InitialView":340}],337:[function(require,module,exports){
+},{"classnames":2,"react":182,"react-dom":6,"renderer/ui/component/InitialView":339}],336:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -32969,7 +32947,7 @@ var ReactUtils = {
 
 module.exports = ReactUtils;
 
-},{"react":182}],338:[function(require,module,exports){
+},{"react":182}],337:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
@@ -33103,7 +33081,7 @@ Ui.prototype.updateState = function (state) {
 
 module.exports = Ui;
 
-},{"renderer/ui/ReactUi":336}],339:[function(require,module,exports){
+},{"renderer/ui/ReactUi":335}],338:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33180,7 +33158,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/FlexBoxContainer":345,"renderer/ui/component/base/StyledText":349,"renderer/ui/component/base/Window":352,"renderer/ui/component/endGame/EndGamePanel":354}],340:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/component/base/FlexBoxContainer":344,"renderer/ui/component/base/StyledText":348,"renderer/ui/component/base/Window":351,"renderer/ui/component/endGame/EndGamePanel":353}],339:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -33257,7 +33235,7 @@ var InitialView = _react2.default.createClass({
 
 module.exports = InitialView;
 
-},{"classnames":2,"react":182,"renderer/ui/ReactUtils":337,"renderer/ui/component/EndScreen":339,"renderer/ui/component/StartHelp":342,"renderer/ui/component/StartScreen":343,"renderer/ui/component/base/FullScreenEffect":346,"renderer/ui/component/base/Viewport":351,"renderer/ui/component/hud/AmmoTileContainer":358,"renderer/ui/component/hud/MessageContainer":359,"renderer/ui/component/hud/WeaponInfoContainer":360}],341:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/ReactUtils":336,"renderer/ui/component/EndScreen":338,"renderer/ui/component/StartHelp":341,"renderer/ui/component/StartScreen":342,"renderer/ui/component/base/FullScreenEffect":345,"renderer/ui/component/base/Viewport":350,"renderer/ui/component/hud/AmmoTileContainer":357,"renderer/ui/component/hud/MessageContainer":358,"renderer/ui/component/hud/WeaponInfoContainer":359}],340:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33300,7 +33278,7 @@ var SettingsMenu = function (_Component) {
                 justifyContent: 'flex-end'
             },
             settingText: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 color: '#666666',
                 textAlign: 'center',
                 letterSpacing: '0.35vmin',
@@ -33490,7 +33468,7 @@ module.exports = SettingsMenu;
             </div>
  */
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/OptionButton":347,"renderer/ui/component/base/Slider":348,"renderer/ui/component/base/StyledText":349,"renderer/ui/component/base/ToggleButton":350}],342:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/component/base/OptionButton":346,"renderer/ui/component/base/Slider":347,"renderer/ui/component/base/StyledText":348,"renderer/ui/component/base/ToggleButton":349}],341:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33630,7 +33608,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/StyledText":349}],343:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/component/base/StyledText":348}],342:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -33662,7 +33640,7 @@ var componentStyle = {
         color: 'white',
         textShadow: '1vmin 1vmin 1vmin rgba(0, 0, 0, 0.2)',
         whiteSpace: 'nowrap',
-        fontFamily: 'Oswald-Regular',
+        fontFamily: 'Oswald-ExtraLight',
         WebkitTouchCallout: 'none',
         WebkitUserSelect: 'none',
         khtmlUserSelect: 'none',
@@ -33716,7 +33694,7 @@ var StartScreen = _react2.default.createClass({
 
 module.exports = StartScreen;
 
-},{"classnames":2,"react":182,"renderer/ui/ReactUtils":337,"renderer/ui/component/SettingsMenu":341,"renderer/ui/component/base/Button":344,"renderer/ui/component/base/FlexBoxContainer":345,"renderer/ui/component/base/StyledText":349,"renderer/ui/component/base/Window":352,"renderer/ui/component/endGame/EndGamePanel":354}],344:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/ReactUtils":336,"renderer/ui/component/SettingsMenu":340,"renderer/ui/component/base/Button":343,"renderer/ui/component/base/FlexBoxContainer":344,"renderer/ui/component/base/StyledText":348,"renderer/ui/component/base/Window":351,"renderer/ui/component/endGame/EndGamePanel":353}],343:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33764,7 +33742,7 @@ var Button = function (_React$Component) {
                 lineHeight: '6vmin',
                 fontSize: '3vmin',
                 letterSpacing: '0.5vmin',
-                fontFamily: 'Oswald-Regular'
+                fontFamily: 'Oswald-ExtraLight'
             }
         };
         return _this;
@@ -33793,7 +33771,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":2,"react":182}],345:[function(require,module,exports){
+},{"classnames":2,"react":182}],344:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33849,7 +33827,7 @@ var FlexBoxContainer = function (_Component) {
 
 module.exports = FlexBoxContainer;
 
-},{"react":182}],346:[function(require,module,exports){
+},{"react":182}],345:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -33905,7 +33883,7 @@ var FullScreenEffect = _react2.default.createClass({
 
 module.exports = FullScreenEffect;
 
-},{"classnames":2,"react":182}],347:[function(require,module,exports){
+},{"classnames":2,"react":182}],346:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -33953,7 +33931,7 @@ var OptionButton = function (_React$Component) {
                 lineHeight: '6vmin',
                 fontSize: '3vmin',
                 letterSpacing: '0.5vmin',
-                fontFamily: 'Oswald-Regular'
+                fontFamily: 'Oswald-ExtraLight'
             }
         };
 
@@ -34000,7 +33978,7 @@ var OptionButton = function (_React$Component) {
 
 module.exports = OptionButton;
 
-},{"classnames":2,"react":182}],348:[function(require,module,exports){
+},{"classnames":2,"react":182}],347:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34103,7 +34081,7 @@ var Slider = function (_Component) {
 
 module.exports = Slider;
 
-},{"react":182,"react-slider":7}],349:[function(require,module,exports){
+},{"react":182,"react-slider":7}],348:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34150,7 +34128,7 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":2,"react":182}],350:[function(require,module,exports){
+},{"classnames":2,"react":182}],349:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -34199,7 +34177,7 @@ var ToggleButton = _react2.default.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":2,"react":182}],351:[function(require,module,exports){
+},{"classnames":2,"react":182}],350:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34245,7 +34223,7 @@ var Viewport = function (_React$Component) {
 
 module.exports = Viewport;
 
-},{"classnames":2,"react":182}],352:[function(require,module,exports){
+},{"classnames":2,"react":182}],351:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34288,7 +34266,8 @@ var Window = function (_Component) {
                 width: '41%',
                 height: '0.5vmin',
                 background: 'linear-gradient(to left, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'
             },
 
             topBarRight: {
@@ -34296,7 +34275,8 @@ var Window = function (_Component) {
                 height: '0.5vmin',
                 right: '0',
                 background: 'linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'
             },
 
             bottomBar: {
@@ -34304,7 +34284,8 @@ var Window = function (_Component) {
                 height: '0.5vmin',
                 bottom: '0',
                 background: 'linear-gradient(to right,  rgba(255, 255, 255, 0), rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'
             },
 
             leftTopSideBar: {
@@ -34366,7 +34347,7 @@ var Window = function (_Component) {
 
             title: {
                 textAlign: 'center',
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '4vmin',
                 color: 'white',
                 height: '10%',
@@ -34426,7 +34407,7 @@ var Window = function (_Component) {
 
 module.exports = Window;
 
-},{"react":182}],353:[function(require,module,exports){
+},{"react":182}],352:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34463,7 +34444,7 @@ var DiedRow = function (_Component) {
             },
 
             text: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '5vmin',
                 color: 'white'
             },
@@ -34515,7 +34496,7 @@ var DiedRow = function (_Component) {
 
 module.exports = DiedRow;
 
-},{"react":182}],354:[function(require,module,exports){
+},{"react":182}],353:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34556,7 +34537,7 @@ var EndGamePanel = function (_Component) {
             },
 
             titleText: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '6vmin',
                 color: 'white'
             },
@@ -34641,7 +34622,7 @@ var EndGamePanel = function (_Component) {
 
 module.exports = EndGamePanel;
 
-},{"react":182,"renderer/ui/component/endGame/DiedRow":353,"renderer/ui/component/endGame/KillRow":355,"renderer/ui/component/endGame/Summary":356}],355:[function(require,module,exports){
+},{"react":182,"renderer/ui/component/endGame/DiedRow":352,"renderer/ui/component/endGame/KillRow":354,"renderer/ui/component/endGame/Summary":355}],354:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34679,12 +34660,12 @@ var KillRow = function (_Component) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
-                margin: '1vh',
+                margin: '0.2vh',
                 background: 'linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0))'
             },
 
             text: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '3vmin',
                 color: 'white',
                 width: '50%',
@@ -34692,7 +34673,7 @@ var KillRow = function (_Component) {
             },
 
             number: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '3vmin',
                 color: 'white',
                 width: '25%'
@@ -34779,12 +34760,12 @@ var KillRow = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         { style: this.componentStyle.text },
-                        this.props.enemyName
+                        this.props.enemyName + ' '
                     ),
                     _react2.default.createElement(
                         'div',
                         { style: this.componentStyle.number },
-                        'x' + this.state.currentKillCount
+                        ' x ' + this.state.currentKillCount
                     ),
                     _react2.default.createElement(
                         'div',
@@ -34801,7 +34782,7 @@ var KillRow = function (_Component) {
 
 module.exports = KillRow;
 
-},{"react":182}],356:[function(require,module,exports){
+},{"react":182}],355:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34828,14 +34809,14 @@ var Summary = function (_Component) {
 
         _this.componentStyle = {
             totalText: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '5vmin',
                 color: 'white',
                 textAlign: 'center'
             },
 
             flavourText: {
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '3vmin',
                 color: 'white',
                 textAlign: 'center'
@@ -34938,7 +34919,7 @@ var Summary = function (_Component) {
 
 module.exports = Summary;
 
-},{"react":182}],357:[function(require,module,exports){
+},{"react":182}],356:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35004,9 +34985,10 @@ var AmmoTile = function (_Component) {
             },
             text: {
                 position: 'absolute',
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '1.25vw',
-                right: '2.5vw'
+                right: '2.5vw',
+                marginTop: '0.2vw'
             }
         };
         return _this;
@@ -35065,7 +35047,7 @@ var AmmoTile = function (_Component) {
 
 module.exports = AmmoTile;
 
-},{"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":337}],358:[function(require,module,exports){
+},{"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":336}],357:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35172,7 +35154,7 @@ var AmmoTileContainer = function (_Component) {
 
 module.exports = AmmoTileContainer;
 
-},{"react":182,"renderer/ui/ReactUtils":337,"renderer/ui/component/hud/AmmoTile":357}],359:[function(require,module,exports){
+},{"react":182,"renderer/ui/ReactUtils":336,"renderer/ui/component/hud/AmmoTile":356}],358:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35227,7 +35209,7 @@ var MessageContainer = function (_Component) {
                 whiteSpace: 'nowrap',
                 userDrag: 'none',
                 userSelect: 'none',
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 opacity: 1
             }
         };
@@ -35327,7 +35309,7 @@ var MessageContainer = function (_Component) {
 
 module.exports = MessageContainer;
 
-},{"classnames":2,"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":337}],360:[function(require,module,exports){
+},{"classnames":2,"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":336}],359:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35386,13 +35368,13 @@ var WeaponInfoContainer = function (_Component) {
             },
 
             activeWeapon: {
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '2vw',
                 color: 'rgba(255, 255, 255, 0.8)'
             },
 
             inactiveWeapon: {
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '1.5vw',
                 color: 'rgba(255, 255, 255, 0.4)'
             }
@@ -35486,7 +35468,7 @@ var WeaponInfoContainer = function (_Component) {
 
 module.exports = WeaponInfoContainer;
 
-},{"classnames":2,"react":182,"shared/WeaponConfig":368}],361:[function(require,module,exports){
+},{"classnames":2,"react":182,"shared/WeaponConfig":367}],360:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -36028,7 +36010,7 @@ var ActorConfig = {
 
 module.exports = ActorConfig;
 
-},{"shared/ActorFactory":362}],362:[function(require,module,exports){
+},{"shared/ActorFactory":361}],361:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -36132,7 +36114,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":186,"logic/actor/enemy/EnemyActor":192,"logic/actor/map/EnemySpawnMarkerActor":193,"logic/actor/map/EnemySpawnerActor":194,"logic/actor/map/ItemSpawnerActor":195,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/object/ExplosionActor":203,"logic/actor/object/SmallExplosionActor":204,"logic/actor/pickup/EnergyPickupActor":205,"logic/actor/pickup/MissileQuadPickupActor":206,"logic/actor/pickup/PlasmaPickupActor":207,"logic/actor/pickup/ShieldPickupActor":208,"logic/actor/pickup/WeaponPickupActor":209,"logic/actor/player/DemoShipActor":210,"logic/actor/player/ShipActor":211,"logic/actor/projectile/ConcsnMissileActor":212,"logic/actor/projectile/EmdProjectileActor":213,"logic/actor/projectile/EnemyConcsnMissileActor":214,"logic/actor/projectile/EnemyHomingMissileActor":215,"logic/actor/projectile/GreenLaserProjectileActor":216,"logic/actor/projectile/HomingMissileActor":217,"logic/actor/projectile/LaserProjectileActor":218,"logic/actor/projectile/MoltenProjectileActor":219,"logic/actor/projectile/PlasmaBlastMiniProjectileActor":220,"logic/actor/projectile/PlasmaBlastProjectileActor":221,"logic/actor/projectile/PlasmaProjectileActor":222,"logic/actor/projectile/PulseWaveProjectileActor":223,"logic/actor/projectile/PurpleLaserProjectileActor":224,"logic/actor/projectile/RedLaserEnemyProjectileActor":225,"logic/actor/projectile/RedLaserProjectileActor":226,"logic/actor/projectile/RingProjectileActor":227,"renderer/actor/DebugActor":237,"renderer/actor/enemy/EnemyActor":246,"renderer/actor/map/EnemySpawnMarkerActor":247,"renderer/actor/map/EnemySpawnerActor":248,"renderer/actor/map/ItemSpawnerActor":249,"renderer/actor/object/BoomChunkActor":253,"renderer/actor/object/ChunkActor":254,"renderer/actor/object/ExplosionActor":255,"renderer/actor/object/SmallExplosionActor":256,"renderer/actor/pickup/EnergyPickupActor":257,"renderer/actor/pickup/MissileQuadPickupActor":258,"renderer/actor/pickup/PlasmaPickupActor":259,"renderer/actor/pickup/ShieldPickupActor":260,"renderer/actor/pickup/WeaponPickupActor":261,"renderer/actor/player/DemoShipActor":262,"renderer/actor/player/ShipActor":263,"renderer/actor/projectile/ConcsnMissileActor":264,"renderer/actor/projectile/EmdProjectileActor":265,"renderer/actor/projectile/EnemyConcsnMissileActor":266,"renderer/actor/projectile/EnemyHomingMissileActor":267,"renderer/actor/projectile/GreenLaserProjectileActor":268,"renderer/actor/projectile/HomingMissileActor":269,"renderer/actor/projectile/LaserProjectileActor":270,"renderer/actor/projectile/MoltenProjectileActor":271,"renderer/actor/projectile/PlasmaBlastMiniProjectileActor":272,"renderer/actor/projectile/PlasmaBlastProjectileActor":273,"renderer/actor/projectile/PlasmaProjectileActor":274,"renderer/actor/projectile/PulseWaveProjectileActor":275,"renderer/actor/projectile/PurpleLaserProjectileActor":276,"renderer/actor/projectile/RedLaserEnemyProjectileActor":277,"renderer/actor/projectile/RedLaserProjectileActor":278,"renderer/actor/projectile/RingProjectileActor":279}],363:[function(require,module,exports){
+},{"logic/actor/DebugActor":186,"logic/actor/enemy/EnemyActor":192,"logic/actor/map/EnemySpawnMarkerActor":193,"logic/actor/map/EnemySpawnerActor":194,"logic/actor/map/ItemSpawnerActor":195,"logic/actor/object/BoomChunkActor":200,"logic/actor/object/ChunkActor":201,"logic/actor/object/ExplosionActor":202,"logic/actor/object/SmallExplosionActor":203,"logic/actor/pickup/EnergyPickupActor":204,"logic/actor/pickup/MissileQuadPickupActor":205,"logic/actor/pickup/PlasmaPickupActor":206,"logic/actor/pickup/ShieldPickupActor":207,"logic/actor/pickup/WeaponPickupActor":208,"logic/actor/player/DemoShipActor":209,"logic/actor/player/ShipActor":210,"logic/actor/projectile/ConcsnMissileActor":211,"logic/actor/projectile/EmdProjectileActor":212,"logic/actor/projectile/EnemyConcsnMissileActor":213,"logic/actor/projectile/EnemyHomingMissileActor":214,"logic/actor/projectile/GreenLaserProjectileActor":215,"logic/actor/projectile/HomingMissileActor":216,"logic/actor/projectile/LaserProjectileActor":217,"logic/actor/projectile/MoltenProjectileActor":218,"logic/actor/projectile/PlasmaBlastMiniProjectileActor":219,"logic/actor/projectile/PlasmaBlastProjectileActor":220,"logic/actor/projectile/PlasmaProjectileActor":221,"logic/actor/projectile/PulseWaveProjectileActor":222,"logic/actor/projectile/PurpleLaserProjectileActor":223,"logic/actor/projectile/RedLaserEnemyProjectileActor":224,"logic/actor/projectile/RedLaserProjectileActor":225,"logic/actor/projectile/RingProjectileActor":226,"renderer/actor/DebugActor":236,"renderer/actor/enemy/EnemyActor":245,"renderer/actor/map/EnemySpawnMarkerActor":246,"renderer/actor/map/EnemySpawnerActor":247,"renderer/actor/map/ItemSpawnerActor":248,"renderer/actor/object/BoomChunkActor":252,"renderer/actor/object/ChunkActor":253,"renderer/actor/object/ExplosionActor":254,"renderer/actor/object/SmallExplosionActor":255,"renderer/actor/pickup/EnergyPickupActor":256,"renderer/actor/pickup/MissileQuadPickupActor":257,"renderer/actor/pickup/PlasmaPickupActor":258,"renderer/actor/pickup/ShieldPickupActor":259,"renderer/actor/pickup/WeaponPickupActor":260,"renderer/actor/player/DemoShipActor":261,"renderer/actor/player/ShipActor":262,"renderer/actor/projectile/ConcsnMissileActor":263,"renderer/actor/projectile/EmdProjectileActor":264,"renderer/actor/projectile/EnemyConcsnMissileActor":265,"renderer/actor/projectile/EnemyHomingMissileActor":266,"renderer/actor/projectile/GreenLaserProjectileActor":267,"renderer/actor/projectile/HomingMissileActor":268,"renderer/actor/projectile/LaserProjectileActor":269,"renderer/actor/projectile/MoltenProjectileActor":270,"renderer/actor/projectile/PlasmaBlastMiniProjectileActor":271,"renderer/actor/projectile/PlasmaBlastProjectileActor":272,"renderer/actor/projectile/PlasmaProjectileActor":273,"renderer/actor/projectile/PulseWaveProjectileActor":274,"renderer/actor/projectile/PurpleLaserProjectileActor":275,"renderer/actor/projectile/RedLaserEnemyProjectileActor":276,"renderer/actor/projectile/RedLaserProjectileActor":277,"renderer/actor/projectile/RingProjectileActor":278}],362:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = {
@@ -36158,7 +36140,7 @@ var ActorTypes = {
 
 module.exports = ActorTypes;
 
-},{}],364:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -36203,7 +36185,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],365:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -37054,7 +37036,7 @@ var EnemyConfig = {
 
 module.exports = EnemyConfig;
 
-},{"shared/ActorFactory":362}],366:[function(require,module,exports){
+},{"shared/ActorFactory":361}],365:[function(require,module,exports){
 "use strict";
 
 /**
@@ -37159,7 +37141,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],367:[function(require,module,exports){
+},{}],366:[function(require,module,exports){
 'use strict';
 
 var Utils = {
@@ -37369,7 +37351,7 @@ if (!Function.prototype.mixin) {
 
 module.exports = Utils;
 
-},{}],368:[function(require,module,exports){
+},{}],367:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -37664,7 +37646,7 @@ var WeaponConfig = {
 
 module.exports = WeaponConfig;
 
-},{"shared/ActorFactory":362}],369:[function(require,module,exports){
+},{"shared/ActorFactory":361}],368:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {

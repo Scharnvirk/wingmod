@@ -30,7 +30,7 @@ class MessageContainer extends Component {
                 whiteSpace: 'nowrap',
                 userDrag: 'none',
                 userSelect: 'none',        
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 opacity: 1
             }
         };

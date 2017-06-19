@@ -25,6 +25,7 @@ var ModelList = {
         '/models/plasmablast.json',
         '/models/pulsewavegun.json',
         '/models/missilelauncher.json',
+        '/models/missilelauncher2.json',
         '/models/homingmissilelauncher.json',
         '/models/hudMaterial.json',
         '/models/flatHudMaterial.json',

@@ -35,13 +35,13 @@ class WeaponInfoContainer extends Component {
             },
 
             activeWeapon: {
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '2vw',
                 color: 'rgba(255, 255, 255, 0.8)'
             },
 
             inactiveWeapon: {
-                fontFamily: 'Oswald',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '1.5vw',
                 color: 'rgba(255, 255, 255, 0.4)'
             }

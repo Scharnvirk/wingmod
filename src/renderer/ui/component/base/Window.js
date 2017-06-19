@@ -22,7 +22,8 @@ class Window extends Component {
                 width: '41%',
                 height: '0.5vmin',
                 background: 'linear-gradient(to left, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'   
             },
 
             topBarRight: {
@@ -30,7 +31,8 @@ class Window extends Component {
                 height: '0.5vmin',
                 right: '0',
                 background: 'linear-gradient(to right, rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'   
             },
 
             bottomBar: {
@@ -38,7 +40,8 @@ class Window extends Component {
                 height: '0.5vmin',
                 bottom: '0',
                 background: 'linear-gradient(to right,  rgba(255, 255, 255, 0), rgb(255, 255, 255), rgb(255, 255, 255), rgba(255, 255, 255, 0))',
-                position: 'absolute'
+                position: 'absolute',
+                display: 'none'   
             },
 
             leftTopSideBar: {
@@ -100,7 +103,7 @@ class Window extends Component {
 
             title: {
                 textAlign: 'center',
-                fontFamily: 'Oswald-Regular',
+                fontFamily: 'Oswald-ExtraLight',
                 fontSize: '4vmin',
                 color: 'white',
                 height: '10%',
