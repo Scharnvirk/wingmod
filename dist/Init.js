@@ -29844,7 +29844,7 @@ module.exports = CustomModelCreator;
 'use strict';
 
 var ModelList = {
-    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/emdgun.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/missilelauncher.json', '/models/missilelauncher2.json', '/models/homingmissilelauncher.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json']
+    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/emdgun.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/missilelauncher.json', '/models/missilelauncher2.json', '/models/homingmissilelauncher.json', '/models/missilelauncher3.json', '/models/homingmissilelauncher3.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json']
 };
 
 module.exports = ModelList;
@@ -37508,7 +37508,7 @@ var WeaponConfig = {
         burstCooldown: 5,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
-        name: 'GAN BLASTER',
+        name: 'BURST BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
             energy: 1.5
@@ -37563,7 +37563,7 @@ var WeaponConfig = {
         burstCooldown: 6,
         sound: 'laser_green',
         firingMode: 'alternate',
-        name: 'CO-VA BLASTER',
+        name: 'HEAVY BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 1.5
@@ -37577,7 +37577,7 @@ var WeaponConfig = {
         firingMode: 'alternate',
         volume: 0.5,
         name: 'HOMING MISSILE SYSTEM',
-        modelName: 'homingmissilelauncher',
+        modelName: 'homingmissilelauncher3',
         ammoConfig: {
             missiles: 1,
             energy: 4
@@ -37591,7 +37591,7 @@ var WeaponConfig = {
         burstCooldown: 5,
         sound: 'red_laser',
         firingMode: 'alternate',
-        name: 'LIGHT NE-HE BLASTER',
+        name: 'LIGHT BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 0.3
@@ -37604,7 +37604,7 @@ var WeaponConfig = {
         sound: 'missile',
         firingMode: 'alternate',
         name: 'CONCUSSION MISSILE SYSTEM',
-        modelName: 'missilelauncher',
+        modelName: 'missilelauncher3',
         ammoConfig: {
             missiles: 1
         }
@@ -37700,7 +37700,7 @@ var WeaponConfig = {
         velocity: 1400,
         sound: 'red_laser',
         firingMode: 'simultaneous',
-        name: 'NE-HE BLASTER',
+        name: 'COMBAT BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 0.5
@@ -37726,7 +37726,7 @@ var WeaponConfig = {
         burstCooldown: 20,
         sound: 'laser_purple',
         firingMode: 'alternate',
-        name: 'GL-NI BLASTER',
+        name: 'POWERED BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
             energy: 1.5

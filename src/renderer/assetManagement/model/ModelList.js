@@ -27,6 +27,8 @@ var ModelList = {
         '/models/missilelauncher.json',
         '/models/missilelauncher2.json',
         '/models/homingmissilelauncher.json',
+        '/models/missilelauncher3.json',
+        '/models/homingmissilelauncher3.json',
         '/models/hudMaterial.json',
         '/models/flatHudMaterial.json',
         '/models/missile.json'

@@ -8777,7 +8777,7 @@ var WeaponConfig = {
         burstCooldown: 5,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
-        name: 'GAN BLASTER',
+        name: 'BURST BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
             energy: 1.5
@@ -8832,7 +8832,7 @@ var WeaponConfig = {
         burstCooldown: 6,
         sound: 'laser_green',
         firingMode: 'alternate',
-        name: 'CO-VA BLASTER',
+        name: 'HEAVY BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 1.5
@@ -8846,7 +8846,7 @@ var WeaponConfig = {
         firingMode: 'alternate',
         volume: 0.5,
         name: 'HOMING MISSILE SYSTEM',
-        modelName: 'homingmissilelauncher',
+        modelName: 'homingmissilelauncher3',
         ammoConfig: {
             missiles: 1,
             energy: 4
@@ -8860,7 +8860,7 @@ var WeaponConfig = {
         burstCooldown: 5,
         sound: 'red_laser',
         firingMode: 'alternate',
-        name: 'LIGHT NE-HE BLASTER',
+        name: 'LIGHT BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 0.3
@@ -8873,7 +8873,7 @@ var WeaponConfig = {
         sound: 'missile',
         firingMode: 'alternate',
         name: 'CONCUSSION MISSILE SYSTEM',
-        modelName: 'missilelauncher',
+        modelName: 'missilelauncher3',
         ammoConfig: {
             missiles: 1
         }
@@ -8969,7 +8969,7 @@ var WeaponConfig = {
         velocity: 1400,
         sound: 'red_laser',
         firingMode: 'simultaneous',
-        name: 'NE-HE BLASTER',
+        name: 'COMBAT BLASTER',
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 0.5
@@ -8995,7 +8995,7 @@ var WeaponConfig = {
         burstCooldown: 20,
         sound: 'laser_purple',
         firingMode: 'alternate',
-        name: 'GL-NI BLASTER',
+        name: 'POWERED BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
             energy: 1.5
