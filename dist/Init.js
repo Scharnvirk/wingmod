@@ -23011,6 +23011,10 @@ BaseActor.prototype.getType = function () {
     return this.props.type || 'noType';
 };
 
+BaseActor.prototype.isPlayer = function () {
+    return this.props.isPlayer;
+};
+
 BaseActor.prototype.setThrust = function (thrust) {
     this._thrust = thrust;
 };
@@ -23244,6 +23248,7 @@ module.exports = DebugActor;
 var Weapon = require('logic/actor/component/weapon/Weapon');
 
 var WeaponConfig = require('shared/WeaponConfig');
+var ActorFactory = require('shared/ActorFactory')('logic');
 
 function WeaponSystem(config) {
     Object.assign(this, config);
@@ -23258,6 +23263,7 @@ function WeaponSystem(config) {
     this._canPickup = false;
     this._canPickupTimer = 0;
     this._switchingBlocked = false;
+    this._droppingBlocked = false;
 
     this.currentWeaponIndex = 0;
 }
@@ -23282,6 +23288,14 @@ WeaponSystem.prototype._createWeapons = function (weaponNames) {
     return weapons;
 };
 
+WeaponSystem.prototype.lockDropWeapon = function () {
+    this._droppingBlocked = true;
+};
+
+WeaponSystem.prototype.unlockDropWeapon = function () {
+    this._droppingBlocked = false;
+};
+
 WeaponSystem.prototype.blockWeaponSwitch = function () {
     this._switchingBlocked = true;
 };
@@ -23296,14 +23310,18 @@ WeaponSystem.prototype.isBlocked = function () {
 
 WeaponSystem.prototype.getOpenSlotInfo = function () {
     var forcedPickup = this._canPickup;
-    var firstOpenSlot = this.weapons[0].noneType;
-    var secondOpenSlot = this.weapons[1].noneType;
+    var firstSlotIsOpen = !!this.weapons[0].noneType;
+    var secondSlotIsOpen = !!this.weapons[1].noneType;
+    var emptyWeaponCount = this.weapons.reduce(function (carry, weapon) {
+        return carry + (!!weapon.noneType ? 1 : 0);
+    }, 0);
 
     return {
         forcedPickup: forcedPickup,
-        firstOpenSlot: firstOpenSlot,
-        secondOpenSlot: secondOpenSlot,
-        isOpen: forcedPickup || firstOpenSlot || secondOpenSlot
+        firstSlotIsOpen: firstSlotIsOpen,
+        secondSlotIsOpen: secondSlotIsOpen,
+        emptyWeaponCount: emptyWeaponCount,
+        isOpen: forcedPickup || firstSlotIsOpen || secondSlotIsOpen
     };
 };
 
@@ -23314,6 +23332,27 @@ WeaponSystem.prototype.enablePickup = function () {
 
 WeaponSystem.prototype.disablePickup = function () {
     this._canPickup = false;
+};
+
+WeaponSystem.prototype.dropWeapon = function () {
+    if (this._droppingBlocked) return;
+
+    var weaponIndex = this._getNextWeaponIndex();
+    if (this.weapons[weaponIndex].noneType) return;
+
+    var weapon = new Weapon(Object.assign({
+        actor: this.actor,
+        firingPoints: this.firingPoints,
+        gameState: this.gameState,
+        weaponName: WeaponConfig.getNoneName()
+    }, WeaponConfig[WeaponConfig.getNoneName()]));
+
+    this._createDropPickup(this.weapons[this.currentWeaponIndex]);
+
+    this.weapons[this.currentWeaponIndex] = weapon;
+
+    this.gameState.removeWeapon(this.weaponSystemIndex, this.currentWeaponIndex);
+    this.switchWeaponToNext();
 };
 
 WeaponSystem.prototype.shoot = function () {
@@ -23342,13 +23381,24 @@ WeaponSystem.prototype.replaceWeapon = function (weaponIndex, weaponSubclassId) 
     }, WeaponConfig[weaponName]));
 
     this.weapons[weaponIndex] = weapon;
+
+    this.gameState.replaceWeapon(this.weaponSystemIndex, weaponIndex, weaponSubclassId);
 };
 
 WeaponSystem.prototype.switchWeaponToNext = function () {
-    this.currentWeaponIndex++;
-    if (this.currentWeaponIndex >= this.weaponCount) {
-        this.currentWeaponIndex = 0;
-    }
+    var weaponIndex = this._getNextWeaponIndex();
+    if (this.weapons[weaponIndex].noneType) return;
+
+    this.currentWeaponIndex = weaponIndex;
+
+    this.actor.playSound(['cannon_change']);
+    this.actor.manager.onPlayerWeaponSwitched(this.weaponSystemIndex, this.weapons[this.currentWeaponIndex].weaponName);
+};
+
+WeaponSystem.prototype.switchWeaponToIndex = function (weaponIndex) {
+    if (weaponIndex >= this.weaponCount) throw new Error('This weapon system has ' + this.weaponCount + ' weapons but it was commanded to change to weapon index ' + weaponIndex);
+    this.currentWeaponIndex = weaponIndex;
+
     this.actor.playSound(['cannon_change']);
     this.actor.manager.onPlayerWeaponSwitched(this.weaponSystemIndex, this.weapons[this.currentWeaponIndex].weaponName);
 };
@@ -23366,9 +23416,30 @@ WeaponSystem.prototype.update = function () {
     }
 };
 
+WeaponSystem.prototype._getNextWeaponIndex = function () {
+    var weaponIndex = this.currentWeaponIndex;
+
+    weaponIndex++;
+    if (weaponIndex >= this.weaponCount) {
+        weaponIndex = 0;
+    }
+
+    return weaponIndex;
+};
+
+WeaponSystem.prototype._createDropPickup = function (weaponConfig) {
+    this.actor.spawn({
+        classId: ActorFactory.WEAPONPICKUP,
+        angle: 0,
+        velocity: 50,
+        spawnOffset: -5,
+        subclassId: WeaponConfig.getSubclassIdFor(weaponConfig.weaponName)
+    });
+};
+
 module.exports = WeaponSystem;
 
-},{"logic/actor/component/weapon/Weapon":191,"shared/WeaponConfig":367}],188:[function(require,module,exports){
+},{"logic/actor/component/weapon/Weapon":191,"shared/ActorFactory":361,"shared/WeaponConfig":367}],188:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = require('shared/ActorTypes');
@@ -24123,7 +24194,6 @@ EnemyActor.prototype._dropWeapon = function () {
     //HAX!!! should be config property in ActorConfig... but for now...
     if (Utils.rand(0, 100) > 94) {
         this.spawn({
-            probability: 1,
             classId: ActorFactory.WEAPONPICKUP,
             subclassId: Utils.rand(1, 8),
             angle: [0, 360],
@@ -24599,28 +24669,30 @@ var InputMixin = {
             this.secondaryWeaponSystem.stopShooting();
         }
 
-        if (!inputState.q && this._lastInputState.q > 0) {
-            if (!this.secondaryWeaponSystem.isBlocked()) {
-                this.secondaryWeaponSystem.switchWeaponToNext();
-            } else {
-                this.secondaryWeaponSystem.unlockWeaponSwitch();
-            }
+        if (!inputState.q && this._lastInputState.q === 1) {
+            this.secondaryWeaponSystem.switchWeaponToNext();
         }
 
-        if (!inputState.e && this._lastInputState.e > 0) {
-            if (!this.primaryWeaponSystem.isBlocked()) {
-                this.primaryWeaponSystem.switchWeaponToNext();
-            } else {
-                this.primaryWeaponSystem.unlockWeaponSwitch();
-            }
+        if (!inputState.e && this._lastInputState.e === 1) {
+            this.primaryWeaponSystem.switchWeaponToNext();
         }
 
-        if (inputState.q && this._lastInputState.q > 0) {
-            this.secondaryWeaponSystem.enablePickup();
+        if (inputState.q && this._lastInputState.q > 1) {
+            this.secondaryWeaponSystem.dropWeapon();
+            this.secondaryWeaponSystem.lockDropWeapon();
         }
 
-        if (inputState.e && this._lastInputState.e > 0) {
-            this.primaryWeaponSystem.enablePickup();
+        if (inputState.e && this._lastInputState.e > 1) {
+            this.primaryWeaponSystem.dropWeapon();
+            this.primaryWeaponSystem.lockDropWeapon();
+        }
+
+        if (!inputState.q && this._lastInputState.q > 1) {
+            this.secondaryWeaponSystem.unlockDropWeapon();
+        }
+
+        if (!inputState.e && this._lastInputState.e > 1) {
+            this.primaryWeaponSystem.unlockDropWeapon();
         }
     },
 
@@ -24654,7 +24726,7 @@ var PickupMixin = {
             case 'missileQuad':
                 canPickup = this._handleMissileQuadPickup();break;
             case 'weapon':
-                canPickup = this._handleWeaponPickup(pickupActorSubclassId);break;
+                canPickup = pickupActorState.pickupBlockedTimer === 0 && this._handleWeaponPickup(pickupActorSubclassId);break;
             default:
                 throw new Error('unknown pickup: ' + pickupActorState, pickupActorState.pickup);
         }
@@ -24698,28 +24770,27 @@ var PickupMixin = {
         var secondaryOpenSlotInfo = this.secondaryWeaponSystem.getOpenSlotInfo();
 
         if (primaryOpenSlotInfo.isOpen || secondaryOpenSlotInfo.isOpen) {
-            var pickupingWeaponSystem = secondaryOpenSlotInfo.isOpen ? this.secondaryWeaponSystem : this.primaryWeaponSystem;
-            var openSlotInfo = secondaryOpenSlotInfo.isOpen ? secondaryOpenSlotInfo : primaryOpenSlotInfo;
-            var pickupingWeaponSystemIndex = secondaryOpenSlotInfo.isOpen ? 1 : 0;
+
+            var pickupingWeaponSystem = primaryOpenSlotInfo.emptyWeaponCount >= secondaryOpenSlotInfo.emptyWeaponCount ? this.primaryWeaponSystem : this.secondaryWeaponSystem;
+            var openSlotInfo = pickupingWeaponSystem === this.primaryWeaponSystem ? primaryOpenSlotInfo : secondaryOpenSlotInfo;
 
             var weaponIndex = void 0;
             if (openSlotInfo.forcedPickup) {
                 weaponIndex = pickupingWeaponSystem.getCurrentWeaponIndex();
-            } else if (openSlotInfo.firstOpenSlot) {
+            } else if (openSlotInfo.firstSlotIsOpen) {
                 weaponIndex = 0;
-            } else if (openSlotInfo.secondOpenSlot) {
+            } else if (openSlotInfo.secondSlotIsOpen) {
                 weaponIndex = 1;
             } else {
                 this.gameState.informOfNoFreeWeaponSlots();
                 return false;
             }
 
-            this.gameState.replaceWeapon(pickupingWeaponSystemIndex, weaponIndex, weaponSubclassId);
-            pickupingWeaponSystem.replaceWeapon(weaponIndex, weaponSubclassId);
-
             if (openSlotInfo.forcedPickup) {
                 pickupingWeaponSystem.blockWeaponSwitch();
             }
+
+            pickupingWeaponSystem.replaceWeapon(weaponIndex, weaponSubclassId);
 
             return true;
         } else {
@@ -24980,9 +25051,21 @@ function WeaponPickupActor(config) {
     if (this.parent && this.parent.isSpawner) {
         this.props.timeout = 9999999;
     }
+
+    this.state.pickupBlockedTimer = config.parent && config.parent.isPlayer() ? 120 : 0;
 }
 
 WeaponPickupActor.extend(BaseActor);
+
+WeaponPickupActor.prototype.isPickupPossible = function () {
+    return this.props.pickupBlockedTimer === 0;
+};
+
+WeaponPickupActor.prototype.customUpdate = function () {
+    if (this.state.pickupBlockedTimer > 0) {
+        this.state.pickupBlockedTimer--;
+    }
+};
 
 WeaponPickupActor.prototype.createBody = function () {
     return new BaseBody(this.bodyConfig);
@@ -33553,7 +33636,7 @@ var StartHelp = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'Q: change primary weapon'
+                            'Q: change primary weapon, hold Q: drop primary weapon'
                         )
                     ),
                     _react2.default.createElement(
@@ -33562,7 +33645,7 @@ var StartHelp = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'E: change secondary weapon'
+                            'E: change secondary weapon, hold E: drop secondary weapon'
                         )
                     )
                 ),
@@ -37356,6 +37439,8 @@ module.exports = Utils;
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
 
+var NONE_WEAPON_NAME = 'NONE';
+
 var WEAPON_MAP = {
     BLUE_BLASTER: 1,
     EMD_GUN: 2,
@@ -37381,6 +37466,10 @@ var WEAPON_MAP = {
 
 var ID_MAP = Utils.objectSwitchKeysAndValues(WEAPON_MAP);
 
+var getNoneName = function getNoneName() {
+    return NONE_WEAPON_NAME;
+};
+
 var getNameById = function getNameById(id) {
     var className = ID_MAP[id];
     if (!className) throw new Error('Missing weapon name for subclassId ' + id);
@@ -37403,6 +37492,7 @@ var WeaponConfig = {
     getById: getById,
     getNameById: getNameById,
     getSubclassIdFor: getSubclassIdFor,
+    getNoneName: getNoneName,
 
     NONE: {
         projectileClass: ActorFactory.LASERPROJECTILE,

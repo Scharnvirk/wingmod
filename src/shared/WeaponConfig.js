@@ -1,5 +1,7 @@
 const ActorFactory = require('shared/ActorFactory')('renderer');
 
+const NONE_WEAPON_NAME = 'NONE';
+
 const WEAPON_MAP = {
     BLUE_BLASTER: 1,
     EMD_GUN: 2,
@@ -25,6 +27,10 @@ const WEAPON_MAP = {
 
 const ID_MAP = Utils.objectSwitchKeysAndValues(WEAPON_MAP);
 
+const getNoneName = function() {
+    return NONE_WEAPON_NAME;
+};
+
 const getNameById = function(id) {
     const className = ID_MAP[id];
     if (!className) throw new Error('Missing weapon name for subclassId ' + id);        
@@ -47,6 +53,7 @@ const WeaponConfig = {
     getById: getById,
     getNameById: getNameById,
     getSubclassIdFor: getSubclassIdFor,
+    getNoneName: getNoneName,
 
     NONE: {
         projectileClass: ActorFactory.LASERPROJECTILE,
