@@ -3,6 +3,7 @@ var ActorList = [
     'actor/player/DemoShipActor',
     'actor/enemy/EnemyActor',
     'actor/object/ChunkActor',
+    'actor/object/FlameChunkActor',
     'actor/object/BoomChunkActor',
     'actor/object/ExplosionActor',
     'actor/object/SmallExplosionActor',

@@ -81,6 +81,12 @@ ShipActor.prototype.onDeath = function(){
         angle: [0, 360],
         velocity: [50, 100]
     });
+    this.spawn({
+        amount: Utils.rand(15,20),
+        classId: ActorFactory.FLAMECHUNK,
+        angle: [0, 360],
+        velocity: [200, 300]
+    });
 
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
 }; 

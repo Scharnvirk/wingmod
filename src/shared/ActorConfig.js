@@ -386,6 +386,19 @@ const ActorConfig = {
         }
     },
 
+    FLAMECHUNK: {
+        props:{
+            hp: 1,
+            turnSpeed: 1,
+            removeOnHit: false,
+            timeoutRandomMin: 5,
+            timeoutRandomMax: 10
+        },
+        bodyConfig: {
+            mass: 0.01
+        }
+    },
+
     BOOMCHUNK: {
         props:{
             hp: 1,

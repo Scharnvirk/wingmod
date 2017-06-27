@@ -19,8 +19,8 @@ GameState.prototype._createInitialState = function(){
         },
         ammo: {
             energy: 100,
-            plasma: 25,            
-            missiles: 0,
+            plasma: 0,            
+            missiles: 20,
             rads: 0,
             coolant: 0
         },

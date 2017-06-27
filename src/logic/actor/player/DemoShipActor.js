@@ -4,6 +4,7 @@ var MookBrain = require('logic/actor/component/ai/MookBrain');
 var BrainMixin = require('logic/actor/mixin/BrainMixin');
 var Weapon = require('logic/actor/component/weapon/Weapon');
 var ActorTypes = require('shared/ActorTypes');
+var WeaponConfig = require('shared/WeaponConfig');
 
 function DemoShipActor(){
     this.applyConfig(ActorConfig.DEMOSHIP);    
@@ -34,15 +35,18 @@ DemoShipActor.prototype.customUpdate = function(){
 };
 
 DemoShipActor.prototype.createWeapon = function(){
-    return new RedBlaster({
+    const weaponConfig = Object.assign({
         actor: this,
-        manager: this.manager,
-        firingMode: 'alternate',
+        manager: this.manager,        
+    }, WeaponConfig['RED_BLASTER'], {
+        type: 'RED_BLASTER',
         firingPoints: [
-            {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
-            {offsetAngle: 90, offsetDistance: 3.5 , fireAngle: 0}
+            {offsetAngle: -50, offsetDistance: 4, fireAngle: 0},
+            {offsetAngle: 50, offsetDistance: 4, fireAngle: 0}
         ]
     });
+
+    return new Weapon(weaponConfig);
 };
 
 module.exports = DemoShipActor;

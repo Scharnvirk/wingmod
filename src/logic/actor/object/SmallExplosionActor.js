@@ -15,4 +15,5 @@ SmallExplosionActor.prototype.createBody = function(){
     return new BaseBody(this.bodyConfig);
 };
 
+
 module.exports = SmallExplosionActor;

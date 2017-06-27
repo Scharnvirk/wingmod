@@ -31,20 +31,7 @@ ChunkActor.prototype.customUpdate = function(){
 };
 
 ChunkActor.prototype.onDeath = function(){
-    for (let i = 0; i < 10; i++){
-        this.createParticle({
-            particleClass: 'smokePuffAlpha',
-            offsetPositionX: Utils.rand(-1,1),
-            offsetPositionY: Utils.rand(-1,1),
-            color: 'WHITE',
-            scale: Utils.rand(2,5),
-            alpha: 0.6,
-            alphaMultiplier: 0.95,
-            particleVelocity: Utils.rand(0, 3) / 10,
-            particleRotation: Utils.rand(0,360),
-            lifeTime: 120
-        });
-    }
+    this.createPremade({premadeName: 'OrangeBoomTiny'}); 
 };
 
 module.exports = ChunkActor;

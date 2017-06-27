@@ -22,6 +22,18 @@ ConcsnMissileActor.prototype.onDeath = function(){
             classId: ActorFactory.EXPLOSION
         });
     }, 100);   
+    this.spawn({
+        amount: Utils.rand(1,5),
+        classId: ActorFactory.CHUNK,
+        angle: [0, 360],
+        velocity: [50, 100]
+    });
+    this.spawn({
+        amount: Utils.rand(15,20),
+        classId: ActorFactory.FLAMECHUNK,
+        angle: [0, 360],
+        velocity: [200, 300]
+    });
 };
 
 

@@ -31,6 +31,7 @@ ParticleGenerator.prototype.createColors = function(){
     return {
         //red + blue*512 + green*512*512
         GREEN: 120 + 256*512 + 200*262144,
+        GREY: 120 + 120*512 + 120*262144,
         BLUE: 100 + 100*512 + 256*262144,
         ORANGE: 256 + 150*512 + 50*262144,
         YELLOW: 256 + 200*512 + 100*262144,

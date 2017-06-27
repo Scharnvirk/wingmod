@@ -141,7 +141,7 @@ const WeaponConfig = {
         modelName: 'homingmissilelauncher3',
         ammoConfig: {
             missiles: 1,
-            energy: 4
+            energy: 6
         }
     },
     MINI_RED_BLASTER: {
@@ -160,7 +160,7 @@ const WeaponConfig = {
     },
     CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.CONCSNMISSILE,
-        cooldown: 40,
+        cooldown: 15,
         velocity: 180,
         sound: 'missile',
         firingMode: 'alternate',
@@ -217,7 +217,7 @@ const WeaponConfig = {
     },
     PLASMA_BLAST: {
         projectileClass: ActorFactory.PLASMABLASTPROJECTILE,
-        cooldown: 90,
+        cooldown: 100,
         velocity: 200,
         sound: 'plasmabig2',
         firingMode: 'alternate',
@@ -226,12 +226,12 @@ const WeaponConfig = {
         name: 'PLASMA BLAST',
         modelName: 'plasmablast',
         ammoConfig: {
-            plasma: 3
+            plasma: 4
         }
     },
     PLASMA_CANNON: {
         projectileClass: ActorFactory.PLASMAPROJECTILE,
-        cooldown: 7,
+        cooldown: 8,
         velocity: 230,
         sound: 'plasmashot3',
         firingMode: 'simultaneous',
@@ -252,7 +252,7 @@ const WeaponConfig = {
         name: 'PULSE WAVE GUN',
         modelName: 'pulsewavegun',
         ammoConfig: {
-            energy: 0.4
+            energy: 0.5
         }
     },
     RED_BLASTER: {

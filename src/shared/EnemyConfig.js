@@ -69,6 +69,11 @@ const EnemyConfig = {
                             angle: [0, 360],
                             velocity: [50, 100]
                         },{
+                            amount: 8,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
                             classId: ActorFactory.SMALLEXPLOSION,
                             delay: 100
                         },{
@@ -154,6 +159,11 @@ const EnemyConfig = {
                             classId: ActorFactory.CHUNK,
                             angle: [0, 360],
                             velocity: [50, 100]
+                        },{
+                            amount: 8,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
                         },{
                             classId: ActorFactory.SMALLEXPLOSION,
                             delay: 100
@@ -242,6 +252,11 @@ const EnemyConfig = {
                             angle: [0, 360],
                             velocity: [50, 100]
                         },{
+                            amount: 8,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
                             classId: ActorFactory.SMALLEXPLOSION,
                             delay: 100
                         },{
@@ -329,6 +344,11 @@ const EnemyConfig = {
                             classId: ActorFactory.CHUNK,
                             angle: [0, 360],
                             velocity: [50, 100]
+                        },{
+                            amount: 15,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
                         },{
                             amount: 1,
                             classId: ActorFactory.BOOMCHUNK,
@@ -426,6 +446,11 @@ const EnemyConfig = {
                             classId: ActorFactory.CHUNK,
                             angle: [0, 360],
                             velocity: [50, 100]
+                        },{
+                            amount: 15,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
                         },{
                             amount: 3,
                             classId: ActorFactory.BOOMCHUNK,
@@ -528,6 +553,11 @@ const EnemyConfig = {
                             classId: ActorFactory.BOOMCHUNK,
                             angle: [0, 360],
                             velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
                         },{
                             classId: ActorFactory.EXPLOSION,
                             delay: 100
@@ -648,6 +678,11 @@ const EnemyConfig = {
                             angle: [0, 360],
                             velocity: [50, 100]
                         },{
+                            amount: 15,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
                             classId: ActorFactory.ENEMY,
                             subclassId: getSubclassIdFor('SPIDERLING'),
                             probability: 0.8,
@@ -754,6 +789,11 @@ const EnemyConfig = {
                             angle: [0, 360],
                             velocity: [50, 100]
                         },{
+                            amount: 5,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
                             classId: ActorFactory.SMALLEXPLOSION,
                             delay: 100
                         }
@@ -834,6 +874,11 @@ const EnemyConfig = {
                             classId: ActorFactory.CHUNK,
                             angle: [0, 360],
                             velocity: [50, 100]
+                        },{
+                            amount: 5,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
                         },{
                             classId: ActorFactory.SMALLEXPLOSION,
                             delay: 100

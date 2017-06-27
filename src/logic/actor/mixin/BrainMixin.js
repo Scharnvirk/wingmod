@@ -3,10 +3,16 @@ var BrainMixin = {
         if (this.brain.orders.lookAtPosition) {
             this._lookAtPosition(this.brain.orders.lookAtPosition);
             if (this.brain.orders.turn > 0) {
-                this.setAngleForce(this.brain.orders.turn);
+                this.setAngleForce(this.brain.orders.turn);   
+                if(!this.orders){
+                    this.orders = {};
+                }     
                 this.orders.horizontalThrust = -1;
             } else if (this.brain.orders.turn < 0) {
                 this.setAngleForce(this.brain.orders.turn);
+                if(!this.orders){
+                    this.orders = {};
+                }     
                 this.orders.horizontalThrust = 1;
             }
         } else {

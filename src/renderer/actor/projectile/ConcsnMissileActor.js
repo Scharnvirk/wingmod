@@ -42,7 +42,7 @@ ConcsnMissileActor.prototype.customUpdate = function(){
 
 ConcsnMissileActor.prototype.onDeath = function(){
     var offsetPosition = this.getOffsetPosition(-10);
-    this.createPremade({premadeName: 'OrangeBoomLarge', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
+    this.createPremade({premadeName: 'OrangeBoomSmall', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
     this.requestUiFlash('white');
     this.requestShake();
 };
