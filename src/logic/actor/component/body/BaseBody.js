@@ -24,23 +24,45 @@ BaseBody.prototype.createShape = function(){
             collisionMask: 0
         });
     case 'playerProjectile':
-        return new p2.Circle({
-            radius: this.radius,
-            collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
-            collisionMask:
-                Constants.COLLISION_GROUPS.ENEMY |
-                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                Constants.COLLISION_GROUPS.TERRAIN
-        });
+        if (this.isPlayer) {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN
+            });    
+        } else {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN
+            });
+        }     
     case 'enemyProjectile':
-        return new p2.Circle({
-            radius: this.radius,
-            collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
-            collisionMask:
-                Constants.COLLISION_GROUPS.SHIP |
-                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                Constants.COLLISION_GROUPS.TERRAIN
-        });
+        if (this.isPlayer) {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN
+            });    
+        } else {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN
+            });
+        }     
     case 'pickup':
         return new p2.Circle({
             radius: this.radius,
@@ -51,28 +73,55 @@ BaseBody.prototype.createShape = function(){
                 Constants.COLLISION_GROUPS.EXPLOSION
         });
     case 'playerShip':
-        return new p2.Circle({
-            radius: this.radius,
-            collisionGroup: Constants.COLLISION_GROUPS.SHIP,
-            collisionMask:
-                Constants.COLLISION_GROUPS.ENEMY |
-                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                Constants.COLLISION_GROUPS.TERRAIN |
-                Constants.COLLISION_GROUPS.PICKUP | 
-                Constants.COLLISION_GROUPS.EXPLOSION
-        });
+        if (this.isPlayer) {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.SHIP,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN |
+                    Constants.COLLISION_GROUPS.PICKUP | 
+                    Constants.COLLISION_GROUPS.EXPLOSION
+            });    
+        } else {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN |
+                    Constants.COLLISION_GROUPS.EXPLOSION
+            });
+        }
     case 'enemyShip':
-        return new p2.Circle({
-            radius: this.radius,
-            collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
-            collisionMask:
-                Constants.COLLISION_GROUPS.SHIP |
-                Constants.COLLISION_GROUPS.ENEMY |
-                Constants.COLLISION_GROUPS.SHIPPROJECTILE |
-                Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
-                Constants.COLLISION_GROUPS.TERRAIN |
-                Constants.COLLISION_GROUPS.EXPLOSION
-        });
+        if (this.isPlayer) {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.SHIP,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN |
+                    Constants.COLLISION_GROUPS.PICKUP | 
+                    Constants.COLLISION_GROUPS.EXPLOSION
+            });    
+        } else {
+            return new p2.Circle({
+                radius: this.radius,
+                collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+                collisionMask:
+                    Constants.COLLISION_GROUPS.SHIP |
+                    Constants.COLLISION_GROUPS.ENEMY |
+                    Constants.COLLISION_GROUPS.SHIPPROJECTILE |
+                    Constants.COLLISION_GROUPS.ENEMYPROJECTILE |
+                    Constants.COLLISION_GROUPS.TERRAIN |
+                    Constants.COLLISION_GROUPS.EXPLOSION
+            });
+        }    
     case 'enemyMapObject':
         return new p2.Circle({
             radius: this.radius,

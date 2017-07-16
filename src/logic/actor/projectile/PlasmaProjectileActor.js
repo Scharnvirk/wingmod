@@ -11,8 +11,4 @@ function PlasmaProjectileActor(config){
 
 PlasmaProjectileActor.extend(BaseActor);
 
-PlasmaProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = PlasmaProjectileActor;

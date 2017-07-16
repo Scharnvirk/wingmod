@@ -25,20 +25,17 @@ GreenLaserProjectileActor.prototype.onSpawn = function(){
         scale: 7,
         particleVelocity: 1,
         alpha: 7,
-        lifeTime: 1,
+        lifeTime: 1
     });
 
-    let offsetPosition = this.getOffsetPosition(3);
     this.createParticle({
         particleClass: 'particleAdd',
-        offsetPositionX: offsetPosition[0],
-        offsetPositionY: offsetPosition[1],
         color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 6,
         particleVelocity: 1,
         alpha: 0.5,
-        lifeTime: 1,
+        lifeTime: 1
     });
 
     this.createParticle({
@@ -48,8 +45,7 @@ GreenLaserProjectileActor.prototype.onSpawn = function(){
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        lifeTime: 10,
-        spriteNumber: 0
+        lifeTime: 10
     });
 };
 

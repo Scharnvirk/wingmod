@@ -26,6 +26,9 @@ Ui.prototype.setupButtonListener = function(){
         case 'shadowConfig':
             this.onShadowConfig(data);
             break;
+        case 'difficultyConfig':
+            this.onDifficultyConfig(data);
+            break;
         case 'resolutionConfig':
             this.onResolutionConfig(data);
             break;
@@ -103,6 +106,10 @@ Ui.prototype.lostPointerLock = function(){
 
 Ui.prototype.onShadowConfig = function(data){
     this.emit({type: 'shadowConfig', option: data.buttonEvent, value: data.state});
+};
+
+Ui.prototype.onDifficultyConfig = function(data){
+    this.emit({type: 'difficultyConfig', option: data.buttonEvent, value: data.state});
 };
 
 Ui.prototype.onResolutionConfig = function(data){

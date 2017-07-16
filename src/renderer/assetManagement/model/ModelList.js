@@ -1,15 +1,15 @@
-var ModelList = {
+var ModelList = { 
     models: [
-        '/models/none.json',
+        '/models/none.json', 
         '/models/ship.json',
         '/models/ravier.json',
         '/models/ravier_gunless.json',
         '/models/ravier_shield.json',
         '/models/drone.json',
-        '/models/chaser.json', 
+        '/models/chaser.json',
         '/models/sniper.json',
         '/models/orbot.json',
-        '/models/shulk.json', 
+        '/models/shulk.json',
         '/models/mhulk.json',
         '/models/lhulk.json',
         '/models/spider.json',
@@ -20,10 +20,14 @@ var ModelList = {
         '/models/levels/startmenu.json',
         '/models/lasgun.json',
         '/models/redlasgun.json',
-        '/models/emdgun.json',
+        '/models/greenlasgun.json',
+        '/models/bluelasgun.json',
+        '/models/lightlasgun.json',
+        '/models/emdgun2.json',
         '/models/plasmagun.json',
         '/models/plasmablast.json',
         '/models/pulsewavegun.json',
+        '/models/pulsewaveblast.json',
         '/models/missilelauncher.json',
         '/models/missilelauncher2.json',
         '/models/homingmissilelauncher.json',
@@ -31,7 +35,9 @@ var ModelList = {
         '/models/homingmissilelauncher3.json',
         '/models/hudMaterial.json',
         '/models/flatHudMaterial.json',
-        '/models/missile.json'
+        '/models/missile.json',
+        '/models/molten.json',
+        '/models/moltenshotgun.json'
     ]
 };
 

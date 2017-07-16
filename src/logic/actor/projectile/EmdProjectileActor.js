@@ -13,10 +13,6 @@ function EmdProjectileActor(config){
 EmdProjectileActor.extend(BaseActor);
 EmdProjectileActor.mixin(HomingMixin);
 
-EmdProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 EmdProjectileActor.prototype.customUpdate = function(){
     this.updateHomingLock();
 };

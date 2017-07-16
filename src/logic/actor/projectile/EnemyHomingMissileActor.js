@@ -14,10 +14,6 @@ function EnemyHomingMissileActor(config){
 EnemyHomingMissileActor.extend(BaseActor);
 EnemyHomingMissileActor.mixin(HomingMixin);
 
-EnemyHomingMissileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 EnemyHomingMissileActor.prototype.customUpdate = function(){
     this.updateHomingLock();
 };

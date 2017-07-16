@@ -20,21 +20,35 @@ RedLaserProjectileActor.prototype.onDeath = function(){
 RedLaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
+        color: 'RED',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 1
+    });
+
+    let offsetPosition = this.getOffsetPosition(3);
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
         color: 'DEEPRED',
-        scale: 20,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 6,
+        particleVelocity: 1,
+        alpha: 0.5,
         lifeTime: 1
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: 'RED',
-        scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        lifeTime: 3
+        color: 'DEEPRED',
+        scale: 15,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 

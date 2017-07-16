@@ -13,8 +13,4 @@ function ExplosionActor(config){
 
 ExplosionActor.extend(BaseActor);
 
-ExplosionActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = ExplosionActor;

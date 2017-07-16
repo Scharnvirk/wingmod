@@ -12,10 +12,6 @@ function EnemyConcsnMissileActor(config){
 
 EnemyConcsnMissileActor.extend(BaseActor);
 
-EnemyConcsnMissileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 EnemyConcsnMissileActor.prototype.onDeath = function(){    
     setTimeout(() => {
         this.spawn({

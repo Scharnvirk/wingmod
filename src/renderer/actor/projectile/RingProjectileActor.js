@@ -11,11 +11,11 @@ RingProjectileActor.extend(BaseActor);
 RingProjectileActor.mixin(ParticleMixin);
 
 RingProjectileActor.prototype.customUpdate = function(){
-    let ringSections = 20;
+    let ringSections = 40;
     let angle = Utils.degToRad(360/ringSections);  
     let zPosition, xPosition, offsetPosition;
     let timerFactor = this.timer/(this.props.timeout+3);
-    let radius = Utils.rand(15,20)/10 - timerFactor;  
+    let radius = Utils.rand(25,30)/10 - timerFactor;  
 
     for (let i = 0; i < ringSections; i ++){        
         zPosition = Math.sin(i*angle) * radius;

@@ -24,6 +24,9 @@ RenderBus.prototype.handleMessage = function(message){
     case 'mapHitmapsLoaded':
         this.core.onMapHitmapsLoaded(message);
         break;
+    case 'difficultyChange':
+        this.core.onDifficultyChange(message);
+        break;
     }
 };
 

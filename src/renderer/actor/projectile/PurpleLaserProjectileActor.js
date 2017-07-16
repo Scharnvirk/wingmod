@@ -20,10 +20,21 @@ PurpleLaserProjectileActor.prototype.onDeath = function(){
 PurpleLaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
+        color: 'WHITE',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 1
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
         color: 'PURPLE',
-        scale: 30,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 6,
+        particleVelocity: 1,
+        alpha: 0.5,
         lifeTime: 1
     });
 
@@ -31,10 +42,10 @@ PurpleLaserProjectileActor.prototype.onSpawn = function(){
         particleClass: 'particleAdd',
         color: 'PURPLE',
         scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        lifeTime: 3
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 

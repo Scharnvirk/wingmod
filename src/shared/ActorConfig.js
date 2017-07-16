@@ -11,7 +11,8 @@ const ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,
@@ -32,7 +33,8 @@ const ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,
@@ -145,9 +147,9 @@ const ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 4,
+            damage: 6,
             removeOnHit: true,
-            timeout: 60,
+            timeout: 120,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'

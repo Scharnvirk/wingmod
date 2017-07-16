@@ -14,10 +14,6 @@ function HomingMissileActor(config){
 HomingMissileActor.extend(BaseActor);
 HomingMissileActor.mixin(HomingMixin);
 
-HomingMissileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 HomingMissileActor.prototype.customUpdate = function(){
     this.updateHomingLock();
 };

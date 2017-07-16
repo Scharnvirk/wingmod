@@ -11,8 +11,4 @@ function PurpleLaserProjectileActor(config){
 
 PurpleLaserProjectileActor.extend(BaseActor);
 
-PurpleLaserProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = PurpleLaserProjectileActor;

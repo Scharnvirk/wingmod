@@ -14,10 +14,6 @@ function MissileQuadPickupActor(config){
 
 MissileQuadPickupActor.extend(BaseActor);
 
-MissileQuadPickupActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 MissileQuadPickupActor.prototype.onDeath = function(){
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();

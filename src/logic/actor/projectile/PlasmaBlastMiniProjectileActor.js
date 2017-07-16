@@ -7,12 +7,9 @@ function PlasmaBlastMiniProjectile(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTMINIPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastMiniProjectile.extend(BaseActor);
-
-PlasmaBlastMiniProjectile.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
 
 module.exports = PlasmaBlastMiniProjectile;

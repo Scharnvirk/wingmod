@@ -11,16 +11,16 @@ const WEAPON_MAP = {
     PULSE_WAVE_GUN: 6,
     HOMING_MISSILE_LAUNCHER: 7,
     CONCUSSION_MISSILE_LAUNCHER: 8,
-
-    ENEMY_HOMING_MISSILE_LAUNCHER: 9,
+    PURPLE_BLASTER: 9,
     ENEMY_CONCUSSION_MISSILE_LAUNCHER: 10,
     GREEN_BLASTER: 11,    
     MINI_RED_BLASTER: 12,
     MOLTEN_BALL_THROWER: 13,
     MOLTEN_BALL_SHOTGUN: 14,
-    MOLTEN_BALL_LIGHT_THROWER: 15,
-    SLOW_PULSE_WAVE_GUN: 16,
-    PURPLE_BLASTER: 17,
+    SLOW_PULSE_WAVE_GUN: 15,
+    
+
+    ENEMY_HOMING_MISSILE_LAUNCHER: 100,
 
     NONE: 999
 };
@@ -63,27 +63,26 @@ const WeaponConfig = {
     },
     BLUE_BLASTER: {
         projectileClass: ActorFactory.LASERPROJECTILE,
-        cooldown: 45,
-        velocity: 1800,
-        burstCount: 3,
-        burstCooldown: 5,
+        cooldown: 80,
+        velocity: 350,
+        burstCount: 1,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
-        name: 'BURST BLASTER',
+        name: 'HEAVY BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
-            energy: 1.5
+            energy: 2
         }
     },
     EMD_GUN: {
         projectileClass: ActorFactory.EMDPROJECTILE,
-        cooldown: 10,
-        velocity: 500,
+        cooldown: 30,
+        velocity: 165,
         sound: 'disrupter',
         firingMode: 'alternate',
         volume: 0.8,
         name: 'EMD RIFLE',
-        modelName: 'emdgun',
+        modelName: 'emdgun2',
         ammoConfig: {
             energy:  1.5,
         }
@@ -105,11 +104,12 @@ const WeaponConfig = {
     },
     ENEMY_CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.ENEMYCONCSNMISSILE,
-        cooldown: 100,
+        cooldown: 120,
         velocity: 150,
-        burstCount: 3,
+        burstCount: 2,
         burstCooldown: 20,
         sound: 'missile',
+        name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',
         modelName: 'missilelauncher',
         ammoConfig: {
@@ -121,18 +121,18 @@ const WeaponConfig = {
         cooldown: 120,
         velocity: 350,
         burstCount: 4,
-        burstCooldown: 6,
+        burstCooldown: 14,
         sound: 'laser_green',
         firingMode: 'alternate',
-        name: 'HEAVY BLASTER',
-        modelName: 'redlasgun',
+        name: 'BURST BLASTER',
+        modelName: 'greenlasgun',
         ammoConfig: {
-            energy: 1.5
+            energy: 0.5
         }
     },
     HOMING_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.HOMINGMISSILE,
-        cooldown: 80,
+        cooldown: 120,
         velocity: 0,
         sound: 'missile',
         firingMode: 'alternate',
@@ -146,22 +146,20 @@ const WeaponConfig = {
     },
     MINI_RED_BLASTER: {
         projectileClass: ActorFactory.REDLASERENEMYPROJECTILE,
-        cooldown: 60,
-        velocity: 400,
-        burstCount: 10,
-        burstCooldown: 5,
-        sound: 'red_laser',
+        cooldown: 15,
+        velocity: 200,
+        sound: 'red_light_laser', 
         firingMode: 'alternate',
         name: 'LIGHT BLASTER',
-        modelName: 'redlasgun',
+        modelName: 'lightlasgun',
         ammoConfig: {
             energy: 0.3
         }
     },
     CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.CONCSNMISSILE,
-        cooldown: 15,
-        velocity: 180,
+        cooldown: 80,
+        velocity: 60,
         sound: 'missile',
         firingMode: 'alternate',
         name: 'CONCUSSION MISSILE SYSTEM',
@@ -174,51 +172,38 @@ const WeaponConfig = {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
         cooldown: 60,
         velocity: 160,
+        randomAngle: 10,
         burstCount: 3,
-        burstCooldown: 5,
+        burstCooldown: 7,
         sound: 'molten',
         volume: 0.4,
         firingMode: 'alternate',
         name: 'MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
+        modelName: 'molten',
         ammoConfig: {
             energy: 0.5
         }
     },
     MOLTEN_BALL_SHOTGUN: {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 200,
-        projectileCount: 3,
-        randomAngle: 10,
+        cooldown: 150,
+        velocity: 160,
+        projectileCount: 5,
+        randomAngle: 15,
         burstCount: 2,
-        burstCooldown: 10,
+        burstCooldown: 20,
         sound: 'molten',
         firingMode: 'alternate',
         name: 'MOLTEN BALL SHOTGUN',
-        modelName: 'redlasgun',
+        modelName: 'moltenshotgun',
         ammoConfig: {
             energy: 1.5
         }
     },
-    MOLTEN_BALL_LIGHT_THROWER: {
-        projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 140,
-        burstCount: 2,
-        burstCooldown: 20,
-        sound: 'blue_laser',
-        firingMode: 'alternate',
-        name: 'LIGHT MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
-        ammoConfig: {
-            energy: 0.5
-        }
-    },
     PLASMA_BLAST: {
         projectileClass: ActorFactory.PLASMABLASTPROJECTILE,
-        cooldown: 100,
-        velocity: 200,
+        cooldown: 300,
+        velocity: 70,
         sound: 'plasmabig2',
         firingMode: 'alternate',
         recoil: 40000,
@@ -231,8 +216,8 @@ const WeaponConfig = {
     },
     PLASMA_CANNON: {
         projectileClass: ActorFactory.PLASMAPROJECTILE,
-        cooldown: 8,
-        velocity: 230,
+        cooldown: 24,
+        velocity: 75,
         sound: 'plasmashot3',
         firingMode: 'simultaneous',
         name: 'PLASMA CANNON',
@@ -244,8 +229,8 @@ const WeaponConfig = {
     },
     PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.PULSEWAVEPROJECTILE,
-        cooldown: 5,
-        velocity: 500,
+        cooldown: 15,
+        velocity: 165,
         volume: 0.5,
         sound: 'disrupter',
         firingMode: 'alternate',
@@ -257,8 +242,8 @@ const WeaponConfig = {
     },
     RED_BLASTER: {
         projectileClass: ActorFactory.REDLASERPROJECTILE,
-        cooldown: 15,
-        velocity: 1400,
+        cooldown: 45,
+        velocity: 460,
         sound: 'red_laser',
         firingMode: 'simultaneous',
         name: 'COMBAT BLASTER',
@@ -269,12 +254,12 @@ const WeaponConfig = {
     },
     SLOW_PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.RINGPROJECTILE,
-        cooldown: 80,
-        velocity: 200,
+        cooldown: 40,
+        velocity: 250,
         sound: 'disrupter',
         firingMode: 'alternate',
-        name: 'PULSE WAVE EMITTER',
-        modelName: 'pulsewavegun',
+        name: 'PULSE WAVE BLASTER',
+        modelName: 'pulsewaveblast',
         ammoConfig: {
             energy: 1
         }
@@ -282,13 +267,13 @@ const WeaponConfig = {
     PURPLE_BLASTER: {
         projectileClass: ActorFactory.PURPLELASERPROJECTILE,
         cooldown: 150,
-        velocity: 500,
+        velocity: 800,
         burstCount: 2,
         burstCooldown: 20,
         sound: 'laser_purple',
         firingMode: 'alternate',
-        name: 'POWERED BLASTER',
-        modelName: 'lasgun',
+        name: 'SNIPER BLASTER',
+        modelName: 'bluelasgun',
         ammoConfig: {
             energy: 1.5
         }
