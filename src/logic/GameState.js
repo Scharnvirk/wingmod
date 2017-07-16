@@ -30,7 +30,8 @@ GameState.prototype._createInitialState = function(){
             missiles: 20,
             rads: 10,
             coolant: 500
-        },        
+        },
+        difficultyFactor: 1,
         existingActorsByType: {},
         removedActorsByType: {},
         killStats: {},
@@ -218,6 +219,14 @@ GameState.prototype.getActorCountByType = function(type){
     }
 
     return this._state.existingActorsByType[type];
+};
+
+GameState.prototype.setDifficultyFactor = function(factor){
+    this._state.difficultyFactor = factor;
+};
+
+GameState.prototype.getDifficulty = function(factor){
+    return this._state.difficultyFactor;
 };
 
 GameState.prototype._removeNamedActor = function(actorProps){

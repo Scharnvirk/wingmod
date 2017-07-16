@@ -376,11 +376,14 @@ Core.prototype.onPlaySound = function (event) {
 
 Core.prototype.onWeaponSwitched = function (event) {
     this.renderBus.postMessage('weaponSwitched', event.data);
-    // this.actorManager.switchPlayerWeapon(event.data);
 };
 
 Core.prototype.onGameStateChange = function (event) {
     this.renderBus.postMessage('gameStateChange', event.data);
+};
+
+Core.prototype.onDifficultyChange = function (event) {
+    this.gameState.setDifficultyFactor(event.data.difficulty);
 };
 
 module.exports = Core;
@@ -422,7 +425,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: Utils.rand(8,8),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0         
+    //         angle: 0          
     //     });
     // }
 
@@ -679,6 +682,7 @@ GameState.prototype._createInitialState = function () {
             rads: 10,
             coolant: 500
         },
+        difficultyFactor: 1,
         existingActorsByType: {},
         removedActorsByType: {},
         killStats: {},
@@ -872,6 +876,14 @@ GameState.prototype.getActorCountByType = function (type) {
     return this._state.existingActorsByType[type];
 };
 
+GameState.prototype.setDifficultyFactor = function (factor) {
+    this._state.difficultyFactor = factor;
+};
+
+GameState.prototype.getDifficulty = function (factor) {
+    return this._state.difficultyFactor;
+};
+
 GameState.prototype._removeNamedActor = function (actorProps) {
     if (!this._state.killStats[actorProps.name]) {
         this._state.killStats[actorProps.name] = {
@@ -932,7 +944,7 @@ function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1055,6 +1067,9 @@ RenderBus.prototype.handleMessage = function (message) {
             break;
         case 'mapHitmapsLoaded':
             this.core.onMapHitmapsLoaded(message);
+            break;
+        case 'difficultyChange':
+            this.core.onDifficultyChange(message);
             break;
     }
 };
@@ -1880,8 +1895,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -1907,7 +1922,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
+    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -2485,6 +2500,7 @@ function EnemyActor(config) {
 
     Object.assign(this, config);
     this.applyConfig(EnemyConfig.getById(config.subclassId));
+    this.applyDifficulty();
 
     this.calloutSound = this.props.calloutSound;
     this.brain = this.createBrain();
@@ -2495,6 +2511,17 @@ function EnemyActor(config) {
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(BrainMixin);
+
+EnemyActor.prototype.applyDifficulty = function () {
+    var difficulty = this.gameState.getDifficulty();
+    var difficultyMap = { 0: 0.5, 1: 0.75, 2: 1, 3: 1.2, 4: 1.4, 5: 1.6, 6: 1.8, 7: 2, 8: 3, 9: 4 };
+    var difficultyFactor = difficultyMap[difficulty];
+
+    this.props.hp *= difficultyFactor;
+    this.props.acceleration *= difficultyFactor;
+    this.props.turnFactor *= difficultyFactor;
+    this.props.pointWorth *= difficultyFactor;
+};
 
 EnemyActor.prototype.createBrain = function () {
     return new MookBrain(Object.assign({
@@ -2938,7 +2965,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
+        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -2971,8 +2998,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
         var p = this.getPosition();
 
@@ -8743,8 +8770,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
+        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -8863,7 +8890,7 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such.
+    //expects each key and value to be unique; intended for name:id mappings and such. 
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;

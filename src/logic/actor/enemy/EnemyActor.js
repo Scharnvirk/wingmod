@@ -13,6 +13,7 @@ function EnemyActor(config){
 
     Object.assign(this, config);
     this.applyConfig(EnemyConfig.getById(config.subclassId));
+    this.applyDifficulty();
 
     this.calloutSound = this.props.calloutSound;
     this.brain = this.createBrain();
@@ -23,6 +24,17 @@ function EnemyActor(config){
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(BrainMixin);
+
+EnemyActor.prototype.applyDifficulty = function(){
+    const difficulty = this.gameState.getDifficulty();
+    const difficultyMap = {0: 0.5, 1:0.75, 2:1, 3:1.2, 4:1.4, 5:1.6, 6:1.8, 7:2, 8:3, 9:4};
+    const difficultyFactor = difficultyMap[difficulty];
+
+    this.props.hp *= difficultyFactor;
+    this.props.acceleration *= difficultyFactor;
+    this.props.turnFactor *= difficultyFactor;
+    this.props.pointWorth *= difficultyFactor;
+};
 
 EnemyActor.prototype.createBrain = function(){
     return new MookBrain(Object.assign({
