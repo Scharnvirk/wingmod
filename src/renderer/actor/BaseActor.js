@@ -7,6 +7,7 @@ function BaseActor(config, actorDependencies){
     this.timer = 0;   
 
     this._manager = config.manager;
+    this._gameState = config.gameState;
     this._particleManager = actorDependencies.particleManager;
 
     this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);

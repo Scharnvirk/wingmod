@@ -33,7 +33,8 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-console": "off"
     },
     "globals": {
         "require": false,

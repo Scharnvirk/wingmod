@@ -35,7 +35,15 @@ var Constants = {
 
     CHUNK_SIZE: 768,
 
-    MAX_SOUND_DISTANCE: 500
+    MAX_SOUND_DISTANCE: 500,
+
+    DIFFICULTIES: {
+        hp: [0.5, 0.75, 1, 1.2, 1.5],
+        acceleration: [0.5, 0.75, 1, 1.5, 2],
+        turnSpeed: [0.5, 0.75, 1, 1.5, 2],
+        fireDelay: [2, 1.5, 1, 0.75, 0.5],
+        pointWorth: [1, 1.2, 1.6, 2, 3]
+    }
 };
 
 module.exports = Constants;

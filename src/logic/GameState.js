@@ -5,6 +5,7 @@ function GameState(){
     this._props = this._createInitialProps(); 
     this._notifyOfStateChange();
     this._timer = 0;
+    this._props.difficulties = Constants.DIFFICULTIES;
     
     EventEmitter.apply(this, arguments);
 }
@@ -225,9 +226,15 @@ GameState.prototype.setDifficultyFactor = function(factor){
     this._state.difficultyFactor = factor;
 };
 
-GameState.prototype.getDifficulty = function(factor){
-    return this._state.difficultyFactor;
+GameState.prototype.getDifficultyForType = function(type) {
+    if (!this._props.difficulties.hasOwnProperty(type)) {
+        console.warn(`no difficulty type: ${type}; returning default (1)`);
+        return 1;
+    }
+
+    return this._props.difficulties[type][this._state.difficultyFactor];
 };
+
 
 GameState.prototype._removeNamedActor = function(actorProps){
     if (!this._state.killStats[actorProps.name]) {

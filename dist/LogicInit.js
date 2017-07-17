@@ -425,7 +425,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: Utils.rand(8,8),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -656,6 +656,7 @@ function GameState() {
     this._props = this._createInitialProps();
     this._notifyOfStateChange();
     this._timer = 0;
+    this._props.difficulties = Constants.DIFFICULTIES;
 
     EventEmitter.apply(this, arguments);
 }
@@ -880,8 +881,13 @@ GameState.prototype.setDifficultyFactor = function (factor) {
     this._state.difficultyFactor = factor;
 };
 
-GameState.prototype.getDifficulty = function (factor) {
-    return this._state.difficultyFactor;
+GameState.prototype.getDifficultyForType = function (type) {
+    if (!this._props.difficulties.hasOwnProperty(type)) {
+        console.warn('no difficulty type: ' + type + '; returning default (1)');
+        return 1;
+    }
+
+    return this._props.difficulties[type][this._state.difficultyFactor];
 };
 
 GameState.prototype._removeNamedActor = function (actorProps) {
@@ -944,7 +950,7 @@ function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1895,8 +1901,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -1922,7 +1928,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -2500,27 +2506,28 @@ function EnemyActor(config) {
 
     Object.assign(this, config);
     this.applyConfig(EnemyConfig.getById(config.subclassId));
-    this.applyDifficulty();
 
     this.calloutSound = this.props.calloutSound;
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
 
     BaseActor.apply(this, arguments);
+
+    this.applyDifficulty();
 }
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(BrainMixin);
 
 EnemyActor.prototype.applyDifficulty = function () {
-    var difficulty = this.gameState.getDifficulty();
-    var difficultyMap = { 0: 0.5, 1: 0.75, 2: 1, 3: 1.2, 4: 1.4, 5: 1.6, 6: 1.8, 7: 2, 8: 3, 9: 4 };
-    var difficultyFactor = difficultyMap[difficulty];
-
-    this.props.hp *= difficultyFactor;
-    this.props.acceleration *= difficultyFactor;
-    this.props.turnFactor *= difficultyFactor;
-    this.props.pointWorth *= difficultyFactor;
+    this.props.hp *= this.gameState.getDifficultyForType('hp');
+    this.props.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.props.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.props.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
+    this.state.hp *= this.gameState.getDifficultyForType('hp');
+    this.state.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.state.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.state.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
 };
 
 EnemyActor.prototype.createBrain = function () {
@@ -2965,7 +2972,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -2998,8 +3005,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
         var p = this.getPosition();
 
@@ -4349,6 +4356,7 @@ function BaseActor(config, actorDependencies) {
     this.timer = 0;
 
     this._manager = config.manager;
+    this._gameState = config.gameState;
     this._particleManager = actorDependencies.particleManager;
 
     this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);
@@ -4882,6 +4890,8 @@ var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 function EnemyActor(config) {
     this.applyConfig(EnemyConfig.getById(config.subclassId));
     BaseActor.apply(this, arguments);
+
+    this.applyDifficulty();
 }
 
 EnemyActor.extend(BaseActor);
@@ -4925,6 +4935,11 @@ EnemyActor.prototype.onDeath = function () {
     if (this.props.render.onDeath.shake) {
         this.requestShake();
     }
+};
+
+EnemyActor.prototype.applyDifficulty = function () {
+    this.props.hp *= this._gameState.getDifficultyForType('hp');
+    this.state.hp *= this._gameState.getDifficultyForType('hp');
 };
 
 module.exports = EnemyActor;
@@ -7714,7 +7729,15 @@ var Constants = {
 
     CHUNK_SIZE: 768,
 
-    MAX_SOUND_DISTANCE: 500
+    MAX_SOUND_DISTANCE: 500,
+
+    DIFFICULTIES: {
+        hp: [0.5, 0.75, 1, 1.2, 1.5],
+        acceleration: [0.5, 0.75, 1, 1.5, 2],
+        turnSpeed: [0.5, 0.75, 1, 1.5, 2],
+        fireDelay: [2, 1.5, 1, 0.75, 0.5],
+        pointWorth: [1, 1.2, 1.6, 2, 3]
+    }
 };
 
 module.exports = Constants;
@@ -8723,6 +8746,8 @@ EventEmitter.prototype = {
 },{}],109:[function(require,module,exports){
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
         var check = false;
@@ -8770,8 +8795,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
+        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -8890,12 +8915,27 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such. 
+    //expects each key and value to be unique; intended for name:id mappings and such.
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;
             return carry;
         }, {});
+    },
+
+    deepFreeze: function deepFreeze(o) {
+        Object.freeze(o);
+        if (o === undefined) {
+            return o;
+        }
+
+        Object.getOwnPropertyNames(o).forEach(function (prop) {
+            if (o[prop] !== null && (_typeof(o[prop]) === "object" || typeof o[prop] === "function") && !Object.isFrozen(o[prop])) {
+                this.deepFreeze(o[prop]);
+            }
+        });
+
+        return o;
     }
 };
 

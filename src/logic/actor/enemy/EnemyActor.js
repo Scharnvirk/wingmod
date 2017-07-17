@@ -13,27 +13,28 @@ function EnemyActor(config){
 
     Object.assign(this, config);
     this.applyConfig(EnemyConfig.getById(config.subclassId));
-    this.applyDifficulty();
-
+    
     this.calloutSound = this.props.calloutSound;
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
     
     BaseActor.apply(this, arguments);
+    
+    this.applyDifficulty();
 }
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(BrainMixin);
 
 EnemyActor.prototype.applyDifficulty = function(){
-    const difficulty = this.gameState.getDifficulty();
-    const difficultyMap = {0: 0.5, 1:0.75, 2:1, 3:1.2, 4:1.4, 5:1.6, 6:1.8, 7:2, 8:3, 9:4};
-    const difficultyFactor = difficultyMap[difficulty];
-
-    this.props.hp *= difficultyFactor;
-    this.props.acceleration *= difficultyFactor;
-    this.props.turnFactor *= difficultyFactor;
-    this.props.pointWorth *= difficultyFactor;
+    this.props.hp *= this.gameState.getDifficultyForType('hp');
+    this.props.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.props.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.props.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
+    this.state.hp *= this.gameState.getDifficultyForType('hp');
+    this.state.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.state.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.state.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
 };
 
 EnemyActor.prototype.createBrain = function(){
