@@ -15,7 +15,7 @@ function WeaponPickupActor(config){
         this.props.timeout = 9999999;
     }
 
-    this.state.pickupBlockedTimer = config.parent && config.parent.isPlayer() ? 120 : 0;
+    this.state.pickupBlockedTimer = config.parent && config.parent.isOwnedByPlayer() ? 120 : 0;
 }
 
 WeaponPickupActor.extend(BaseActor);
@@ -28,10 +28,6 @@ WeaponPickupActor.prototype.customUpdate = function() {
     if (this.state.pickupBlockedTimer > 0) {
         this.state.pickupBlockedTimer --;
     }
-};
-
-WeaponPickupActor.prototype.createBody = function() {
-    return new BaseBody(this.bodyConfig);
 };
 
 WeaponPickupActor.prototype.onDeath = function(){

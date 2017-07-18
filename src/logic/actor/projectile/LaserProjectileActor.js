@@ -12,8 +12,4 @@ function LaserProjectileActor(config){
 
 LaserProjectileActor.extend(BaseActor);
 
-LaserProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = LaserProjectileActor;

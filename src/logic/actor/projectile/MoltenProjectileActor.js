@@ -11,8 +11,4 @@ function MoltenProjectileActor(config){
 
 MoltenProjectileActor.extend(BaseActor);
 
-MoltenProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = MoltenProjectileActor;

@@ -43,6 +43,7 @@ const EnemyConfig = {
             pointWorth: 25,
             enemyIndex: 8,
             calloutSound: 'drone',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 250,
@@ -139,6 +140,7 @@ const EnemyConfig = {
             pointWorth: 20,
             enemyIndex: 0,
             calloutSound: 'drone',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 140,
@@ -230,6 +232,7 @@ const EnemyConfig = {
             pointWorth: 30,
             enemyIndex: 1,
             calloutSound: 'sniper',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     shootingArc: 8,
@@ -322,6 +325,7 @@ const EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 180,
@@ -425,6 +429,7 @@ const EnemyConfig = {
             pointWorth: 80,
             enemyIndex: 4,
             calloutSound: 'mhulk',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 500,
@@ -527,6 +532,7 @@ const EnemyConfig = {
             pointWorth: 200,
             enemyIndex: 7,
             calloutSound: 'lhulk',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 1500,
@@ -654,6 +660,7 @@ const EnemyConfig = {
             pointWorth: 60,
             enemyIndex: 6,
             calloutSound: 'spider',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -766,6 +773,7 @@ const EnemyConfig = {
             enemy: true,
             type: 'enemyShip',
             calloutSound: 'spiderling',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -854,6 +862,7 @@ const EnemyConfig = {
             pointWorth: 10,
             enemyIndex: 2,
             calloutSound: 'orbot',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     shootingArc: 30,

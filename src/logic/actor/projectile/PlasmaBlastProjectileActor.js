@@ -12,10 +12,6 @@ function PlasmaBlastProjectileActor(config){
 
 PlasmaBlastProjectileActor.extend(BaseActor);
 
-PlasmaBlastProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig); 
-};
-
 PlasmaBlastProjectileActor.prototype.onDeath = function(){    
     this._explode();
 };

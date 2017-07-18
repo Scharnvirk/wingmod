@@ -15,12 +15,13 @@ function EnemyActor(config){
     this.applyConfig(EnemyConfig.getById(config.subclassId));
     
     this.calloutSound = this.props.calloutSound;
-    this.brain = this.createBrain();
-    this.weapon = this.createWeapon();
     
     BaseActor.apply(this, arguments);
     
     this.applyDifficulty();
+
+    this.brain = this.createBrain();
+    this.weapon = this.createWeapon();
 }
 
 EnemyActor.extend(BaseActor);
@@ -31,7 +32,9 @@ EnemyActor.prototype.applyDifficulty = function(){
     this.props.acceleration *= this.gameState.getDifficultyForType('acceleration');
     this.props.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
     this.props.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
+    this.props.powerLevel *= this.gameState.getDifficultyForType('powerLevel');
     this.state.hp *= this.gameState.getDifficultyForType('hp');
+    this.state.powerLevel *= this.gameState.getDifficultyForType('powerLevel');
     this.state.acceleration *= this.gameState.getDifficultyForType('acceleration');
     this.state.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
     this.state.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
@@ -44,10 +47,6 @@ EnemyActor.prototype.createBrain = function(){
         gameState: this.gameState,
         enemyActor: this.manager.getFirstPlayerActor(),
     }, this.props.logic.brain));
-};
-
-EnemyActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
 };
 
 EnemyActor.prototype.customUpdate = function(){
@@ -104,10 +103,10 @@ EnemyActor.prototype._spawn = function(spawnConfig) {
 
 EnemyActor.prototype._dropWeapon = function() {
     //HAX!!! should be config property in ActorConfig... but for now...
-    if(Utils.rand(0,100) > 94){
+    if(Utils.rand(0,100) > 93){
         this.spawn({        
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: Utils.rand(1,8),
+            subclassId: Utils.rand(1,17),
             angle: [0, 360],
             velocity: [15, 20]
         });

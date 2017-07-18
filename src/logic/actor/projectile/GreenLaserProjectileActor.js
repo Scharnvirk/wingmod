@@ -11,8 +11,4 @@ function GreenLaserProjectileActor(config){
 
 GreenLaserProjectileActor.extend(BaseActor);
 
-GreenLaserProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = GreenLaserProjectileActor;

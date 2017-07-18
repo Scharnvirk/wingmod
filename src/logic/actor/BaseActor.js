@@ -1,4 +1,5 @@
 var ActorFactory = require('shared/ActorFactory')('logic');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function BaseActor(config){
     this.id = this.id || config.id;
@@ -6,10 +7,12 @@ function BaseActor(config){
     this.state = this._createState(this.state || {});
     this.timer = 0;   
 
+    this.props.isPlayer = this.props.isPlayer || config.isPlayer;
+
     this.gameState = config.gameState || null;     
     this.manager = config.manager || null;
 
-    this._body = this.createBody();
+    this._body = this.createBody(this.props.isPlayer);
     if(!this._body) throw new Error('No body defined for Logic Actor!');
 
     this._body.position = [config.positionX || 0, config.positionY || 0];
@@ -83,9 +86,13 @@ BaseActor.prototype.getType = function(){
     return this.props.type || 'noType';
 };
 
-BaseActor.prototype.isPlayer = function(){
-    return this.props.isPlayer;
+BaseActor.prototype.isOwnedByPlayer = function(){
+    return !!this.props.isPlayer;
 };
+
+BaseActor.prototype.setOwnedByPlayer = function(ownedByPlayer){
+    this.props.isPlayer = ownedByPlayer;
+}
 
 BaseActor.prototype.setThrust = function(thrust){
     this._thrust = thrust;
@@ -112,12 +119,17 @@ BaseActor.prototype.getOffsetPosition = function(distanceOffset, angleOffset){
     return Utils.rotationToVector(this.angle + (angleOffset || 0), (distanceOffset || 0));
 };
 
+BaseActor.prototype.getPowerLevel = function(){
+    return this.props.powerLevel || 1;
+};
+
 BaseActor.prototype.playSound = function(sounds, volume){
     this.manager.playSound({sounds:sounds, actor: this, volume: volume || 1});
 };
 
-BaseActor.prototype.createBody = function(){
-    return null;
+BaseActor.prototype.createBody = function(isPlayer){
+    this.bodyConfig.isPlayer = isPlayer;
+    return new BaseBody(this.bodyConfig);
 };
 
 BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){

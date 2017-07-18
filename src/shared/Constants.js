@@ -39,10 +39,11 @@ var Constants = {
 
     DIFFICULTIES: {
         hp: [0.5, 0.75, 1, 1.2, 1.5],
-        acceleration: [0.5, 0.75, 1, 1.5, 2],
-        turnSpeed: [0.5, 0.75, 1, 1.5, 2],
+        acceleration: [0.8, 0.9, 1, 1.5, 2],
+        turnSpeed: [0.7, 0.85, 1, 1.5, 2],
         fireDelay: [2, 1.5, 1, 0.75, 0.5],
-        pointWorth: [1, 1.2, 1.6, 2, 3]
+        pointWorth: [0.2, 0.6, 1, 2, 3],
+        powerLevel: [0.5, 0.75, 1, 1.5, 2]
     }
 };
 

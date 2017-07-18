@@ -11,8 +11,4 @@ function PlasmaBlastMiniProjectile(config){
 
 PlasmaBlastMiniProjectile.extend(BaseActor);
 
-PlasmaBlastMiniProjectile.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = PlasmaBlastMiniProjectile;

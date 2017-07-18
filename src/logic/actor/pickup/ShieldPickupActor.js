@@ -14,10 +14,6 @@ function ShieldPickupActor(config){
 
 ShieldPickupActor.extend(BaseActor);
 
-ShieldPickupActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 ShieldPickupActor.prototype.onDeath = function(){
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();

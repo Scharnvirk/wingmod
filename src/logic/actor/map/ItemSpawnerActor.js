@@ -17,10 +17,6 @@ function ItemSpawnerActor(config){
 
 ItemSpawnerActor.extend(BaseActor);
 
-ItemSpawnerActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 ItemSpawnerActor.prototype.customUpdate = function(){
     if (!this.props.spawns) {
         return;

@@ -14,10 +14,6 @@ function EnergyPickupActor(config){
 
 EnergyPickupActor.extend(BaseActor);
 
-EnergyPickupActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 EnergyPickupActor.prototype.onDeath = function(){
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();

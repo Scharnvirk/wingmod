@@ -11,7 +11,8 @@ const ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,
@@ -32,7 +33,8 @@ const ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,

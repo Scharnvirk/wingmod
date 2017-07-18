@@ -12,10 +12,6 @@ function ConcsnMissileActor(config){
 
 ConcsnMissileActor.extend(BaseActor);
 
-ConcsnMissileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 ConcsnMissileActor.prototype.onDeath = function(){    
     setTimeout(() => {
         this.spawn({

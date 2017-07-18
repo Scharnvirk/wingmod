@@ -14,10 +14,6 @@ function PlasmaPickupActor(config){
 
 PlasmaPickupActor.extend(BaseActor);
 
-PlasmaPickupActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 PlasmaPickupActor.prototype.onDeath = function(){
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();

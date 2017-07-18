@@ -41,7 +41,7 @@ ActorManager.prototype.addNew = function(config){
 
     actor.parent = config.parent;
     actor.applySpawnConfig(config.spawnConfig);
-    
+
     this._storage[actor.getType()][this.currentId] = actor;
     this.currentId ++;
     this.world.addBody(actor.getBody());
