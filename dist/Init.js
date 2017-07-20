@@ -24013,6 +24013,8 @@ BaseActor.prototype.spawn = function (config) {
     config.classId = config.classId || ActorFactory.DEBUG;
     config.probability = (config.probability || 1) * 100;
     config.offsetPosition = this.getOffsetPosition(config.spawnOffset || 0);
+    config.powerLevel = config.powerLevel || 1;
+    config.isPlayer = config.isPlayer || false;
 
     for (var i = 0; i < Utils.randArray(config.amount); i++) {
         if (config.probability === 100 || Utils.rand(1, 100) <= config.probability) {
@@ -24024,7 +24026,9 @@ BaseActor.prototype.spawn = function (config) {
                 angle: this.angle + Utils.degToRad(Utils.randArray(config.angle)),
                 velocity: Utils.randArray(config.velocity),
                 parent: this,
-                spawnConfig: config.customConfig
+                spawnConfig: config.customConfig,
+                isPlayer: config.isPlayer,
+                powerLevel: config.powerLevel
             });
         }
     }
@@ -24997,6 +25001,7 @@ Weapon.prototype.handleFiringAlternate = function () {
 
 Weapon.prototype._alterPropertiesByPowerLevel = function (powerLevel) {
     this.burstCooldown *= 1 / powerLevel;
+    if (this.burstCount > 1) this.burstCount = Math.ceil(this.burstCount * (powerLevel * 2 / 3));
     this.cooldown *= 1 / powerLevel;
     this.velocity *= powerLevel;
 };
@@ -25113,7 +25118,7 @@ EnemyActor.prototype._dropWeapon = function () {
     if (Utils.rand(0, 100) > 93) {
         this.spawn({
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: Utils.rand(1, 17),
+            subclassId: Utils.rand(1, 16),
             angle: [0, 360],
             velocity: [15, 20]
         });
@@ -26422,6 +26427,7 @@ function PlasmaBlastMiniProjectile(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTMINIPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastMiniProjectile.extend(BaseActor);
@@ -26441,6 +26447,7 @@ function PlasmaBlastProjectileActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastProjectileActor.extend(BaseActor);
@@ -26460,7 +26467,9 @@ PlasmaBlastProjectileActor.prototype._explode = function () {
         classId: ActorFactory.PLASMABLASTMINIPROJECTILE,
         angle: [-360, 360],
         velocity: [250, 450],
-        spawnOffset: -10
+        spawnOffset: -10,
+        isPlayer: this.isPlayer,
+        powerLevel: this.powerLevel
     });
 };
 
@@ -30171,13 +30180,13 @@ RingProjectileActor.extend(BaseActor);
 RingProjectileActor.mixin(ParticleMixin);
 
 RingProjectileActor.prototype.customUpdate = function () {
-    var ringSections = 20;
+    var ringSections = 30;
     var angle = Utils.degToRad(360 / ringSections);
     var zPosition = void 0,
         xPosition = void 0,
         offsetPosition = void 0;
     var timerFactor = this.timer / (this.props.timeout + 3);
-    var radius = Utils.rand(15, 20) / 10 - timerFactor;
+    var radius = Utils.rand(25, 30) / 10 - timerFactor;
 
     for (var i = 0; i < ringSections; i++) {
         zPosition = Math.sin(i * angle) * radius;
@@ -37407,8 +37416,8 @@ var Constants = {
         acceleration: [0.8, 0.9, 1, 1.5, 2],
         turnSpeed: [0.7, 0.85, 1, 1.5, 2],
         fireDelay: [2, 1.5, 1, 0.75, 0.5],
-        pointWorth: [0.2, 0.6, 1, 2, 3],
-        powerLevel: [0.5, 0.75, 1, 1.5, 2]
+        pointWorth: [0.2, 0.6, 1, 3, 5],
+        powerLevel: [0.7, 0.85, 1.05, 1.55, 2.1]
     }
 };
 
@@ -37462,7 +37471,7 @@ var EnemyConfig = {
             pointWorth: 25,
             enemyIndex: 8,
             calloutSound: 'drone',
-            powerLevel: 1,
+            powerLevel: 0.7,
             logic: {
                 brain: {
                     firingDistance: 250,
@@ -38048,7 +38057,7 @@ var EnemyConfig = {
             pointWorth: 60,
             enemyIndex: 6,
             calloutSound: 'spider',
-            powerLevel: 1,
+            powerLevel: 1.5,
             logic: {
                 brain: {
                     shootingArc: 50,
@@ -38149,14 +38158,14 @@ var EnemyConfig = {
     SPIDERLING: {
         props: {
             danger: 1,
-            acceleration: 160,
-            turnSpeed: 1,
+            acceleration: 400,
+            turnSpeed: 2,
             hp: 2,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
             calloutSound: 'spiderling',
-            powerLevel: 1,
+            powerLevel: 0.8,
             logic: {
                 brain: {
                     shootingArc: 50,
@@ -38166,7 +38175,7 @@ var EnemyConfig = {
                     leadSkill: 0
                 },
                 weapon: {
-                    type: 'MOLTEN_BALL_LIGHT_THROWER',
+                    type: 'MOLTEN_BALL_THROWER',
                     firingMode: 'alternate',
                     firingPoints: [{ offsetAngle: 0, offsetDistance: 0, fireAngle: 0 }]
                 },
@@ -38241,7 +38250,7 @@ var EnemyConfig = {
             pointWorth: 10,
             enemyIndex: 2,
             calloutSound: 'orbot',
-            powerLevel: 1,
+            powerLevel: 0.5,
             logic: {
                 brain: {
                     shootingArc: 30,
@@ -38674,9 +38683,8 @@ var WEAPON_MAP = {
     MINI_RED_BLASTER: 12,
     MOLTEN_BALL_THROWER: 13,
     MOLTEN_BALL_SHOTGUN: 14,
-    MOLTEN_BALL_LIGHT_THROWER: 15,
-    SLOW_PULSE_WAVE_GUN: 16,
-    PURPLE_BLASTER: 17,
+    SLOW_PULSE_WAVE_GUN: 15,
+    PURPLE_BLASTER: 16,
 
     NONE: 999
 };
@@ -38721,7 +38729,7 @@ var WeaponConfig = {
         projectileClass: ActorFactory.LASERPROJECTILE,
         cooldown: 135,
         velocity: 600,
-        burstCount: 3,
+        burstCount: 2,
         burstCooldown: 15,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
@@ -38766,6 +38774,7 @@ var WeaponConfig = {
         burstCount: 3,
         burstCooldown: 20,
         sound: 'missile',
+        name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',
         modelName: 'missilelauncher',
         ammoConfig: {
@@ -38816,7 +38825,7 @@ var WeaponConfig = {
     },
     CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.CONCSNMISSILE,
-        cooldown: 45,
+        cooldown: 80,
         velocity: 60,
         sound: 'missile',
         firingMode: 'alternate',
@@ -38843,7 +38852,7 @@ var WeaponConfig = {
     },
     MOLTEN_BALL_SHOTGUN: {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
+        cooldown: 90,
         velocity: 200,
         projectileCount: 3,
         randomAngle: 10,
@@ -38855,20 +38864,6 @@ var WeaponConfig = {
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 1.5
-        }
-    },
-    MOLTEN_BALL_LIGHT_THROWER: {
-        projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 140,
-        burstCount: 2,
-        burstCooldown: 20,
-        sound: 'blue_laser',
-        firingMode: 'alternate',
-        name: 'LIGHT MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
-        ammoConfig: {
-            energy: 0.5
         }
     },
     PLASMA_BLAST: {
@@ -38925,11 +38920,11 @@ var WeaponConfig = {
     },
     SLOW_PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.RINGPROJECTILE,
-        cooldown: 80,
-        velocity: 200,
+        cooldown: 40,
+        velocity: 400,
         sound: 'disrupter',
         firingMode: 'alternate',
-        name: 'PULSE WAVE EMITTER',
+        name: 'PULSE WAVE BLASTER',
         modelName: 'pulsewavegun',
         ammoConfig: {
             energy: 1

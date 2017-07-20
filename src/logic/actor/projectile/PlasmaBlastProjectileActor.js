@@ -8,6 +8,7 @@ function PlasmaBlastProjectileActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastProjectileActor.extend(BaseActor);
@@ -27,7 +28,9 @@ PlasmaBlastProjectileActor.prototype._explode = function() {
         classId: ActorFactory.PLASMABLASTMINIPROJECTILE,
         angle: [-360, 360],
         velocity: [250, 450],
-        spawnOffset: -10
+        spawnOffset: -10,
+        isPlayer: this.isPlayer,
+        powerLevel: this.powerLevel
     });
 };
 

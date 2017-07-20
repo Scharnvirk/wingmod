@@ -120,6 +120,7 @@ Weapon.prototype.handleFiringAlternate = function(){
 
 Weapon.prototype._alterPropertiesByPowerLevel = function(powerLevel){
     this.burstCooldown *= (1/powerLevel);
+    if (this.burstCount > 1) this.burstCount = Math.ceil(this.burstCount * (powerLevel *2/3));
     this.cooldown *= (1/powerLevel);
     this.velocity *= powerLevel;
 };

@@ -18,9 +18,8 @@ const WEAPON_MAP = {
     MINI_RED_BLASTER: 12,
     MOLTEN_BALL_THROWER: 13,
     MOLTEN_BALL_SHOTGUN: 14,
-    MOLTEN_BALL_LIGHT_THROWER: 15,
-    SLOW_PULSE_WAVE_GUN: 16,
-    PURPLE_BLASTER: 17,
+    SLOW_PULSE_WAVE_GUN: 15,
+    PURPLE_BLASTER: 16,
 
     NONE: 999
 };
@@ -65,7 +64,7 @@ const WeaponConfig = {
         projectileClass: ActorFactory.LASERPROJECTILE,
         cooldown: 135,
         velocity: 600,
-        burstCount: 3,
+        burstCount: 2,
         burstCooldown: 15,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
@@ -110,6 +109,7 @@ const WeaponConfig = {
         burstCount: 3,
         burstCooldown: 20,
         sound: 'missile',
+        name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',
         modelName: 'missilelauncher',
         ammoConfig: {
@@ -160,7 +160,7 @@ const WeaponConfig = {
     },
     CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.CONCSNMISSILE,
-        cooldown: 45,
+        cooldown: 80,
         velocity: 60,
         sound: 'missile',
         firingMode: 'alternate',
@@ -187,7 +187,7 @@ const WeaponConfig = {
     },
     MOLTEN_BALL_SHOTGUN: {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
+        cooldown: 90,
         velocity: 200,
         projectileCount: 3,
         randomAngle: 10,
@@ -199,20 +199,6 @@ const WeaponConfig = {
         modelName: 'redlasgun',
         ammoConfig: {
             energy: 1.5
-        }
-    },
-    MOLTEN_BALL_LIGHT_THROWER: {
-        projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 140,
-        burstCount: 2,
-        burstCooldown: 20,
-        sound: 'blue_laser',
-        firingMode: 'alternate',
-        name: 'LIGHT MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
-        ammoConfig: {
-            energy: 0.5
         }
     },
     PLASMA_BLAST: {
@@ -269,11 +255,11 @@ const WeaponConfig = {
     },
     SLOW_PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.RINGPROJECTILE,
-        cooldown: 80,
-        velocity: 200,
+        cooldown: 40,
+        velocity: 400,
         sound: 'disrupter',
         firingMode: 'alternate',
-        name: 'PULSE WAVE EMITTER',
+        name: 'PULSE WAVE BLASTER',
         modelName: 'pulsewavegun',
         ammoConfig: {
             energy: 1

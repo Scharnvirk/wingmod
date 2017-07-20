@@ -236,6 +236,8 @@ BaseActor.prototype.spawn = function(config){
     config.classId = config.classId || ActorFactory.DEBUG;
     config.probability = (config.probability || 1) * 100;
     config.offsetPosition = this.getOffsetPosition(config.spawnOffset || 0);
+    config.powerLevel = config.powerLevel || 1;
+    config.isPlayer = config.isPlayer || false;
 
     for(let i = 0; i < Utils.randArray(config.amount); i++){        
         if (config.probability === 100 || Utils.rand(1, 100) <= config.probability){
@@ -247,7 +249,9 @@ BaseActor.prototype.spawn = function(config){
                 angle: this.angle + Utils.degToRad(Utils.randArray(config.angle)),
                 velocity: Utils.randArray(config.velocity),
                 parent: this,
-                spawnConfig: config.customConfig
+                spawnConfig: config.customConfig,
+                isPlayer: config.isPlayer,
+                powerLevel: config.powerLevel
             });
         }
     }

@@ -106,7 +106,7 @@ EnemyActor.prototype._dropWeapon = function() {
     if(Utils.rand(0,100) > 93){
         this.spawn({        
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: Utils.rand(1,17),
+            subclassId: Utils.rand(1,16),
             angle: [0, 360],
             velocity: [15, 20]
         });

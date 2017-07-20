@@ -43,7 +43,7 @@ const EnemyConfig = {
             pointWorth: 25,
             enemyIndex: 8,
             calloutSound: 'drone',
-            powerLevel: 1,
+            powerLevel: 0.7,
             logic: {            
                 brain: {
                     firingDistance: 250,
@@ -660,7 +660,7 @@ const EnemyConfig = {
             pointWorth: 60,
             enemyIndex: 6,
             calloutSound: 'spider',
-            powerLevel: 1,
+            powerLevel: 1.5,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -766,14 +766,14 @@ const EnemyConfig = {
     SPIDERLING: {        
         props: {            
             danger: 1,
-            acceleration: 160, 
-            turnSpeed: 1,
+            acceleration: 400, 
+            turnSpeed: 2,
             hp: 2, 
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
             calloutSound: 'spiderling',
-            powerLevel: 1,
+            powerLevel: 0.8,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -783,7 +783,7 @@ const EnemyConfig = {
                     leadSkill: 0
                 },            
                 weapon: {
-                    type: 'MOLTEN_BALL_LIGHT_THROWER',
+                    type: 'MOLTEN_BALL_THROWER',
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: 0, offsetDistance: 0, fireAngle: 0}
@@ -862,7 +862,7 @@ const EnemyConfig = {
             pointWorth: 10,
             enemyIndex: 2,
             calloutSound: 'orbot',
-            powerLevel: 1,
+            powerLevel: 0.5,
             logic: {            
                 brain: {
                     shootingArc: 30,
