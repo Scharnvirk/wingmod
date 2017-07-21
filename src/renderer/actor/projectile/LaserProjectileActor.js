@@ -9,7 +9,7 @@ LaserProjectileActor.extend(BaseActor);
 LaserProjectileActor.mixin(ParticleMixin);
 
 LaserProjectileActor.prototype.customUpdate = function(){
-    this.createPremade({premadeName: 'BlueLaserTrail'});
+    this.createPremade({premadeName: 'BlueLargeLaserTrail'});
 };
 
 LaserProjectileActor.prototype.onDeath = function(){
@@ -21,20 +21,31 @@ LaserProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
         color: 'BLUE',
-        scale: 30,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
         lifeTime: 1
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: 'BLUE',
-        scale: 12,
-        alpha: 1,
-        alphaMultiplier: 0.4,
+        color: 'DEEPBLUE',
+        alphaMultiplier: 0.7,
+        scale: 6,
         particleVelocity: 1,
-        lifeTime: 3
+        alpha: 0.5,    
+        lifeTime: 1
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'DEEPBLUE',
+        scale: 15,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 

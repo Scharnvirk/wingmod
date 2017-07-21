@@ -145,11 +145,14 @@ Core.prototype.onPlaySound = function(event){
 
 Core.prototype.onWeaponSwitched = function(event){
     this.renderBus.postMessage('weaponSwitched', event.data);
-    // this.actorManager.switchPlayerWeapon(event.data);
 };
 
 Core.prototype.onGameStateChange = function(event){
     this.renderBus.postMessage('gameStateChange', event.data);
+};
+
+Core.prototype.onDifficultyChange = function(event){
+    this.gameState.setDifficultyFactor(event.data.difficulty);
 };
 
 module.exports = Core;

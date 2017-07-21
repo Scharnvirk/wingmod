@@ -65,6 +65,7 @@ Core.prototype.initEventHandlers = function(){
     this.ui.on('soundConfig', this.onSoundConfig.bind(this));
     this.ui.on('resolutionConfig', this.onResolutionConfig.bind(this));
     this.ui.on('shadowConfig', this.onShadowConfig.bind(this));
+    this.ui.on('difficultyConfig', this.onDifficultyConfig.bind(this));
     this.ui.on('backgroundModeConfig', this.onBackgroundModeConfig.bind(this));
     this.ui.on('renderDistanceConfig', this.onRenderDistanceConfig.bind(this));
 
@@ -162,6 +163,7 @@ Core.prototype.onAssetsLoaded = function(){
     this.renderLoop.add(this.render.bind(this));
 
     this.logicBus.postMessage('mapHitmapsLoaded', {hitmaps: ChunkStore.serializeHitmaps()});
+    this.logicBus.postMessage('difficultyChange', {difficulty: this.configManager.config.difficulty});
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));
@@ -274,6 +276,11 @@ Core.prototype.onLostPointerLock = function(){
 Core.prototype.onShadowConfig = function(event){
     this.configManager.saveShadow(event.value);
     this.recreateRenderer();
+};
+
+Core.prototype.onDifficultyConfig = function(event){
+    this.configManager.saveDifficulty(event.value);
+    this.logicBus.postMessage('difficultyChange', {difficulty: event.value});
 };
 
 Core.prototype.onResolutionConfig = function(event){

@@ -376,11 +376,14 @@ Core.prototype.onPlaySound = function (event) {
 
 Core.prototype.onWeaponSwitched = function (event) {
     this.renderBus.postMessage('weaponSwitched', event.data);
-    // this.actorManager.switchPlayerWeapon(event.data);
 };
 
 Core.prototype.onGameStateChange = function (event) {
     this.renderBus.postMessage('gameStateChange', event.data);
+};
+
+Core.prototype.onDifficultyChange = function (event) {
+    this.gameState.setDifficultyFactor(event.data.difficulty);
 };
 
 module.exports = Core;
@@ -416,10 +419,10 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     // let i;
 
-    // for (i = 0; i < 1; i++){
+    // for (i = 0; i < 30; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.WEAPONPICKUP,
-    //         subclassId: Utils.rand(8,8),
+    //         subclassId: Utils.rand(1,16),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0         
@@ -428,7 +431,8 @@ GameScene.prototype.fillScene = function (mapBodies) {
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.LHULK,
+    //         classId: ActorFactory.ENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('SNIPER'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -653,6 +657,7 @@ function GameState() {
     this._props = this._createInitialProps();
     this._notifyOfStateChange();
     this._timer = 0;
+    this._props.difficulties = Constants.DIFFICULTIES;
 
     EventEmitter.apply(this, arguments);
 }
@@ -679,6 +684,7 @@ GameState.prototype._createInitialState = function () {
             rads: 10,
             coolant: 500
         },
+        difficultyFactor: 1,
         existingActorsByType: {},
         removedActorsByType: {},
         killStats: {},
@@ -872,6 +878,19 @@ GameState.prototype.getActorCountByType = function (type) {
     return this._state.existingActorsByType[type];
 };
 
+GameState.prototype.setDifficultyFactor = function (factor) {
+    this._state.difficultyFactor = factor;
+};
+
+GameState.prototype.getDifficultyForType = function (type) {
+    if (!this._props.difficulties.hasOwnProperty(type)) {
+        console.warn('no difficulty type: ' + type + '; returning default (1)');
+        return 1;
+    }
+
+    return this._props.difficulties[type][this._state.difficultyFactor];
+};
+
 GameState.prototype._removeNamedActor = function (actorProps) {
     if (!this._state.killStats[actorProps.name]) {
         this._state.killStats[actorProps.name] = {
@@ -1055,6 +1074,9 @@ RenderBus.prototype.handleMessage = function (message) {
             break;
         case 'mapHitmapsLoaded':
             this.core.onMapHitmapsLoaded(message);
+            break;
+        case 'difficultyChange':
+            this.core.onDifficultyChange(message);
             break;
     }
 };
@@ -1297,6 +1319,7 @@ module.exports = ActorManager;
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
+var BaseBody = require('logic/actor/component/body/BaseBody');
 
 function BaseActor(config) {
     this.id = this.id || config.id;
@@ -1304,10 +1327,12 @@ function BaseActor(config) {
     this.state = this._createState(this.state || {});
     this.timer = 0;
 
+    this.props.isPlayer = this.props.isPlayer || config.isPlayer;
+
     this.gameState = config.gameState || null;
     this.manager = config.manager || null;
 
-    this._body = this.createBody();
+    this._body = this.createBody(this.props.isPlayer);
     if (!this._body) throw new Error('No body defined for Logic Actor!');
 
     this._body.position = [config.positionX || 0, config.positionY || 0];
@@ -1381,8 +1406,12 @@ BaseActor.prototype.getType = function () {
     return this.props.type || 'noType';
 };
 
-BaseActor.prototype.isPlayer = function () {
-    return this.props.isPlayer;
+BaseActor.prototype.isOwnedByPlayer = function () {
+    return !!this.props.isPlayer;
+};
+
+BaseActor.prototype.setOwnedByPlayer = function (ownedByPlayer) {
+    this.props.isPlayer = ownedByPlayer;
 };
 
 BaseActor.prototype.setThrust = function (thrust) {
@@ -1410,12 +1439,17 @@ BaseActor.prototype.getOffsetPosition = function (distanceOffset, angleOffset) {
     return Utils.rotationToVector(this.angle + (angleOffset || 0), distanceOffset || 0);
 };
 
+BaseActor.prototype.getPowerLevel = function () {
+    return this.props.powerLevel || 1;
+};
+
 BaseActor.prototype.playSound = function (sounds, volume) {
     this.manager.playSound({ sounds: sounds, actor: this, volume: volume || 1 });
 };
 
-BaseActor.prototype.createBody = function () {
-    return null;
+BaseActor.prototype.createBody = function (isPlayer) {
+    this.bodyConfig.isPlayer = isPlayer;
+    return new BaseBody(this.bodyConfig);
 };
 
 BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {
@@ -1522,6 +1556,8 @@ BaseActor.prototype.spawn = function (config) {
     config.classId = config.classId || ActorFactory.DEBUG;
     config.probability = (config.probability || 1) * 100;
     config.offsetPosition = this.getOffsetPosition(config.spawnOffset || 0);
+    config.powerLevel = config.powerLevel || 1;
+    config.isPlayer = config.isPlayer || false;
 
     for (var i = 0; i < Utils.randArray(config.amount); i++) {
         if (config.probability === 100 || Utils.rand(1, 100) <= config.probability) {
@@ -1533,7 +1569,9 @@ BaseActor.prototype.spawn = function (config) {
                 angle: this.angle + Utils.degToRad(Utils.randArray(config.angle)),
                 velocity: Utils.randArray(config.velocity),
                 parent: this,
-                spawnConfig: config.customConfig
+                spawnConfig: config.customConfig,
+                isPlayer: config.isPlayer,
+                powerLevel: config.powerLevel
             });
         }
     }
@@ -1586,7 +1624,7 @@ BaseActor.prototype._updateHpAndShieldOnCollision = function (otherActor, relati
 
 module.exports = BaseActor;
 
-},{"shared/ActorFactory":104}],11:[function(require,module,exports){
+},{"logic/actor/component/body/BaseBody":15,"shared/ActorFactory":104}],11:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -2273,17 +2311,33 @@ BaseBody.prototype.createShape = function () {
                 collisionMask: 0
             });
         case 'playerProjectile':
-            return new p2.Circle({
-                radius: this.radius,
-                collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
-                collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
-            });
+            if (this.isPlayer) {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
+                    collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+                });
+            } else {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
+                    collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+                });
+            }
         case 'enemyProjectile':
-            return new p2.Circle({
-                radius: this.radius,
-                collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
-                collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
-            });
+            if (this.isPlayer) {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.SHIPPROJECTILE,
+                    collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+                });
+            } else {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.ENEMYPROJECTILE,
+                    collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN
+                });
+            }
         case 'pickup':
             return new p2.Circle({
                 radius: this.radius,
@@ -2291,17 +2345,33 @@ BaseBody.prototype.createShape = function () {
                 collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.EXPLOSION
             });
         case 'playerShip':
-            return new p2.Circle({
-                radius: this.radius,
-                collisionGroup: Constants.COLLISION_GROUPS.SHIP,
-                collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.PICKUP | Constants.COLLISION_GROUPS.EXPLOSION
-            });
+            if (this.isPlayer) {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.SHIP,
+                    collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.PICKUP | Constants.COLLISION_GROUPS.EXPLOSION
+                });
+            } else {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+                    collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.EXPLOSION
+                });
+            }
         case 'enemyShip':
-            return new p2.Circle({
-                radius: this.radius,
-                collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
-                collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.EXPLOSION
-            });
+            if (this.isPlayer) {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.SHIP,
+                    collisionMask: Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.PICKUP | Constants.COLLISION_GROUPS.EXPLOSION
+                });
+            } else {
+                return new p2.Circle({
+                    radius: this.radius,
+                    collisionGroup: Constants.COLLISION_GROUPS.ENEMY,
+                    collisionMask: Constants.COLLISION_GROUPS.SHIP | Constants.COLLISION_GROUPS.ENEMY | Constants.COLLISION_GROUPS.SHIPPROJECTILE | Constants.COLLISION_GROUPS.ENEMYPROJECTILE | Constants.COLLISION_GROUPS.TERRAIN | Constants.COLLISION_GROUPS.EXPLOSION
+                });
+            }
         case 'enemyMapObject':
             return new p2.Circle({
                 radius: this.radius,
@@ -2356,6 +2426,7 @@ module.exports = BaseBody;
 'use strict';
 
 function Weapon(config) {
+
     this.burstCount = 1;
     this.burstCooldown = 0;
     this.cooldown = 100;
@@ -2373,13 +2444,17 @@ function Weapon(config) {
     this.currentFiringPoint = 0;
 
     Object.assign(this, config);
+    if (!this.projectileClass) throw new Error('No projectile class for a Weapon!');
+    if (!this.actor) throw new Error('No actor for a Weapon!');
 
     this.timer = 0;
     this.shooting = false;
     this.shotsFired = 0;
 
-    if (!this.projectileClass) throw new Error('No projectile class for a Weapon!');
-    if (!this.actor) throw new Error('No actor for a Weapon!');
+    this.ownedByPlayer = this.actor.isOwnedByPlayer();
+    this.powerLevel = this.actor.getPowerLevel();
+
+    this._alterPropertiesByPowerLevel(this.powerLevel);
 }
 
 Weapon.prototype.update = function () {
@@ -2435,7 +2510,9 @@ Weapon.prototype.fireProjectile = function (firingPointConfig) {
             positionX: position[0] + offsetPosition[0],
             positionY: position[1] + offsetPosition[1],
             angle: angle + firingPointConfig.fireAngle + Utils.rand(0, randomAngle * 1000) / 1000 - randomAngle / 2,
-            velocity: this.velocity
+            velocity: this.velocity,
+            isPlayer: this.ownedByPlayer,
+            powerLevel: this.powerLevel
         });
     }
 };
@@ -2465,6 +2542,13 @@ Weapon.prototype.handleFiringAlternate = function () {
     }
 };
 
+Weapon.prototype._alterPropertiesByPowerLevel = function (powerLevel) {
+    this.burstCooldown *= 1 / powerLevel;
+    if (this.burstCount > 1) this.burstCount = Math.ceil(this.burstCount * (powerLevel * 2 / 3));
+    this.cooldown *= 1 / powerLevel;
+    this.velocity *= powerLevel;
+};
+
 module.exports = Weapon;
 
 },{}],17:[function(require,module,exports){
@@ -2487,14 +2571,30 @@ function EnemyActor(config) {
     this.applyConfig(EnemyConfig.getById(config.subclassId));
 
     this.calloutSound = this.props.calloutSound;
-    this.brain = this.createBrain();
-    this.weapon = this.createWeapon();
 
     BaseActor.apply(this, arguments);
+
+    this.applyDifficulty();
+
+    this.brain = this.createBrain();
+    this.weapon = this.createWeapon();
 }
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(BrainMixin);
+
+EnemyActor.prototype.applyDifficulty = function () {
+    this.props.hp *= this.gameState.getDifficultyForType('hp');
+    this.props.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.props.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.props.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
+    this.props.powerLevel *= this.gameState.getDifficultyForType('powerLevel');
+    this.state.hp *= this.gameState.getDifficultyForType('hp');
+    this.state.powerLevel *= this.gameState.getDifficultyForType('powerLevel');
+    this.state.acceleration *= this.gameState.getDifficultyForType('acceleration');
+    this.state.turnSpeed *= this.gameState.getDifficultyForType('turnSpeed');
+    this.state.pointWorth *= this.gameState.getDifficultyForType('pointWorth');
+};
 
 EnemyActor.prototype.createBrain = function () {
     return new MookBrain(Object.assign({
@@ -2503,10 +2603,6 @@ EnemyActor.prototype.createBrain = function () {
         gameState: this.gameState,
         enemyActor: this.manager.getFirstPlayerActor()
     }, this.props.logic.brain));
-};
-
-EnemyActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
 };
 
 EnemyActor.prototype.customUpdate = function () {
@@ -2562,10 +2658,10 @@ EnemyActor.prototype._spawn = function (spawnConfig) {
 
 EnemyActor.prototype._dropWeapon = function () {
     //HAX!!! should be config property in ActorConfig... but for now...
-    if (Utils.rand(0, 100) > 94) {
+    if (Utils.rand(0, 100) > 93) {
         this.spawn({
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: Utils.rand(1, 8),
+            subclassId: Utils.rand(1, 15),
             angle: [0, 360],
             velocity: [15, 20]
         });
@@ -2642,10 +2738,6 @@ function EnemySpawnerActor(config) {
 }
 
 EnemySpawnerActor.extend(BaseActor);
-
-EnemySpawnerActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 EnemySpawnerActor.prototype.customUpdate = function () {
     if (this.state.spawnDelay > 0) {
@@ -2769,10 +2861,6 @@ function ItemSpawnerActor(config) {
 }
 
 ItemSpawnerActor.extend(BaseActor);
-
-ItemSpawnerActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 ItemSpawnerActor.prototype.customUpdate = function () {
     if (!this.props.spawns) {
@@ -3257,10 +3345,6 @@ function ExplosionActor(config) {
 
 ExplosionActor.extend(BaseActor);
 
-ExplosionActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = ExplosionActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103,"shared/ActorFactory":104}],28:[function(require,module,exports){
@@ -3311,10 +3395,6 @@ function SmallExplosionActor(config) {
 
 SmallExplosionActor.extend(BaseActor);
 
-SmallExplosionActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = SmallExplosionActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],30:[function(require,module,exports){
@@ -3335,10 +3415,6 @@ function EnergyPickupActor(config) {
 }
 
 EnergyPickupActor.extend(BaseActor);
-
-EnergyPickupActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 EnergyPickupActor.prototype.onDeath = function () {
     if (this.parent && this.parent.onPickupTaken) {
@@ -3367,10 +3443,6 @@ function MissileQuadPickupActor(config) {
 
 MissileQuadPickupActor.extend(BaseActor);
 
-MissileQuadPickupActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 MissileQuadPickupActor.prototype.onDeath = function () {
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();
@@ -3398,10 +3470,6 @@ function PlasmaPickupActor(config) {
 
 PlasmaPickupActor.extend(BaseActor);
 
-PlasmaPickupActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 PlasmaPickupActor.prototype.onDeath = function () {
     if (this.parent && this.parent.onPickupTaken) {
         this.parent.onPickupTaken();
@@ -3428,10 +3496,6 @@ function ShieldPickupActor(config) {
 }
 
 ShieldPickupActor.extend(BaseActor);
-
-ShieldPickupActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 ShieldPickupActor.prototype.onDeath = function () {
     if (this.parent && this.parent.onPickupTaken) {
@@ -3461,7 +3525,7 @@ function WeaponPickupActor(config) {
         this.props.timeout = 9999999;
     }
 
-    this.state.pickupBlockedTimer = config.parent && config.parent.isPlayer() ? 120 : 0;
+    this.state.pickupBlockedTimer = config.parent && config.parent.isOwnedByPlayer() ? 120 : 0;
 }
 
 WeaponPickupActor.extend(BaseActor);
@@ -3474,10 +3538,6 @@ WeaponPickupActor.prototype.customUpdate = function () {
     if (this.state.pickupBlockedTimer > 0) {
         this.state.pickupBlockedTimer--;
     }
-};
-
-WeaponPickupActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
 };
 
 WeaponPickupActor.prototype.onDeath = function () {
@@ -3572,10 +3632,6 @@ ShipActor.extend(BaseActor);
 ShipActor.mixin(InputMixin);
 ShipActor.mixin(PickupMixin);
 
-ShipActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 ShipActor.prototype.customUpdate = function () {
     this.primaryWeaponSystem.update();
     this.secondaryWeaponSystem.update();
@@ -3665,10 +3721,6 @@ function ConcsnMissileActor(config) {
 
 ConcsnMissileActor.extend(BaseActor);
 
-ConcsnMissileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 ConcsnMissileActor.prototype.onDeath = function () {
     var _this = this;
 
@@ -3711,10 +3763,6 @@ function EmdProjectileActor(config) {
 EmdProjectileActor.extend(BaseActor);
 EmdProjectileActor.mixin(HomingMixin);
 
-EmdProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 EmdProjectileActor.prototype.customUpdate = function () {
     this.updateHomingLock();
 };
@@ -3737,10 +3785,6 @@ function EnemyConcsnMissileActor(config) {
 }
 
 EnemyConcsnMissileActor.extend(BaseActor);
-
-EnemyConcsnMissileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 EnemyConcsnMissileActor.prototype.onDeath = function () {
     var _this = this;
@@ -3784,10 +3828,6 @@ function EnemyHomingMissileActor(config) {
 
 EnemyHomingMissileActor.extend(BaseActor);
 EnemyHomingMissileActor.mixin(HomingMixin);
-
-EnemyHomingMissileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 EnemyHomingMissileActor.prototype.customUpdate = function () {
     this.updateHomingLock();
@@ -3833,10 +3873,6 @@ function GreenLaserProjectileActor(config) {
 
 GreenLaserProjectileActor.extend(BaseActor);
 
-GreenLaserProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = GreenLaserProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],42:[function(require,module,exports){
@@ -3857,10 +3893,6 @@ function HomingMissileActor(config) {
 
 HomingMissileActor.extend(BaseActor);
 HomingMissileActor.mixin(HomingMixin);
-
-HomingMissileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 HomingMissileActor.prototype.customUpdate = function () {
     this.updateHomingLock();
@@ -3906,10 +3938,6 @@ function LaserProjectileActor(config) {
 
 LaserProjectileActor.extend(BaseActor);
 
-LaserProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = LaserProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],44:[function(require,module,exports){
@@ -3928,10 +3956,6 @@ function MoltenProjectileActor(config) {
 
 MoltenProjectileActor.extend(BaseActor);
 
-MoltenProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = MoltenProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],45:[function(require,module,exports){
@@ -3946,13 +3970,10 @@ function PlasmaBlastMiniProjectile(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTMINIPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastMiniProjectile.extend(BaseActor);
-
-PlasmaBlastMiniProjectile.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 module.exports = PlasmaBlastMiniProjectile;
 
@@ -3969,13 +3990,10 @@ function PlasmaBlastProjectileActor(config) {
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTPROJECTILE);
     BaseActor.apply(this, arguments);
+    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastProjectileActor.extend(BaseActor);
-
-PlasmaBlastProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 PlasmaBlastProjectileActor.prototype.onDeath = function () {
     this._explode();
@@ -3992,7 +4010,9 @@ PlasmaBlastProjectileActor.prototype._explode = function () {
         classId: ActorFactory.PLASMABLASTMINIPROJECTILE,
         angle: [-360, 360],
         velocity: [250, 450],
-        spawnOffset: -10
+        spawnOffset: -10,
+        isPlayer: this.isPlayer,
+        powerLevel: this.powerLevel
     });
 };
 
@@ -4014,10 +4034,6 @@ function PlasmaProjectileActor(config) {
 
 PlasmaProjectileActor.extend(BaseActor);
 
-PlasmaProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = PlasmaProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],48:[function(require,module,exports){
@@ -4035,10 +4051,6 @@ function PulseWaveProjectileActor(config) {
 }
 
 PulseWaveProjectileActor.extend(BaseActor);
-
-PulseWaveProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 PulseWaveProjectileActor.prototype.customUpdate = function () {
     this.setMass(this.getMass() * 0.96);
@@ -4063,10 +4075,6 @@ function PurpleLaserProjectileActor(config) {
 
 PurpleLaserProjectileActor.extend(BaseActor);
 
-PurpleLaserProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = PurpleLaserProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],50:[function(require,module,exports){
@@ -4084,10 +4092,6 @@ function RedLaserEnemyProjectileActor(config) {
 }
 
 RedLaserEnemyProjectileActor.extend(BaseActor);
-
-RedLaserEnemyProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 module.exports = RedLaserEnemyProjectileActor;
 
@@ -4107,10 +4111,6 @@ function RedLaserProjectileActor(config) {
 
 RedLaserProjectileActor.extend(BaseActor);
 
-RedLaserProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = RedLaserProjectileActor;
 
 },{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":103}],52:[function(require,module,exports){
@@ -4128,10 +4128,6 @@ function RingProjectileActor(config) {
 }
 
 RingProjectileActor.extend(BaseActor);
-
-RingProjectileActor.prototype.createBody = function () {
-    return new BaseBody(this.bodyConfig);
-};
 
 RingProjectileActor.prototype.customUpdate = function () {
     this.setMass(this.getMass() * 0.96);
@@ -4322,6 +4318,7 @@ function BaseActor(config, actorDependencies) {
     this.timer = 0;
 
     this._manager = config.manager;
+    this._gameState = config.gameState;
     this._particleManager = actorDependencies.particleManager;
 
     this._position = new Float32Array([config.positionX || 0, config.positionY || 0, config.positionZ || 10]);
@@ -4855,6 +4852,8 @@ var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 function EnemyActor(config) {
     this.applyConfig(EnemyConfig.getById(config.subclassId));
     BaseActor.apply(this, arguments);
+
+    this.applyDifficulty();
 }
 
 EnemyActor.extend(BaseActor);
@@ -4898,6 +4897,11 @@ EnemyActor.prototype.onDeath = function () {
     if (this.props.render.onDeath.shake) {
         this.requestShake();
     }
+};
+
+EnemyActor.prototype.applyDifficulty = function () {
+    this.props.hp *= this._gameState.getDifficultyForType('hp');
+    this.state.hp *= this._gameState.getDifficultyForType('hp');
 };
 
 module.exports = EnemyActor;
@@ -6166,11 +6170,8 @@ GreenLaserProjectileActor.prototype.onSpawn = function () {
         lifeTime: 1
     });
 
-    var offsetPosition = this.getOffsetPosition(3);
     this.createParticle({
         particleClass: 'particleAdd',
-        offsetPositionX: offsetPosition[0],
-        offsetPositionY: offsetPosition[1],
         color: 'GREEN',
         alphaMultiplier: 0.7,
         scale: 6,
@@ -6186,8 +6187,7 @@ GreenLaserProjectileActor.prototype.onSpawn = function () {
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        lifeTime: 10,
-        spriteNumber: 0
+        lifeTime: 10
     });
 };
 
@@ -6294,7 +6294,7 @@ LaserProjectileActor.extend(BaseActor);
 LaserProjectileActor.mixin(ParticleMixin);
 
 LaserProjectileActor.prototype.customUpdate = function () {
-    this.createPremade({ premadeName: 'BlueLaserTrail' });
+    this.createPremade({ premadeName: 'BlueLargeLaserTrail' });
 };
 
 LaserProjectileActor.prototype.onDeath = function () {
@@ -6306,20 +6306,31 @@ LaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
         color: 'BLUE',
-        scale: 30,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
         lifeTime: 1
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: 'BLUE',
-        scale: 12,
-        alpha: 1,
-        alphaMultiplier: 0.4,
+        color: 'DEEPBLUE',
+        alphaMultiplier: 0.7,
+        scale: 6,
         particleVelocity: 1,
-        lifeTime: 3
+        alpha: 0.5,
+        lifeTime: 1
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'DEEPBLUE',
+        scale: 15,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 
@@ -6683,10 +6694,21 @@ PurpleLaserProjectileActor.prototype.onDeath = function () {
 PurpleLaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
+        color: 'WHITE',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 1
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
         color: 'PURPLE',
-        scale: 30,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 6,
+        particleVelocity: 1,
+        alpha: 0.5,
         lifeTime: 1
     });
 
@@ -6694,10 +6716,10 @@ PurpleLaserProjectileActor.prototype.onSpawn = function () {
         particleClass: 'particleAdd',
         color: 'PURPLE',
         scale: 15,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        lifeTime: 3
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 
@@ -6728,21 +6750,35 @@ RedLaserEnemyProjectileActor.prototype.onDeath = function () {
 RedLaserEnemyProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
+        color: 'RED',
+        alphaMultiplier: 0.7,
+        scale: 5,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 1
+    });
+
+    var offsetPosition = this.getOffsetPosition(-3);
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
         color: 'DEEPRED',
-        scale: 20,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 4,
+        particleVelocity: 1,
+        alpha: 0.5,
         lifeTime: 1
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: 'RED',
+        color: 'DEEPRED',
         scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        lifeTime: 3
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 
@@ -6773,21 +6809,35 @@ RedLaserProjectileActor.prototype.onDeath = function () {
 RedLaserProjectileActor.prototype.onSpawn = function () {
     this.createParticle({
         particleClass: 'particleAdd',
+        color: 'RED',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 1
+    });
+
+    var offsetPosition = this.getOffsetPosition(3);
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
         color: 'DEEPRED',
-        scale: 20,
-        alpha: 0.8,
-        alphaMultiplier: 0.2,
+        alphaMultiplier: 0.7,
+        scale: 6,
+        particleVelocity: 1,
+        alpha: 0.5,
         lifeTime: 1
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
-        color: 'RED',
-        scale: 8,
-        alpha: 1,
-        alphaMultiplier: 0.4,
-        particleVelocity: 1,
-        lifeTime: 3
+        color: 'DEEPRED',
+        scale: 15,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10
     });
 };
 
@@ -6809,13 +6859,13 @@ RingProjectileActor.extend(BaseActor);
 RingProjectileActor.mixin(ParticleMixin);
 
 RingProjectileActor.prototype.customUpdate = function () {
-    var ringSections = 20;
+    var ringSections = 40;
     var angle = Utils.degToRad(360 / ringSections);
     var zPosition = void 0,
         xPosition = void 0,
         offsetPosition = void 0;
     var timerFactor = this.timer / (this.props.timeout + 3);
-    var radius = Utils.rand(15, 20) / 10 - timerFactor;
+    var radius = Utils.rand(25, 30) / 10 - timerFactor;
 
     for (var i = 0; i < ringSections; i++) {
         zPosition = Math.sin(i * angle) * radius;
@@ -6976,7 +7026,8 @@ var ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,
@@ -6997,7 +7048,8 @@ var ActorConfig = {
             hpBarCount: 10,
             shieldBarCount: 10,
             isPlayer: true,
-            type: 'playerShip'
+            type: 'playerShip',
+            powerLevel: 3
         },
         bodyConfig: {
             mass: 4,
@@ -7110,9 +7162,9 @@ var ActorConfig = {
     LASERPROJECTILE: {
         props: {
             hp: 1,
-            damage: 4,
+            damage: 6,
             removeOnHit: true,
-            timeout: 60,
+            timeout: 120,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'
@@ -7687,7 +7739,16 @@ var Constants = {
 
     CHUNK_SIZE: 768,
 
-    MAX_SOUND_DISTANCE: 500
+    MAX_SOUND_DISTANCE: 500,
+
+    DIFFICULTIES: {
+        hp: [0.5, 0.75, 1, 1.2, 1.5],
+        acceleration: [0.8, 0.9, 1, 1.5, 2],
+        turnSpeed: [0.7, 0.85, 1, 1.5, 2],
+        fireDelay: [2, 1.5, 1, 0.75, 0.5],
+        pointWorth: [0.2, 0.6, 1, 3, 5],
+        powerLevel: [0.7, 0.85, 1.05, 1.55, 2.1]
+    }
 };
 
 module.exports = Constants;
@@ -7740,6 +7801,7 @@ var EnemyConfig = {
             pointWorth: 25,
             enemyIndex: 8,
             calloutSound: 'drone',
+            powerLevel: 1.5,
             logic: {
                 brain: {
                     firingDistance: 250,
@@ -7831,6 +7893,7 @@ var EnemyConfig = {
             pointWorth: 20,
             enemyIndex: 0,
             calloutSound: 'drone',
+            powerLevel: 1,
             logic: {
                 brain: {
                     firingDistance: 140,
@@ -7917,6 +7980,7 @@ var EnemyConfig = {
             pointWorth: 30,
             enemyIndex: 1,
             calloutSound: 'sniper',
+            powerLevel: 1.2,
             logic: {
                 brain: {
                     shootingArc: 8,
@@ -7926,7 +7990,7 @@ var EnemyConfig = {
                     leadSkill: 0.5
                 },
                 weapon: {
-                    type: 'PURPLE_BLASTER',
+                    type: 'BLUE_BLASTER',
                     firingPoints: [{ offsetAngle: 10, offsetDistance: 5, fireAngle: 0 }]
                 },
                 onDeath: {
@@ -8005,6 +8069,7 @@ var EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
+            powerLevel: 1,
             logic: {
                 brain: {
                     firingDistance: 180,
@@ -8101,6 +8166,7 @@ var EnemyConfig = {
             pointWorth: 80,
             enemyIndex: 4,
             calloutSound: 'mhulk',
+            powerLevel: 1.5,
             logic: {
                 brain: {
                     firingDistance: 500,
@@ -8198,6 +8264,7 @@ var EnemyConfig = {
             pointWorth: 200,
             enemyIndex: 7,
             calloutSound: 'lhulk',
+            powerLevel: 1,
             logic: {
                 brain: {
                     firingDistance: 1500,
@@ -8320,6 +8387,7 @@ var EnemyConfig = {
             pointWorth: 60,
             enemyIndex: 6,
             calloutSound: 'spider',
+            powerLevel: 1.5,
             logic: {
                 brain: {
                     shootingArc: 50,
@@ -8420,13 +8488,14 @@ var EnemyConfig = {
     SPIDERLING: {
         props: {
             danger: 1,
-            acceleration: 160,
-            turnSpeed: 1,
+            acceleration: 400,
+            turnSpeed: 2,
             hp: 2,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
             calloutSound: 'spiderling',
+            powerLevel: 0.8,
             logic: {
                 brain: {
                     shootingArc: 50,
@@ -8436,7 +8505,7 @@ var EnemyConfig = {
                     leadSkill: 0
                 },
                 weapon: {
-                    type: 'MOLTEN_BALL_LIGHT_THROWER',
+                    type: 'MOLTEN_BALL_THROWER',
                     firingMode: 'alternate',
                     firingPoints: [{ offsetAngle: 0, offsetDistance: 0, fireAngle: 0 }]
                 },
@@ -8511,6 +8580,7 @@ var EnemyConfig = {
             pointWorth: 10,
             enemyIndex: 2,
             calloutSound: 'orbot',
+            powerLevel: 0.5,
             logic: {
                 brain: {
                     shootingArc: 30,
@@ -8696,6 +8766,8 @@ EventEmitter.prototype = {
 },{}],109:[function(require,module,exports){
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
         var check = false;
@@ -8869,6 +8941,21 @@ var Utils = {
             carry[object[objectKey]] = objectKey;
             return carry;
         }, {});
+    },
+
+    deepFreeze: function deepFreeze(o) {
+        Object.freeze(o);
+        if (o === undefined) {
+            return o;
+        }
+
+        Object.getOwnPropertyNames(o).forEach(function (prop) {
+            if (o[prop] !== null && (_typeof(o[prop]) === "object" || typeof o[prop] === "function") && !Object.isFrozen(o[prop])) {
+                this.deepFreeze(o[prop]);
+            }
+        });
+
+        return o;
     }
 };
 
@@ -8919,16 +9006,15 @@ var WEAPON_MAP = {
     PULSE_WAVE_GUN: 6,
     HOMING_MISSILE_LAUNCHER: 7,
     CONCUSSION_MISSILE_LAUNCHER: 8,
-
-    ENEMY_HOMING_MISSILE_LAUNCHER: 9,
+    PURPLE_BLASTER: 9,
     ENEMY_CONCUSSION_MISSILE_LAUNCHER: 10,
     GREEN_BLASTER: 11,
     MINI_RED_BLASTER: 12,
     MOLTEN_BALL_THROWER: 13,
     MOLTEN_BALL_SHOTGUN: 14,
-    MOLTEN_BALL_LIGHT_THROWER: 15,
-    SLOW_PULSE_WAVE_GUN: 16,
-    PURPLE_BLASTER: 17,
+    SLOW_PULSE_WAVE_GUN: 15,
+
+    ENEMY_HOMING_MISSILE_LAUNCHER: 100,
 
     NONE: 999
 };
@@ -8971,27 +9057,26 @@ var WeaponConfig = {
     },
     BLUE_BLASTER: {
         projectileClass: ActorFactory.LASERPROJECTILE,
-        cooldown: 45,
-        velocity: 1800,
-        burstCount: 3,
-        burstCooldown: 5,
+        cooldown: 80,
+        velocity: 350,
+        burstCount: 1,
         sound: 'blue_laser',
         firingMode: 'simultaneous',
-        name: 'BURST BLASTER',
+        name: 'HEAVY BLASTER',
         modelName: 'lasgun',
         ammoConfig: {
-            energy: 1.5
+            energy: 2
         }
     },
     EMD_GUN: {
         projectileClass: ActorFactory.EMDPROJECTILE,
-        cooldown: 10,
-        velocity: 500,
+        cooldown: 30,
+        velocity: 165,
         sound: 'disrupter',
         firingMode: 'alternate',
         volume: 0.8,
         name: 'EMD RIFLE',
-        modelName: 'emdgun',
+        modelName: 'emdgun2',
         ammoConfig: {
             energy: 1.5
         }
@@ -9013,11 +9098,12 @@ var WeaponConfig = {
     },
     ENEMY_CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.ENEMYCONCSNMISSILE,
-        cooldown: 100,
+        cooldown: 120,
         velocity: 150,
-        burstCount: 3,
+        burstCount: 2,
         burstCooldown: 20,
         sound: 'missile',
+        name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',
         modelName: 'missilelauncher',
         ammoConfig: {
@@ -9029,18 +9115,18 @@ var WeaponConfig = {
         cooldown: 120,
         velocity: 350,
         burstCount: 4,
-        burstCooldown: 6,
+        burstCooldown: 14,
         sound: 'laser_green',
         firingMode: 'alternate',
-        name: 'HEAVY BLASTER',
-        modelName: 'redlasgun',
+        name: 'BURST BLASTER',
+        modelName: 'greenlasgun',
         ammoConfig: {
-            energy: 1.5
+            energy: 0.5
         }
     },
     HOMING_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.HOMINGMISSILE,
-        cooldown: 80,
+        cooldown: 120,
         velocity: 0,
         sound: 'missile',
         firingMode: 'alternate',
@@ -9054,22 +9140,20 @@ var WeaponConfig = {
     },
     MINI_RED_BLASTER: {
         projectileClass: ActorFactory.REDLASERENEMYPROJECTILE,
-        cooldown: 60,
-        velocity: 400,
-        burstCount: 10,
-        burstCooldown: 5,
-        sound: 'red_laser',
+        cooldown: 15,
+        velocity: 200,
+        sound: 'red_light_laser',
         firingMode: 'alternate',
         name: 'LIGHT BLASTER',
-        modelName: 'redlasgun',
+        modelName: 'lightlasgun',
         ammoConfig: {
             energy: 0.3
         }
     },
     CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.CONCSNMISSILE,
-        cooldown: 15,
-        velocity: 180,
+        cooldown: 80,
+        velocity: 60,
         sound: 'missile',
         firingMode: 'alternate',
         name: 'CONCUSSION MISSILE SYSTEM',
@@ -9082,51 +9166,38 @@ var WeaponConfig = {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
         cooldown: 60,
         velocity: 160,
+        randomAngle: 10,
         burstCount: 3,
-        burstCooldown: 5,
+        burstCooldown: 7,
         sound: 'molten',
         volume: 0.4,
         firingMode: 'alternate',
         name: 'MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
+        modelName: 'molten',
         ammoConfig: {
             energy: 0.5
         }
     },
     MOLTEN_BALL_SHOTGUN: {
         projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 200,
-        projectileCount: 3,
-        randomAngle: 10,
+        cooldown: 150,
+        velocity: 160,
+        projectileCount: 5,
+        randomAngle: 15,
         burstCount: 2,
-        burstCooldown: 10,
+        burstCooldown: 20,
         sound: 'molten',
         firingMode: 'alternate',
         name: 'MOLTEN BALL SHOTGUN',
-        modelName: 'redlasgun',
+        modelName: 'moltenshotgun',
         ammoConfig: {
             energy: 1.5
         }
     },
-    MOLTEN_BALL_LIGHT_THROWER: {
-        projectileClass: ActorFactory.MOLTENPROJECTILE,
-        cooldown: 60,
-        velocity: 140,
-        burstCount: 2,
-        burstCooldown: 20,
-        sound: 'blue_laser',
-        firingMode: 'alternate',
-        name: 'LIGHT MOLTEN BALL THROWER',
-        modelName: 'redlasgun',
-        ammoConfig: {
-            energy: 0.5
-        }
-    },
     PLASMA_BLAST: {
         projectileClass: ActorFactory.PLASMABLASTPROJECTILE,
-        cooldown: 100,
-        velocity: 200,
+        cooldown: 300,
+        velocity: 70,
         sound: 'plasmabig2',
         firingMode: 'alternate',
         recoil: 40000,
@@ -9139,8 +9210,8 @@ var WeaponConfig = {
     },
     PLASMA_CANNON: {
         projectileClass: ActorFactory.PLASMAPROJECTILE,
-        cooldown: 8,
-        velocity: 230,
+        cooldown: 24,
+        velocity: 75,
         sound: 'plasmashot3',
         firingMode: 'simultaneous',
         name: 'PLASMA CANNON',
@@ -9152,8 +9223,8 @@ var WeaponConfig = {
     },
     PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.PULSEWAVEPROJECTILE,
-        cooldown: 5,
-        velocity: 500,
+        cooldown: 15,
+        velocity: 165,
         volume: 0.5,
         sound: 'disrupter',
         firingMode: 'alternate',
@@ -9165,8 +9236,8 @@ var WeaponConfig = {
     },
     RED_BLASTER: {
         projectileClass: ActorFactory.REDLASERPROJECTILE,
-        cooldown: 15,
-        velocity: 1400,
+        cooldown: 45,
+        velocity: 460,
         sound: 'red_laser',
         firingMode: 'simultaneous',
         name: 'COMBAT BLASTER',
@@ -9177,12 +9248,12 @@ var WeaponConfig = {
     },
     SLOW_PULSE_WAVE_GUN: {
         projectileClass: ActorFactory.RINGPROJECTILE,
-        cooldown: 80,
-        velocity: 200,
+        cooldown: 40,
+        velocity: 250,
         sound: 'disrupter',
         firingMode: 'alternate',
-        name: 'PULSE WAVE EMITTER',
-        modelName: 'pulsewavegun',
+        name: 'PULSE WAVE BLASTER',
+        modelName: 'pulsewaveblast',
         ammoConfig: {
             energy: 1
         }
@@ -9190,13 +9261,13 @@ var WeaponConfig = {
     PURPLE_BLASTER: {
         projectileClass: ActorFactory.PURPLELASERPROJECTILE,
         cooldown: 150,
-        velocity: 500,
+        velocity: 800,
         burstCount: 2,
         burstCooldown: 20,
         sound: 'laser_purple',
         firingMode: 'alternate',
-        name: 'POWERED BLASTER',
-        modelName: 'lasgun',
+        name: 'SNIPER BLASTER',
+        modelName: 'bluelasgun',
         ammoConfig: {
             energy: 1.5
         }

@@ -1,4 +1,5 @@
 function Weapon(config){
+    
     this.burstCount = 1;
     this.burstCooldown = 0;
     this.cooldown = 100;
@@ -16,13 +17,17 @@ function Weapon(config){
     this.currentFiringPoint = 0;
 
     Object.assign(this, config);
+    if(!this.projectileClass) throw new Error('No projectile class for a Weapon!');
+    if(!this.actor) throw new Error('No actor for a Weapon!');
 
     this.timer = 0;
     this.shooting = false;
     this.shotsFired = 0;
+    
+    this.ownedByPlayer = this.actor.isOwnedByPlayer();
+    this.powerLevel = this.actor.getPowerLevel();
 
-    if(!this.projectileClass) throw new Error('No projectile class for a Weapon!');
-    if(!this.actor) throw new Error('No actor for a Weapon!');
+    this._alterPropertiesByPowerLevel(this.powerLevel);
 }
 
 Weapon.prototype.update = function(){
@@ -81,7 +86,9 @@ Weapon.prototype.fireProjectile = function(firingPointConfig){
             positionX: position[0] + offsetPosition[0],
             positionY: position[1] + offsetPosition[1],
             angle: angle + firingPointConfig.fireAngle + Utils.rand(0, randomAngle*1000)/1000 - randomAngle/2,
-            velocity: this.velocity
+            velocity: this.velocity,
+            isPlayer: this.ownedByPlayer,
+            powerLevel: this.powerLevel   
         });
     }    
 };
@@ -109,6 +116,13 @@ Weapon.prototype.handleFiringAlternate = function(){
     if (this.sound){
         this.actor.playSound([this.sound], this.volume);
     }
+};
+
+Weapon.prototype._alterPropertiesByPowerLevel = function(powerLevel){
+    this.burstCooldown *= (1/powerLevel);
+    if (this.burstCount > 1) this.burstCount = Math.ceil(this.burstCount * (powerLevel *2/3));
+    this.cooldown *= (1/powerLevel);
+    this.velocity *= powerLevel;
 };
 
 module.exports = Weapon;

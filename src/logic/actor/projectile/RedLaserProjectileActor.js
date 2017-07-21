@@ -11,8 +11,4 @@ function RedLaserProjectileActor(config){
 
 RedLaserProjectileActor.extend(BaseActor);
 
-RedLaserProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 module.exports = RedLaserProjectileActor;

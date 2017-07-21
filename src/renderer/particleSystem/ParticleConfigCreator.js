@@ -98,6 +98,7 @@ ParticleConfigCreator.prototype.createPremades = function(){
     return {
         BlueSparks: require('renderer/particleSystem/premade/BlueSparks'),
         BlueLaserTrail: require('renderer/particleSystem/premade/BlueLaserTrail'),
+        BlueLargeLaserTrail: require('renderer/particleSystem/premade/BlueLaserTrail'),
         OrangeTrail: require('renderer/particleSystem/premade/OrangeTrail'),
         OrangeBoomTiny: require('renderer/particleSystem/premade/OrangeBoomTiny'),
         GreenTrail: require('renderer/particleSystem/premade/GreenTrail'),

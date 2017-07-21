@@ -69,7 +69,8 @@ ActorManager.prototype.updateFromLogic = function(messageObject){
                     positionX: positionArray[i*3],
                     positionY: positionArray[i*3+1],
                     rotation: positionArray[i*3+2],
-                    manager: this
+                    manager: this,
+                    gameState: this.gameState
                 });
             }
         } else {

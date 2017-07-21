@@ -7,8 +7,10 @@ var EnemyConfig = require('shared/EnemyConfig');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
 
 function EnemyActor(config){
-    this.applyConfig(EnemyConfig.getById(config.subclassId));
+    this.applyConfig(EnemyConfig.getById(config.subclassId));    
     BaseActor.apply(this, arguments);    
+
+    this.applyDifficulty();
 }
 
 EnemyActor.extend(BaseActor);
@@ -50,6 +52,11 @@ EnemyActor.prototype.onDeath = function(){
     if (this.props.render.onDeath.shake) {
         this.requestShake();
     }
+};
+
+EnemyActor.prototype.applyDifficulty = function(){
+    this.props.hp *= this._gameState.getDifficultyForType('hp');
+    this.state.hp *= this._gameState.getDifficultyForType('hp');
 };
 
 module.exports = EnemyActor;

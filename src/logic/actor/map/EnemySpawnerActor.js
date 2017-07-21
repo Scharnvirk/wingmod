@@ -13,9 +13,6 @@ function EnemySpawnerActor(config){
 
 EnemySpawnerActor.extend(BaseActor);
 
-EnemySpawnerActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
 
 EnemySpawnerActor.prototype.customUpdate = function() {
     if (this.state.spawnDelay > 0){

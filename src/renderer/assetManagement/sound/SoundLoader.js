@@ -7,6 +7,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.alternateExtensions = ['mp3']; 
     createjs.Sound.registerSound({src:'sounds/laser2.mp3', id:'blue_laser'});
     createjs.Sound.registerSound({src:'sounds/laser13.mp3', id:'red_laser'});
+    createjs.Sound.registerSound({src:'sounds/laser17.mp3', id:'red_light_laser'});
     createjs.Sound.registerSound({src:'sounds/laser3.mp3', id:'plasmashot3'});
     createjs.Sound.registerSound({src:'sounds/laser14.mp3', id:'laser_purple'});
     createjs.Sound.registerSound({src:'sounds/laser12.mp3', id:'laser_green'});

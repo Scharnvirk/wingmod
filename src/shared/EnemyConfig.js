@@ -43,6 +43,7 @@ const EnemyConfig = {
             pointWorth: 25,
             enemyIndex: 8,
             calloutSound: 'drone',
+            powerLevel: 1.5,
             logic: {            
                 brain: {
                     firingDistance: 250,
@@ -139,6 +140,7 @@ const EnemyConfig = {
             pointWorth: 20,
             enemyIndex: 0,
             calloutSound: 'drone',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 140,
@@ -230,6 +232,7 @@ const EnemyConfig = {
             pointWorth: 30,
             enemyIndex: 1,
             calloutSound: 'sniper',
+            powerLevel: 1.2,
             logic: {            
                 brain: {
                     shootingArc: 8,
@@ -239,7 +242,7 @@ const EnemyConfig = {
                     leadSkill: 0.5
                 },            
                 weapon: {
-                    type: 'PURPLE_BLASTER',
+                    type: 'BLUE_BLASTER',
                     firingPoints: [
                         {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
                     ]
@@ -322,6 +325,7 @@ const EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 180,
@@ -425,6 +429,7 @@ const EnemyConfig = {
             pointWorth: 80,
             enemyIndex: 4,
             calloutSound: 'mhulk',
+            powerLevel: 1.5,
             logic: {            
                 brain: {
                     firingDistance: 500,
@@ -527,6 +532,7 @@ const EnemyConfig = {
             pointWorth: 200,
             enemyIndex: 7,
             calloutSound: 'lhulk',
+            powerLevel: 1,
             logic: {            
                 brain: {
                     firingDistance: 1500,
@@ -654,6 +660,7 @@ const EnemyConfig = {
             pointWorth: 60,
             enemyIndex: 6,
             calloutSound: 'spider',
+            powerLevel: 1.5,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -759,13 +766,14 @@ const EnemyConfig = {
     SPIDERLING: {        
         props: {            
             danger: 1,
-            acceleration: 160, 
-            turnSpeed: 1,
+            acceleration: 400, 
+            turnSpeed: 2,
             hp: 2, 
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
             calloutSound: 'spiderling',
+            powerLevel: 0.8,
             logic: {            
                 brain: {
                     shootingArc: 50,
@@ -775,7 +783,7 @@ const EnemyConfig = {
                     leadSkill: 0
                 },            
                 weapon: {
-                    type: 'MOLTEN_BALL_LIGHT_THROWER',
+                    type: 'MOLTEN_BALL_THROWER',
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: 0, offsetDistance: 0, fireAngle: 0}
@@ -854,6 +862,7 @@ const EnemyConfig = {
             pointWorth: 10,
             enemyIndex: 2,
             calloutSound: 'orbot',
+            powerLevel: 0.5,
             logic: {            
                 brain: {
                     shootingArc: 30,

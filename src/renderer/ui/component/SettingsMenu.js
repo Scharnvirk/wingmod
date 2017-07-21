@@ -64,6 +64,16 @@ class SettingsMenu extends Component {
         return <div style={style}>
 
             <div style = {this.componentStyle.settingItem}>
+                <span style={this.componentStyle.settingText} >{'DIFFICULTY:'}</span>
+                <OptionButton 
+                    actionEvent={'difficultyConfig'} 
+                    options={['JUST 4 FUN', 'CHALLENGE', 'HARD', 'INSANE', 'LUDICROUS']} 
+                    value={this.state.initialConfigs.difficulty}
+                    style={this.componentStyle.buttonStyle}
+                />
+            </div>
+
+            <div style = {this.componentStyle.settingItem}>
                 <span style={this.componentStyle.settingText} >{'SHADOWS:'}</span>
                 <OptionButton 
                     actionEvent={'shadowConfig'} 

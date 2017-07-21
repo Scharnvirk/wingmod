@@ -11,10 +11,6 @@ function RingProjectileActor(config){
 
 RingProjectileActor.extend(BaseActor);
 
-RingProjectileActor.prototype.createBody = function(){
-    return new BaseBody(this.bodyConfig);
-};
-
 RingProjectileActor.prototype.customUpdate = function(){
     this.setMass(this.getMass() * 0.96);
     this.props.damage *= 0.95;

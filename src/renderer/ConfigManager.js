@@ -7,8 +7,9 @@ function ConfigManager(config){
         soundVolume: 2,
         shadow: 1,
         resolution: 2,
-        backgroundMode: 1,
-        renderDistance: 5
+        backgroundMode: 0,
+        renderDistance: 5,
+        difficulty: 0
     };
 
     this.storageKey = 'wingmodConfig033';
@@ -34,6 +35,10 @@ ConfigManager.prototype.makeConfig = function(){
     }
 
     return {};
+};
+
+ConfigManager.prototype.getConfig = function(){
+    return this.config;
 };
 
 ConfigManager.prototype.restore = function(){
@@ -97,6 +102,12 @@ ConfigManager.prototype.saveBackgroundMode = function(value){
 ConfigManager.prototype.saveRenderDistance = function(value){
     this.settingConfig.renderDistance = value;
     this.config.renderDistance = value;
+    this.saveToLocalStorage();
+};
+
+ConfigManager.prototype.saveDifficulty = function(value){
+    this.settingConfig.difficulty = value;
+    this.config.difficulty = value;
     this.saveToLocalStorage();
 };
 
