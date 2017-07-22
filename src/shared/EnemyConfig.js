@@ -70,7 +70,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MINI_RED_BLASTER',
-                    randomPool: ['RED_BLASTER', 'RED_BLASTER', 'PURPLE_BLASTER'],
+                    randomPool: ['RED_BLASTER', 'RED_BLASTER'],
                     chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [
@@ -144,7 +144,7 @@ const EnemyConfig = {
     },
 
     MOOK: {        
-        props: {            
+        props: {                        
             danger: 1,
             acceleration: 140,
             turnSpeed: 2,
@@ -164,8 +164,6 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MOLTEN_BALL_THROWER',
-                    randomPool: ['MOLTEN_BALL_SHOTGUN', 'MOLTEN_BALL_SHOTGUN', 'PLASMA_CANNON'],
-                    chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
@@ -261,8 +259,6 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'BLUE_BLASTER',
-                    randomPool: ['PURPLE_BLASTER'],
-                    chanceForRandomWeapon: 0.2,
                     firingPoints: [
                         {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
                     ]
@@ -452,6 +448,11 @@ const EnemyConfig = {
             enemyIndex: 4,
             calloutSound: 'mhulk',
             powerLevel: 1.5,
+            delayedDeath: {
+                time: 60,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     firingDistance: 500,
@@ -557,6 +558,11 @@ const EnemyConfig = {
             enemyIndex: 7,
             calloutSound: 'lhulk',
             powerLevel: 1,
+            delayedDeath: {
+                time: 120,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     firingDistance: 1500,
@@ -695,8 +701,6 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MOLTEN_BALL_SHOTGUN',
-                    randomPool: ['MOLTEN_BALL_THROWER', 'PLASMA_BLAST'],
-                    chanceForRandomWeapon: 0.3,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0},
@@ -898,7 +902,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'SLOW_PULSE_WAVE_GUN',
-                    randomPool: ['PULSE_WAVE_GUN', 'PULSE_WAVE_GUN', 'PLASMA_CANNON'],
+                    randomPool: ['PULSE_WAVE_GUN'],
                     chanceForRandomWeapon: 0.2,
                     firingPoints: [
                         {offsetAngle: 90, offsetDistance: 0.2, fireAngle: 0},
@@ -983,6 +987,11 @@ const EnemyConfig = {
             enemyIndex: 2,
             calloutSound: 'orbot',
             powerLevel: 3,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     shootingArc: 30,
@@ -1102,6 +1111,11 @@ const EnemyConfig = {
             enemyIndex: 8,
             calloutSound: 'drone',
             powerLevel: 3,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     firingDistance: 500,
@@ -1221,6 +1235,11 @@ const EnemyConfig = {
             enemyIndex: 6,
             calloutSound: 'spider',
             powerLevel: 1.5,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     shootingArc: 0,
@@ -1336,6 +1355,11 @@ const EnemyConfig = {
             enemyIndex: 0,
             calloutSound: 'drone',
             powerLevel: 1,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     firingDistance: 140,
@@ -1448,6 +1472,11 @@ const EnemyConfig = {
             enemyIndex: 3,
             calloutSound: 'shulk',
             powerLevel: 2.2,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     nearDistance: 20,
@@ -1566,6 +1595,11 @@ const EnemyConfig = {
             enemyIndex: 4,
             calloutSound: 'mhulk',
             powerLevel: 2,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     firingDistance: 500,
@@ -1678,6 +1712,11 @@ const EnemyConfig = {
             enemyIndex: 1,
             calloutSound: 'sniper',
             powerLevel: 4,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
             logic: {            
                 brain: {
                     shootingArc: 8,

@@ -197,7 +197,7 @@ const WeaponConfig = {
         name: 'MOLTEN BALL THROWER',
         modelName: 'molten',
         ammoConfig: {
-            energy: 0.5
+            energy: 0.3
         }
     },
     MOLTEN_BALL_SHOTGUN: {
@@ -291,7 +291,7 @@ const WeaponConfig = {
         name: 'SNIPER BLASTER',
         modelName: 'bluelasgun',
         ammoConfig: {
-            energy: 1.5
+            energy: 0.5
         }
     }
 };

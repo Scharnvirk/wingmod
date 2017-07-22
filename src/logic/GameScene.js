@@ -29,17 +29,17 @@ GameScene.prototype.fillScene = function(mapBodies){
     // for (i = 0; i < 30; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.WEAPONPICKUP,
-    //         subclassId: Utils.rand(1,16),
+    //         subclassId: Utils.rand(1,15),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0          
     //     });
     // }
 
-    // for (i = 0; i < 1; i++){
+    // for (i = 0; i < 3; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.CHAMPIONENEMY,
-    //         subclassId: EnemyConfig.getSubclassIdFor('SNIPERBOSS'),
+    //         classId: ActorFactory.ENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('MOOK'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0

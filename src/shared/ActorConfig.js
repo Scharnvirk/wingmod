@@ -431,6 +431,9 @@ const ActorConfig = {
             enemy: true,
             type: 'enemyMapObject',
             name: 'GATEWAY',
+            delayedDeath: {
+                time: 300
+            },
             pointWorth: 1000,
             enemyIndex: 5,
             spawnPool: ['CHASER', 'MOOK', 'ORBOT', 'SNIPER'],
@@ -441,10 +444,10 @@ const ActorConfig = {
                 180: 'MHULK',
                 210: 'SPIDER',
                 240: 'MHULK',
-                300: 'LHULK',
-                330: 'SHULK',
+                300: 'SHULK',
                 360: 'SPIDER',
-                390: 'LHULK'
+                390: 'LHULK',
+                550: 'LHULK'
             }
         },
         bodyConfig: {

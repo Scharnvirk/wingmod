@@ -21,15 +21,15 @@ GameState.prototype._createInitialState = function(){
         ammo: {
             energy: 100,
             plasma: 0,            
-            missiles: 20,
+            missiles: 0,
             rads: 0,
             coolant: 0
         },
         ammoMax: {
             energy: 200,
             plasma: 200,            
-            missiles: 20,
-            rads: 10,
+            missiles: 30,
+            rads: 5,
             coolant: 500
         },
         difficultyFactor: 1,

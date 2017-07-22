@@ -57,6 +57,50 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(enemySubclass) {
     this.manager.updateActorState(this);
 };
 
+EnemySpawnerActor.prototype.onDelayedDeath = function(){
+    this.customUpdate = function(){
+        this._handleDelayedDeath();
+    };
+
+    this.state.shield = 0;
+    
+    this.spawn({
+        classId: ActorFactory.ENEMYSPAWNMARKER, 
+        angle: [0, 0],
+        velocity: [0, 0],
+        customConfig: {
+            props: {
+                enemyClass: ActorFactory.CHAMPIONENEMY,
+                enemySubclass: this._pickEnemyChampionClassToSpawn()
+            }
+        }
+    });
+}
+
+EnemySpawnerActor.prototype._handleDelayedDeath = function(){ 
+    const spawnRandom = Utils.rand(0,100);
+
+    if (spawnRandom < 5) {
+        this.spawn({        
+            classId: ActorFactory.CHUNK,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    } else if (spawnRandom >= 5 && spawnRandom <= 7) {
+        this.spawn({        
+            classId: ActorFactory.FLAMECHUNK,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    } else if (spawnRandom >= 7 && spawnRandom <= 10) {
+        this.spawn({        
+            classId: ActorFactory.BOOMCHUNK,
+            angle: [0, 360],
+            velocity: [20, 40]
+        });
+    }
+}
+
 EnemySpawnerActor.prototype.onDeath = function() {
     this.spawn({
         amount: 40,
@@ -69,18 +113,6 @@ EnemySpawnerActor.prototype.onDeath = function() {
         classId: ActorFactory.BOOMCHUNK,
         angle: [0, 360],
         velocity: [50, 100]
-    });
-
-    this.spawn({
-        classId: ActorFactory.ENEMYSPAWNMARKER, 
-        angle: [0, 0],
-        velocity: [0, 0],
-        customConfig: {
-            props: {
-                enemyClass: ActorFactory.CHAMPIONENEMY,
-                enemySubclass: this._pickEnemyChampionClassToSpawn()
-            }
-        }
     });
 
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -97,7 +129,9 @@ EnemySpawnerActor.prototype.onHit = function(shielded) {
             angle: [0, 360],
             velocity: [50, 100]
         });
-        this.playSound(['armorHit1', 'armorHit2'], 10);
+        if (!this.state.deathTimer) {
+            this.playSound(['armorHit1', 'armorHit2'], 10);
+        }
     }
 };
 

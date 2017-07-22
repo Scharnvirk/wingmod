@@ -136,7 +136,13 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
     this._updateHpAndShieldOnCollision(otherActor, relativeContactPoint);
 
     if (this.state.hp <= 0 || this.props.removeOnHit){
-        this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        if (this.props.delayedDeath) {
+            if (!this.state.deathTimer) {
+                this.delayDeath();
+            }
+        } else {
+            this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        }
     }
 
     if (otherActor && this.state.pickup && otherActor.state.canPickup) {
@@ -153,9 +159,15 @@ BaseActor.prototype.onCollision = function(otherActor, relativeContactPoint){
 
 BaseActor.prototype.update = function(){
     this.timer ++;
-    if(this.timer > this.props.timeout){
+    if (this.timer > this.props.timeout){
         this.deathMain(null, Constants.DEATH_TYPES.TIMEOUT);
     }
+    if (this.state.deathTimer && this.state.deathTimer > -1){
+        this.state.deathTimer --;
+        if (this.state.deathTimer === 0){
+            this.deathMain(null, Constants.DEATH_TYPES.HIT);
+        }
+    }    
     this.customUpdate();
     this.processMovement();
 };
@@ -179,6 +191,12 @@ BaseActor.prototype.onSpawn = function(){};
 BaseActor.prototype.onDeath = function(){};
 
 BaseActor.prototype.onTimeout = function(){};
+
+BaseActor.prototype.delayDeath = function(){
+    this.state.deathTimer = this.props.delayedDeath.time || 0;
+    this.onDelayedDeath && this.onDelayedDeath();
+    this.manager.updateActorState(this);
+}
 
 BaseActor.prototype.deathMain = function(relativeContactPoint, deathType){
     if (this.state.alreadyRemoved) {
@@ -272,11 +290,11 @@ BaseActor.prototype._createState = function(state){
 };
 
 BaseActor.prototype._handleDeath = function(deathType){
+    if(this.props.soundsOnDeath){
+        this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
+    }
     switch(deathType){
-    case Constants.DEATH_TYPES.HIT: 
-        if(this.props.soundsOnDeath){
-            this.manager.playSound({sounds: this.props.soundsOnDeath, actor: this});
-        }
+    case Constants.DEATH_TYPES.HIT:         
         this.onDeath();
         break;
     case Constants.DEATH_TYPES.TIMEOUT: 

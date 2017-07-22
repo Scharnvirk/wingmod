@@ -23913,7 +23913,13 @@ BaseActor.prototype.onCollision = function (otherActor, relativeContactPoint) {
     this._updateHpAndShieldOnCollision(otherActor, relativeContactPoint);
 
     if (this.state.hp <= 0 || this.props.removeOnHit) {
-        this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        if (this.props.delayedDeath) {
+            if (!this.state.deathTimer) {
+                this.delayDeath();
+            }
+        } else {
+            this.deathMain(relativeContactPoint, Constants.DEATH_TYPES.HIT);
+        }
     }
 
     if (otherActor && this.state.pickup && otherActor.state.canPickup) {
@@ -23932,6 +23938,12 @@ BaseActor.prototype.update = function () {
     this.timer++;
     if (this.timer > this.props.timeout) {
         this.deathMain(null, Constants.DEATH_TYPES.TIMEOUT);
+    }
+    if (this.state.deathTimer && this.state.deathTimer > -1) {
+        this.state.deathTimer--;
+        if (this.state.deathTimer === 0) {
+            this.deathMain(null, Constants.DEATH_TYPES.HIT);
+        }
     }
     this.customUpdate();
     this.processMovement();
@@ -23956,6 +23968,12 @@ BaseActor.prototype.onSpawn = function () {};
 BaseActor.prototype.onDeath = function () {};
 
 BaseActor.prototype.onTimeout = function () {};
+
+BaseActor.prototype.delayDeath = function () {
+    this.state.deathTimer = this.props.delayedDeath.time || 0;
+    this.onDelayedDeath && this.onDelayedDeath();
+    this.manager.updateActorState(this);
+};
 
 BaseActor.prototype.deathMain = function (relativeContactPoint, deathType) {
     if (this.state.alreadyRemoved) {
@@ -24049,11 +24067,11 @@ BaseActor.prototype._createState = function (state) {
 };
 
 BaseActor.prototype._handleDeath = function (deathType) {
+    if (this.props.soundsOnDeath) {
+        this.manager.playSound({ sounds: this.props.soundsOnDeath, actor: this });
+    }
     switch (deathType) {
         case Constants.DEATH_TYPES.HIT:
-            if (this.props.soundsOnDeath) {
-                this.manager.playSound({ sounds: this.props.soundsOnDeath, actor: this });
-            }
             this.onDeath();
             break;
         case Constants.DEATH_TYPES.TIMEOUT:
@@ -25185,6 +25203,23 @@ EnemyActor.prototype.onHit = function () {
     this._handleEvent(this.props.logic.onHit);
 };
 
+EnemyActor.prototype.onDelayedDeath = function () {
+    this.state.deathTimer = Utils.rand(1, this.state.deathTimer);
+    this.customUpdate = function () {
+        this._handleDelayedDeath();
+    };
+};
+
+EnemyActor.prototype._handleDelayedDeath = function () {
+    if (Utils.rand(0, 100) < this.props.delayedDeath.deathObjectSpawnChance * 100) {
+        this.spawn({
+            classId: this.props.delayedDeath.deathObjectPool[Utils.rand(0, this.props.delayedDeath.deathObjectPool.length - 1)],
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    }
+};
+
 EnemyActor.prototype._handleEvent = function (config) {
     if (config.spawn) {
         this._spawn(config.spawn);
@@ -25339,6 +25374,50 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function (enemySubclass) {
     this.manager.updateActorState(this);
 };
 
+EnemySpawnerActor.prototype.onDelayedDeath = function () {
+    this.customUpdate = function () {
+        this._handleDelayedDeath();
+    };
+
+    this.state.shield = 0;
+
+    this.spawn({
+        classId: ActorFactory.ENEMYSPAWNMARKER,
+        angle: [0, 0],
+        velocity: [0, 0],
+        customConfig: {
+            props: {
+                enemyClass: ActorFactory.CHAMPIONENEMY,
+                enemySubclass: this._pickEnemyChampionClassToSpawn()
+            }
+        }
+    });
+};
+
+EnemySpawnerActor.prototype._handleDelayedDeath = function () {
+    var spawnRandom = Utils.rand(0, 100);
+
+    if (spawnRandom < 5) {
+        this.spawn({
+            classId: ActorFactory.CHUNK,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    } else if (spawnRandom >= 5 && spawnRandom <= 7) {
+        this.spawn({
+            classId: ActorFactory.FLAMECHUNK,
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    } else if (spawnRandom >= 7 && spawnRandom <= 10) {
+        this.spawn({
+            classId: ActorFactory.BOOMCHUNK,
+            angle: [0, 360],
+            velocity: [20, 40]
+        });
+    }
+};
+
 EnemySpawnerActor.prototype.onDeath = function () {
     this.spawn({
         amount: 40,
@@ -25351,18 +25430,6 @@ EnemySpawnerActor.prototype.onDeath = function () {
         classId: ActorFactory.BOOMCHUNK,
         angle: [0, 360],
         velocity: [50, 100]
-    });
-
-    this.spawn({
-        classId: ActorFactory.ENEMYSPAWNMARKER,
-        angle: [0, 0],
-        velocity: [0, 0],
-        customConfig: {
-            props: {
-                enemyClass: ActorFactory.CHAMPIONENEMY,
-                enemySubclass: this._pickEnemyChampionClassToSpawn()
-            }
-        }
     });
 
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -25379,7 +25446,9 @@ EnemySpawnerActor.prototype.onHit = function (shielded) {
             angle: [0, 360],
             velocity: [50, 100]
         });
-        this.playSound(['armorHit1', 'armorHit2'], 10);
+        if (!this.state.deathTimer) {
+            this.playSound(['armorHit1', 'armorHit2'], 10);
+        }
     }
 };
 
@@ -37385,6 +37454,9 @@ var ActorConfig = {
             enemy: true,
             type: 'enemyMapObject',
             name: 'GATEWAY',
+            delayedDeath: {
+                time: 300
+            },
             pointWorth: 1000,
             enemyIndex: 5,
             spawnPool: ['CHASER', 'MOOK', 'ORBOT', 'SNIPER'],
@@ -38129,6 +38201,11 @@ var EnemyConfig = {
             enemyIndex: 4,
             calloutSound: 'mhulk',
             powerLevel: 1.5,
+            delayedDeath: {
+                time: 60,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     firingDistance: 500,
@@ -38229,6 +38306,11 @@ var EnemyConfig = {
             enemyIndex: 7,
             calloutSound: 'lhulk',
             powerLevel: 1,
+            delayedDeath: {
+                time: 120,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     firingDistance: 1500,
@@ -38637,6 +38719,11 @@ var EnemyConfig = {
             enemyIndex: 2,
             calloutSound: 'orbot',
             powerLevel: 3,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     shootingArc: 30,
@@ -38752,6 +38839,11 @@ var EnemyConfig = {
             enemyIndex: 8,
             calloutSound: 'drone',
             powerLevel: 3,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     firingDistance: 500,
@@ -38866,6 +38958,11 @@ var EnemyConfig = {
             enemyIndex: 6,
             calloutSound: 'spider',
             powerLevel: 1.5,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     shootingArc: 0,
@@ -38976,6 +39073,11 @@ var EnemyConfig = {
             enemyIndex: 0,
             calloutSound: 'drone',
             powerLevel: 1,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     firingDistance: 140,
@@ -39083,6 +39185,11 @@ var EnemyConfig = {
             enemyIndex: 3,
             calloutSound: 'shulk',
             powerLevel: 2.2,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     nearDistance: 20,
@@ -39194,6 +39301,11 @@ var EnemyConfig = {
             enemyIndex: 4,
             calloutSound: 'mhulk',
             powerLevel: 2,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     firingDistance: 500,
@@ -39301,6 +39413,11 @@ var EnemyConfig = {
             enemyIndex: 1,
             calloutSound: 'sniper',
             powerLevel: 4,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
             logic: {
                 brain: {
                     shootingArc: 8,

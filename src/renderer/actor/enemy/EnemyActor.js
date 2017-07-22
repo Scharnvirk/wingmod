@@ -60,4 +60,5 @@ EnemyActor.prototype.applyDifficulty = function(){
     this.state.hp *= this._gameState.getDifficultyForType('hp');
 };
 
+
 module.exports = EnemyActor;

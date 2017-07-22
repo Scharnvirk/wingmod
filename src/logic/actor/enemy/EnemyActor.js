@@ -57,7 +57,7 @@ EnemyActor.prototype.createBrain = function(){
 EnemyActor.prototype.customUpdate = function(){
     if(this.timer % 2 === 0) this.brain.update();
     this.doBrainOrders();
-    this.weapon.update();
+    this.weapon.update();    
 };
 
 EnemyActor.prototype.createWeapon = function(){
@@ -95,6 +95,23 @@ EnemyActor.prototype.onHit = function(){
     if (!this.props.logic.onHit) return;
     this._handleEvent(this.props.logic.onHit);
 };
+
+EnemyActor.prototype.onDelayedDeath = function(){
+    this.state.deathTimer = Utils.rand(1, this.state.deathTimer);
+    this.customUpdate = function(){
+        this._handleDelayedDeath();
+    };
+}
+
+EnemyActor.prototype._handleDelayedDeath = function(){ 
+    if (Utils.rand(0, 100) < this.props.delayedDeath.deathObjectSpawnChance * 100) {
+        this.spawn({        
+            classId: this.props.delayedDeath.deathObjectPool[Utils.rand(0, this.props.delayedDeath.deathObjectPool.length -1)],
+            angle: [0, 360],
+            velocity: [50, 100]
+        });
+    }
+}
 
 EnemyActor.prototype._handleEvent = function(config) {
     if (config.spawn) {
@@ -139,6 +156,8 @@ EnemyActor.prototype._dropWeapon = function() {
 EnemyActor.prototype._notifyParentOfDeath = function() {
     this.parent && this.parent.onChildDeath && this.parent.onChildDeath();
 };
+
+
     
 
 module.exports = EnemyActor;
