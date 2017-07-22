@@ -9451,7 +9451,7 @@ var EnemyConfig = {
             pointWorth: 1000,
             enemyIndex: 3,
             calloutSound: 'shulk',
-            powerLevel: 2.2,
+            powerLevel: 1.5,
             delayedDeath: {
                 time: 180,
                 deathObjectSpawnChance: 0.1,
@@ -10236,10 +10236,10 @@ var WeaponConfig = {
     },
     ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: {
         projectileClass: ActorFactory.ENEMYCONCSNMISSILE,
-        cooldown: 200,
+        cooldown: 250,
         velocity: 50,
-        burstCount: 20,
-        burstCooldown: 10,
+        burstCount: 15,
+        burstCooldown: 15,
         projectileCount: 2,
         randomAngle: 25,
         sound: 'missile',
@@ -10395,7 +10395,7 @@ var WeaponConfig = {
         name: 'PULSE WAVE BLASTER',
         modelName: 'pulsewaveblast',
         ammoConfig: {
-            energy: 1
+            energy: 0.5
         }
     },
     PURPLE_BLASTER: {

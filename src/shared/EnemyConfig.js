@@ -1471,7 +1471,7 @@ const EnemyConfig = {
             pointWorth: 1000,
             enemyIndex: 3,
             calloutSound: 'shulk',
-            powerLevel: 2.2,
+            powerLevel: 1.5,
             delayedDeath: {
                 time: 180,
                 deathObjectSpawnChance: 0.1,
