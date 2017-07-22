@@ -33,8 +33,8 @@ EnemySpawnMarkerActor.prototype.createEnemy = function(){
     if (!this.created) {
         this.spawn({
             amount: 1,
-            classId: ActorFactory.ENEMY,
-            subclassId: EnemyConfig.getSubclassIdFor(this.props.enemyClass),
+            classId: this.props.enemyClass,
+            subclassId: EnemyConfig.getSubclassIdFor(this.props.enemySubclass),
             angle: [0, 360],
             velocity: [50, 100]
         });

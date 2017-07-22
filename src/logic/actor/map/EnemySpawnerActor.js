@@ -2,6 +2,7 @@ var BaseBody = require('logic/actor/component/body/BaseBody');
 var BaseActor = require('logic/actor/BaseActor');
 var ActorFactory = require('shared/ActorFactory')('logic');
 var ActorConfig = require('shared/ActorConfig');
+var EnemyConfig = require('shared/EnemyConfig');
 
 function EnemySpawnerActor(config){
     Object.assign(this, config);
@@ -47,7 +48,8 @@ EnemySpawnerActor.prototype.createEnemySpawnMarker = function(enemyClass) {
         velocity: [0, 0],
         customConfig: {
             props: {
-                enemyClass: enemyClass
+                enemyClass: ActorFactory.ENEMY,
+                enemySubclass: enemySubclass
             }
         }
     });
@@ -67,6 +69,18 @@ EnemySpawnerActor.prototype.onDeath = function() {
         classId: ActorFactory.BOOMCHUNK,
         angle: [0, 360],
         velocity: [50, 100]
+    });
+
+    this.spawn({
+        classId: ActorFactory.ENEMYSPAWNMARKER, 
+        angle: [0, 0],
+        velocity: [0, 0],
+        customConfig: {
+            props: {
+                enemyClass: ActorFactory.CHAMPIONENEMY,
+                enemySubclass: this._pickEnemyChampionClassToSpawn()
+            }
+        }
     });
 
     this.playSound(['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'], 10);
@@ -89,6 +103,10 @@ EnemySpawnerActor.prototype.onHit = function(shielded) {
 
 EnemySpawnerActor.prototype._pickEnemyClassToSpawn = function() {
     return this.state.spawnPool[Utils.rand(0, this.state.spawnPool.length -1)];
+};
+
+EnemySpawnerActor.prototype._pickEnemyChampionClassToSpawn = function() {
+    return EnemyConfig.getNameById(Utils.rand(101, 107));
 };
 
 EnemySpawnerActor.prototype._updateSpawnPool = function() {

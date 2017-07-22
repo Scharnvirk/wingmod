@@ -18,6 +18,7 @@ EnemyActor.mixin(ParticleMixin);
 EnemyActor.mixin(BobMixin);
 EnemyActor.mixin(ShowDamageMixin);
 
+
 EnemyActor.prototype.createMeshes = function(){  
     return [new BaseMesh({
         actor: this, 
@@ -40,7 +41,7 @@ EnemyActor.prototype.onDeath = function(){
     if (!this.props.render.onDeath) return;
 
     if (this.props.render.onDeath.premades) {
-        this.props.render.onDeath.premades.forEach(premade => {
+        this.props.render.onDeath.premades.forEach(premade => { 
             this.createPremade({premadeName: premade});
         });
     }
