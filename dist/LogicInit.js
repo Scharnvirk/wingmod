@@ -2864,7 +2864,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
     }
 };
 
-EnemySpawnerActor.prototype.createEnemySpawnMarker = function (enemyClass) {
+EnemySpawnerActor.prototype.createEnemySpawnMarker = function (enemySubclass) {
     this.state.spawnDelay = this.props.spawnRate;
 
     this.spawn({
