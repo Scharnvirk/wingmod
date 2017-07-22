@@ -122,7 +122,7 @@ Weapon.prototype._alterPropertiesByPowerLevel = function(powerLevel){
     this.burstCooldown *= (1/powerLevel);
     if (this.burstCount > 1) this.burstCount = Math.ceil(this.burstCount * (powerLevel *2/3));
     this.cooldown *= (1/powerLevel);
-    this.velocity *= powerLevel;
+    this.velocity = Math.max(this.velocity / (3/2), this.velocity * powerLevel);
 };
 
 module.exports = Weapon;

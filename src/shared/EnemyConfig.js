@@ -9,7 +9,8 @@ const ENEMY_MAP = {
     LHULK: 6,
     SPIDER: 7,
     SPIDERLING: 8,
-    MHULK: 9
+    MHULK: 9,
+    ORBOTBOSS: 10
 };
 
 const ID_MAP = Utils.objectSwitchKeysAndValues(ENEMY_MAP);
@@ -56,6 +57,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MINI_RED_BLASTER',
+                    randomPool: ['RED_BLASTER', 'RED_BLASTER', 'PURPLE_BLASTER'],
+                    chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
@@ -148,6 +151,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MOLTEN_BALL_THROWER',
+                    randomPool: ['MOLTEN_BALL_SHOTGUN', 'MOLTEN_BALL_SHOTGUN', 'PLASMA_CANNON'],
+                    chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
@@ -243,6 +248,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'BLUE_BLASTER',
+                    randomPool: ['PURPLE_BLASTER'],
+                    chanceForRandomWeapon: 0.2,
                     firingPoints: [
                         {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
                     ]
@@ -325,7 +332,7 @@ const EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
-            powerLevel: 1,
+            powerLevel: 1.5,
             logic: {            
                 brain: {
                     firingDistance: 180,
@@ -333,6 +340,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'GREEN_BLASTER',
+                    randomPool: ['BLUE_BLASTER', 'RED_BLASTER', 'PURPLE_BLASTER'],
+                    chanceForRandomWeapon: 0.3,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -37, offsetDistance: 10.5, fireAngle: 0},
@@ -438,6 +447,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'ENEMY_CONCUSSION_MISSILE_LAUNCHER',
+                    randomPool: ['CONCUSSION_MISSILE_LAUNCHER'],
+                    chanceForRandomWeapon: 0.5,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -37, offsetDistance: 12.5, fireAngle: 0},
@@ -671,6 +682,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MOLTEN_BALL_SHOTGUN',
+                    randomPool: ['MOLTEN_BALL_THROWER', 'PLASMA_CANNON', 'PLASMA_BLAST'],
+                    chanceForRandomWeapon: 0.3,
                     firingMode: 'alternate',
                     firingPoints: [
                         {offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0},
@@ -872,6 +885,8 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'SLOW_PULSE_WAVE_GUN',
+                    randomPool: ['PULSE_WAVE_GUN', 'PULSE_WAVE_GUN', 'PLASMA_CANNON'],
+                    chanceForRandomWeapon: 0.2,
                     firingPoints: [
                         {offsetAngle: 90, offsetDistance: 0.2, fireAngle: 0},
                     ]
@@ -938,6 +953,100 @@ const EnemyConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 2
+        }
+    },
+
+    ORBOTBOSS: {        
+        props: {            
+            danger: 3,
+            acceleration: 2500,
+            turnSpeed: 4,
+            hp: 100,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'SUPER ORBOT',
+            pointWorth: 10,
+            enemyIndex: 2,
+            calloutSound: 'orbot',
+            powerLevel: 0.1,
+            logic: {            
+                brain: {
+                    shootingArc: 30,
+                    nearDistance: 10,
+                    farDistance: 30,
+                    firingDistance: 500
+                },            
+                weapon: {
+                    type: 'SLOW_PULSE_WAVE_GUN',
+                    randomPool: ['PULSE_WAVE_GUN', 'SLOW_PULSE_WAVE_GUN', 'SLOW_PULSE_WAVE_GUN', 'PLASMA_CANNON', 'PLASMA_BLAST'],
+                    chanceForRandomWeapon: 1,
+                    firingPoints: [
+                        {offsetAngle: 90, offsetDistance: 0.2, fireAngle: 0},
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 10,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 5,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
+                            classId: ActorFactory.SMALLEXPLOSION,
+                            delay: 100
+                        },{
+                            classId: ActorFactory.PLASMAPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20],
+                            probability: 0.1
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 2.5,
+                    scaleY: 2.5,
+                    scaleZ: 2.5,
+                    geometry: 'orbot',
+                    material: 'orbot'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 15,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5
         }
     }
 };

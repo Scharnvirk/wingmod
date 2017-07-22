@@ -20,8 +20,14 @@ function EnemyActor(config){
     
     this.applyDifficulty();
 
+    this.props.dropChance = 0.07;
+    this.props.dropChanceForRandomWeapon = 0.5;
+    this.props.randomWeaponRangeMax = 15;
+    this.props.randomWeaponRangeMin = 1;
+
     this.brain = this.createBrain();
     this.weapon = this.createWeapon();
+
 }
 
 EnemyActor.extend(BaseActor);
@@ -56,10 +62,24 @@ EnemyActor.prototype.customUpdate = function(){
 };
 
 EnemyActor.prototype.createWeapon = function(){
+    let weaponType = this.props.logic.weapon.type;
+    let chanceForRandomWeapon = this.props.logic.weapon.chanceForRandomWeapon || 0;
+    const randomWeaponPool = this.props.logic.weapon.randomPool || [];
+
+    if (randomWeaponPool.length > 0 && chanceForRandomWeapon > 0) {
+        chanceForRandomWeapon *= 100;
+        this.props.dropChance = (1 - (1 - this.props.dropChance) * (1 - this.props.dropChance));
+        if (Utils.rand(0, 100) < chanceForRandomWeapon) {            
+            weaponType = randomWeaponPool[Utils.rand(0, randomWeaponPool.length -1)];
+        }
+    }
+
+    this.props.weaponDropType = weaponType;
+
     const weaponConfig = Object.assign({
         actor: this,
         manager: this.manager,        
-    }, WeaponConfig[this.props.logic.weapon.type], this.props.logic.weapon);
+    }, WeaponConfig[weaponType], this.props.logic.weapon);
 
     return new Weapon(weaponConfig);
 };
@@ -102,11 +122,13 @@ EnemyActor.prototype._spawn = function(spawnConfig) {
 };
 
 EnemyActor.prototype._dropWeapon = function() {
-    //HAX!!! should be config property in ActorConfig... but for now...
-    if(Utils.rand(0,100) > 93){
+    if (Utils.rand(0,100) < this.props.dropChance * 100) {
+        const weaponType = (Utils.rand(0,100) < this.props.dropChanceForRandomWeapon * 100) ?
+                            Utils.rand(this.props.randomWeaponRangeMin, this.props.randomWeaponRangeMax) :
+                            this.props.weaponDropType;
         this.spawn({        
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: Utils.rand(1,15),
+            subclassId: WeaponConfig.getSubclassIdFor(weaponType),
             angle: [0, 360],
             velocity: [15, 20]
         });
