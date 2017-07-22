@@ -26,5 +26,9 @@ GameState.prototype.getDifficultyForType = function(type) {
     return this._props.difficulties[type][this._state.difficultyFactor];
 };
 
+GameState.prototype.setDifficulty = function(difficultyFactor) {
+    this._state.difficultyFactor = difficultyFactor;
+}
+
 
 module.exports = GameState;

@@ -8,7 +8,6 @@ function PlasmaBlastProjectileActor(config){
     Object.assign(this, config);
     this.applyConfig(ActorConfig.PLASMABLASTPROJECTILE);
     BaseActor.apply(this, arguments);
-    console.log(this.isPlayer, this.powerLevel);
 }
 
 PlasmaBlastProjectileActor.extend(BaseActor);

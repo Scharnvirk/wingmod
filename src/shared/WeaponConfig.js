@@ -19,8 +19,8 @@ const WEAPON_MAP = {
     MOLTEN_BALL_SHOTGUN: 14,
     SLOW_PULSE_WAVE_GUN: 15,
     
-
     ENEMY_HOMING_MISSILE_LAUNCHER: 100,
+    ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: 101,
 
     NONE: 999
 };
@@ -108,6 +108,22 @@ const WeaponConfig = {
         velocity: 150,
         burstCount: 2,
         burstCooldown: 20,
+        sound: 'missile',
+        name: 'CONCUSSION MISSILE POD',
+        firingMode: 'alternate',
+        modelName: 'missilelauncher',
+        ammoConfig: {
+            missiles: 1
+        }
+    },
+    ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: {
+        projectileClass: ActorFactory.ENEMYCONCSNMISSILE,
+        cooldown: 200,
+        velocity: 50,
+        burstCount: 20,
+        burstCooldown: 10,
+        projectileCount: 2,
+        randomAngle: 25,
         sound: 'missile',
         name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',

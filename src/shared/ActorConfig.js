@@ -292,7 +292,7 @@ const ActorConfig = {
             damage: 15,
             removeOnHit: true,
             timeout: 800,
-            constantAcceleration: 400,
+            constantAcceleration: 200,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'playerProjectile'
@@ -336,8 +336,7 @@ const ActorConfig = {
             damage: 10,
             removeOnHit: true,
             timeout: 800,
-            acceleration: 650,
-            constantAcceleration: 300,
+            constantAcceleration: 150,
             collisionFixesPosition: true,
             soundsOnDeath: ['matterhit3'],
             type: 'enemyProjectile'

@@ -164,6 +164,7 @@ Core.prototype.onAssetsLoaded = function(){
 
     this.logicBus.postMessage('mapHitmapsLoaded', {hitmaps: ChunkStore.serializeHitmaps()});
     this.logicBus.postMessage('difficultyChange', {difficulty: this.configManager.config.difficulty});
+    this.gameState.setDifficulty(this.configManager.config.difficulty);
 
     var controlsLoop = new THREEx.PhysicsLoop(120);
     controlsLoop.add(this.controlsUpdate.bind(this));

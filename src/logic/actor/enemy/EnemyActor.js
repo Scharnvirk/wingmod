@@ -26,8 +26,7 @@ function EnemyActor(config){
     this.props.randomWeaponRangeMin = 1;
 
     this.brain = this.createBrain();
-    this.weapon = this.createWeapon();
-
+    this.weapon = this.createWeapon();    
 }
 
 EnemyActor.extend(BaseActor);
@@ -88,6 +87,7 @@ EnemyActor.prototype.onDeath = function(){
     if (!this.props.logic.onDeath) return;
     this._handleEvent(this.props.logic.onDeath);
 
+    this._notifyParentOfDeath();
     this._dropWeapon();
 };
 
@@ -123,17 +123,22 @@ EnemyActor.prototype._spawn = function(spawnConfig) {
 
 EnemyActor.prototype._dropWeapon = function() {
     if (Utils.rand(0,100) < this.props.dropChance * 100) {
-        const weaponType = (Utils.rand(0,100) < this.props.dropChanceForRandomWeapon * 100) ?
+        const weaponTypeId = (Utils.rand(0,100) < this.props.dropChanceForRandomWeapon * 100) ?
                             Utils.rand(this.props.randomWeaponRangeMin, this.props.randomWeaponRangeMax) :
-                            this.props.weaponDropType;
+                            WeaponConfig.getSubclassIdFor(this.props.weaponDropType);
         this.spawn({        
             classId: ActorFactory.WEAPONPICKUP,
-            subclassId: WeaponConfig.getSubclassIdFor(weaponType),
+            subclassId: weaponTypeId,
             angle: [0, 360],
             velocity: [15, 20]
         });
     }
     
 };
+
+EnemyActor.prototype._notifyParentOfDeath = function() {
+    this.parent && this.parent.onChildDeath && this.parent.onChildDeath();
+};
+    
 
 module.exports = EnemyActor;

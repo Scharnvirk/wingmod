@@ -36,15 +36,15 @@ GameScene.prototype.fillScene = function(mapBodies){
     //     });
     // }
 
-    for (i = 0; i < 1; i++){
-        this.actorManager.addNew({
-            classId: ActorFactory.ENEMY,
-            subclassId: EnemyConfig.getSubclassIdFor('ORBOTBOSS'),
-            positionX: Utils.rand(-100, 100),
-            positionY: Utils.rand(-100, 100),
-            angle: 0
-        });
-    }
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.CHAMPIONENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('SNIPERBOSS'),
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0
+    //     });
+    // }
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({

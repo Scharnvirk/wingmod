@@ -18,6 +18,7 @@ EnemyActor.mixin(ParticleMixin);
 EnemyActor.mixin(BobMixin);
 EnemyActor.mixin(ShowDamageMixin);
 
+
 EnemyActor.prototype.createMeshes = function(){  
     return [new BaseMesh({
         actor: this, 

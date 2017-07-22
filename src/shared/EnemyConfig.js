@@ -5,20 +5,32 @@ const ENEMY_MAP = {
     MOOK: 2,
     SNIPER: 3,
     ORBOT: 4,
-    SHULK: 5,
-    LHULK: 6,
-    SPIDER: 7,
-    SPIDERLING: 8,
-    MHULK: 9,
-    ORBOTBOSS: 10
+    SHULK: 5,    
+    SPIDER: 6,    
+    MHULK: 7,
+    LHULK: 8,
+    
+    CHASERBOSS: 101,
+    MOOKBOSS: 102,
+    SNIPERBOSS: 103,
+    ORBOTBOSS: 104,
+    SHULKBOSS: 105,
+    SPIDERBOSS: 106,
+    MHULKBOSS: 107,
+
+    SPIDERLING: 10007,
 };
 
 const ID_MAP = Utils.objectSwitchKeysAndValues(ENEMY_MAP);
 
 const getById = function(id){
-    const className = EnemyConfig[ID_MAP[id]];
-    if (!className) throw new Error('Missing enemy config for subclassId ' + id);        
-    return className;
+    const configObject = EnemyConfig[ID_MAP[id]];
+    if (!configObject) throw new Error('Missing enemy config for subclassId ' + id);        
+    return configObject;
+};
+
+const getNameById = function(id){
+    return ID_MAP[id];
 };
 
 const getSubclassIdFor = function(enemyClassName) {
@@ -30,6 +42,7 @@ const getSubclassIdFor = function(enemyClassName) {
 const EnemyConfig = {  
     getById: getById,
     getSubclassIdFor: getSubclassIdFor,
+    getNameById: getNameById,
 
     CHASER: {        
         props: {            
@@ -682,7 +695,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MOLTEN_BALL_SHOTGUN',
-                    randomPool: ['MOLTEN_BALL_THROWER', 'PLASMA_CANNON', 'PLASMA_BLAST'],
+                    randomPool: ['MOLTEN_BALL_THROWER', 'PLASMA_BLAST'],
                     chanceForRandomWeapon: 0.3,
                     firingMode: 'alternate',
                     firingPoints: [
@@ -959,23 +972,23 @@ const EnemyConfig = {
     ORBOTBOSS: {        
         props: {            
             danger: 3,
-            acceleration: 2500,
+            acceleration: 1500,
             turnSpeed: 4,
-            hp: 100,
+            hp: 50,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'SUPER ORBOT',
-            pointWorth: 10,
+            name: 'ALL-SEEING ORBOT',
+            pointWorth: 300,
             enemyIndex: 2,
             calloutSound: 'orbot',
-            powerLevel: 0.1,
+            powerLevel: 3,
             logic: {            
                 brain: {
                     shootingArc: 30,
                     nearDistance: 10,
                     farDistance: 30,
-                    firingDistance: 500
+                    firingDistance: 200
                 },            
                 weapon: {
                     type: 'SLOW_PULSE_WAVE_GUN',
@@ -988,23 +1001,43 @@ const EnemyConfig = {
                 onDeath: {
                     spawn: [
                         {
-                            amount: 10,
+                            amount: 20,
                             classId: ActorFactory.CHUNK,
                             angle: [0, 360],
                             velocity: [50, 100]
                         },{
-                            amount: 5,
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
                             classId: ActorFactory.FLAMECHUNK,
                             angle: [0, 360],
-                            velocity: [200, 300]
+                            velocity: [250, 300]
                         },{
-                            classId: ActorFactory.SMALLEXPLOSION,
+                            classId: ActorFactory.EXPLOSION,
                             delay: 100
                         },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 2,
                             classId: ActorFactory.PLASMAPICKUP,
                             angle: [0, 360],
-                            velocity: [15, 20],
-                            probability: 0.1
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
                         }
                     ],
                     sounds: {
@@ -1024,6 +1057,11 @@ const EnemyConfig = {
                         sounds: ['armorHit1', 'armorHit2'],
                         volume: 1
                     }
+                },
+                championConfig: {
+                    spawnTime: 120,
+                    guardianTypes: ['ORBOT'],
+                    guardianCount: 5
                 }
             },
             render: {
@@ -1048,7 +1086,694 @@ const EnemyConfig = {
             inertia: 10,
             radius: 5
         }
-    }
+    },
+
+    CHASERBOSS: {        
+        props: {            
+            danger: 3,            
+            hp: 60,
+            enemy: true,
+            acceleration: 11000,
+            turnSpeed: 7,
+            hpBarCount: 7,
+            type: 'enemyShip',
+            name: 'MASTER CHASER',
+            pointWorth: 500,
+            enemyIndex: 8,
+            calloutSound: 'drone',
+            powerLevel: 3,
+            logic: {            
+                brain: {
+                    firingDistance: 500,
+                    leadSkill: 1,
+                    nearDistance: 100,
+                    farDistance: 500,
+                    shootingArc: 30,
+                    wallDetectionDistance: 40,
+                    behavior: 'chaser'
+                },            
+                weapon: {
+                    type: 'RED_BLASTER',
+                    randomPool: ['MINI_RED_BLASTER'],
+                    chanceForRandomWeapon: 0.5,
+                    firingMode: 'simultaneous',
+                    firingPoints: [
+                        {offsetAngle: -90, offsetDistance: 8, fireAngle: 0},
+                        {offsetAngle: 90, offsetDistance: 8 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['CHASER'],
+                    guardianCount: 4,
+                    spawnTime: 120
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 5,
+                    scaleY: 5,
+                    scaleZ: 5,
+                    geometry: 'chaser',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 10
+        }
+    },
+
+    SPIDERBOSS: {        
+        props: {            
+            danger: 3,
+            acceleration: 1500, 
+            turnSpeed: 2,
+            hp: 200, 
+            hpBarCount: 9,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'SPIDER QUEEN',
+            pointWorth: 1200,
+            enemyIndex: 6,
+            calloutSound: 'spider',
+            powerLevel: 1.5,
+            logic: {            
+                brain: {
+                    shootingArc: 0,
+                    nearDistance: 20,
+                    farDistance: 15000,
+                    firingDistance: 0,
+                    leadSkill: 0
+                },            
+                weapon: {
+                    type: 'NONE',
+                    firingMode: 'alternate',
+                    firingPoints: [
+                        {offsetAngle: -90, offsetDistance: 0.5, fireAngle: 0},
+                        {offsetAngle: 90, offsetDistance: 0.5 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['SPIDER'],
+                    guardianCount: 4,
+                    spawnTime: 30
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 6, 
+                    scaleY: 6,
+                    scaleZ: 6,
+                    geometry: 'spider',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomMedium'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 50,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 12
+        }
+    },
+
+    MOOKBOSS: {        
+        props: {            
+            danger: 3,
+            acceleration: 700,
+            turnSpeed: 2,
+            hp: 120,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'MEGADRONE',
+            pointWorth: 400,
+            enemyIndex: 0,
+            calloutSound: 'drone',
+            powerLevel: 1,
+            logic: {            
+                brain: {
+                    firingDistance: 140,
+                    leadSkill: 0
+                },            
+                weapon: {
+                    type: 'NONE',
+                    firingMode: 'alternate',
+                    firingPoints: [
+                        {offsetAngle: -90, offsetDistance: 3.5, fireAngle: 0},
+                        {offsetAngle: 90, offsetDistance: 3.5 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['MOOK'],
+                    guardianCount: 12,
+                    spawnTime: 60
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 2.6,
+                    scaleY: 2.6,
+                    scaleZ: 2.6,
+                    geometry: 'drone',
+                    material: 'drone'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 10
+        }
+    },
+
+    SHULKBOSS: {        
+        props: {            
+            danger: 2,
+            acceleration: 4000, 
+            turnSpeed: 1.5,
+            hp: 150, 
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'GREMLIN LORD',
+            pointWorth: 1000,
+            enemyIndex: 3,
+            calloutSound: 'shulk',
+            powerLevel: 2.2,
+            logic: {            
+                brain: {
+                    nearDistance: 20,
+                    farDistance: 20,
+                    firingDistance: 400,
+                    leadSkill: 0.3
+                },            
+                weapon: {
+                    type: 'GREEN_BLASTER',
+                    randomPool: ['BLUE_BLASTER', 'RED_BLASTER', 'GREEN_BLASTER'],
+                    chanceForRandomWeapon: 1,
+                    firingMode: 'simultaneous',
+                    firingPoints: [
+                        {offsetAngle: -37, offsetDistance: 17, fireAngle: 0},
+                        {offsetAngle: 37, offsetDistance: 17 , fireAngle: 0},
+                        {offsetAngle: -35, offsetDistance: 14, fireAngle: 0},
+                        {offsetAngle: 35, offsetDistance: 14 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['SHULK'],
+                    guardianCount: 2,
+                    spawnTime: 120
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 12,
+                    scaleY: 12,
+                    scaleZ: 12,
+                    geometry: 'shulk',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomLarge'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 50,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 12
+        }
+    },
+
+    MHULKBOSS: {        
+        props: {            
+            danger: 3,
+            acceleration: 700, 
+            turnSpeed: 1,
+            hp: 400,
+            hpBarCount: 11,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'MOBILE MISSILE MASSACRE',
+            pointWorth: 1600,
+            enemyIndex: 4,
+            calloutSound: 'mhulk',
+            powerLevel: 2,
+            logic: {            
+                brain: {
+                    firingDistance: 500,
+                    shootingArc: 30,
+                    leadSkill: 0.01
+                },            
+                weapon: {
+                    type: 'ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER',
+                    firingPoints: [
+                        {offsetAngle: -37, offsetDistance: 24.5, fireAngle: 0},
+                        {offsetAngle: 37, offsetDistance: 24.5 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        },{
+                            amount: 5,
+                            classId: ActorFactory.MISSILEQUADPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 7,
+                    scaleY: 7,
+                    scaleZ: 7,
+                    geometry: 'mhulk',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomLarge'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 70,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 20
+        }
+    },
+
+    SNIPERBOSS: {        
+        props: {            
+            danger: 3,
+            acceleration: 0,
+            turnSpeed: 2,
+            hp: 120,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'SNIPER',
+            pointWorth: 600,
+            enemyIndex: 1,
+            calloutSound: 'sniper',
+            powerLevel: 4,
+            logic: {            
+                brain: {
+                    shootingArc: 8,
+                    nearDistance: 200,
+                    farDistance: 300,
+                    firingDistance: 400,
+                    leadSkill: 0.5
+                },            
+                weapon: {
+                    type: 'PURPLE_BLASTER',
+                    randomPool: ['BLUE_BLASTER', 'PURPLE_BLASTER', 'RED_BLASTER'],
+                    chanceForRandomWeapon: 1,
+                    firingPoints: [
+                        {offsetAngle: 10, offsetDistance: 10, fireAngle: 0},
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 4,
+                    scaleY: 4,
+                    scaleZ: 4,
+                    geometry: 'sniper',
+                    material: 'sniper'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 80,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 8
+        }
+    },
+
 };
 
 module.exports = EnemyConfig;
