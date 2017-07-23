@@ -425,14 +425,14 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: Utils.rand(1,15),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
-    // for (i = 0; i < 3; i++){
+    // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ENEMY,
-    //         subclassId: EnemyConfig.getSubclassIdFor('MOOK'),
+    //         classId: ActorFactory.CHAMPIONENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('SNIPERBOSS'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -951,7 +951,7 @@ function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1936,8 +1936,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -1963,7 +1963,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -3213,7 +3213,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -3246,8 +3246,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
         var p = this.getPosition();
 
@@ -8250,7 +8250,7 @@ var EnemyConfig = {
                     scaleY: 1.2,
                     scaleZ: 1.2,
                     geometry: 'drone',
-                    material: 'drone'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -8339,7 +8339,7 @@ var EnemyConfig = {
                     scaleY: 1.9,
                     scaleZ: 1.9,
                     geometry: 'sniper',
-                    material: 'sniper'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -8954,7 +8954,7 @@ var EnemyConfig = {
                     scaleY: 1.3,
                     scaleZ: 1.3,
                     geometry: 'orbot',
-                    material: 'orbot'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -8977,7 +8977,7 @@ var EnemyConfig = {
             danger: 3,
             acceleration: 1500,
             turnSpeed: 4,
-            hp: 50,
+            hp: 120,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -9074,7 +9074,7 @@ var EnemyConfig = {
                     scaleY: 2.5,
                     scaleZ: 2.5,
                     geometry: 'orbot',
-                    material: 'orbot'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -9095,7 +9095,7 @@ var EnemyConfig = {
     CHASERBOSS: {
         props: {
             danger: 3,
-            hp: 60,
+            hp: 100,
             enemy: true,
             acceleration: 11000,
             turnSpeed: 7,
@@ -9123,7 +9123,7 @@ var EnemyConfig = {
                 },
                 weapon: {
                     type: 'RED_BLASTER',
-                    randomPool: ['MINI_RED_BLASTER'],
+                    randomPool: ['BLUE_BLASTER'],
                     chanceForRandomWeapon: 0.5,
                     firingMode: 'simultaneous',
                     firingPoints: [{ offsetAngle: -90, offsetDistance: 8, fireAngle: 0 }, { offsetAngle: 90, offsetDistance: 8, fireAngle: 0 }]
@@ -9193,7 +9193,7 @@ var EnemyConfig = {
                     scaleY: 5,
                     scaleZ: 5,
                     geometry: 'chaser',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -9308,7 +9308,7 @@ var EnemyConfig = {
                     scaleY: 6,
                     scaleZ: 6,
                     geometry: 'spider',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomMedium'],
@@ -9331,8 +9331,8 @@ var EnemyConfig = {
             danger: 3,
             acceleration: 700,
             turnSpeed: 2,
-            hp: 120,
-            hpBarCount: 7,
+            hp: 250,
+            hpBarCount: 9,
             enemy: true,
             type: 'enemyShip',
             name: 'MEGADRONE',
@@ -9420,7 +9420,7 @@ var EnemyConfig = {
                     scaleY: 2.6,
                     scaleZ: 2.6,
                     geometry: 'drone',
-                    material: 'drone'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -9443,7 +9443,7 @@ var EnemyConfig = {
             danger: 2,
             acceleration: 4000,
             turnSpeed: 1.5,
-            hp: 150,
+            hp: 180,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -9536,7 +9536,7 @@ var EnemyConfig = {
                     scaleY: 12,
                     scaleZ: 12,
                     geometry: 'shulk',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomLarge'],
@@ -9559,7 +9559,7 @@ var EnemyConfig = {
             danger: 3,
             acceleration: 700,
             turnSpeed: 1,
-            hp: 400,
+            hp: 300,
             hpBarCount: 11,
             enemy: true,
             type: 'enemyShip',
@@ -9648,7 +9648,7 @@ var EnemyConfig = {
                     scaleY: 7,
                     scaleZ: 7,
                     geometry: 'mhulk',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomLarge'],
@@ -9759,7 +9759,7 @@ var EnemyConfig = {
                     scaleY: 4,
                     scaleZ: 4,
                     geometry: 'sniper',
-                    material: 'sniper'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -9889,7 +9889,7 @@ EventEmitter.prototype = {
 },{}],111:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
@@ -9938,8 +9938,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
+        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -10058,7 +10058,7 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such. 
+    //expects each key and value to be unique; intended for name:id mappings and such.
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;

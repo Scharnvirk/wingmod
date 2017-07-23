@@ -217,7 +217,7 @@ const EnemyConfig = {
                     scaleY: 1.2,
                     scaleZ: 1.2,
                     geometry: 'drone',
-                    material: 'drone'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -310,7 +310,7 @@ const EnemyConfig = {
                     scaleY: 1.9,
                     scaleZ: 1.9,
                     geometry: 'sniper',
-                    material: 'sniper'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -955,7 +955,7 @@ const EnemyConfig = {
                     scaleY: 1.3,
                     scaleZ: 1.3,
                     geometry: 'orbot',
-                    material: 'orbot'
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -978,7 +978,7 @@ const EnemyConfig = {
             danger: 3,
             acceleration: 1500,
             turnSpeed: 4,
-            hp: 50,
+            hp: 120,
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -1079,7 +1079,7 @@ const EnemyConfig = {
                     scaleY: 2.5,
                     scaleZ: 2.5,
                     geometry: 'orbot',
-                    material: 'orbot'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -1100,7 +1100,7 @@ const EnemyConfig = {
     CHASERBOSS: {        
         props: {            
             danger: 3,            
-            hp: 60,
+            hp: 100,
             enemy: true,
             acceleration: 11000,
             turnSpeed: 7,
@@ -1128,7 +1128,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'RED_BLASTER',
-                    randomPool: ['MINI_RED_BLASTER'],
+                    randomPool: ['BLUE_BLASTER'],
                     chanceForRandomWeapon: 0.5,
                     firingMode: 'simultaneous',
                     firingPoints: [
@@ -1203,7 +1203,7 @@ const EnemyConfig = {
                     scaleY: 5,
                     scaleZ: 5,
                     geometry: 'chaser',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -1323,7 +1323,7 @@ const EnemyConfig = {
                     scaleY: 6,
                     scaleZ: 6,
                     geometry: 'spider',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomMedium'],
@@ -1346,8 +1346,8 @@ const EnemyConfig = {
             danger: 3,
             acceleration: 700,
             turnSpeed: 2,
-            hp: 120,
-            hpBarCount: 7,
+            hp: 250,
+            hpBarCount: 9,
             enemy: true,
             type: 'enemyShip',
             name: 'MEGADRONE',
@@ -1440,7 +1440,7 @@ const EnemyConfig = {
                     scaleY: 2.6,
                     scaleZ: 2.6,
                     geometry: 'drone',
-                    material: 'drone'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -1463,7 +1463,7 @@ const EnemyConfig = {
             danger: 2,
             acceleration: 4000, 
             turnSpeed: 1.5,
-            hp: 150, 
+            hp: 180, 
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
@@ -1563,7 +1563,7 @@ const EnemyConfig = {
                     scaleY: 12,
                     scaleZ: 12,
                     geometry: 'shulk',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomLarge'],
@@ -1586,7 +1586,7 @@ const EnemyConfig = {
             danger: 3,
             acceleration: 700, 
             turnSpeed: 1,
-            hp: 400,
+            hp: 300,
             hpBarCount: 11,
             enemy: true,
             type: 'enemyShip',
@@ -1680,7 +1680,7 @@ const EnemyConfig = {
                     scaleY: 7,
                     scaleZ: 7,
                     geometry: 'mhulk',
-                    material: 'enemyModel'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomLarge'],
@@ -1795,7 +1795,7 @@ const EnemyConfig = {
                     scaleY: 4,
                     scaleZ: 4,
                     geometry: 'sniper',
-                    material: 'sniper'
+                    material: 'championEnemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],

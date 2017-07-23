@@ -75,7 +75,7 @@ EnemySpawnerActor.prototype.onDelayedDeath = function(){
             }
         }
     });
-}
+};
 
 EnemySpawnerActor.prototype._handleDelayedDeath = function(){ 
     const spawnRandom = Utils.rand(0,100);
