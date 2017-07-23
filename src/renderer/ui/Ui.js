@@ -93,15 +93,15 @@ Ui.prototype.onStartButtonClick = function(){
     }
 };
 
-Ui.prototype.gotPointerLock = function(){
-    let newMode = this.reactUi.changeMode('running');
+Ui.prototype.gotPointerLock = function(currentlyPaused){
+    let newMode = this.reactUi.changeMode('running', {currentlyPaused: currentlyPaused});
     if (newMode === 'running') {
         this.emit({type: 'startGame'});
     }
 };
 
-Ui.prototype.lostPointerLock = function(){
-    this.reactUi.changeMode('helpScreen');
+Ui.prototype.lostPointerLock = function(currentlyPaused){
+    this.reactUi.changeMode('helpScreen', {currentlyPaused: currentlyPaused});
 };
 
 Ui.prototype.onShadowConfig = function(data){

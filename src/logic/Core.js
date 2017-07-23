@@ -95,6 +95,10 @@ Core.prototype.onPause = function(){
     this.running = false;
 };
 
+Core.prototype.onUnpause = function(){
+    this.running = true;
+};
+
 Core.prototype.onAiImageDone = function(event){
     this.actorManager.aiImage = event.data;
 };

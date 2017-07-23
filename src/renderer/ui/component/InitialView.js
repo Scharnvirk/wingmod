@@ -20,7 +20,10 @@ var InitialView = React.createClass({
             UIcontent.push(<StartScreen key={ReactUtils.generateKey()} isBrowserMobile={this.props.isBrowserMobile}/>);
             break;
         case 'helpScreen':
-            UIcontent.push(<StartHelp key={ReactUtils.generateKey()}/>);
+            UIcontent.push(<StartHelp 
+                key={ReactUtils.generateKey()}
+                currentlyPaused={this.props.context && this.props.context.currentlyPaused}
+            />);
             break;
         case 'gameOverScreen':
             UIcontent.push(<EndScreen 

@@ -2,9 +2,14 @@ import classnames from 'classnames';
 import React from 'react';
 
 var StyledText = require('renderer/ui/component/base/StyledText');
+var ReactUtils = require('renderer/ui/ReactUtils');
 
 class StartHelp extends React.Component {
     render() {
+        let acceptText = this.props.currentlyPaused ? 
+                        ReactUtils.multilinize('GAME PAUSED!\n\nACCEPT POINTER LOCK TO CONTINUE!') :
+                        'ACCEPT POINTER LOCK!';
+
         return <div style = {{bottom: '100px'}}>
             <div
                 className={ classnames('class', ['centerHorizontal', 'topCenter', 'verticalSpacing']) }
@@ -33,7 +38,7 @@ class StartHelp extends React.Component {
                 className={ classnames('class', ['centerHorizontal', 'bottomCenter', 'verticalSpacing']) }
             >
                 <StyledText style={classnames('mediumText', 'textBlink')}>
-                    <span>{'ACCEPT POINTER LOCK!'}</span>
+                    <span>{acceptText}</span>
                 </StyledText>
                 <StyledText style={classnames('smallText', 'textDark')}>
                     <span>{'CHROME: Just click.'}</span>

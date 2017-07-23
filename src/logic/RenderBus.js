@@ -27,6 +27,12 @@ RenderBus.prototype.handleMessage = function(message){
     case 'difficultyChange':
         this.core.onDifficultyChange(message);
         break;
+    case 'gameUnpause':
+        this.core.onUnpause(message);
+        break;
+    case 'gamePause':
+        this.core.onPause(message);
+        break;
     }
 };
 

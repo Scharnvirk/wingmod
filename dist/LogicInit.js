@@ -322,6 +322,10 @@ Core.prototype.onPause = function () {
     this.running = false;
 };
 
+Core.prototype.onUnpause = function () {
+    this.running = true;
+};
+
 Core.prototype.onAiImageDone = function (event) {
     this.actorManager.aiImage = event.data;
 };
@@ -1077,6 +1081,12 @@ RenderBus.prototype.handleMessage = function (message) {
             break;
         case 'difficultyChange':
             this.core.onDifficultyChange(message);
+            break;
+        case 'gameUnpause':
+            this.core.onUnpause(message);
+            break;
+        case 'gamePause':
+            this.core.onPause(message);
             break;
     }
 };

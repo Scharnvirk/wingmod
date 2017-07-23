@@ -25,6 +25,7 @@ function Core(config){
     this.viewportElement = document.getElementById('viewport');
     this.canvasElement = document.getElementById('hudCanvas');
     this.activeScene = '';
+    this.paused = false;
 
     this.renderTicks = 0;
 }
@@ -183,13 +184,15 @@ Core.prototype.controlsUpdate = function(){
 };
 
 Core.prototype.render = function(){
-    this.actorManager.update();
-    this.hud.update();
-    this.particleManager.update();
-    this.sceneManager.update();
-    this.renderTicks++;
-    this.sceneManager.render(this.activeScene);
-    // this.flatHud.update();
+    if (!this.paused) {
+        this.actorManager.update();
+        this.hud.update();
+        this.particleManager.update();    
+        this.sceneManager.update();
+        this.renderTicks++;
+        this.sceneManager.render(this.activeScene);
+    }
+
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -263,14 +266,18 @@ Core.prototype.onStartGame = function(){
 };
 
 Core.prototype.onGotPointerLock = function(){
+    this.logicBus.postMessage('gameUnpause', {});
+    this.paused = false;
     if(!this.gameEnded){
-        this.ui.gotPointerLock();
+        this.ui.gotPointerLock(this.paused);
     }
 };
 
 Core.prototype.onLostPointerLock = function(){
+    this.logicBus.postMessage('gamePause', {});
+    this.paused = true;
     if(!this.gameEnded){
-        this.ui.lostPointerLock();
+        this.ui.lostPointerLock(this.paused);
     }
 };
 

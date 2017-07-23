@@ -26219,6 +26219,7 @@ function Core(config) {
     this.viewportElement = document.getElementById('viewport');
     this.canvasElement = document.getElementById('hudCanvas');
     this.activeScene = '';
+    this.paused = false;
 
     this.renderTicks = 0;
 }
@@ -26379,13 +26380,15 @@ Core.prototype.controlsUpdate = function () {
 };
 
 Core.prototype.render = function () {
-    this.actorManager.update();
-    this.hud.update();
-    this.particleManager.update();
-    this.sceneManager.update();
-    this.renderTicks++;
-    this.sceneManager.render(this.activeScene);
-    // this.flatHud.update();
+    if (!this.paused) {
+        this.actorManager.update();
+        this.hud.update();
+        this.particleManager.update();
+        this.sceneManager.update();
+        this.renderTicks++;
+        this.sceneManager.render(this.activeScene);
+    }
+
     this.renderStats.update(this.renderer);
     this.stats.update();
 };
@@ -26461,14 +26464,18 @@ Core.prototype.onStartGame = function () {
 };
 
 Core.prototype.onGotPointerLock = function () {
+    this.logicBus.postMessage('gameUnpause', {});
+    this.paused = false;
     if (!this.gameEnded) {
-        this.ui.gotPointerLock();
+        this.ui.gotPointerLock(this.paused);
     }
 };
 
 Core.prototype.onLostPointerLock = function () {
+    this.logicBus.postMessage('gamePause', {});
+    this.paused = true;
     if (!this.gameEnded) {
-        this.ui.lostPointerLock();
+        this.ui.lostPointerLock(this.paused);
     }
 };
 
@@ -33739,15 +33746,15 @@ Ui.prototype.onStartButtonClick = function () {
     }
 };
 
-Ui.prototype.gotPointerLock = function () {
-    var newMode = this.reactUi.changeMode('running');
+Ui.prototype.gotPointerLock = function (currentlyPaused) {
+    var newMode = this.reactUi.changeMode('running', { currentlyPaused: currentlyPaused });
     if (newMode === 'running') {
         this.emit({ type: 'startGame' });
     }
 };
 
-Ui.prototype.lostPointerLock = function () {
-    this.reactUi.changeMode('helpScreen');
+Ui.prototype.lostPointerLock = function (currentlyPaused) {
+    this.reactUi.changeMode('helpScreen', { currentlyPaused: currentlyPaused });
 };
 
 Ui.prototype.onShadowConfig = function (data) {
@@ -33890,7 +33897,10 @@ var InitialView = _react2.default.createClass({
                 UIcontent.push(_react2.default.createElement(StartScreen, { key: ReactUtils.generateKey(), isBrowserMobile: this.props.isBrowserMobile }));
                 break;
             case 'helpScreen':
-                UIcontent.push(_react2.default.createElement(StartHelp, { key: ReactUtils.generateKey() }));
+                UIcontent.push(_react2.default.createElement(StartHelp, {
+                    key: ReactUtils.generateKey(),
+                    currentlyPaused: this.props.context && this.props.context.currentlyPaused
+                }));
                 break;
             case 'gameOverScreen':
                 UIcontent.push(_react2.default.createElement(EndScreen, {
@@ -34204,6 +34214,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var StyledText = require('renderer/ui/component/base/StyledText');
+var ReactUtils = require('renderer/ui/ReactUtils');
 
 var StartHelp = function (_React$Component) {
     _inherits(StartHelp, _React$Component);
@@ -34217,6 +34228,8 @@ var StartHelp = function (_React$Component) {
     _createClass(StartHelp, [{
         key: 'render',
         value: function render() {
+            var acceptText = this.props.currentlyPaused ? ReactUtils.multilinize('GAME PAUSED!\n\nACCEPT POINTER LOCK TO CONTINUE!') : 'ACCEPT POINTER LOCK!';
+
             return _react2.default.createElement(
                 'div',
                 { style: { bottom: '100px' } },
@@ -34291,7 +34304,7 @@ var StartHelp = function (_React$Component) {
                         _react2.default.createElement(
                             'span',
                             null,
-                            'ACCEPT POINTER LOCK!'
+                            acceptText
                         )
                     ),
                     _react2.default.createElement(
@@ -34322,7 +34335,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/StyledText":352}],346:[function(require,module,exports){
+},{"classnames":2,"react":182,"renderer/ui/ReactUtils":340,"renderer/ui/component/base/StyledText":352}],346:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
