@@ -24,6 +24,7 @@ var ActorList = [
     'actor/projectile/EnemyConcsnMissileActor',
     'actor/projectile/HomingMissileActor',
     'actor/projectile/EnemyHomingMissileActor',
+    'actor/projectile/MinigunProjectileActor',
     'actor/map/EnemySpawnerActor',
     'actor/map/EnemySpawnMarkerActor',
     'actor/map/ItemSpawnerActor',

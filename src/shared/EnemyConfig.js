@@ -70,7 +70,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MINI_RED_BLASTER',
-                    randomPool: ['RED_BLASTER', 'RED_BLASTER'],
+                    randomPool: ['RED_BLASTER', 'RED_BLASTER', 'MINIGUN'],
                     chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [

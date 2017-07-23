@@ -42,6 +42,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/pickup.mp3', id:'powerup'});
     createjs.Sound.registerSound({src:'sounds/distrupter_fire.wav', id:'disrupter'});
     createjs.Sound.registerSound({src:'sounds/missile2.mp3', id:'missile'});
+    createjs.Sound.registerSound({src:'sounds/gun1.mp3', id:'minigun'});
 };
 
 module.exports = SoundLoader;

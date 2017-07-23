@@ -366,11 +366,29 @@ const ActorConfig = {
             turnSpeed: 2
         },
         bodyConfig: {
-            radius: 1,
+            radius: 2,
             mass: 0.5,
             ccdSpeedThreshold: 1,
             ccdIterations: 4,
             damping: 0.995
+        }
+    },
+
+    MINIGUNPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 0.5,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.1,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
         }
     },
 
