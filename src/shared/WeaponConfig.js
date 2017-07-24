@@ -308,7 +308,7 @@ const WeaponConfig = {
         modelName: 'minigun',
         recoil: 1200,
         ammoConfig: {
-            energy: 0.1
+            bullets: 2
         }
     }
 };

@@ -23,14 +23,16 @@ GameState.prototype._createInitialState = function(){
             plasma: 0,            
             missiles: 0,
             rads: 0,
-            coolant: 0
+            coolant: 0,
+            bullets: 0
         },
         ammoMax: {
             energy: 200,
             plasma: 200,            
             missiles: 30,
             rads: 5,
-            coolant: 500
+            coolant: 500,
+            bullets: 2000
         },
         difficultyFactor: 1,
         existingActorsByType: {},
@@ -50,7 +52,8 @@ GameState.prototype._createInitialProps = function(){
             missiles: '#ff4d4d',
             coolant: '#8bc9ff',
             shield: '#66aaff',
-            weapon: '#ff4d4d'
+            weapon: '#ff4d4d',
+            bullets: '#d4d4d4',
         },
         enemyMessageColor: '#ffffff'
     };

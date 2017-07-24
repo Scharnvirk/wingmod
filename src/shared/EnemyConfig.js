@@ -9,6 +9,7 @@ const ENEMY_MAP = {
     SPIDER: 6,    
     MHULK: 7,
     LHULK: 8,
+    DRILLER: 9,
     
     CHASERBOSS: 101,
     MOOKBOSS: 102,
@@ -70,7 +71,7 @@ const EnemyConfig = {
                 },            
                 weapon: {
                     type: 'MINI_RED_BLASTER',
-                    randomPool: ['RED_BLASTER', 'RED_BLASTER', 'MINIGUN'],
+                    randomPool: ['RED_BLASTER'],
                     chanceForRandomWeapon: 0.2,
                     firingMode: 'alternate',
                     firingPoints: [
@@ -328,6 +329,114 @@ const EnemyConfig = {
         }
     },
 
+    DRILLER: {        
+        props: {            
+            danger: 3,
+            acceleration: 800,
+            turnSpeed: 1.2,
+            hp: 10,
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'DRILLER',
+            pointWorth: 100,
+            enemyIndex: 1,
+            calloutSound: 'sniper',
+            powerLevel: 1.5,
+            logic: {            
+                brain: {
+                    shootingArc: 8,
+                    nearDistance: 400,
+                    farDistance: 700,
+                    firingDistance: 800,
+                    leadSkill: 0.5
+                },            
+                weapon: {
+                    type: 'MINIGUN',
+                    firingPoints: [
+                        {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 10,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 8,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
+                            classId: ActorFactory.SMALLEXPLOSION,
+                            delay: 100
+                        },{
+                            probability: 0.3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        },{
+                            probability: 1,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        },{
+                            probability: 0.5,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        },{
+                            probability: 0.25,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 2.1,
+                    scaleY: 2.1,
+                    scaleZ: 2.1,
+                    geometry: 'sniper',
+                    material: 'championEnemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 10,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 5
+        }
+    },
+
     SHULK: {        
         props: {            
             danger: 2,
@@ -341,7 +450,7 @@ const EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
-            powerLevel: 1.5,
+            powerLevel: 1.1,
             logic: {            
                 brain: {
                     firingDistance: 180,
@@ -1100,7 +1209,7 @@ const EnemyConfig = {
     CHASERBOSS: {        
         props: {            
             danger: 3,            
-            hp: 100,
+            hp: 70,
             enemy: true,
             acceleration: 11000,
             turnSpeed: 7,
@@ -1722,7 +1831,7 @@ const EnemyConfig = {
                     shootingArc: 8,
                     nearDistance: 200,
                     farDistance: 300,
-                    firingDistance: 400,
+                    firingDistance: 1500,
                     leadSkill: 0.5
                 },            
                 weapon: {

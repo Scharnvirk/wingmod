@@ -265,10 +265,10 @@ Core.prototype.onStartGame = function(){
     this.resetRenderer();
 };
 
-Core.prototype.onGotPointerLock = function(){
-    this.logicBus.postMessage('gameUnpause', {});
+Core.prototype.onGotPointerLock = function(){    
     this.paused = false;
-    if(!this.gameEnded){
+    if (!this.gameEnded) {
+        this.logicBus.postMessage('gameUnpause', {});
         this.ui.gotPointerLock(this.paused);
     }
 };
@@ -276,7 +276,7 @@ Core.prototype.onGotPointerLock = function(){
 Core.prototype.onLostPointerLock = function(){
     this.logicBus.postMessage('gamePause', {});
     this.paused = true;
-    if(!this.gameEnded){
+    if (!this.gameEnded) {
         this.ui.lostPointerLock(this.paused);
     }
 };

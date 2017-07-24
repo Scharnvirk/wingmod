@@ -38,7 +38,8 @@ var ModelList = {
         '/models/missile.json',
         '/models/molten.json',        
         '/models/moltenshotgun.json',
-        '/models/minigun.json'
+        '/models/minigun.json',
+        '/models/minigunammo.json'
     ]
 };
 

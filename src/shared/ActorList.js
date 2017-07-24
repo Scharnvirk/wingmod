@@ -33,6 +33,7 @@ var ActorList = [
     'actor/pickup/EnergyPickupActor',
     'actor/pickup/PlasmaPickupActor',
     'actor/pickup/MissileQuadPickupActor',
+    'actor/pickup/BulletAmmoPickupActor',
     'actor/pickup/WeaponPickupActor',
 ];
 

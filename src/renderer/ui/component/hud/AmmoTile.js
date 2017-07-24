@@ -7,16 +7,25 @@ class AmmoTile extends Component {
     constructor (props, context) {
         super (props, context);
 
-        this.tileCount = 4;
-        this.multiplier = 97.75; // investigate why - whould be 100
+        this.tileCount = 6;
         this.gain = false;
 
+        /*
+        Investigate why - should be 100.
+        I offer a good beer to the one who solves that; for 5 tiles it was 0.975... 
+        If it is 100 then all the icons are slightly but noticeably offset. What is interesting is that offset *decreased* when added one new icon.
+        Refer to line 88 (or its victinity) for usage.
+        Bizzare. 
+        */
+        this.multiplier = 0.984; 
+        
         this.iconIndexes = {
             plasma: 0,
-            energy: 4,
-            rads: 2,
-            missiles: 3,
-            coolant: 1
+            energy: 1,
+            rads: 3,
+            missiles: 2,
+            coolant: 4,
+            bullets: 5,
         };
 
         this.colors = {
@@ -24,7 +33,8 @@ class AmmoTile extends Component {
             energy: '#ffc04d',
             rads: '#8a4dff',
             missiles: '#ff4d4d',
-            coolant: '#8bc9ff'
+            coolant: '#8bc9ff',
+            bullets: '#d4d4d4'
         };
 
         this.componentStyle = {
@@ -64,7 +74,19 @@ class AmmoTile extends Component {
     }   
 
     createIconStyle() {
-        var positionOffset = ((this.iconIndexes[this.props.type] || 0 / this.tileCount) * this.multiplier) + '%';
+        /**
+         * 
+         * 0: 0%
+            1: 20%
+            2: 40%
+            3: 60%
+            4: 80%
+            5: 100%
+         */
+
+        const oneTileOffset = 100 / (this.tileCount - 1);
+        const positionOffset = this.iconIndexes[this.props.type] * oneTileOffset * this.multiplier + '%';
+        
         return Object.assign(
             this.componentStyle.icon,
             {
