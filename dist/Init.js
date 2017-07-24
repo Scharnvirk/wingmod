@@ -38474,15 +38474,15 @@ var EnemyConfig = {
             enemy: true,
             type: 'enemyShip',
             name: 'DRILLER',
-            pointWorth: 30,
+            pointWorth: 100,
             enemyIndex: 1,
             calloutSound: 'sniper',
-            powerLevel: 1,
+            powerLevel: 1.5,
             logic: {
                 brain: {
                     shootingArc: 8,
-                    nearDistance: 100,
-                    farDistance: 200,
+                    nearDistance: 400,
+                    farDistance: 700,
                     firingDistance: 800,
                     leadSkill: 0.5
                 },
@@ -38581,7 +38581,7 @@ var EnemyConfig = {
             pointWorth: 50,
             enemyIndex: 3,
             calloutSound: 'shulk',
-            powerLevel: 1.5,
+            powerLevel: 1.1,
             logic: {
                 brain: {
                     firingDistance: 180,
@@ -39306,7 +39306,7 @@ var EnemyConfig = {
     CHASERBOSS: {
         props: {
             danger: 3,
-            hp: 100,
+            hp: 70,
             enemy: true,
             acceleration: 11000,
             turnSpeed: 7,
@@ -39901,7 +39901,7 @@ var EnemyConfig = {
                     shootingArc: 8,
                     nearDistance: 200,
                     farDistance: 300,
-                    firingDistance: 400,
+                    firingDistance: 1500,
                     leadSkill: 0.5
                 },
                 weapon: {
