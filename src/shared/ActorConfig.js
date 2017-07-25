@@ -366,11 +366,29 @@ const ActorConfig = {
             turnSpeed: 2
         },
         bodyConfig: {
-            radius: 1,
+            radius: 2,
             mass: 0.5,
             ccdSpeedThreshold: 1,
             ccdIterations: 4,
             damping: 0.995
+        }
+    },
+
+    MINIGUNPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 0.5,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 0.04,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
         }
     },
 
@@ -444,9 +462,11 @@ const ActorConfig = {
                 180: 'MHULK',
                 210: 'SPIDER',
                 240: 'MHULK',
+                270: 'DRILLER',
                 300: 'SHULK',
                 360: 'SPIDER',
                 390: 'LHULK',
+                420: 'DRILLER',
                 550: 'LHULK'
             }
         },
@@ -538,6 +558,22 @@ const ActorConfig = {
     MISSILEQUADPICKUP: {
         props:{
             pickup: 'missileQuad',
+            hp: 1000,
+            turnSpeed: 1,
+            timeoutRandomMin: 1800,
+            timeoutRandomMax: 2100,
+            type: 'pickup'
+        },
+        bodyConfig: {
+            radius: 4,
+            mass: 0.000001,
+            damping: 0.65
+        }
+    },
+
+    BULLETAMMOPICKUP: {
+        props:{
+            pickup: 'bulletAmmo',
             hp: 1000,
             turnSpeed: 1,
             timeoutRandomMin: 1800,

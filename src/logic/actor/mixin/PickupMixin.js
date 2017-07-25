@@ -4,6 +4,7 @@ var PickupMixin = {
         energy: 25,
         plasma: 25,
         missileQuad: 4,
+        bullets: 400
     },
 
     handlePickup: function(pickupActorState, pickupActorSubclassId){
@@ -13,6 +14,7 @@ var PickupMixin = {
         case 'energy': canPickup = this._handleEnergyPickup(); break;
         case 'plasma': canPickup = this._handlePlasmaPickup(); break;
         case 'missileQuad': canPickup = this._handleMissileQuadPickup(); break;
+        case 'bulletAmmo': canPickup = this._handleBulletAmmoPickup(); break;
         case 'weapon': canPickup = pickupActorState.pickupBlockedTimer === 0 && this._handleWeaponPickup(pickupActorSubclassId); break;
         default: 
             throw new Error ('unknown pickup: ' + pickupActorState, pickupActorState.pickup); 
@@ -47,6 +49,12 @@ var PickupMixin = {
     _handleMissileQuadPickup: function(){
         if(!this.gameState) throw new Error ('Cannot handle a missileQuad pickup for an actor without gameState!');
         this.gameState.addAmmo({missiles: this._pickupValues['missileQuad']}, true);
+        return true;
+    },
+
+    _handleBulletAmmoPickup: function(){
+        if(!this.gameState) throw new Error ('Cannot handle a bulletAmmo pickup for an actor without gameState!');
+        this.gameState.addAmmo({bullets: this._pickupValues['bullets']}, true);
         return true;
     },
 

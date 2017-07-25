@@ -6,6 +6,10 @@ function Camera(config){
     this.NEAR = 0.1;
     this.FAR = Constants.RENDER_DISTANCE;
 
+    this.MIN_CAMERA_POSITION = 30;
+    this.MAX_CAMERA_ROTATION_POSITION = 150;
+    this.MAX_CAMERA_POSITION = 270;
+
     this.ZOOM_THRESHOLD = 0.995;
     this.zoomSpeed = 5;
 
@@ -50,16 +54,24 @@ Camera.prototype.update = function(){
     }else{
         this.expectedPositionZ = -1;
         if(this.inputListener && this.actor){
-            if (inputState.scrollUp && this.position.z < 150) {
+            if (inputState.scrollUp && this.position.z < this.MAX_CAMERA_ROTATION_POSITION) {
                 this.position.z += inputState.scrollUp;
                 this.rotation.x -= inputState.scrollUp * 0.01;
                 this.zOffset -= inputState.scrollUp * 0.5;
             }
 
-            if (inputState.scrollDown && this.position.z > 30) {
+            if (inputState.scrollUp && this.position.z >= this.MAX_CAMERA_ROTATION_POSITION && this.position.z < this.MAX_CAMERA_POSITION) {
+                this.position.z += inputState.scrollUp;
+            }
+
+            if (inputState.scrollDown && this.position.z > this.MIN_CAMERA_POSITION && this.position.z < this.MAX_CAMERA_ROTATION_POSITION) {
                 this.position.z -= inputState.scrollDown;
                 this.rotation.x += inputState.scrollDown * 0.01;
                 this.zOffset += inputState.scrollDown * 0.5;
+            }
+
+            if (inputState.scrollDown && this.position.z >= this.MAX_CAMERA_ROTATION_POSITION) {
+                this.position.z -= inputState.scrollDown;
             }
         }
     }

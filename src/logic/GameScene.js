@@ -24,12 +24,21 @@ GameScene.prototype.fillScene = function(mapBodies){
         angle: 0
     });
 
-    let i; 
+    let i;
 
-    // for (i = 0; i < 30; i++){
+    // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.WEAPONPICKUP,
-    //         subclassId: Utils.rand(1,15),
+    //         subclassId: 16,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0          
+    //     });
+    // }
+
+    // for (i = 0; i < 3; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.BULLETAMMOPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0          
@@ -38,8 +47,8 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.CHAMPIONENEMY,
-    //         subclassId: EnemyConfig.getSubclassIdFor('SNIPERBOSS'),
+    //         classId: ActorFactory.ENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('DRILLER'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0
@@ -220,6 +229,22 @@ GameScene.prototype.fillScene = function(mapBodies){
         spawns: {class: 'MISSILEQUADPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
         positionX: -302,
         positionY: 557,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'BULLETAMMOPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: 232,
+        positionY: 420,
+        angle: 0
+    });
+
+    this.actorManager.addNew({
+        classId: ActorFactory.ITEMSPAWNER,
+        spawns: {class: 'BULLETAMMOPICKUP', delayAfterPickup: 60*30, spawnedInitially: true},
+        positionX: 262,
+        positionY: 420,
         angle: 0
     });
 };

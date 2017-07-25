@@ -14,6 +14,7 @@ var ModelList = {
         '/models/lhulk.json',
         '/models/spider.json',
         '/models/spider2.json',
+        '/models/driller.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
         '/models/telering_top.json',
@@ -36,8 +37,10 @@ var ModelList = {
         '/models/hudMaterial.json',
         '/models/flatHudMaterial.json',
         '/models/missile.json',
-        '/models/molten.json',
-        '/models/moltenshotgun.json'
+        '/models/molten.json',        
+        '/models/moltenshotgun.json',
+        '/models/minigun.json',
+        '/models/minigunammo.json'
     ]
 };
 

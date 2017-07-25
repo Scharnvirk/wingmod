@@ -18,6 +18,7 @@ const WEAPON_MAP = {
     MOLTEN_BALL_THROWER: 13,
     MOLTEN_BALL_SHOTGUN: 14,
     SLOW_PULSE_WAVE_GUN: 15,
+    MINIGUN: 16,
     
     ENEMY_HOMING_MISSILE_LAUNCHER: 100,
     ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: 101,
@@ -108,6 +109,7 @@ const WeaponConfig = {
         velocity: 150,
         burstCount: 2,
         burstCooldown: 20,
+        randomAngle: 6,
         sound: 'missile',
         name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',
@@ -292,6 +294,22 @@ const WeaponConfig = {
         modelName: 'bluelasgun',
         ammoConfig: {
             energy: 0.5
+        }
+    },
+    MINIGUN: {
+        projectileClass: ActorFactory.MINIGUNPROJECTILE,
+        burstCount: 60,
+        burstCooldown: 3,
+        cooldown: 120,
+        velocity: 1200,
+        randomAngle: 2,
+        sound: 'minigun', 
+        firingMode: 'alternate',
+        name: 'MINIGUN',
+        modelName: 'minigun',
+        recoil: 1200,
+        ammoConfig: {
+            bullets: 2
         }
     }
 };

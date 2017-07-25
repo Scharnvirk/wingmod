@@ -22,7 +22,7 @@ function EnemyActor(config){
 
     this.props.dropChance = 0.07;
     this.props.dropChanceForRandomWeapon = 0.5;
-    this.props.randomWeaponRangeMax = 15;
+    this.props.randomWeaponRangeMax = 16;
     this.props.randomWeaponRangeMin = 1;
 
     this.brain = this.createBrain();
