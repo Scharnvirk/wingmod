@@ -429,7 +429,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: 16,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -438,7 +438,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         classId: ActorFactory.BULLETAMMOPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -983,7 +983,7 @@ function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1974,8 +1974,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -2001,7 +2001,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -3251,7 +3251,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -3284,8 +3284,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
         var p = this.getPosition();
 
@@ -8600,7 +8600,7 @@ var EnemyConfig = {
             type: 'enemyShip',
             name: 'DRILLER',
             pointWorth: 100,
-            enemyIndex: 1,
+            enemyIndex: 9,
             calloutSound: 'sniper',
             powerLevel: 1.5,
             logic: {
@@ -8608,12 +8608,12 @@ var EnemyConfig = {
                     shootingArc: 8,
                     nearDistance: 400,
                     farDistance: 700,
-                    firingDistance: 800,
-                    leadSkill: 0.5
+                    firingDistance: 700,
+                    leadSkill: 0.6
                 },
                 weapon: {
                     type: 'MINIGUN',
-                    firingPoints: [{ offsetAngle: 10, offsetDistance: 5, fireAngle: 0 }]
+                    firingPoints: [{ offsetAngle: 0, offsetDistance: 16, fireAngle: 0 }]
                 },
                 onDeath: {
                     spawn: [{
@@ -8671,11 +8671,11 @@ var EnemyConfig = {
             },
             render: {
                 model: {
-                    scaleX: 2.1,
-                    scaleY: 2.1,
-                    scaleZ: 2.1,
-                    geometry: 'sniper',
-                    material: 'championEnemyModel'
+                    scaleX: 3.1,
+                    scaleY: 3.1,
+                    scaleZ: 3.1,
+                    geometry: 'driller',
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -8689,7 +8689,7 @@ var EnemyConfig = {
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5
+            radius: 7
         }
     },
 
@@ -9437,7 +9437,7 @@ var EnemyConfig = {
             turnSpeed: 7,
             hpBarCount: 7,
             type: 'enemyShip',
-            name: 'MASTER CHASER',
+            name: 'ELITE CHASER',
             pointWorth: 500,
             enemyIndex: 8,
             calloutSound: 'drone',
@@ -9783,7 +9783,7 @@ var EnemyConfig = {
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'GREMLIN LORD',
+            name: 'MASTER GUARD',
             pointWorth: 1000,
             enemyIndex: 3,
             calloutSound: 'shulk',
@@ -9899,7 +9899,7 @@ var EnemyConfig = {
             hpBarCount: 11,
             enemy: true,
             type: 'enemyShip',
-            name: 'MOBILE MISSILE MASSACRE',
+            name: 'ELITE GUARD',
             pointWorth: 1600,
             enemyIndex: 4,
             calloutSound: 'mhulk',
@@ -10011,7 +10011,7 @@ var EnemyConfig = {
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'SNIPER',
+            name: 'ELITE SNIPER',
             pointWorth: 600,
             enemyIndex: 1,
             calloutSound: 'sniper',
@@ -10225,7 +10225,7 @@ EventEmitter.prototype = {
 },{}],115:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
@@ -10274,8 +10274,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
+        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -10394,7 +10394,7 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such. 
+    //expects each key and value to be unique; intended for name:id mappings and such.
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;
@@ -10563,6 +10563,7 @@ var WeaponConfig = {
         velocity: 150,
         burstCount: 2,
         burstCooldown: 20,
+        randomAngle: 6,
         sound: 'missile',
         name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',

@@ -109,6 +109,7 @@ const WeaponConfig = {
         velocity: 150,
         burstCount: 2,
         burstCooldown: 20,
+        randomAngle: 6,
         sound: 'missile',
         name: 'CONCUSSION MISSILE POD',
         firingMode: 'alternate',

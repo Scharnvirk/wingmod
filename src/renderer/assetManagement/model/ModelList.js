@@ -14,6 +14,7 @@ var ModelList = {
         '/models/lhulk.json',
         '/models/spider.json',
         '/models/spider2.json',
+        '/models/driller.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
         '/models/telering_top.json',

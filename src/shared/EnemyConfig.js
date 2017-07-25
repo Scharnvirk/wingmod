@@ -340,7 +340,7 @@ const EnemyConfig = {
             type: 'enemyShip',
             name: 'DRILLER',
             pointWorth: 100,
-            enemyIndex: 1,
+            enemyIndex: 9,
             calloutSound: 'sniper',
             powerLevel: 1.5,
             logic: {            
@@ -348,13 +348,13 @@ const EnemyConfig = {
                     shootingArc: 8,
                     nearDistance: 400,
                     farDistance: 700,
-                    firingDistance: 800,
-                    leadSkill: 0.5
+                    firingDistance: 700,
+                    leadSkill: 0.6
                 },            
                 weapon: {
                     type: 'MINIGUN',
                     firingPoints: [
-                        {offsetAngle: 10, offsetDistance: 5, fireAngle: 0},
+                        {offsetAngle: 0, offsetDistance: 16, fireAngle: 0},
                     ]
                 },
                 onDeath: {
@@ -415,11 +415,11 @@ const EnemyConfig = {
             },
             render: {
                 model: {
-                    scaleX: 2.1,
-                    scaleY: 2.1,
-                    scaleZ: 2.1,
-                    geometry: 'sniper',
-                    material: 'championEnemyModel'
+                    scaleX: 3.1,
+                    scaleY: 3.1,
+                    scaleZ: 3.1,
+                    geometry: 'driller',
+                    material: 'enemyModel'
                 },
                 onDeath: {
                     premades: ['OrangeBoomSmall'],
@@ -433,7 +433,7 @@ const EnemyConfig = {
             damping: 0.75,
             angularDamping: 0,
             inertia: 10,
-            radius: 5
+            radius: 7
         }
     },
 
@@ -1215,7 +1215,7 @@ const EnemyConfig = {
             turnSpeed: 7,
             hpBarCount: 7,
             type: 'enemyShip',
-            name: 'MASTER CHASER',
+            name: 'ELITE CHASER',
             pointWorth: 500,
             enemyIndex: 8,
             calloutSound: 'drone',
@@ -1576,7 +1576,7 @@ const EnemyConfig = {
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'GREMLIN LORD',
+            name: 'MASTER GUARD',
             pointWorth: 1000,
             enemyIndex: 3,
             calloutSound: 'shulk',
@@ -1699,7 +1699,7 @@ const EnemyConfig = {
             hpBarCount: 11,
             enemy: true,
             type: 'enemyShip',
-            name: 'MOBILE MISSILE MASSACRE',
+            name: 'ELITE GUARD',
             pointWorth: 1600,
             enemyIndex: 4,
             calloutSound: 'mhulk',
@@ -1816,7 +1816,7 @@ const EnemyConfig = {
             hpBarCount: 7,
             enemy: true,
             type: 'enemyShip',
-            name: 'SNIPER',
+            name: 'ELITE SNIPER',
             pointWorth: 600,
             enemyIndex: 1,
             calloutSound: 'sniper',

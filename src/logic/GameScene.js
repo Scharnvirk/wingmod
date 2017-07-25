@@ -24,7 +24,7 @@ GameScene.prototype.fillScene = function(mapBodies){
         angle: 0
     });
 
-    let i; 
+    let i;
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
