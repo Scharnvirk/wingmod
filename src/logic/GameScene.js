@@ -29,6 +29,16 @@ GameScene.prototype.fillScene = function(mapBodies){
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
     //         classId: ActorFactory.WEAPONPICKUP,
+    //         subclassId: 17,
+    //         positionX: Utils.rand(-100, 100),
+    //         positionY: Utils.rand(-100, 100),
+    //         angle: 0          
+    //     });
+    // }
+
+    // for (i = 0; i < 1; i++){
+    //     this.actorManager.addNew({
+    //         classId: ActorFactory.WEAPONPICKUP,
     //         subclassId: 16,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
@@ -47,8 +57,8 @@ GameScene.prototype.fillScene = function(mapBodies){
 
     // for (i = 0; i < 1; i++){
     //     this.actorManager.addNew({
-    //         classId: ActorFactory.ENEMY,
-    //         subclassId: EnemyConfig.getSubclassIdFor('DRILLER'),
+    //         classId: ActorFactory.CHAMPIONENEMY,
+    //         subclassId: EnemyConfig.getSubclassIdFor('DRILLERBOSS'),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
     //         angle: 0

@@ -8,7 +8,7 @@ var BrainMixin = require('logic/actor/mixin/BrainMixin');
 
 const ActorFactory = require('shared/ActorFactory')('logic');
 
-function EnemyActor(config){ 
+function EnemyActor(config){
     config = config || [];
 
     Object.assign(this, config);
@@ -20,8 +20,8 @@ function EnemyActor(config){
     
     this.applyDifficulty();
 
-    this.props.dropChance = 0.07;
-    this.props.dropChanceForRandomWeapon = 0.5;
+    this.props.dropChance = this.props.dropChance || 0.07;
+    this.props.dropChanceForRandomWeapon = this.props.dropChanceForRandomWeapon || 0.5;
     this.props.randomWeaponRangeMax = 16;
     this.props.randomWeaponRangeMin = 1;
 

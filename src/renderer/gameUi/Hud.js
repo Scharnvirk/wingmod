@@ -29,6 +29,9 @@ Hud.prototype.drawRadar = function(){
     let enemies = this.actorManager.getEnemies();
     for (let enemyId in enemies ){
         let enemyActor = enemies[enemyId];
+
+        if (enemyActor.props.invisible) return; //invisible enemies don't appear on radar
+
         let rotation = Utils.rotationBetweenPoints(enemyActor.getPosition(), actorPosition);
         
         let color = 'DEEPRED', scale = 0.6, distance = 10;

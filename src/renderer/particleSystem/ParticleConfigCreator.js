@@ -131,7 +131,9 @@ ParticleConfigCreator.prototype.createPremades = function(){
         BlueBoom: require('renderer/particleSystem/premade/BlueBoom'),
         EmdTrail: require('renderer/particleSystem/premade/EmdTrail'),
         BulletTrail: require('renderer/particleSystem/premade/BulletTrail'),
-        OrangeSparks: require('renderer/particleSystem/premade/OrangeSparks')
+        LargeBulletTrail: require('renderer/particleSystem/premade/LargeBulletTrail'),
+        OrangeSparks: require('renderer/particleSystem/premade/OrangeSparks'),
+        ManyOrangeSparks: require('renderer/particleSystem/premade/ManyOrangeSparks')
     };
 };
 

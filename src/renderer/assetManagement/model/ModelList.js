@@ -15,6 +15,9 @@ var ModelList = {
         '/models/spider.json',
         '/models/spider2.json',
         '/models/driller.json',
+        '/models/razorman.json',
+        '/models/razorman_static.json',
+        '/models/eva.json',
         '/models/chunk.json',
         '/models/telering_bottom.json',
         '/models/telering_top.json',
@@ -40,6 +43,7 @@ var ModelList = {
         '/models/molten.json',        
         '/models/moltenshotgun.json',
         '/models/minigun.json',
+        '/models/amcannon.json',
         '/models/minigunammo.json'
     ]
 };

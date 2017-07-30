@@ -62,6 +62,16 @@ CustomModelCreator.prototype.configure = function(){
                 bumpMap: new THREE.TextureLoader().load('/models/enemies_bump.png'),
                 emissiveMap: new THREE.TextureLoader().load('/models/enemies_illumination.png')
             } )
+        },
+        'cloakedModel': { 
+            material: new THREE.MeshPhongMaterial( { 
+                transparent: true,
+                color: 0x000000,
+                emissive: 0x000000,
+                shininess: 0,
+                specularMap: new THREE.TextureLoader().load('/models/enemies_specular.png'),
+                alphaMap: new THREE.TextureLoader().load('/models/chunk.png')
+            } )
         }
     };
 };

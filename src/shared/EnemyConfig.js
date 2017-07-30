@@ -10,6 +10,7 @@ const ENEMY_MAP = {
     MHULK: 7,
     LHULK: 8,
     DRILLER: 9,
+    RAZORMAN: 10,
     
     CHASERBOSS: 101,
     MOOKBOSS: 102,
@@ -18,6 +19,8 @@ const ENEMY_MAP = {
     SHULKBOSS: 105,
     SPIDERBOSS: 106,
     MHULKBOSS: 107,
+    DRILLERBOSS: 108,
+    RAZORMANBOSS: 109,
 
     SPIDERLING: 10007,
 };
@@ -334,7 +337,7 @@ const EnemyConfig = {
             danger: 3,
             acceleration: 800,
             turnSpeed: 1.2,
-            hp: 10,
+            hp: 7,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -1079,6 +1082,105 @@ const EnemyConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 2
+        }
+    },
+
+    RAZORMAN: {        
+        props: {            
+            danger: 2,
+            acceleration: 1800,
+            turnSpeed: 5,
+            hp: 16,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'RAZORMAN',
+            pointWorth: 40,
+            enemyIndex: 10,
+            calloutSound: 'razorman',
+            powerLevel: 1,
+            dropChance: 0.00001,
+            logic: {            
+                brain: {
+                    shootingArc: 30,
+                    nearDistance: 1,
+                    farDistance: 1,
+                    firingDistance: 20,
+                    leadSkill: 1,
+                    minStrafingDistance: 50
+                },            
+                weapon: {
+                    type: 'ENEMY_PLASMAKICK',
+                    firingPoints: [
+                        {offsetAngle: -25, offsetDistance: 15, fireAngle: 0},
+                        {offsetAngle: 25, offsetDistance: 15 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 10,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 5,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [200, 300]
+                        },{
+                            classId: ActorFactory.SMALLEXPLOSION,
+                            delay: 100
+                        },{
+                            probability: 0.7,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            delay: 100
+                        },{
+                            probability: 0.2,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            delay: 100
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 4.5,
+                    scaleY: 4.5,
+                    scaleZ: 4.5,
+                    geometry: 'razorman_static',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 8,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
         }
     },
 
@@ -1919,6 +2021,260 @@ const EnemyConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 8
+        }
+    },
+
+    RAZORMANBOSS: {        
+        props: {       
+            invisible: true,     
+            danger: 3,
+            acceleration: 4000,
+            turnSpeed: 5,
+            hp: 70,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'BLADE SPECTRE',
+            pointWorth: 800,
+            enemyIndex: 10,
+            calloutSound: 'razorman',
+            powerLevel: 1,
+            dropChance: 0.00001,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
+            logic: {            
+                brain: {
+                    shootingArc: 30,
+                    nearDistance: 1,
+                    farDistance: 1,
+                    firingDistance: 20,
+                    leadSkill: 1,
+                    minStrafingDistance: 50
+                },            
+                weapon: {
+                    type: 'ENEMY_PLASMAKICK',
+                    firingPoints: [
+                        {offsetAngle: -25, offsetDistance: 20, fireAngle: 0},
+                        {offsetAngle: 25, offsetDistance: 20 , fireAngle: 0}
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['RAZORMAN'],
+                    guardianCount: 3,
+                    spawnTime: 20
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 6,
+                    scaleY: 6,
+                    scaleZ: 6,
+                    geometry: 'razorman_static',
+                    material: 'cloakedModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
+        }
+    },
+
+    DRILLERBOSS: {        
+        props: {            
+            invisible: true,
+            danger: 3,
+            acceleration: 3600,
+            turnSpeed: 1.2,
+            hp: 50,
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'HUNTER',
+            pointWorth: 2000,
+            enemyIndex: 9,
+            calloutSound: 'sniper',
+            powerLevel: 1.1,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK,  ActorFactory.FLAMECHUNK]
+            },
+            logic: {            
+                brain: {
+                    shootingArc: 8,
+                    nearDistance: 100,
+                    farDistance: 700,
+                    firingDistance: 700,
+                    leadSkill: 0.6
+                },            
+                weapon: {
+                    type: 'HEAVYCANNON',
+                    firingPoints: [
+                        {offsetAngle: 0, offsetDistance: 16, fireAngle: 0},
+                    ]
+                },
+                onDeath: {
+                    spawn: [
+                        {
+                            amount: 20,
+                            classId: ActorFactory.CHUNK,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 10,
+                            classId: ActorFactory.BOOMCHUNK,
+                            angle: [0, 360],
+                            velocity: [60, 120]
+                        },{
+                            amount: 20,
+                            classId: ActorFactory.FLAMECHUNK,
+                            angle: [0, 360],
+                            velocity: [250, 300]
+                        },{
+                            classId: ActorFactory.EXPLOSION,
+                            delay: 100
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.ENERGYPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            amount: 3,
+                            classId: ActorFactory.SHIELDPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100]
+                        },{
+                            classId: ActorFactory.WEAPONPICKUP,
+                            angle: [0, 360],
+                            velocity: [50, 100],
+                            subclassId: Utils.rand(1,15)
+                        },{
+                            probability: 1,
+                            amount: 2,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        },{
+                            probability: 0.5,
+                            amount: 2,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        },{
+                            probability: 0.25,
+                            amount: 2,
+                            classId: ActorFactory.BULLETAMMOPICKUP,
+                            angle: [0, 360],
+                            velocity: [15, 20]
+                        }
+                    ],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 6.1,
+                    scaleY: 6.1,
+                    scaleZ: 6.1,
+                    geometry: 'driller',
+                    material: 'cloakedModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },    
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
         }
     },
 

@@ -56,8 +56,11 @@ var HomingMixin = {
 
         for (let i = 0; i < targetTypes.length; i++){
             targetActors = this.manager.getActorsByType(targetTypes[i]);
-            for (let targetActorId in targetActors) {
+            for (let targetActorId in targetActors) {            
                 targetActor = targetActors[targetActorId];
+
+                if (targetActor.props.invisible) continue; //do not pick invisible targets
+
                 distance = Utils.distanceBetweenActors(targetActor, this);
 
                 if (distance < minimumDistance) {

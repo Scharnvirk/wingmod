@@ -12,31 +12,33 @@ EXPLOSION: 8,
 SMALLEXPLOSION: 9,
 EMDPROJECTILE: 10,
 PLASMAPROJECTILE: 11,
-PLASMABLASTPROJECTILE: 12,
-PLASMABLASTMINIPROJECTILE: 13,
-LASERPROJECTILE: 14,
-REDLASERPROJECTILE: 15,
-REDLASERENEMYPROJECTILE: 16,
-PURPLELASERPROJECTILE: 17,
-GREENLASERPROJECTILE: 18,
-MOLTENPROJECTILE: 19,
-RINGPROJECTILE: 20,
-PULSEWAVEPROJECTILE: 21,
-CONCSNMISSILE: 22,
-ENEMYCONCSNMISSILE: 23,
-HOMINGMISSILE: 24,
-ENEMYHOMINGMISSILE: 25,
-MINIGUNPROJECTILE: 26,
-ENEMYSPAWNER: 27,
-ENEMYSPAWNMARKER: 28,
-ITEMSPAWNER: 29,
-DEBUG: 30,
-SHIELDPICKUP: 31,
-ENERGYPICKUP: 32,
-PLASMAPICKUP: 33,
-MISSILEQUADPICKUP: 34,
-BULLETAMMOPICKUP: 35,
-WEAPONPICKUP: 36,
+PLASMAKICKPROJECTILE: 12,
+PLASMABLASTPROJECTILE: 13,
+PLASMABLASTMINIPROJECTILE: 14,
+LASERPROJECTILE: 15,
+REDLASERPROJECTILE: 16,
+REDLASERENEMYPROJECTILE: 17,
+PURPLELASERPROJECTILE: 18,
+GREENLASERPROJECTILE: 19,
+MOLTENPROJECTILE: 20,
+RINGPROJECTILE: 21,
+PULSEWAVEPROJECTILE: 22,
+CONCSNMISSILE: 23,
+ENEMYCONCSNMISSILE: 24,
+HOMINGMISSILE: 25,
+ENEMYHOMINGMISSILE: 26,
+MINIGUNPROJECTILE: 27,
+HEAVYCANNONPROJECTILE: 28,
+ENEMYSPAWNER: 29,
+ENEMYSPAWNMARKER: 30,
+ITEMSPAWNER: 31,
+DEBUG: 32,
+SHIELDPICKUP: 33,
+ENERGYPICKUP: 34,
+PLASMAPICKUP: 35,
+MISSILEQUADPICKUP: 36,
+BULLETAMMOPICKUP: 37,
+WEAPONPICKUP: 38,
 
 };
 
@@ -53,6 +55,7 @@ ActorFactory.ExplosionActor = context === 'renderer' ? require("renderer/actor/o
 ActorFactory.SmallExplosionActor = context === 'renderer' ? require("renderer/actor/object/SmallExplosionActor") : require("logic/actor/object/SmallExplosionActor");
 ActorFactory.EmdProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/EmdProjectileActor") : require("logic/actor/projectile/EmdProjectileActor");
 ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
+ActorFactory.PlasmaKickProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaKickProjectileActor") : require("logic/actor/projectile/PlasmaKickProjectileActor");
 ActorFactory.PlasmaBlastProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaBlastProjectileActor") : require("logic/actor/projectile/PlasmaBlastProjectileActor");
 ActorFactory.PlasmaBlastMiniProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaBlastMiniProjectileActor") : require("logic/actor/projectile/PlasmaBlastMiniProjectileActor");
 ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
@@ -68,6 +71,7 @@ ActorFactory.EnemyConcsnMissileActor = context === 'renderer' ? require("rendere
 ActorFactory.HomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/HomingMissileActor") : require("logic/actor/projectile/HomingMissileActor");
 ActorFactory.EnemyHomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyHomingMissileActor") : require("logic/actor/projectile/EnemyHomingMissileActor");
 ActorFactory.MinigunProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MinigunProjectileActor") : require("logic/actor/projectile/MinigunProjectileActor");
+ActorFactory.HeavyCannonProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/HeavyCannonProjectileActor") : require("logic/actor/projectile/HeavyCannonProjectileActor");
 ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
 ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
 ActorFactory.ItemSpawnerActor = context === 'renderer' ? require("renderer/actor/map/ItemSpawnerActor") : require("logic/actor/map/ItemSpawnerActor");
@@ -92,6 +96,7 @@ ActorFactory.WeaponPickupActor = context === 'renderer' ? require("renderer/acto
 [idMap.SMALLEXPLOSION]: ActorFactory.SmallExplosionActor,
 [idMap.EMDPROJECTILE]: ActorFactory.EmdProjectileActor,
 [idMap.PLASMAPROJECTILE]: ActorFactory.PlasmaProjectileActor,
+[idMap.PLASMAKICKPROJECTILE]: ActorFactory.PlasmaKickProjectileActor,
 [idMap.PLASMABLASTPROJECTILE]: ActorFactory.PlasmaBlastProjectileActor,
 [idMap.PLASMABLASTMINIPROJECTILE]: ActorFactory.PlasmaBlastMiniProjectileActor,
 [idMap.LASERPROJECTILE]: ActorFactory.LaserProjectileActor,
@@ -107,6 +112,7 @@ ActorFactory.WeaponPickupActor = context === 'renderer' ? require("renderer/acto
 [idMap.HOMINGMISSILE]: ActorFactory.HomingMissileActor,
 [idMap.ENEMYHOMINGMISSILE]: ActorFactory.EnemyHomingMissileActor,
 [idMap.MINIGUNPROJECTILE]: ActorFactory.MinigunProjectileActor,
+[idMap.HEAVYCANNONPROJECTILE]: ActorFactory.HeavyCannonProjectileActor,
 [idMap.ENEMYSPAWNER]: ActorFactory.EnemySpawnerActor,
 [idMap.ENEMYSPAWNMARKER]: ActorFactory.EnemySpawnMarkerActor,
 [idMap.ITEMSPAWNER]: ActorFactory.ItemSpawnerActor,

@@ -1,26 +1,34 @@
-var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
-var BaseActor = require('renderer/actor/BaseActor');
-var ModelStore = require('renderer/assetManagement/model/ModelStore');
-var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
-var BobMixin = require('renderer/actor/mixin/BobMixin');
-var EnemyConfig = require('shared/EnemyConfig');
-var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
+const BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
+const SkinnedMesh = require('renderer/actor/component/mesh/SkinnedShipMesh');
+const BaseActor = require('renderer/actor/BaseActor');
+const ModelStore = require('renderer/assetManagement/model/ModelStore');
+const ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+const BobMixin = require('renderer/actor/mixin/BobMixin');
+const EnemyConfig = require('shared/EnemyConfig');
+const ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
+const AnimationMixin = require('renderer/actor/mixin/AnimationMixin');
 
 function EnemyActor(config){
     this.applyConfig(EnemyConfig.getById(config.subclassId));    
     BaseActor.apply(this, arguments);    
 
     this.applyDifficulty();
+
+    if (this.props.render.animation) {
+        this.initAnimation();
+    }
 }
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(ParticleMixin);
 EnemyActor.mixin(BobMixin);
 EnemyActor.mixin(ShowDamageMixin);
+EnemyActor.mixin(AnimationMixin);
 
+EnemyActor.prototype.createMeshes = function(){
+    const meshClass = this.props.render.animation ? SkinnedMesh : BaseMesh;
 
-EnemyActor.prototype.createMeshes = function(){  
-    return [new BaseMesh({
+    return [new meshClass({
         actor: this, 
         scaleX: this.props.render.model.scaleX,
         scaleY: this.props.render.model.scaleY,
@@ -33,6 +41,10 @@ EnemyActor.prototype.createMeshes = function(){
 EnemyActor.prototype.customUpdate = function(){
     this.doBob();
     this.showDamage();
+    
+    if (this.props.render.animation) {
+        this.updateAnimation();
+    }
 };
 
 EnemyActor.prototype.onSpawn = function(){};

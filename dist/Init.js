@@ -171,6 +171,206 @@ process.umask = function() { return 0; };
 
 },{}],3:[function(require,module,exports){
 /*!
+Copyright (C) 2015 by Andrea Giammarchi - @WebReflection
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+var cloner = (function (O) {'use strict';
+
+  // (C) Andrea Giammarchi - Mit Style
+
+  var
+
+    // constants
+    VALUE   = 'value',
+    PROTO   = '__proto__', // to avoid jshint complains
+
+    // shortcuts
+    isArray = Array.isArray,
+    create  = O.create,
+    dP      = O.defineProperty,
+    dPs     = O.defineProperties,
+    gOPD    = O.getOwnPropertyDescriptor,
+    gOPN    = O.getOwnPropertyNames,
+    gOPS    = O.getOwnPropertySymbols ||
+              function (o) { return Array.prototype; },
+    gPO     = O.getPrototypeOf ||
+              function (o) { return o[PROTO]; },
+    hOP     = O.prototype.hasOwnProperty,
+    oKs     = (typeof Reflect !== typeof oK) &&
+              Reflect.ownKeys ||
+              function (o) { return gOPS(o).concat(gOPN(o)); },
+    set     = function (descriptors, key, descriptor) {
+      if (key in descriptors) dP(descriptors, key, {
+        configurable: true,
+        enumerable: true,
+        value: descriptor
+      });
+      else descriptors[key] = descriptor;
+    },
+
+    // used to avoid recursions in deep copy
+    index   = -1,
+    known   = null,
+    blown   = null,
+    clean   = function () { known = blown = null; },
+
+    // utilities
+    New = function (source, descriptors) {
+      var out = isArray(source) ? [] : create(gPO(source));
+      return descriptors ? Object.defineProperties(out, descriptors) : out;
+    },
+
+    // deep copy and merge
+    deepCopy = function deepCopy(source) {
+      var result = New(source);
+      known = [source];
+      blown = [result];
+      deepDefine(result, source);
+      clean();
+      return result;
+    },
+    deepMerge = function (target) {
+      known = [];
+      blown = [];
+      for (var i = 1; i < arguments.length; i++) {
+        known[i - 1] = arguments[i];
+        blown[i - 1] = target;
+      }
+      merge.apply(true, arguments);
+      clean();
+      return target;
+    },
+
+    // shallow copy and merge
+    shallowCopy = function shallowCopy(source) {
+      clean();
+      for (var
+        key,
+        descriptors = {},
+        keys = oKs(source),
+        i = keys.length; i--;
+        set(descriptors, key, gOPD(source, key))
+      ) key = keys[i];
+      return New(source, descriptors);
+    },
+    shallowMerge = function () {
+      clean();
+      return merge.apply(false, arguments);
+    },
+
+    // internal methods
+    isObject = function isObject(value) {
+      /*jshint eqnull: true */
+      return value != null && typeof value === 'object';
+    },
+    shouldCopy = function shouldCopy(value) {
+      /*jshint eqnull: true */
+      index = -1;
+      if (isObject(value)) {
+        if (known == null) return true;
+        index = known.indexOf(value);
+        if (index < 0) return 0 < known.push(value);
+      }
+      return false;
+    },
+    deepDefine = function deepDefine(target, source) {
+      for (var
+        key, descriptor,
+        descriptors = {},
+        keys = oKs(source),
+        i = keys.length; i--;
+      ) {
+        key = keys[i];
+        descriptor = gOPD(source, key);
+        if (VALUE in descriptor) deepValue(descriptor);
+        set(descriptors, key, descriptor);
+      }
+      dPs(target, descriptors);
+    },
+    deepValue = function deepValue(descriptor) {
+      var value = descriptor[VALUE];
+      if (shouldCopy(value)) {
+        descriptor[VALUE] = New(value);
+        deepDefine(descriptor[VALUE], value);
+        blown[known.indexOf(value)] = descriptor[VALUE];
+      } else if (-1 < index && index in blown) {
+        descriptor[VALUE] = blown[index];
+      }
+    },
+    merge = function merge(target) {
+      for (var
+        source,
+        keys, key,
+        value, tvalue,
+        descriptor,
+        deep = this.valueOf(),
+        descriptors = {},
+        i, a = 1;
+        a < arguments.length; a++
+      ) {
+        source = arguments[a];
+        keys = oKs(source);
+        for (i = 0; i < keys.length; i++) {
+          key = keys[i];
+          descriptor = gOPD(source, key);
+          if (hOP.call(target, key)) {
+            if (VALUE in descriptor) {
+              value = descriptor[VALUE];
+              if (shouldCopy(value)) {
+                descriptor = gOPD(target, key);
+                if (VALUE in descriptor) {
+                  tvalue = descriptor[VALUE];
+                  if (isObject(tvalue)) {
+                    merge.call(deep, tvalue, value);
+                  }
+                }
+              }
+            }
+          } else {
+            if (deep && VALUE in descriptor) {
+              deepValue(descriptor);
+            }
+            set(descriptors, key, descriptor);
+          }
+        }
+      }
+      return dPs(target, descriptors);
+    }
+  ;
+
+  return {
+    deep: {
+      copy: deepCopy,
+      merge: deepMerge
+    },
+    shallow: {
+      copy: shallowCopy,
+      merge: shallowMerge
+    }
+  };
+
+}(Object));
+module.exports = cloner;
+},{}],4:[function(require,module,exports){
+/*!
   * domready (c) Dustin Diaz 2014 - License MIT
   */
 !function (name, definition) {
@@ -201,7 +401,7 @@ process.umask = function() { return 0; };
 
 });
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*
 Copyright (c) 2010,2011,2012,2013,2014 Morgan Roderick http://roderick.dk
 License: MIT - http://mrgnrdrck.mit-license.org
@@ -448,14 +648,14 @@ https://github.com/mroderick/PubSubJS
 	};
 }));
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = require('react/lib/ReactCSSTransitionGroup');
-},{"react/lib/ReactCSSTransitionGroup":35}],6:[function(require,module,exports){
+},{"react/lib/ReactCSSTransitionGroup":36}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":47}],7:[function(require,module,exports){
+},{"react/lib/ReactDOM":48}],8:[function(require,module,exports){
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(['react'], factory);
@@ -1246,7 +1446,7 @@ module.exports = require('react/lib/ReactDOM');
   return ReactSlider;
 }));
 
-},{"react":182}],8:[function(require,module,exports){
+},{"react":183}],9:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1271,7 +1471,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactDOMComponentTree":51,"fbjs/lib/focusNode":165}],9:[function(require,module,exports){
+},{"./ReactDOMComponentTree":52,"fbjs/lib/focusNode":166}],10:[function(require,module,exports){
 /**
  * Copyright 2013-present Facebook, Inc.
  * All rights reserved.
@@ -1660,7 +1860,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":23,"./EventPropagators":27,"./FallbackCompositionState":28,"./SyntheticCompositionEvent":111,"./SyntheticInputEvent":115,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/keyOf":175}],10:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPropagators":28,"./FallbackCompositionState":29,"./SyntheticCompositionEvent":112,"./SyntheticInputEvent":116,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/keyOf":176}],11:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1809,7 +2009,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2017,7 +2217,7 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":10,"./ReactInstrumentation":81,"./dangerousStyleValue":129,"_process":1,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/camelizeStyleName":159,"fbjs/lib/hyphenateStyleName":170,"fbjs/lib/memoizeStringOnly":176,"fbjs/lib/warning":180}],12:[function(require,module,exports){
+},{"./CSSProperty":11,"./ReactInstrumentation":82,"./dangerousStyleValue":130,"_process":1,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/camelizeStyleName":160,"fbjs/lib/hyphenateStyleName":171,"fbjs/lib/memoizeStringOnly":177,"fbjs/lib/warning":181}],13:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2126,7 +2326,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
-},{"./PooledClass":32,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"object-assign":181}],13:[function(require,module,exports){
+},{"./PooledClass":33,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"object-assign":182}],14:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2452,7 +2652,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":23,"./EventPluginHub":24,"./EventPropagators":27,"./ReactDOMComponentTree":51,"./ReactUpdates":104,"./SyntheticEvent":113,"./getEventTarget":137,"./isEventSupported":144,"./isTextInputElement":145,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/keyOf":175}],14:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPluginHub":25,"./EventPropagators":28,"./ReactDOMComponentTree":52,"./ReactUpdates":105,"./SyntheticEvent":114,"./getEventTarget":138,"./isEventSupported":145,"./isTextInputElement":146,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/keyOf":176}],15:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2649,7 +2849,7 @@ var DOMChildrenOperations = {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":15,"./Danger":19,"./ReactDOMComponentTree":51,"./ReactInstrumentation":81,"./ReactMultiChildUpdateTypes":86,"./createMicrosoftUnsafeLocalFunction":128,"./setInnerHTML":150,"./setTextContent":151,"_process":1}],15:[function(require,module,exports){
+},{"./DOMLazyTree":16,"./Danger":20,"./ReactDOMComponentTree":52,"./ReactInstrumentation":82,"./ReactMultiChildUpdateTypes":87,"./createMicrosoftUnsafeLocalFunction":129,"./setInnerHTML":151,"./setTextContent":152,"_process":1}],16:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -2768,7 +2968,7 @@ DOMLazyTree.queueHTML = queueHTML;
 DOMLazyTree.queueText = queueText;
 
 module.exports = DOMLazyTree;
-},{"./DOMNamespaces":16,"./createMicrosoftUnsafeLocalFunction":128,"./setInnerHTML":150,"./setTextContent":151}],16:[function(require,module,exports){
+},{"./DOMNamespaces":17,"./createMicrosoftUnsafeLocalFunction":129,"./setInnerHTML":151,"./setTextContent":152}],17:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2789,7 +2989,7 @@ var DOMNamespaces = {
 };
 
 module.exports = DOMNamespaces;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2998,7 +3198,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],18:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],19:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -3222,7 +3422,7 @@ var DOMPropertyOperations = {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":17,"./ReactDOMComponentTree":51,"./ReactInstrumentation":81,"./quoteAttributeValueForBrowser":147,"_process":1,"fbjs/lib/warning":180}],19:[function(require,module,exports){
+},{"./DOMProperty":18,"./ReactDOMComponentTree":52,"./ReactInstrumentation":82,"./quoteAttributeValueForBrowser":148,"_process":1,"fbjs/lib/warning":181}],20:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -3273,7 +3473,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":15,"./reactProdInvariant":148,"_process":1,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/createNodesFromMarkup":162,"fbjs/lib/emptyFunction":163,"fbjs/lib/invariant":171}],20:[function(require,module,exports){
+},{"./DOMLazyTree":16,"./reactProdInvariant":149,"_process":1,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/createNodesFromMarkup":163,"fbjs/lib/emptyFunction":164,"fbjs/lib/invariant":172}],21:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3301,7 +3501,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":175}],21:[function(require,module,exports){
+},{"fbjs/lib/keyOf":176}],22:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3352,7 +3552,7 @@ var DisabledInputUtils = {
 };
 
 module.exports = DisabledInputUtils;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3458,7 +3658,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":23,"./EventPropagators":27,"./ReactDOMComponentTree":51,"./SyntheticMouseEvent":117,"fbjs/lib/keyOf":175}],23:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPropagators":28,"./ReactDOMComponentTree":52,"./SyntheticMouseEvent":118,"fbjs/lib/keyOf":176}],24:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3556,7 +3756,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":174}],24:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":175}],25:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -3810,7 +4010,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":25,"./EventPluginUtils":26,"./ReactErrorUtils":72,"./accumulateInto":124,"./forEachAccumulated":133,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],25:[function(require,module,exports){
+},{"./EventPluginRegistry":26,"./EventPluginUtils":27,"./ReactErrorUtils":73,"./accumulateInto":125,"./forEachAccumulated":134,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],26:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4060,7 +4260,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],26:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],27:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4292,7 +4492,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./EventConstants":23,"./ReactErrorUtils":72,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],27:[function(require,module,exports){
+},{"./EventConstants":24,"./ReactErrorUtils":73,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],28:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4432,7 +4632,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventConstants":23,"./EventPluginHub":24,"./EventPluginUtils":26,"./accumulateInto":124,"./forEachAccumulated":133,"_process":1,"fbjs/lib/warning":180}],28:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPluginHub":25,"./EventPluginUtils":27,"./accumulateInto":125,"./forEachAccumulated":134,"_process":1,"fbjs/lib/warning":181}],29:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -4528,7 +4728,7 @@ _assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./PooledClass":32,"./getTextContentAccessor":141,"object-assign":181}],29:[function(require,module,exports){
+},{"./PooledClass":33,"./getTextContentAccessor":142,"object-assign":182}],30:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -4738,7 +4938,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":17}],30:[function(require,module,exports){
+},{"./DOMProperty":18}],31:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -4798,7 +4998,7 @@ var KeyEscapeUtils = {
 };
 
 module.exports = KeyEscapeUtils;
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4937,7 +5137,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocations":91,"./ReactPropTypes":92,"./ReactPropTypesSecret":93,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],32:[function(require,module,exports){
+},{"./ReactPropTypeLocations":92,"./ReactPropTypes":93,"./ReactPropTypesSecret":94,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],33:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -5061,7 +5261,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],33:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],34:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -5153,7 +5353,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactChildren":38,"./ReactClass":40,"./ReactComponent":41,"./ReactDOMFactories":54,"./ReactElement":69,"./ReactElementValidator":70,"./ReactPropTypes":92,"./ReactPureComponent":94,"./ReactVersion":105,"./onlyChild":146,"_process":1,"fbjs/lib/warning":180,"object-assign":181}],34:[function(require,module,exports){
+},{"./ReactChildren":39,"./ReactClass":41,"./ReactComponent":42,"./ReactDOMFactories":55,"./ReactElement":70,"./ReactElementValidator":71,"./ReactPropTypes":93,"./ReactPureComponent":95,"./ReactVersion":106,"./onlyChild":147,"_process":1,"fbjs/lib/warning":181,"object-assign":182}],35:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -5471,7 +5671,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":23,"./EventPluginRegistry":25,"./ReactEventEmitterMixin":73,"./ViewportMetrics":123,"./getVendorPrefixedEventName":142,"./isEventSupported":144,"object-assign":181}],35:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPluginRegistry":26,"./ReactEventEmitterMixin":74,"./ViewportMetrics":124,"./getVendorPrefixedEventName":143,"./isEventSupported":145,"object-assign":182}],36:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -5559,7 +5759,7 @@ var ReactCSSTransitionGroup = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroup;
-},{"./React":33,"./ReactCSSTransitionGroupChild":36,"./ReactTransitionGroup":102,"object-assign":181}],36:[function(require,module,exports){
+},{"./React":34,"./ReactCSSTransitionGroupChild":37,"./ReactTransitionGroup":103,"object-assign":182}],37:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -5727,7 +5927,7 @@ var ReactCSSTransitionGroupChild = React.createClass({
 });
 
 module.exports = ReactCSSTransitionGroupChild;
-},{"./React":33,"./ReactDOM":47,"./ReactTransitionEvents":101,"./onlyChild":146,"fbjs/lib/CSSCore":155}],37:[function(require,module,exports){
+},{"./React":34,"./ReactDOM":48,"./ReactTransitionEvents":102,"./onlyChild":147,"fbjs/lib/CSSCore":156}],38:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -5884,7 +6084,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":30,"./ReactComponentTreeHook":44,"./ReactReconciler":96,"./instantiateReactComponent":143,"./shouldUpdateReactComponent":152,"./traverseAllChildren":153,"_process":1,"fbjs/lib/warning":180}],38:[function(require,module,exports){
+},{"./KeyEscapeUtils":31,"./ReactComponentTreeHook":45,"./ReactReconciler":97,"./instantiateReactComponent":144,"./shouldUpdateReactComponent":153,"./traverseAllChildren":154,"_process":1,"fbjs/lib/warning":181}],39:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -6076,7 +6276,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":32,"./ReactElement":69,"./traverseAllChildren":153,"fbjs/lib/emptyFunction":163}],39:[function(require,module,exports){
+},{"./PooledClass":33,"./ReactElement":70,"./traverseAllChildren":154,"fbjs/lib/emptyFunction":164}],40:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -6133,7 +6333,7 @@ var ReactChildrenMutationWarningHook = {
 
 module.exports = ReactChildrenMutationWarningHook;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":44,"_process":1,"fbjs/lib/warning":180}],40:[function(require,module,exports){
+},{"./ReactComponentTreeHook":45,"_process":1,"fbjs/lib/warning":181}],41:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -6868,7 +7068,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./ReactComponent":41,"./ReactElement":69,"./ReactNoopUpdateQueue":88,"./ReactPropTypeLocationNames":90,"./ReactPropTypeLocations":91,"./reactProdInvariant":148,"_process":1,"fbjs/lib/emptyObject":164,"fbjs/lib/invariant":171,"fbjs/lib/keyMirror":174,"fbjs/lib/keyOf":175,"fbjs/lib/warning":180,"object-assign":181}],41:[function(require,module,exports){
+},{"./ReactComponent":42,"./ReactElement":70,"./ReactNoopUpdateQueue":89,"./ReactPropTypeLocationNames":91,"./ReactPropTypeLocations":92,"./reactProdInvariant":149,"_process":1,"fbjs/lib/emptyObject":165,"fbjs/lib/invariant":172,"fbjs/lib/keyMirror":175,"fbjs/lib/keyOf":176,"fbjs/lib/warning":181,"object-assign":182}],42:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -6989,7 +7189,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":88,"./canDefineProperty":126,"./reactProdInvariant":148,"_process":1,"fbjs/lib/emptyObject":164,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],42:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":89,"./canDefineProperty":127,"./reactProdInvariant":149,"_process":1,"fbjs/lib/emptyObject":165,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],43:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -7020,7 +7220,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./DOMChildrenOperations":14,"./ReactDOMIDOperations":56}],43:[function(require,module,exports){
+},{"./DOMChildrenOperations":15,"./ReactDOMIDOperations":57}],44:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -7068,7 +7268,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],44:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],45:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -7413,7 +7613,7 @@ var ReactComponentTreeHook = {
 
 module.exports = ReactComponentTreeHook;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":46,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],45:[function(require,module,exports){
+},{"./ReactCurrentOwner":47,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],46:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8336,7 +8536,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./ReactComponentEnvironment":43,"./ReactCurrentOwner":46,"./ReactElement":69,"./ReactErrorUtils":72,"./ReactInstanceMap":80,"./ReactInstrumentation":81,"./ReactNodeTypes":87,"./ReactPropTypeLocations":91,"./ReactReconciler":96,"./checkReactTypeSpec":127,"./reactProdInvariant":148,"./shouldUpdateReactComponent":152,"_process":1,"fbjs/lib/emptyObject":164,"fbjs/lib/invariant":171,"fbjs/lib/shallowEqual":179,"fbjs/lib/warning":180,"object-assign":181}],46:[function(require,module,exports){
+},{"./ReactComponentEnvironment":44,"./ReactCurrentOwner":47,"./ReactElement":70,"./ReactErrorUtils":73,"./ReactInstanceMap":81,"./ReactInstrumentation":82,"./ReactNodeTypes":88,"./ReactPropTypeLocations":92,"./ReactReconciler":97,"./checkReactTypeSpec":128,"./reactProdInvariant":149,"./shouldUpdateReactComponent":153,"_process":1,"fbjs/lib/emptyObject":165,"fbjs/lib/invariant":172,"fbjs/lib/shallowEqual":180,"fbjs/lib/warning":181,"object-assign":182}],47:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -8368,7 +8568,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8481,7 +8681,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactDOM;
 }).call(this,require('_process'))
-},{"./ReactDOMComponentTree":51,"./ReactDOMNullInputValuePropHook":58,"./ReactDOMUnknownPropertyHook":65,"./ReactDefaultInjection":68,"./ReactInstrumentation":81,"./ReactMount":84,"./ReactReconciler":96,"./ReactUpdates":104,"./ReactVersion":105,"./findDOMNode":131,"./getHostComponentFromComposite":138,"./renderSubtreeIntoContainer":149,"_process":1,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/warning":180}],48:[function(require,module,exports){
+},{"./ReactDOMComponentTree":52,"./ReactDOMNullInputValuePropHook":59,"./ReactDOMUnknownPropertyHook":66,"./ReactDefaultInjection":69,"./ReactInstrumentation":82,"./ReactMount":85,"./ReactReconciler":97,"./ReactUpdates":105,"./ReactVersion":106,"./findDOMNode":132,"./getHostComponentFromComposite":139,"./renderSubtreeIntoContainer":150,"_process":1,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/warning":181}],49:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -8506,7 +8706,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{"./DisabledInputUtils":21}],49:[function(require,module,exports){
+},{"./DisabledInputUtils":22}],50:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9514,7 +9714,7 @@ _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mi
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":8,"./CSSPropertyOperations":11,"./DOMLazyTree":15,"./DOMNamespaces":16,"./DOMProperty":17,"./DOMPropertyOperations":18,"./EventConstants":23,"./EventPluginHub":24,"./EventPluginRegistry":25,"./ReactBrowserEventEmitter":34,"./ReactDOMButton":48,"./ReactDOMComponentFlags":50,"./ReactDOMComponentTree":51,"./ReactDOMInput":57,"./ReactDOMOption":59,"./ReactDOMSelect":60,"./ReactDOMTextarea":63,"./ReactInstrumentation":81,"./ReactMultiChild":85,"./ReactServerRenderingTransaction":98,"./escapeTextContentForBrowser":130,"./isEventSupported":144,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":1,"fbjs/lib/emptyFunction":163,"fbjs/lib/invariant":171,"fbjs/lib/keyOf":175,"fbjs/lib/shallowEqual":179,"fbjs/lib/warning":180,"object-assign":181}],50:[function(require,module,exports){
+},{"./AutoFocusUtils":9,"./CSSPropertyOperations":12,"./DOMLazyTree":16,"./DOMNamespaces":17,"./DOMProperty":18,"./DOMPropertyOperations":19,"./EventConstants":24,"./EventPluginHub":25,"./EventPluginRegistry":26,"./ReactBrowserEventEmitter":35,"./ReactDOMButton":49,"./ReactDOMComponentFlags":51,"./ReactDOMComponentTree":52,"./ReactDOMInput":58,"./ReactDOMOption":60,"./ReactDOMSelect":61,"./ReactDOMTextarea":64,"./ReactInstrumentation":82,"./ReactMultiChild":86,"./ReactServerRenderingTransaction":99,"./escapeTextContentForBrowser":131,"./isEventSupported":145,"./reactProdInvariant":149,"./validateDOMNesting":155,"_process":1,"fbjs/lib/emptyFunction":164,"fbjs/lib/invariant":172,"fbjs/lib/keyOf":176,"fbjs/lib/shallowEqual":180,"fbjs/lib/warning":181,"object-assign":182}],51:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -9533,7 +9733,7 @@ var ReactDOMComponentFlags = {
 };
 
 module.exports = ReactDOMComponentFlags;
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9724,7 +9924,7 @@ var ReactDOMComponentTree = {
 
 module.exports = ReactDOMComponentTree;
 }).call(this,require('_process'))
-},{"./DOMProperty":17,"./ReactDOMComponentFlags":50,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],52:[function(require,module,exports){
+},{"./DOMProperty":18,"./ReactDOMComponentFlags":51,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],53:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9760,7 +9960,7 @@ function ReactDOMContainerInfo(topLevelWrapper, node) {
 
 module.exports = ReactDOMContainerInfo;
 }).call(this,require('_process'))
-},{"./validateDOMNesting":154,"_process":1}],53:[function(require,module,exports){
+},{"./validateDOMNesting":155,"_process":1}],54:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -9821,7 +10021,7 @@ _assign(ReactDOMEmptyComponent.prototype, {
 });
 
 module.exports = ReactDOMEmptyComponent;
-},{"./DOMLazyTree":15,"./ReactDOMComponentTree":51,"object-assign":181}],54:[function(require,module,exports){
+},{"./DOMLazyTree":16,"./ReactDOMComponentTree":52,"object-assign":182}],55:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9994,7 +10194,7 @@ var ReactDOMFactories = {
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":69,"./ReactElementValidator":70,"_process":1}],55:[function(require,module,exports){
+},{"./ReactElement":70,"./ReactElementValidator":71,"_process":1}],56:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -10013,7 +10213,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -10048,7 +10248,7 @@ var ReactDOMIDOperations = {
 };
 
 module.exports = ReactDOMIDOperations;
-},{"./DOMChildrenOperations":14,"./ReactDOMComponentTree":51}],57:[function(require,module,exports){
+},{"./DOMChildrenOperations":15,"./ReactDOMComponentTree":52}],58:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -10320,7 +10520,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./DOMPropertyOperations":18,"./DisabledInputUtils":21,"./LinkedValueUtils":31,"./ReactDOMComponentTree":51,"./ReactUpdates":104,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180,"object-assign":181}],58:[function(require,module,exports){
+},{"./DOMPropertyOperations":19,"./DisabledInputUtils":22,"./LinkedValueUtils":32,"./ReactDOMComponentTree":52,"./ReactUpdates":105,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181,"object-assign":182}],59:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -10366,7 +10566,7 @@ var ReactDOMNullInputValuePropHook = {
 
 module.exports = ReactDOMNullInputValuePropHook;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":44,"_process":1,"fbjs/lib/warning":180}],59:[function(require,module,exports){
+},{"./ReactComponentTreeHook":45,"_process":1,"fbjs/lib/warning":181}],60:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -10492,7 +10692,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./ReactChildren":38,"./ReactDOMComponentTree":51,"./ReactDOMSelect":60,"_process":1,"fbjs/lib/warning":180,"object-assign":181}],60:[function(require,module,exports){
+},{"./ReactChildren":39,"./ReactDOMComponentTree":52,"./ReactDOMSelect":61,"_process":1,"fbjs/lib/warning":181,"object-assign":182}],61:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -10696,7 +10896,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./DisabledInputUtils":21,"./LinkedValueUtils":31,"./ReactDOMComponentTree":51,"./ReactUpdates":104,"_process":1,"fbjs/lib/warning":180,"object-assign":181}],61:[function(require,module,exports){
+},{"./DisabledInputUtils":22,"./LinkedValueUtils":32,"./ReactDOMComponentTree":52,"./ReactUpdates":105,"_process":1,"fbjs/lib/warning":181,"object-assign":182}],62:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -10909,7 +11109,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":140,"./getTextContentAccessor":141,"fbjs/lib/ExecutionEnvironment":157}],62:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":141,"./getTextContentAccessor":142,"fbjs/lib/ExecutionEnvironment":158}],63:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11076,7 +11276,7 @@ _assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":14,"./DOMLazyTree":15,"./ReactDOMComponentTree":51,"./escapeTextContentForBrowser":130,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":1,"fbjs/lib/invariant":171,"object-assign":181}],63:[function(require,module,exports){
+},{"./DOMChildrenOperations":15,"./DOMLazyTree":16,"./ReactDOMComponentTree":52,"./escapeTextContentForBrowser":131,"./reactProdInvariant":149,"./validateDOMNesting":155,"_process":1,"fbjs/lib/invariant":172,"object-assign":182}],64:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11234,7 +11434,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./DisabledInputUtils":21,"./LinkedValueUtils":31,"./ReactDOMComponentTree":51,"./ReactUpdates":104,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180,"object-assign":181}],64:[function(require,module,exports){
+},{"./DisabledInputUtils":22,"./LinkedValueUtils":32,"./ReactDOMComponentTree":52,"./ReactUpdates":105,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181,"object-assign":182}],65:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -11373,7 +11573,7 @@ module.exports = {
   traverseEnterLeave: traverseEnterLeave
 };
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],65:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],66:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11488,7 +11688,7 @@ var ReactDOMUnknownPropertyHook = {
 
 module.exports = ReactDOMUnknownPropertyHook;
 }).call(this,require('_process'))
-},{"./DOMProperty":17,"./EventPluginRegistry":25,"./ReactComponentTreeHook":44,"_process":1,"fbjs/lib/warning":180}],66:[function(require,module,exports){
+},{"./DOMProperty":18,"./EventPluginRegistry":26,"./ReactComponentTreeHook":45,"_process":1,"fbjs/lib/warning":181}],67:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -11798,7 +11998,7 @@ if (/[?&]react_perf\b/.test(url)) {
 
 module.exports = ReactDebugTool;
 }).call(this,require('_process'))
-},{"./ReactChildrenMutationWarningHook":39,"./ReactComponentTreeHook":44,"./ReactHostOperationHistoryHook":77,"./ReactInvalidSetStateWarningHook":82,"_process":1,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/performanceNow":178,"fbjs/lib/warning":180}],67:[function(require,module,exports){
+},{"./ReactChildrenMutationWarningHook":40,"./ReactComponentTreeHook":45,"./ReactHostOperationHistoryHook":78,"./ReactInvalidSetStateWarningHook":83,"_process":1,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/performanceNow":179,"fbjs/lib/warning":181}],68:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -11867,7 +12067,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./ReactUpdates":104,"./Transaction":122,"fbjs/lib/emptyFunction":163,"object-assign":181}],68:[function(require,module,exports){
+},{"./ReactUpdates":105,"./Transaction":123,"fbjs/lib/emptyFunction":164,"object-assign":182}],69:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -11952,7 +12152,7 @@ function inject() {
 module.exports = {
   inject: inject
 };
-},{"./BeforeInputEventPlugin":9,"./ChangeEventPlugin":13,"./DefaultEventPluginOrder":20,"./EnterLeaveEventPlugin":22,"./HTMLDOMPropertyConfig":29,"./ReactComponentBrowserEnvironment":42,"./ReactDOMComponent":49,"./ReactDOMComponentTree":51,"./ReactDOMEmptyComponent":53,"./ReactDOMTextComponent":62,"./ReactDOMTreeTraversal":64,"./ReactDefaultBatchingStrategy":67,"./ReactEventListener":74,"./ReactInjection":78,"./ReactReconcileTransaction":95,"./SVGDOMPropertyConfig":106,"./SelectEventPlugin":107,"./SimpleEventPlugin":108}],69:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":10,"./ChangeEventPlugin":14,"./DefaultEventPluginOrder":21,"./EnterLeaveEventPlugin":23,"./HTMLDOMPropertyConfig":30,"./ReactComponentBrowserEnvironment":43,"./ReactDOMComponent":50,"./ReactDOMComponentTree":52,"./ReactDOMEmptyComponent":54,"./ReactDOMTextComponent":63,"./ReactDOMTreeTraversal":65,"./ReactDefaultBatchingStrategy":68,"./ReactEventListener":75,"./ReactInjection":79,"./ReactReconcileTransaction":96,"./SVGDOMPropertyConfig":107,"./SelectEventPlugin":108,"./SimpleEventPlugin":109}],70:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -12319,7 +12519,7 @@ ReactElement.REACT_ELEMENT_TYPE = REACT_ELEMENT_TYPE;
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":46,"./canDefineProperty":126,"_process":1,"fbjs/lib/warning":180,"object-assign":181}],70:[function(require,module,exports){
+},{"./ReactCurrentOwner":47,"./canDefineProperty":127,"_process":1,"fbjs/lib/warning":181,"object-assign":182}],71:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -12550,7 +12750,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":44,"./ReactCurrentOwner":46,"./ReactElement":69,"./ReactPropTypeLocations":91,"./canDefineProperty":126,"./checkReactTypeSpec":127,"./getIteratorFn":139,"_process":1,"fbjs/lib/warning":180}],71:[function(require,module,exports){
+},{"./ReactComponentTreeHook":45,"./ReactCurrentOwner":47,"./ReactElement":70,"./ReactPropTypeLocations":92,"./canDefineProperty":127,"./checkReactTypeSpec":128,"./getIteratorFn":140,"_process":1,"fbjs/lib/warning":181}],72:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -12581,7 +12781,7 @@ var ReactEmptyComponent = {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -12660,7 +12860,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":1}],73:[function(require,module,exports){
+},{"_process":1}],74:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -12694,7 +12894,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":24}],74:[function(require,module,exports){
+},{"./EventPluginHub":25}],75:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -12852,7 +13052,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./PooledClass":32,"./ReactDOMComponentTree":51,"./ReactUpdates":104,"./getEventTarget":137,"fbjs/lib/EventListener":156,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/getUnboundedScrollPosition":168,"object-assign":181}],75:[function(require,module,exports){
+},{"./PooledClass":33,"./ReactDOMComponentTree":52,"./ReactUpdates":105,"./getEventTarget":138,"fbjs/lib/EventListener":157,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/getUnboundedScrollPosition":169,"object-assign":182}],76:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -12875,7 +13075,7 @@ var ReactFeatureFlags = {
 };
 
 module.exports = ReactFeatureFlags;
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -12954,7 +13154,7 @@ var ReactHostComponent = {
 
 module.exports = ReactHostComponent;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"object-assign":181}],77:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"object-assign":182}],78:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -12992,7 +13192,7 @@ var ReactHostOperationHistoryHook = {
 };
 
 module.exports = ReactHostOperationHistoryHook;
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -13029,7 +13229,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":17,"./EventPluginHub":24,"./EventPluginUtils":26,"./ReactBrowserEventEmitter":34,"./ReactClass":40,"./ReactComponentEnvironment":43,"./ReactEmptyComponent":71,"./ReactHostComponent":76,"./ReactUpdates":104}],79:[function(require,module,exports){
+},{"./DOMProperty":18,"./EventPluginHub":25,"./EventPluginUtils":27,"./ReactBrowserEventEmitter":35,"./ReactClass":41,"./ReactComponentEnvironment":44,"./ReactEmptyComponent":72,"./ReactHostComponent":77,"./ReactUpdates":105}],80:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -13154,7 +13354,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":61,"fbjs/lib/containsNode":160,"fbjs/lib/focusNode":165,"fbjs/lib/getActiveElement":166}],80:[function(require,module,exports){
+},{"./ReactDOMSelection":62,"fbjs/lib/containsNode":161,"fbjs/lib/focusNode":166,"fbjs/lib/getActiveElement":167}],81:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -13203,7 +13403,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -13227,7 +13427,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = { debugTool: debugTool };
 }).call(this,require('_process'))
-},{"./ReactDebugTool":66,"_process":1}],82:[function(require,module,exports){
+},{"./ReactDebugTool":67,"_process":1}],83:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -13266,7 +13466,7 @@ var ReactInvalidSetStateWarningHook = {
 
 module.exports = ReactInvalidSetStateWarningHook;
 }).call(this,require('_process'))
-},{"_process":1,"fbjs/lib/warning":180}],83:[function(require,module,exports){
+},{"_process":1,"fbjs/lib/warning":181}],84:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -13317,7 +13517,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":125}],84:[function(require,module,exports){
+},{"./adler32":126}],85:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -13854,7 +14054,7 @@ var ReactMount = {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":15,"./DOMProperty":17,"./ReactBrowserEventEmitter":34,"./ReactCurrentOwner":46,"./ReactDOMComponentTree":51,"./ReactDOMContainerInfo":52,"./ReactDOMFeatureFlags":55,"./ReactElement":69,"./ReactFeatureFlags":75,"./ReactInstanceMap":80,"./ReactInstrumentation":81,"./ReactMarkupChecksum":83,"./ReactReconciler":96,"./ReactUpdateQueue":103,"./ReactUpdates":104,"./instantiateReactComponent":143,"./reactProdInvariant":148,"./setInnerHTML":150,"./shouldUpdateReactComponent":152,"_process":1,"fbjs/lib/emptyObject":164,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],85:[function(require,module,exports){
+},{"./DOMLazyTree":16,"./DOMProperty":18,"./ReactBrowserEventEmitter":35,"./ReactCurrentOwner":47,"./ReactDOMComponentTree":52,"./ReactDOMContainerInfo":53,"./ReactDOMFeatureFlags":56,"./ReactElement":70,"./ReactFeatureFlags":76,"./ReactInstanceMap":81,"./ReactInstrumentation":82,"./ReactMarkupChecksum":84,"./ReactReconciler":97,"./ReactUpdateQueue":104,"./ReactUpdates":105,"./instantiateReactComponent":144,"./reactProdInvariant":149,"./setInnerHTML":151,"./shouldUpdateReactComponent":153,"_process":1,"fbjs/lib/emptyObject":165,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],86:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -14308,7 +14508,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":37,"./ReactComponentEnvironment":43,"./ReactCurrentOwner":46,"./ReactInstanceMap":80,"./ReactInstrumentation":81,"./ReactMultiChildUpdateTypes":86,"./ReactReconciler":96,"./flattenChildren":132,"./reactProdInvariant":148,"_process":1,"fbjs/lib/emptyFunction":163,"fbjs/lib/invariant":171}],86:[function(require,module,exports){
+},{"./ReactChildReconciler":38,"./ReactComponentEnvironment":44,"./ReactCurrentOwner":47,"./ReactInstanceMap":81,"./ReactInstrumentation":82,"./ReactMultiChildUpdateTypes":87,"./ReactReconciler":97,"./flattenChildren":133,"./reactProdInvariant":149,"_process":1,"fbjs/lib/emptyFunction":164,"fbjs/lib/invariant":172}],87:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -14341,7 +14541,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":174}],87:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":175}],88:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -14384,7 +14584,7 @@ var ReactNodeTypes = {
 
 module.exports = ReactNodeTypes;
 }).call(this,require('_process'))
-},{"./ReactElement":69,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],88:[function(require,module,exports){
+},{"./ReactElement":70,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],89:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -14483,7 +14683,7 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":1,"fbjs/lib/warning":180}],89:[function(require,module,exports){
+},{"_process":1,"fbjs/lib/warning":181}],90:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -14580,7 +14780,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],90:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],91:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -14607,7 +14807,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":1}],91:[function(require,module,exports){
+},{"_process":1}],92:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -14630,7 +14830,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":174}],92:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":175}],93:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -15064,7 +15264,7 @@ function getClassName(propValue) {
 
 module.exports = ReactPropTypes;
 }).call(this,require('_process'))
-},{"./ReactElement":69,"./ReactPropTypeLocationNames":90,"./ReactPropTypesSecret":93,"./getIteratorFn":139,"_process":1,"fbjs/lib/emptyFunction":163,"fbjs/lib/warning":180}],93:[function(require,module,exports){
+},{"./ReactElement":70,"./ReactPropTypeLocationNames":91,"./ReactPropTypesSecret":94,"./getIteratorFn":140,"_process":1,"fbjs/lib/emptyFunction":164,"fbjs/lib/warning":181}],94:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15081,7 +15281,7 @@ module.exports = ReactPropTypes;
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15124,7 +15324,7 @@ _assign(ReactPureComponent.prototype, ReactComponent.prototype);
 ReactPureComponent.prototype.isPureReactComponent = true;
 
 module.exports = ReactPureComponent;
-},{"./ReactComponent":41,"./ReactNoopUpdateQueue":88,"fbjs/lib/emptyObject":164,"object-assign":181}],95:[function(require,module,exports){
+},{"./ReactComponent":42,"./ReactNoopUpdateQueue":89,"fbjs/lib/emptyObject":165,"object-assign":182}],96:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -15305,7 +15505,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 }).call(this,require('_process'))
-},{"./CallbackQueue":12,"./PooledClass":32,"./ReactBrowserEventEmitter":34,"./ReactInputSelection":79,"./ReactInstrumentation":81,"./ReactUpdateQueue":103,"./Transaction":122,"_process":1,"object-assign":181}],96:[function(require,module,exports){
+},{"./CallbackQueue":13,"./PooledClass":33,"./ReactBrowserEventEmitter":35,"./ReactInputSelection":80,"./ReactInstrumentation":82,"./ReactUpdateQueue":104,"./Transaction":123,"_process":1,"object-assign":182}],97:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -15476,7 +15676,7 @@ var ReactReconciler = {
 
 module.exports = ReactReconciler;
 }).call(this,require('_process'))
-},{"./ReactInstrumentation":81,"./ReactRef":97,"_process":1,"fbjs/lib/warning":180}],97:[function(require,module,exports){
+},{"./ReactInstrumentation":82,"./ReactRef":98,"_process":1,"fbjs/lib/warning":181}],98:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15557,7 +15757,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":89}],98:[function(require,module,exports){
+},{"./ReactOwner":90}],99:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -15650,7 +15850,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 }).call(this,require('_process'))
-},{"./PooledClass":32,"./ReactInstrumentation":81,"./ReactServerUpdateQueue":99,"./Transaction":122,"_process":1,"object-assign":181}],99:[function(require,module,exports){
+},{"./PooledClass":33,"./ReactInstrumentation":82,"./ReactServerUpdateQueue":100,"./Transaction":123,"_process":1,"object-assign":182}],100:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -15794,7 +15994,7 @@ var ReactServerUpdateQueue = function () {
 
 module.exports = ReactServerUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactUpdateQueue":103,"./Transaction":122,"_process":1,"fbjs/lib/warning":180}],100:[function(require,module,exports){
+},{"./ReactUpdateQueue":104,"./Transaction":123,"_process":1,"fbjs/lib/warning":181}],101:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -15900,7 +16100,7 @@ var ReactTransitionChildMapping = {
 
 module.exports = ReactTransitionChildMapping;
 }).call(this,require('_process'))
-},{"./flattenChildren":132,"_process":1}],101:[function(require,module,exports){
+},{"./flattenChildren":133,"_process":1}],102:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15974,7 +16174,7 @@ var ReactTransitionEvents = {
 };
 
 module.exports = ReactTransitionEvents;
-},{"./getVendorPrefixedEventName":142,"fbjs/lib/ExecutionEnvironment":157}],102:[function(require,module,exports){
+},{"./getVendorPrefixedEventName":143,"fbjs/lib/ExecutionEnvironment":158}],103:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -16223,7 +16423,7 @@ var ReactTransitionGroup = React.createClass({
 
 module.exports = ReactTransitionGroup;
 }).call(this,require('_process'))
-},{"./React":33,"./ReactInstanceMap":80,"./ReactTransitionChildMapping":100,"_process":1,"fbjs/lib/emptyFunction":163,"object-assign":181}],103:[function(require,module,exports){
+},{"./React":34,"./ReactInstanceMap":81,"./ReactTransitionChildMapping":101,"_process":1,"fbjs/lib/emptyFunction":164,"object-assign":182}],104:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -16452,7 +16652,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":46,"./ReactInstanceMap":80,"./ReactInstrumentation":81,"./ReactUpdates":104,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],104:[function(require,module,exports){
+},{"./ReactCurrentOwner":47,"./ReactInstanceMap":81,"./ReactInstrumentation":82,"./ReactUpdates":105,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],105:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -16706,7 +16906,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":12,"./PooledClass":32,"./ReactFeatureFlags":75,"./ReactReconciler":96,"./Transaction":122,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"object-assign":181}],105:[function(require,module,exports){
+},{"./CallbackQueue":13,"./PooledClass":33,"./ReactFeatureFlags":76,"./ReactReconciler":97,"./Transaction":123,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"object-assign":182}],106:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -16721,7 +16921,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '15.3.1';
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17024,7 +17224,7 @@ Object.keys(ATTRS).forEach(function (key) {
 });
 
 module.exports = SVGDOMPropertyConfig;
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17221,7 +17421,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":23,"./EventPropagators":27,"./ReactDOMComponentTree":51,"./ReactInputSelection":79,"./SyntheticEvent":113,"./isTextInputElement":145,"fbjs/lib/ExecutionEnvironment":157,"fbjs/lib/getActiveElement":166,"fbjs/lib/keyOf":175,"fbjs/lib/shallowEqual":179}],108:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPropagators":28,"./ReactDOMComponentTree":52,"./ReactInputSelection":80,"./SyntheticEvent":114,"./isTextInputElement":146,"fbjs/lib/ExecutionEnvironment":158,"fbjs/lib/getActiveElement":167,"fbjs/lib/keyOf":176,"fbjs/lib/shallowEqual":180}],109:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -17859,7 +18059,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventConstants":23,"./EventPropagators":27,"./ReactDOMComponentTree":51,"./SyntheticAnimationEvent":109,"./SyntheticClipboardEvent":110,"./SyntheticDragEvent":112,"./SyntheticEvent":113,"./SyntheticFocusEvent":114,"./SyntheticKeyboardEvent":116,"./SyntheticMouseEvent":117,"./SyntheticTouchEvent":118,"./SyntheticTransitionEvent":119,"./SyntheticUIEvent":120,"./SyntheticWheelEvent":121,"./getEventCharCode":134,"./reactProdInvariant":148,"_process":1,"fbjs/lib/EventListener":156,"fbjs/lib/emptyFunction":163,"fbjs/lib/invariant":171,"fbjs/lib/keyOf":175}],109:[function(require,module,exports){
+},{"./EventConstants":24,"./EventPropagators":28,"./ReactDOMComponentTree":52,"./SyntheticAnimationEvent":110,"./SyntheticClipboardEvent":111,"./SyntheticDragEvent":113,"./SyntheticEvent":114,"./SyntheticFocusEvent":115,"./SyntheticKeyboardEvent":117,"./SyntheticMouseEvent":118,"./SyntheticTouchEvent":119,"./SyntheticTransitionEvent":120,"./SyntheticUIEvent":121,"./SyntheticWheelEvent":122,"./getEventCharCode":135,"./reactProdInvariant":149,"_process":1,"fbjs/lib/EventListener":157,"fbjs/lib/emptyFunction":164,"fbjs/lib/invariant":172,"fbjs/lib/keyOf":176}],110:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17899,7 +18099,7 @@ function SyntheticAnimationEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticAnimationEvent, AnimationEventInterface);
 
 module.exports = SyntheticAnimationEvent;
-},{"./SyntheticEvent":113}],110:[function(require,module,exports){
+},{"./SyntheticEvent":114}],111:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17938,7 +18138,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":113}],111:[function(require,module,exports){
+},{"./SyntheticEvent":114}],112:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -17975,7 +18175,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":113}],112:[function(require,module,exports){
+},{"./SyntheticEvent":114}],113:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18012,7 +18212,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":117}],113:[function(require,module,exports){
+},{"./SyntheticMouseEvent":118}],114:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -18282,7 +18482,7 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
   }
 }
 }).call(this,require('_process'))
-},{"./PooledClass":32,"_process":1,"fbjs/lib/emptyFunction":163,"fbjs/lib/warning":180,"object-assign":181}],114:[function(require,module,exports){
+},{"./PooledClass":33,"_process":1,"fbjs/lib/emptyFunction":164,"fbjs/lib/warning":181,"object-assign":182}],115:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18319,7 +18519,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":120}],115:[function(require,module,exports){
+},{"./SyntheticUIEvent":121}],116:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18357,7 +18557,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":113}],116:[function(require,module,exports){
+},{"./SyntheticEvent":114}],117:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18442,7 +18642,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":120,"./getEventCharCode":134,"./getEventKey":135,"./getEventModifierState":136}],117:[function(require,module,exports){
+},{"./SyntheticUIEvent":121,"./getEventCharCode":135,"./getEventKey":136,"./getEventModifierState":137}],118:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18515,7 +18715,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":120,"./ViewportMetrics":123,"./getEventModifierState":136}],118:[function(require,module,exports){
+},{"./SyntheticUIEvent":121,"./ViewportMetrics":124,"./getEventModifierState":137}],119:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18561,7 +18761,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":120,"./getEventModifierState":136}],119:[function(require,module,exports){
+},{"./SyntheticUIEvent":121,"./getEventModifierState":137}],120:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18601,7 +18801,7 @@ function SyntheticTransitionEvent(dispatchConfig, dispatchMarker, nativeEvent, n
 SyntheticEvent.augmentClass(SyntheticTransitionEvent, TransitionEventInterface);
 
 module.exports = SyntheticTransitionEvent;
-},{"./SyntheticEvent":113}],120:[function(require,module,exports){
+},{"./SyntheticEvent":114}],121:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18661,7 +18861,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":113,"./getEventTarget":137}],121:[function(require,module,exports){
+},{"./SyntheticEvent":114,"./getEventTarget":138}],122:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18716,7 +18916,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":117}],122:[function(require,module,exports){
+},{"./SyntheticMouseEvent":118}],123:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -18952,7 +19152,7 @@ var Transaction = {
 
 module.exports = Transaction;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],123:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],124:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18980,7 +19180,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -19041,7 +19241,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],125:[function(require,module,exports){
+},{"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],126:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19086,7 +19286,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],126:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -19113,7 +19313,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":1}],127:[function(require,module,exports){
+},{"_process":1}],128:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -19203,7 +19403,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 
 module.exports = checkReactTypeSpec;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":44,"./ReactPropTypeLocationNames":90,"./ReactPropTypesSecret":93,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],128:[function(require,module,exports){
+},{"./ReactComponentTreeHook":45,"./ReactPropTypeLocationNames":91,"./ReactPropTypesSecret":94,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],129:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19236,7 +19436,7 @@ var createMicrosoftUnsafeLocalFunction = function (func) {
 };
 
 module.exports = createMicrosoftUnsafeLocalFunction;
-},{}],129:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -19318,7 +19518,7 @@ function dangerousStyleValue(name, value, component) {
 
 module.exports = dangerousStyleValue;
 }).call(this,require('_process'))
-},{"./CSSProperty":10,"_process":1,"fbjs/lib/warning":180}],130:[function(require,module,exports){
+},{"./CSSProperty":11,"_process":1,"fbjs/lib/warning":181}],131:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -19442,7 +19642,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -19505,7 +19705,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":46,"./ReactDOMComponentTree":51,"./ReactInstanceMap":80,"./getHostComponentFromComposite":138,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],132:[function(require,module,exports){
+},{"./ReactCurrentOwner":47,"./ReactDOMComponentTree":52,"./ReactInstanceMap":81,"./getHostComponentFromComposite":139,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],133:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -19584,7 +19784,7 @@ function flattenChildren(children, selfDebugID) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":30,"./ReactComponentTreeHook":44,"./traverseAllChildren":153,"_process":1,"fbjs/lib/warning":180}],133:[function(require,module,exports){
+},{"./KeyEscapeUtils":31,"./ReactComponentTreeHook":45,"./traverseAllChildren":154,"_process":1,"fbjs/lib/warning":181}],134:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19616,7 +19816,7 @@ function forEachAccumulated(arr, cb, scope) {
 }
 
 module.exports = forEachAccumulated;
-},{}],134:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19667,7 +19867,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],135:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19770,7 +19970,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":134}],136:[function(require,module,exports){
+},{"./getEventCharCode":135}],137:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19814,7 +20014,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],137:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19850,7 +20050,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],138:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19881,7 +20081,7 @@ function getHostComponentFromComposite(inst) {
 }
 
 module.exports = getHostComponentFromComposite;
-},{"./ReactNodeTypes":87}],139:[function(require,module,exports){
+},{"./ReactNodeTypes":88}],140:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19923,7 +20123,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],140:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -19998,7 +20198,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20032,7 +20232,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":157}],142:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":158}],143:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20134,7 +20334,7 @@ function getVendorPrefixedEventName(eventName) {
 }
 
 module.exports = getVendorPrefixedEventName;
-},{"fbjs/lib/ExecutionEnvironment":157}],143:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":158}],144:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -20256,7 +20456,7 @@ function instantiateReactComponent(node, shouldHaveDebugID) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./ReactCompositeComponent":45,"./ReactEmptyComponent":71,"./ReactHostComponent":76,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180,"object-assign":181}],144:[function(require,module,exports){
+},{"./ReactCompositeComponent":46,"./ReactEmptyComponent":72,"./ReactHostComponent":77,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181,"object-assign":182}],145:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20317,7 +20517,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":157}],145:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":158}],146:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20369,7 +20569,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],146:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -20410,7 +20610,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":69,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171}],147:[function(require,module,exports){
+},{"./ReactElement":70,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172}],148:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20437,7 +20637,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":130}],148:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":131}],149:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20477,7 +20677,7 @@ function reactProdInvariant(code) {
 }
 
 module.exports = reactProdInvariant;
-},{}],149:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20494,7 +20694,7 @@ module.exports = reactProdInvariant;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":84}],150:[function(require,module,exports){
+},{"./ReactMount":85}],151:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20593,7 +20793,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"./DOMNamespaces":16,"./createMicrosoftUnsafeLocalFunction":128,"fbjs/lib/ExecutionEnvironment":157}],151:[function(require,module,exports){
+},{"./DOMNamespaces":17,"./createMicrosoftUnsafeLocalFunction":129,"fbjs/lib/ExecutionEnvironment":158}],152:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20642,7 +20842,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":130,"./setInnerHTML":150,"fbjs/lib/ExecutionEnvironment":157}],152:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":131,"./setInnerHTML":151,"fbjs/lib/ExecutionEnvironment":158}],153:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -20685,7 +20885,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -20855,7 +21055,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":30,"./ReactCurrentOwner":46,"./ReactElement":69,"./getIteratorFn":139,"./reactProdInvariant":148,"_process":1,"fbjs/lib/invariant":171,"fbjs/lib/warning":180}],154:[function(require,module,exports){
+},{"./KeyEscapeUtils":31,"./ReactCurrentOwner":47,"./ReactElement":70,"./getIteratorFn":140,"./reactProdInvariant":149,"_process":1,"fbjs/lib/invariant":172,"fbjs/lib/warning":181}],155:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -21227,7 +21427,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"_process":1,"fbjs/lib/emptyFunction":163,"fbjs/lib/warning":180,"object-assign":181}],155:[function(require,module,exports){
+},{"_process":1,"fbjs/lib/emptyFunction":164,"fbjs/lib/warning":181,"object-assign":182}],156:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -21351,7 +21551,7 @@ var CSSCore = {
 
 module.exports = CSSCore;
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":1}],156:[function(require,module,exports){
+},{"./invariant":172,"_process":1}],157:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -21437,7 +21637,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":163,"_process":1}],157:[function(require,module,exports){
+},{"./emptyFunction":164,"_process":1}],158:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -21473,7 +21673,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],158:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 "use strict";
 
 /**
@@ -21505,7 +21705,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],159:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -21545,7 +21745,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":158}],160:[function(require,module,exports){
+},{"./camelize":159}],161:[function(require,module,exports){
 'use strict';
 
 /**
@@ -21585,7 +21785,7 @@ function containsNode(outerNode, innerNode) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":173}],161:[function(require,module,exports){
+},{"./isTextNode":174}],162:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -21714,7 +21914,7 @@ function createArrayFromMixed(obj) {
 
 module.exports = createArrayFromMixed;
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":1}],162:[function(require,module,exports){
+},{"./invariant":172,"_process":1}],163:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -21800,7 +22000,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":157,"./createArrayFromMixed":161,"./getMarkupWrap":167,"./invariant":171,"_process":1}],163:[function(require,module,exports){
+},{"./ExecutionEnvironment":158,"./createArrayFromMixed":162,"./getMarkupWrap":168,"./invariant":172,"_process":1}],164:[function(require,module,exports){
 "use strict";
 
 /**
@@ -21839,7 +22039,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],164:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -21861,7 +22061,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":1}],165:[function(require,module,exports){
+},{"_process":1}],166:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -21888,7 +22088,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 'use strict';
 
 /**
@@ -21923,7 +22123,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],167:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -22020,7 +22220,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":157,"./invariant":171,"_process":1}],168:[function(require,module,exports){
+},{"./ExecutionEnvironment":158,"./invariant":172,"_process":1}],169:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -22059,7 +22259,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],169:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 'use strict';
 
 /**
@@ -22092,7 +22292,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],170:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -22131,7 +22331,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":169}],171:[function(require,module,exports){
+},{"./hyphenate":170}],172:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -22183,7 +22383,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":1}],172:[function(require,module,exports){
+},{"_process":1}],173:[function(require,module,exports){
 'use strict';
 
 /**
@@ -22206,7 +22406,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],173:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 'use strict';
 
 /**
@@ -22231,7 +22431,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":172}],174:[function(require,module,exports){
+},{"./isNode":173}],175:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -22281,7 +22481,7 @@ var keyMirror = function keyMirror(obj) {
 
 module.exports = keyMirror;
 }).call(this,require('_process'))
-},{"./invariant":171,"_process":1}],175:[function(require,module,exports){
+},{"./invariant":172,"_process":1}],176:[function(require,module,exports){
 "use strict";
 
 /**
@@ -22316,7 +22516,7 @@ var keyOf = function keyOf(oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -22346,7 +22546,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],177:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -22369,7 +22569,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":157}],178:[function(require,module,exports){
+},{"./ExecutionEnvironment":158}],179:[function(require,module,exports){
 'use strict';
 
 /**
@@ -22403,7 +22603,7 @@ if (performance.now) {
 }
 
 module.exports = performanceNow;
-},{"./performance":177}],179:[function(require,module,exports){
+},{"./performance":178}],180:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -22470,7 +22670,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -22539,7 +22739,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":163,"_process":1}],181:[function(require,module,exports){
+},{"./emptyFunction":164,"_process":1}],182:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -22624,12 +22824,12 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],182:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":33}],183:[function(require,module,exports){
+},{"./lib/React":34}],184:[function(require,module,exports){
 /**
 sprintf() for JavaScript 0.7-beta1
 http://www.diveintojavascript.com/projects/javascript-sprintf
@@ -22880,7 +23080,7 @@ module.exports = sprintf;
 sprintf.sprintf = sprintf;
 sprintf.vsprintf = vsprintf;
 
-},{}],184:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -22923,7 +23123,7 @@ var init = new Init();
 init.start();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"domready":3,"pubsub-js":4,"renderer/Core":234,"renderer/ui/Ui":348,"shared/Constants":374,"shared/EventEmitter":376,"shared/Utils":377}],185:[function(require,module,exports){
+},{"domready":4,"pubsub-js":5,"renderer/Core":238,"renderer/ui/Ui":359,"shared/Constants":385,"shared/EventEmitter":387,"shared/Utils":388}],186:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -23250,7 +23450,7 @@ BaseActor.prototype._updateHpAndShieldOnCollision = function (otherActor, relati
 
 module.exports = BaseActor;
 
-},{"logic/actor/component/body/BaseBody":190,"shared/ActorFactory":372}],186:[function(require,module,exports){
+},{"logic/actor/component/body/BaseBody":191,"shared/ActorFactory":383}],187:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -23276,7 +23476,7 @@ DebugActor.prototype.createBody = function () {
 
 module.exports = DebugActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190}],187:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191}],188:[function(require,module,exports){
 'use strict';
 
 var Weapon = require('logic/actor/component/weapon/Weapon');
@@ -23473,7 +23673,7 @@ WeaponSystem.prototype._createDropPickup = function (weaponConfig) {
 
 module.exports = WeaponSystem;
 
-},{"logic/actor/component/weapon/Weapon":191,"shared/ActorFactory":372,"shared/WeaponConfig":378}],188:[function(require,module,exports){
+},{"logic/actor/component/weapon/Weapon":192,"shared/ActorFactory":383,"shared/WeaponConfig":389}],189:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = require('shared/ActorTypes');
@@ -23593,13 +23793,14 @@ BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
 
 module.exports = BaseBrain;
 
-},{"shared/ActorTypes":373}],189:[function(require,module,exports){
+},{"shared/ActorTypes":384}],190:[function(require,module,exports){
 'use strict';
 
 var BaseBrain = require('logic/actor/component/ai/BaseBrain');
 
 function MookBrain(config) {
 
+    config.minStrafingDistance = config.minStrafingDistance || 1;
     config.shootingArc = config.shootingArc || 15;
     config.nearDistance = config.nearDistance || 40;
     config.farDistance = config.farDistance || 90;
@@ -23810,8 +24011,12 @@ MookBrain.prototype.randomStrafeAction = function () {
     }
 };
 
+MookBrain.prototype.stopStrafing = function () {
+    this.orders.horizontalThrust = 0;
+};
+
 MookBrain.prototype.playCalloutSound = function () {
-    if (this.actor.calloutSound) {
+    if (this.actor.calloutSound && !this.actor.props.invisible) {
         if (Utils.rand(0, 150) === 0) {
             this.actor.playSound([this.actor.calloutSound]);
         }
@@ -23835,9 +24040,15 @@ MookBrain.prototype._dogfighterSeesEnemyAction = function () {
 
     if (distance < this.firingDistance) {
         this.shootAction(distance);
+    } else {
+        this.orders.shoot = false;
     }
 
-    this.randomStrafeAction();
+    if (distance > this.minStrafingDistance) {
+        this.randomStrafeAction();
+    } else {
+        this.stopStrafing();
+    }
     this.playCalloutSound();
 };
 
@@ -23908,7 +24119,7 @@ MookBrain.prototype._chaserSeesEnemyRetreatAction = function () {
 
 module.exports = MookBrain;
 
-},{"logic/actor/component/ai/BaseBrain":188}],190:[function(require,module,exports){
+},{"logic/actor/component/ai/BaseBrain":189}],191:[function(require,module,exports){
 'use strict';
 
 function BaseBody(config) {
@@ -24048,7 +24259,7 @@ BaseBody.prototype.update = function () {};
 
 module.exports = BaseBody;
 
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 'use strict';
 
 function Weapon(config) {
@@ -24177,7 +24388,7 @@ Weapon.prototype._alterPropertiesByPowerLevel = function (powerLevel) {
 
 module.exports = Weapon;
 
-},{}],192:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 'use strict';
 
 var EnemyActor = require('logic/actor/enemy/EnemyActor');
@@ -24253,7 +24464,7 @@ ChampionEnemyActor.prototype._createGuardian = function () {
 
 module.exports = ChampionEnemyActor;
 
-},{"logic/actor/enemy/EnemyActor":193,"shared/ActorFactory":372,"shared/EnemyConfig":375}],193:[function(require,module,exports){
+},{"logic/actor/enemy/EnemyActor":194,"shared/ActorFactory":383,"shared/EnemyConfig":386}],194:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24278,8 +24489,8 @@ function EnemyActor(config) {
 
     this.applyDifficulty();
 
-    this.props.dropChance = 0.07;
-    this.props.dropChanceForRandomWeapon = 0.5;
+    this.props.dropChance = this.props.dropChance || 0.07;
+    this.props.dropChanceForRandomWeapon = this.props.dropChanceForRandomWeapon || 0.5;
     this.props.randomWeaponRangeMax = 16;
     this.props.randomWeaponRangeMin = 1;
 
@@ -24413,7 +24624,7 @@ EnemyActor.prototype._notifyParentOfDeath = function () {
 
 module.exports = EnemyActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/ai/MookBrain":189,"logic/actor/component/body/BaseBody":190,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":197,"shared/ActorFactory":372,"shared/EnemyConfig":375,"shared/WeaponConfig":378}],194:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/ai/MookBrain":190,"logic/actor/component/body/BaseBody":191,"logic/actor/component/weapon/Weapon":192,"logic/actor/mixin/BrainMixin":198,"shared/ActorFactory":383,"shared/EnemyConfig":386,"shared/WeaponConfig":389}],195:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -24464,7 +24675,7 @@ EnemySpawnMarkerActor.prototype.createEnemy = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorFactory":372,"shared/EnemyConfig":375}],195:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorFactory":383,"shared/EnemyConfig":386}],196:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -24608,7 +24819,7 @@ EnemySpawnerActor.prototype._pickEnemyClassToSpawn = function () {
 };
 
 EnemySpawnerActor.prototype._pickEnemyChampionClassToSpawn = function () {
-    return EnemyConfig.getNameById(Utils.rand(101, 107));
+    return EnemyConfig.getNameById(Utils.rand(101, 109));
 };
 
 EnemySpawnerActor.prototype._updateSpawnPool = function () {
@@ -24635,7 +24846,7 @@ EnemySpawnerActor.prototype._getNextSpawn = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372,"shared/EnemyConfig":375}],196:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383,"shared/EnemyConfig":386}],197:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -24685,7 +24896,7 @@ ItemSpawnerActor.prototype.onPickupTaken = function () {
 
 module.exports = ItemSpawnerActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372}],197:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383}],198:[function(require,module,exports){
 "use strict";
 
 var BrainMixin = {
@@ -24735,7 +24946,7 @@ var BrainMixin = {
 
 module.exports = BrainMixin;
 
-},{}],198:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 "use strict";
 
 var HomingMixin = {
@@ -24802,6 +25013,9 @@ var HomingMixin = {
             targetActors = this.manager.getActorsByType(targetTypes[i]);
             for (var targetActorId in targetActors) {
                 targetActor = targetActors[targetActorId];
+
+                if (targetActor.props.invisible) continue; //do not pick invisible targets
+
                 distance = Utils.distanceBetweenActors(targetActor, this);
 
                 if (distance < minimumDistance) {
@@ -24870,7 +25084,7 @@ var HomingMixin = {
 
 module.exports = HomingMixin;
 
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 "use strict";
 
 var InputMixin = {
@@ -24962,7 +25176,7 @@ var InputMixin = {
 
 module.exports = InputMixin;
 
-},{}],200:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 'use strict';
 
 var PickupMixin = {
@@ -25070,7 +25284,7 @@ var PickupMixin = {
 
 module.exports = PickupMixin;
 
-},{}],201:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require('logic/actor/object/ChunkActor');
@@ -25100,7 +25314,7 @@ BoomChunkActor.prototype.onTimeout = function () {
 
 module.exports = BoomChunkActor;
 
-},{"logic/actor/object/ChunkActor":202,"shared/ActorConfig":371,"shared/ActorFactory":372}],202:[function(require,module,exports){
+},{"logic/actor/object/ChunkActor":203,"shared/ActorConfig":382,"shared/ActorFactory":383}],203:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25132,7 +25346,7 @@ ChunkActor.prototype.onSpawn = function () {
 
 module.exports = ChunkActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],203:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],204:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25151,7 +25365,7 @@ ExplosionActor.extend(BaseActor);
 
 module.exports = ExplosionActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372}],204:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383}],205:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25183,7 +25397,7 @@ FlameChunkActor.prototype.onSpawn = function () {
 
 module.exports = FlameChunkActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],205:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],206:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25201,7 +25415,7 @@ SmallExplosionActor.extend(BaseActor);
 
 module.exports = SmallExplosionActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],206:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],207:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25228,7 +25442,7 @@ BulletAmmoPickupActor.prototype.onDeath = function () {
 
 module.exports = BulletAmmoPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],207:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],208:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25255,7 +25469,7 @@ EnergyPickupActor.prototype.onDeath = function () {
 
 module.exports = EnergyPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],208:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],209:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25282,7 +25496,7 @@ MissileQuadPickupActor.prototype.onDeath = function () {
 
 module.exports = MissileQuadPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],209:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],210:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25309,7 +25523,7 @@ PlasmaPickupActor.prototype.onDeath = function () {
 
 module.exports = PlasmaPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],210:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],211:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25336,7 +25550,7 @@ ShieldPickupActor.prototype.onDeath = function () {
 
 module.exports = ShieldPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],211:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],212:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25379,7 +25593,7 @@ WeaponPickupActor.prototype.onDeath = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/WeaponConfig":378}],212:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/WeaponConfig":389}],213:[function(require,module,exports){
 'use strict';
 
 var ShipActor = require('logic/actor/player/ShipActor');
@@ -25432,7 +25646,7 @@ DemoShipActor.prototype.createWeapon = function () {
 
 module.exports = DemoShipActor;
 
-},{"logic/actor/component/ai/MookBrain":189,"logic/actor/component/weapon/Weapon":191,"logic/actor/mixin/BrainMixin":197,"logic/actor/player/ShipActor":213,"shared/ActorConfig":371,"shared/ActorTypes":373,"shared/WeaponConfig":378}],213:[function(require,module,exports){
+},{"logic/actor/component/ai/MookBrain":190,"logic/actor/component/weapon/Weapon":192,"logic/actor/mixin/BrainMixin":198,"logic/actor/player/ShipActor":214,"shared/ActorConfig":382,"shared/ActorTypes":384,"shared/WeaponConfig":389}],214:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25535,7 +25749,7 @@ ShipActor.prototype.onHit = function (shielded) {
 
 module.exports = ShipActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/WeaponSystem":187,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/InputMixin":199,"logic/actor/mixin/PickupMixin":200,"shared/ActorConfig":371,"shared/ActorFactory":372}],214:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/WeaponSystem":188,"logic/actor/component/body/BaseBody":191,"logic/actor/mixin/InputMixin":200,"logic/actor/mixin/PickupMixin":201,"shared/ActorConfig":382,"shared/ActorFactory":383}],215:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25576,7 +25790,7 @@ ConcsnMissileActor.prototype.onDeath = function () {
 
 module.exports = ConcsnMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372}],215:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383}],216:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25600,7 +25814,7 @@ EmdProjectileActor.prototype.customUpdate = function () {
 
 module.exports = EmdProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":371}],216:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"logic/actor/mixin/HomingMixin":199,"shared/ActorConfig":382}],217:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25641,7 +25855,7 @@ EnemyConcsnMissileActor.prototype.onDeath = function () {
 
 module.exports = EnemyConcsnMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372}],217:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383}],218:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25688,7 +25902,7 @@ EnemyHomingMissileActor.prototype.onDeath = function () {
 
 module.exports = EnemyHomingMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":371,"shared/ActorFactory":372}],218:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"logic/actor/mixin/HomingMixin":199,"shared/ActorConfig":382,"shared/ActorFactory":383}],219:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25706,7 +25920,24 @@ GreenLaserProjectileActor.extend(BaseActor);
 
 module.exports = GreenLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],219:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],220:[function(require,module,exports){
+'use strict';
+
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
+
+function HeavyCannonProjectileActor(config) {
+    config = config || [];
+    Object.assign(this, config);
+    this.applyConfig(ActorConfig.HEAVYCANNONPROJECTILE);
+    BaseActor.apply(this, arguments);
+}
+
+HeavyCannonProjectileActor.extend(BaseActor);
+
+module.exports = HeavyCannonProjectileActor;
+
+},{"logic/actor/BaseActor":186,"shared/ActorConfig":382}],221:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25753,7 +25984,7 @@ HomingMissileActor.prototype.onDeath = function () {
 
 module.exports = HomingMissileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"logic/actor/mixin/HomingMixin":198,"shared/ActorConfig":371,"shared/ActorFactory":372}],220:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"logic/actor/mixin/HomingMixin":199,"shared/ActorConfig":382,"shared/ActorFactory":383}],222:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25771,7 +26002,7 @@ LaserProjectileActor.extend(BaseActor);
 
 module.exports = LaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],221:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],223:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -25788,7 +26019,7 @@ MinigunProjectileActor.extend(BaseActor);
 
 module.exports = MinigunProjectileActor;
 
-},{"logic/actor/BaseActor":185,"shared/ActorConfig":371}],222:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"shared/ActorConfig":382}],224:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25806,7 +26037,7 @@ MoltenProjectileActor.extend(BaseActor);
 
 module.exports = MoltenProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],223:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],225:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25824,7 +26055,7 @@ PlasmaBlastMiniProjectile.extend(BaseActor);
 
 module.exports = PlasmaBlastMiniProjectile;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],224:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],226:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25864,7 +26095,25 @@ PlasmaBlastProjectileActor.prototype._explode = function () {
 
 module.exports = PlasmaBlastProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371,"shared/ActorFactory":372}],225:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382,"shared/ActorFactory":383}],227:[function(require,module,exports){
+'use strict';
+
+var BaseBody = require('logic/actor/component/body/BaseBody');
+var BaseActor = require('logic/actor/BaseActor');
+var ActorConfig = require('shared/ActorConfig');
+
+function PlasmaKickProjectileActor(config) {
+    config = config || [];
+    Object.assign(this, config);
+    this.applyConfig(ActorConfig.PLASMAKICKPROJECTILE);
+    BaseActor.apply(this, arguments);
+}
+
+PlasmaKickProjectileActor.extend(BaseActor);
+
+module.exports = PlasmaKickProjectileActor;
+
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],228:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25882,7 +26131,7 @@ PlasmaProjectileActor.extend(BaseActor);
 
 module.exports = PlasmaProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],226:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],229:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25905,7 +26154,7 @@ PulseWaveProjectileActor.prototype.customUpdate = function () {
 
 module.exports = PulseWaveProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],227:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],230:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25923,7 +26172,7 @@ PurpleLaserProjectileActor.extend(BaseActor);
 
 module.exports = PurpleLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],228:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],231:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25941,7 +26190,7 @@ RedLaserEnemyProjectileActor.extend(BaseActor);
 
 module.exports = RedLaserEnemyProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],229:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],232:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25959,7 +26208,7 @@ RedLaserProjectileActor.extend(BaseActor);
 
 module.exports = RedLaserProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],230:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],233:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -25982,7 +26231,7 @@ RingProjectileActor.prototype.customUpdate = function () {
 
 module.exports = RingProjectileActor;
 
-},{"logic/actor/BaseActor":185,"logic/actor/component/body/BaseBody":190,"shared/ActorConfig":371}],231:[function(require,module,exports){
+},{"logic/actor/BaseActor":186,"logic/actor/component/body/BaseBody":191,"shared/ActorConfig":382}],234:[function(require,module,exports){
 'use strict';
 
 function Camera(config) {
@@ -26073,7 +26322,12 @@ Camera.prototype.setRenderDistance = function (renderDistance) {
 
 module.exports = Camera;
 
-},{}],232:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
+"use strict";
+
+module.exports = new THREE.Clock();
+
+},{}],236:[function(require,module,exports){
 'use strict';
 
 var sprintf = require('sprintf');
@@ -26191,7 +26445,7 @@ ConfigManager.prototype.saveDifficulty = function (value) {
 
 module.exports = ConfigManager;
 
-},{"sprintf":183}],233:[function(require,module,exports){
+},{"sprintf":184}],237:[function(require,module,exports){
 'use strict';
 
 function ControlsHandler(config) {
@@ -26254,7 +26508,7 @@ ControlsHandler.prototype.sendUpdate = function () {
 
 module.exports = ControlsHandler;
 
-},{}],234:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 'use strict';
 
 var ConfigManager = require('renderer/ConfigManager');
@@ -26617,7 +26871,7 @@ Core.prototype.onGameStateChange = function (event) {
 
 module.exports = Core;
 
-},{"renderer/ConfigManager":232,"renderer/ControlsHandler":233,"renderer/GameState":235,"renderer/InputListener":236,"renderer/LogicBus":237,"renderer/actor/ActorManager":238,"renderer/ai/AiImageRenderer":287,"renderer/assetManagement/assetManager.js":288,"renderer/assetManagement/level/ChunkStore":291,"renderer/gameUi/Hud":299,"renderer/particleSystem/ParticleManager":304,"renderer/scene/SceneManager":345}],235:[function(require,module,exports){
+},{"renderer/ConfigManager":236,"renderer/ControlsHandler":237,"renderer/GameState":239,"renderer/InputListener":240,"renderer/LogicBus":241,"renderer/actor/ActorManager":242,"renderer/ai/AiImageRenderer":296,"renderer/assetManagement/assetManager.js":297,"renderer/assetManagement/level/ChunkStore":300,"renderer/gameUi/Hud":308,"renderer/particleSystem/ParticleManager":313,"renderer/scene/SceneManager":356}],239:[function(require,module,exports){
 'use strict';
 
 function GameState(config) {
@@ -26653,7 +26907,7 @@ GameState.prototype.setDifficulty = function (difficultyFactor) {
 
 module.exports = GameState;
 
-},{}],236:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 'use strict';
 
 function InputListener(config) {
@@ -26860,7 +27114,7 @@ InputListener.prototype.initPointerLock = function () {
 
 module.exports = InputListener;
 
-},{}],237:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 'use strict';
 
 var WorkerBus = require('shared/WorkerBus');
@@ -26907,7 +27161,7 @@ LogicBus.prototype.handleMessage = function (message) {
 
 module.exports = LogicBus;
 
-},{"shared/WorkerBus":379}],238:[function(require,module,exports){
+},{"shared/WorkerBus":390}],242:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -27086,7 +27340,7 @@ ActorManager.prototype.updatePlayerWeapons = function (weaponSystemsConfig) {
 
 module.exports = ActorManager;
 
-},{"shared/ActorFactory":372}],239:[function(require,module,exports){
+},{"shared/ActorFactory":383}],243:[function(require,module,exports){
 'use strict';
 
 var BaseStateChangeHandler = require('renderer/actor/component/stateChangeHandler/BaseStateChangeHandler');
@@ -27269,7 +27523,7 @@ BaseActor.prototype._createState = function (state) {
 
 module.exports = BaseActor;
 
-},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":248}],240:[function(require,module,exports){
+},{"renderer/actor/component/stateChangeHandler/BaseStateChangeHandler":254}],244:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27300,7 +27554,7 @@ DebugActor.prototype.customUpdate = function () {
 
 module.exports = DebugActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],241:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],245:[function(require,module,exports){
 'use strict';
 
 function BaseMesh(config) {
@@ -27343,7 +27597,54 @@ BaseMesh.prototype.update = function () {
 
 module.exports = BaseMesh;
 
-},{}],242:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
+'use strict';
+
+function BaseSkinnedMesh(config) {
+    config.scaleX = config.scaleX || 1;
+    config.scaleY = config.scaleY || 1;
+    config.scaleZ = config.scaleZ || 1;
+
+    config = config || {};
+
+    THREE.SkinnedMesh.apply(this, [config.geometry, config.material]);
+    this.rotationOffset = 0;
+    this.positionOffset = config.positionOffset || [0, 0, 0];
+
+    Object.assign(this, config);
+
+    this.scale.x = config.scaleX;
+    this.scale.y = config.scaleY;
+    this.scale.z = config.scaleZ;
+
+    this.receiveShadow = typeof config.shadows === 'undefined' ? true : config.shadows;
+    this.castShadow = typeof config.shadows === 'undefined' ? true : config.shadows;
+}
+
+BaseSkinnedMesh.extend(THREE.SkinnedMesh);
+
+BaseSkinnedMesh.prototype.customUpdate = function () {};
+
+BaseSkinnedMesh.prototype.update = function () {
+    var position = this.actor.getPosition();
+    var rotation = this.actor.getRotation();
+    if (this.actor) {
+        var offsetVector = Utils.rotateVector(this.positionOffset[0], this.positionOffset[1], rotation * -1);
+        this.position.x = position[0] + offsetVector[0];
+        this.position.y = position[1] + offsetVector[1];
+        this.position.z = position[2] + this.positionOffset[2];
+        this.rotation.z = rotation + this.rotationOffset;
+    }
+    this.customUpdate();
+};
+
+BaseSkinnedMesh.prototype.getGeometry = function () {
+    return this.geometry;
+};
+
+module.exports = BaseSkinnedMesh;
+
+},{}],247:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27365,7 +27666,7 @@ ChunkMesh.extend(BaseMesh);
 
 module.exports = ChunkMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],243:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],248:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27387,7 +27688,7 @@ MissileMesh.extend(BaseMesh);
 
 module.exports = MissileMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],244:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],249:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27430,7 +27731,7 @@ PickupMesh.prototype.update = function () {
 
 module.exports = PickupMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],245:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],250:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27452,7 +27753,7 @@ RavierMesh.extend(BaseMesh);
 
 module.exports = RavierMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],246:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],251:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -27579,11 +27880,10 @@ ShieldMesh.prototype._createFragmentShader = function () {
 
 module.exports = ShieldMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],247:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],252:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
-var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ShipMesh(config) {
     BaseMesh.apply(this, arguments);
@@ -27600,7 +27900,27 @@ ShipMesh.extend(BaseMesh);
 
 module.exports = ShipMesh;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],248:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245}],253:[function(require,module,exports){
+'use strict';
+
+var BaseSkinnedMesh = require('renderer/actor/component/mesh/BaseSkinnedMesh');
+
+function SkinnedShipMesh(config) {
+    BaseSkinnedMesh.apply(this, arguments);
+    this.rotationOffset = Math.PI;
+
+    config = config || {};
+    Object.assign(this, config);
+
+    this.castShadow = true;
+    this.receiveShadow = true;
+}
+
+SkinnedShipMesh.extend(BaseSkinnedMesh);
+
+module.exports = SkinnedShipMesh;
+
+},{"renderer/actor/component/mesh/BaseSkinnedMesh":246}],254:[function(require,module,exports){
 "use strict";
 
 function BaseStateChangeHandler(config) {
@@ -27618,7 +27938,7 @@ BaseStateChangeHandler.prototype.customUpdate = function () {};
 
 module.exports = BaseStateChangeHandler;
 
-},{}],249:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 'use strict';
 
 var EnemyActor = require('renderer/actor/enemy/EnemyActor');
@@ -27714,31 +28034,40 @@ ChampionEnemyActor.prototype._doSpawnInitBlast = function () {
 
 module.exports = ChampionEnemyActor;
 
-},{"renderer/actor/enemy/EnemyActor":250}],250:[function(require,module,exports){
+},{"renderer/actor/enemy/EnemyActor":256}],256:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/ShipMesh');
+var SkinnedMesh = require('renderer/actor/component/mesh/SkinnedShipMesh');
 var BaseActor = require('renderer/actor/BaseActor');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 var BobMixin = require('renderer/actor/mixin/BobMixin');
 var EnemyConfig = require('shared/EnemyConfig');
 var ShowDamageMixin = require('renderer/actor/mixin/ShowDamageMixin');
+var AnimationMixin = require('renderer/actor/mixin/AnimationMixin');
 
 function EnemyActor(config) {
     this.applyConfig(EnemyConfig.getById(config.subclassId));
     BaseActor.apply(this, arguments);
 
     this.applyDifficulty();
+
+    if (this.props.render.animation) {
+        this.initAnimation();
+    }
 }
 
 EnemyActor.extend(BaseActor);
 EnemyActor.mixin(ParticleMixin);
 EnemyActor.mixin(BobMixin);
 EnemyActor.mixin(ShowDamageMixin);
+EnemyActor.mixin(AnimationMixin);
 
 EnemyActor.prototype.createMeshes = function () {
-    return [new BaseMesh({
+    var meshClass = this.props.render.animation ? SkinnedMesh : BaseMesh;
+
+    return [new meshClass({
         actor: this,
         scaleX: this.props.render.model.scaleX,
         scaleY: this.props.render.model.scaleY,
@@ -27751,6 +28080,10 @@ EnemyActor.prototype.createMeshes = function () {
 EnemyActor.prototype.customUpdate = function () {
     this.doBob();
     this.showDamage();
+
+    if (this.props.render.animation) {
+        this.updateAnimation();
+    }
 };
 
 EnemyActor.prototype.onSpawn = function () {};
@@ -27782,7 +28115,7 @@ EnemyActor.prototype.applyDifficulty = function () {
 
 module.exports = EnemyActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/ShipMesh":247,"renderer/actor/mixin/BobMixin":254,"renderer/actor/mixin/ParticleMixin":255,"renderer/actor/mixin/ShowDamageMixin":256,"renderer/assetManagement/model/ModelStore":296,"shared/EnemyConfig":375}],251:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/ShipMesh":252,"renderer/actor/component/mesh/SkinnedShipMesh":253,"renderer/actor/mixin/AnimationMixin":260,"renderer/actor/mixin/BobMixin":261,"renderer/actor/mixin/ParticleMixin":262,"renderer/actor/mixin/ShowDamageMixin":263,"renderer/assetManagement/model/ModelStore":305,"shared/EnemyConfig":386}],257:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -27864,7 +28197,7 @@ EnemySpawnMarkerActor.prototype.onDeath = function () {
 
 module.exports = EnemySpawnMarkerActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],252:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],258:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28006,7 +28339,7 @@ EnemySpawnerActor.prototype.doChargingAnimation = function () {
 
 module.exports = EnemySpawnerActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/BaseMesh":241,"renderer/actor/component/mesh/ShieldMesh":246,"renderer/actor/mixin/ParticleMixin":255,"renderer/assetManagement/model/ModelStore":296,"shared/ActorConfig":371}],253:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/BaseMesh":245,"renderer/actor/component/mesh/ShieldMesh":251,"renderer/actor/mixin/ParticleMixin":262,"renderer/assetManagement/model/ModelStore":305,"shared/ActorConfig":382}],259:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28019,7 +28352,70 @@ ItemSpawnerActor.extend(BaseActor);
 
 module.exports = ItemSpawnerActor;
 
-},{"renderer/actor/BaseActor":239}],254:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243}],260:[function(require,module,exports){
+'use strict';
+
+var AnimationMixin = {
+    initAnimation: function initAnimation() {
+        this._animationMixer = new THREE.AnimationMixer(this.getMeshAt(0));
+        this._animationClock = new THREE.Clock();
+        this._animationActions = this._createActions();
+    },
+
+    updateAnimation: function updateAnimation() {
+        this._animationMixer.update(this._animationClock.getDelta());
+    },
+
+    playAnimation: function playAnimation(animationName) {
+        if (!this._animationActions.hasOwnProperty(animationName)) throw new Error('This actor has no animation ' + animationName);
+        this._animationActions[animationName].play();
+    },
+
+    cloneGeometry: function cloneGeometry(geometry) {
+        var clonedGeometry = geometry.clone();
+        var bones = JSON.parse(JSON.stringify(geometry.bones));
+        var skinWeights = JSON.parse(JSON.stringify(geometry.skinWeights));
+        var skinIndices = JSON.parse(JSON.stringify(geometry.skinIndices));
+        var animations = geometry.animations;
+
+        animations.forEach(function (animation) {
+            console.log(animation.tracks[0]);
+            animation.uuid = Utils.generateUUID();
+        });
+
+        skinWeights = skinWeights.map(function (x) {
+            return new THREE.Vector4().copy(x);
+        });
+        skinIndices = skinIndices.map(function (x) {
+            return new THREE.Vector4().copy(x);
+        });
+        Object.assign(clonedGeometry, { bones: bones, skinWeights: skinWeights, skinIndices: skinIndices, animations: animations });
+        return clonedGeometry;
+    },
+
+    _createActions: function _createActions() {
+        var _this = this;
+
+        var actions = {};
+        var animationConfig = this.props.render.animation;
+        var geometry = this.getMeshAt(0).geometry;
+
+        if (!animationConfig.animations) animationConfig.animations = {};
+
+        Object.keys(animationConfig.animations).forEach(function (animation) {
+            actions[animation] = _this._animationMixer.clipAction(geometry.animations[animationConfig.animations[animation]]);
+            actions[animation].setEffectiveWeight(1);
+            actions[animation].enabled = true;
+        });
+
+        console.log('mesh: ', this.getMeshAt(0));
+        return actions;
+    }
+};
+
+module.exports = AnimationMixin;
+
+},{}],261:[function(require,module,exports){
 "use strict";
 
 var BobMixin = {
@@ -28040,7 +28436,7 @@ var BobMixin = {
 
 module.exports = BobMixin;
 
-},{}],255:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 'use strict';
 
 var ParticleMixin = {
@@ -28074,7 +28470,7 @@ var ParticleMixin = {
 
 module.exports = ParticleMixin;
 
-},{}],256:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 'use strict';
 
 var ShowDamageMixin = {
@@ -28104,7 +28500,7 @@ var ShowDamageMixin = {
 
 module.exports = ShowDamageMixin;
 
-},{}],257:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 'use strict';
 
 var ChunkActor = require('renderer/actor/object/ChunkActor');
@@ -28125,7 +28521,7 @@ BoomChunkActor.prototype.onTimeout = function () {
 
 module.exports = BoomChunkActor;
 
-},{"renderer/actor/mixin/ParticleMixin":255,"renderer/actor/object/ChunkActor":258}],258:[function(require,module,exports){
+},{"renderer/actor/mixin/ParticleMixin":262,"renderer/actor/object/ChunkActor":265}],265:[function(require,module,exports){
 'use strict';
 
 var ChunkMesh = require('renderer/actor/component/mesh/ChunkMesh');
@@ -28166,7 +28562,7 @@ ChunkActor.prototype.onDeath = function () {
 
 module.exports = ChunkActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/ChunkMesh":242,"renderer/actor/mixin/ParticleMixin":255}],259:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/ChunkMesh":247,"renderer/actor/mixin/ParticleMixin":262}],266:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28181,7 +28577,7 @@ ExplosionActor.mixin(ParticleMixin);
 
 module.exports = ExplosionActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],260:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],267:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28237,7 +28633,7 @@ FlameChunkActor.prototype.onDeath = function () {
 
 module.exports = FlameChunkActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],261:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],268:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28252,7 +28648,7 @@ SmallExplosionActor.mixin(ParticleMixin);
 
 module.exports = SmallExplosionActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],262:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],269:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28293,7 +28689,7 @@ BulletAmmoPickupActor.prototype.customUpdate = function () {
 
 module.exports = BulletAmmoPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/PickupMesh":244,"renderer/actor/mixin/ParticleMixin":255}],263:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/PickupMesh":249,"renderer/actor/mixin/ParticleMixin":262}],270:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28326,7 +28722,7 @@ EnergyPickupActor.prototype.customUpdate = function () {
 
 module.exports = EnergyPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],264:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],271:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28367,7 +28763,7 @@ MissileQuadPickupActor.prototype.customUpdate = function () {
 
 module.exports = MissileQuadPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/PickupMesh":244,"renderer/actor/mixin/ParticleMixin":255}],265:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/PickupMesh":249,"renderer/actor/mixin/ParticleMixin":262}],272:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28400,7 +28796,7 @@ PlasmaPickupActor.prototype.customUpdate = function () {
 
 module.exports = PlasmaPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],266:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],273:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28433,7 +28829,7 @@ ShieldPickupActor.prototype.customUpdate = function () {
 
 module.exports = ShieldPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],267:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],274:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28479,7 +28875,7 @@ WeaponPickupActor.prototype.customUpdate = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/PickupMesh":244,"renderer/actor/mixin/ParticleMixin":255,"shared/WeaponConfig":378}],268:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/PickupMesh":249,"renderer/actor/mixin/ParticleMixin":262,"shared/WeaponConfig":389}],275:[function(require,module,exports){
 'use strict';
 
 var ActorConfig = require('shared/ActorConfig');
@@ -28494,7 +28890,7 @@ DemoShipActor.extend(ShipActor);
 
 module.exports = DemoShipActor;
 
-},{"renderer/actor/player/ShipActor":269,"shared/ActorConfig":371}],269:[function(require,module,exports){
+},{"renderer/actor/player/ShipActor":276,"shared/ActorConfig":382}],276:[function(require,module,exports){
 'use strict';
 
 var RavierMesh = require('renderer/actor/component/mesh/RavierMesh');
@@ -28757,7 +29153,7 @@ ShipActor.prototype._setupWeapons = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/BaseMesh":241,"renderer/actor/component/mesh/RavierMesh":245,"renderer/actor/component/mesh/ShieldMesh":246,"renderer/actor/mixin/BobMixin":254,"renderer/actor/mixin/ParticleMixin":255,"renderer/actor/mixin/ShowDamageMixin":256,"renderer/assetManagement/model/ModelStore":296,"shared/ActorConfig":371,"shared/WeaponConfig":378}],270:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/BaseMesh":245,"renderer/actor/component/mesh/RavierMesh":250,"renderer/actor/component/mesh/ShieldMesh":251,"renderer/actor/mixin/BobMixin":261,"renderer/actor/mixin/ParticleMixin":262,"renderer/actor/mixin/ShowDamageMixin":263,"renderer/assetManagement/model/ModelStore":305,"shared/ActorConfig":382,"shared/WeaponConfig":389}],277:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28832,7 +29228,7 @@ ConcsnMissileActor.prototype.onSpawn = function () {
 
 module.exports = ConcsnMissileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/MissileMesh":243,"renderer/actor/mixin/ParticleMixin":255}],271:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/MissileMesh":248,"renderer/actor/mixin/ParticleMixin":262}],278:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28892,7 +29288,7 @@ EmdProjectileActor.prototype.onSpawn = function () {
 
 module.exports = EmdProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],272:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],279:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -28967,7 +29363,7 @@ EnemyConcsnMissileActor.prototype.onSpawn = function () {
 
 module.exports = EnemyConcsnMissileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/MissileMesh":243,"renderer/actor/mixin/ParticleMixin":255}],273:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/MissileMesh":248,"renderer/actor/mixin/ParticleMixin":262}],280:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29054,7 +29450,7 @@ EnemyHomingMissileActor.prototype.onSpawn = function () {
 
 module.exports = EnemyHomingMissileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/MissileMesh":243,"renderer/actor/mixin/ParticleMixin":255}],274:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/MissileMesh":248,"renderer/actor/mixin/ParticleMixin":262}],281:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29110,7 +29506,69 @@ GreenLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = GreenLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],275:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],282:[function(require,module,exports){
+'use strict';
+
+var BaseActor = require('renderer/actor/BaseActor');
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+
+function HeavyCannonProjectileActor() {
+    BaseActor.apply(this, arguments);
+}
+
+HeavyCannonProjectileActor.extend(BaseActor);
+HeavyCannonProjectileActor.mixin(ParticleMixin);
+
+HeavyCannonProjectileActor.prototype.customUpdate = function () {
+    this.createPremade({ premadeName: 'LargeBulletTrail' });
+};
+
+HeavyCannonProjectileActor.prototype.onDeath = function () {
+    var offsetPosition = this.getOffsetPosition(-3);
+    this.createPremade({ premadeName: 'ManyOrangeSparks', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1] });
+    this.createPremade({ premadeName: 'OrangeBoomTiny', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1] });
+};
+
+HeavyCannonProjectileActor.prototype.onSpawn = function () {
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'ORANGE',
+        alphaMultiplier: 0.7,
+        scale: 15,
+        particleVelocity: 1,
+        alpha: 7,
+        lifeTime: 2,
+        spriteNumber: 2
+    });
+
+    var offsetPosition = this.getOffsetPosition(-3);
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
+        color: 'WHITE',
+        alphaMultiplier: 0.7,
+        scale: 12,
+        particleVelocity: 1,
+        alpha: 0.5,
+        lifeTime: 2,
+        spriteNumber: 2
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'ORANGE',
+        scale: 24,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 20
+    });
+};
+
+module.exports = HeavyCannonProjectileActor;
+
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],283:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29197,7 +29655,7 @@ HomingMissileActor.prototype.onSpawn = function () {
 
 module.exports = HomingMissileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/component/mesh/MissileMesh":243,"renderer/actor/mixin/ParticleMixin":255}],276:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/component/mesh/MissileMesh":248,"renderer/actor/mixin/ParticleMixin":262}],284:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29253,7 +29711,7 @@ LaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = LaserProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],277:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],285:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29283,7 +29741,8 @@ MinigunProjectileActor.prototype.onSpawn = function () {
         scale: 5,
         particleVelocity: 1,
         alpha: 7,
-        lifeTime: 1
+        lifeTime: 1,
+        spriteNumber: 2
     });
 
     var offsetPosition = this.getOffsetPosition(-3);
@@ -29296,7 +29755,8 @@ MinigunProjectileActor.prototype.onSpawn = function () {
         scale: 4,
         particleVelocity: 1,
         alpha: 0.5,
-        lifeTime: 1
+        lifeTime: 1,
+        spriteNumber: 2
     });
 
     this.createParticle({
@@ -29312,7 +29772,7 @@ MinigunProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MinigunProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],278:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],286:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29358,7 +29818,7 @@ MoltenProjectileActor.prototype.onSpawn = function () {
 
 module.exports = MoltenProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],279:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],287:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29387,7 +29847,7 @@ PlasmaBlastMiniProjectileActor.prototype.onTimeout = function () {
 
 module.exports = PlasmaBlastMiniProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],280:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],288:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29457,7 +29917,63 @@ PlasmaBlastProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaBlastProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],281:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],289:[function(require,module,exports){
+'use strict';
+
+var BaseActor = require('renderer/actor/BaseActor');
+var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
+
+function PlasmaKickProjectileActor() {
+    BaseActor.apply(this, arguments);
+}
+
+PlasmaKickProjectileActor.extend(BaseActor);
+PlasmaKickProjectileActor.mixin(ParticleMixin);
+
+PlasmaKickProjectileActor.prototype.onDeath = function () {
+    var offsetPosition = this.getOffsetPosition(-5);
+    this.createPremade({ premadeName: 'ManyOrangeSparks', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1] });
+};
+
+PlasmaKickProjectileActor.prototype.onSpawn = function () {
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'GREEN',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 8,
+        lifeTime: 1
+    });
+
+    var offsetPosition = this.getOffsetPosition(3);
+    this.createParticle({
+        particleClass: 'particleAdd',
+        offsetPositionX: offsetPosition[0],
+        offsetPositionY: offsetPosition[1],
+        color: 'GREEN',
+        alphaMultiplier: 0.7,
+        scale: 7,
+        particleVelocity: 1,
+        alpha: 0.5,
+        lifeTime: 1
+    });
+
+    this.createParticle({
+        particleClass: 'particleAdd',
+        color: 'GREEN',
+        scale: 20,
+        alpha: 0.4,
+        alphaMultiplier: 0.7,
+        particleVelocity: 2,
+        lifeTime: 10,
+        spriteNumber: 0
+    });
+};
+
+module.exports = PlasmaKickProjectileActor;
+
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],290:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29517,7 +30033,7 @@ PlasmaProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PlasmaProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],282:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],291:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29645,7 +30161,7 @@ PulseWaveProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PulseWaveProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255,"shared/ActorConfig":371}],283:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262,"shared/ActorConfig":382}],292:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29701,7 +30217,7 @@ PurpleLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = PurpleLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],284:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],293:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29760,7 +30276,7 @@ RedLaserEnemyProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserEnemyProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],285:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],294:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29819,7 +30335,7 @@ RedLaserProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RedLaserProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255}],286:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262}],295:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -29950,7 +30466,7 @@ RingProjectileActor.prototype.onSpawn = function () {
 
 module.exports = RingProjectileActor;
 
-},{"renderer/actor/BaseActor":239,"renderer/actor/mixin/ParticleMixin":255,"shared/ActorConfig":371}],287:[function(require,module,exports){
+},{"renderer/actor/BaseActor":243,"renderer/actor/mixin/ParticleMixin":262,"shared/ActorConfig":382}],296:[function(require,module,exports){
 'use strict';
 
 function AiImageRenderer() {
@@ -30068,7 +30584,7 @@ AiImageRenderer.prototype.drawConvex = function (convexDataObject) {
 
 module.exports = AiImageRenderer;
 
-},{}],288:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 'use strict';
 
 var ModelLoader = require('renderer/assetManagement/model/ModelLoader');
@@ -30148,7 +30664,7 @@ AssetManager.prototype.chunksLoaded = function (event) {
 
 module.exports = AssetManager;
 
-},{"renderer/assetManagement/level/ChunkList":289,"renderer/assetManagement/level/ChunkLoader":290,"renderer/assetManagement/level/ChunkStore":291,"renderer/assetManagement/model/CustomModelCreator":293,"renderer/assetManagement/model/ModelList":294,"renderer/assetManagement/model/ModelLoader":295,"renderer/assetManagement/model/ModelStore":296,"renderer/assetManagement/sound/SoundLoader":297}],289:[function(require,module,exports){
+},{"renderer/assetManagement/level/ChunkList":298,"renderer/assetManagement/level/ChunkLoader":299,"renderer/assetManagement/level/ChunkStore":300,"renderer/assetManagement/model/CustomModelCreator":302,"renderer/assetManagement/model/ModelList":303,"renderer/assetManagement/model/ModelLoader":304,"renderer/assetManagement/model/ModelStore":305,"renderer/assetManagement/sound/SoundLoader":306}],298:[function(require,module,exports){
 'use strict';
 
 var levelPath = '/models/levels';
@@ -30175,7 +30691,7 @@ var ChunkList = {
 
 module.exports = ChunkList;
 
-},{}],290:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 var HitmapLoader = require('renderer/assetManagement/level/HitmapLoader');
@@ -30242,7 +30758,7 @@ ChunkLoader.prototype.getModelName = function (path) {
 
 module.exports = ChunkLoader;
 
-},{"renderer/assetManagement/level/HitmapLoader":292}],291:[function(require,module,exports){
+},{"renderer/assetManagement/level/HitmapLoader":301}],300:[function(require,module,exports){
 "use strict";
 
 var ChunkStore = {
@@ -30285,7 +30801,7 @@ var ChunkStore = {
 
 module.exports = ChunkStore;
 
-},{}],292:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 "use strict";
 
 function HitmapLoader() {
@@ -30417,7 +30933,7 @@ HitmapLoader.prototype.addVerticesToFaces = function (vertices, faces) {
 
 module.exports = HitmapLoader;
 
-},{}],293:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 'use strict';
 
 function CustomModelCreator() {
@@ -30484,6 +31000,16 @@ CustomModelCreator.prototype.configure = function () {
                 bumpMap: new THREE.TextureLoader().load('/models/enemies_bump.png'),
                 emissiveMap: new THREE.TextureLoader().load('/models/enemies_illumination.png')
             })
+        },
+        'cloakedModel': {
+            material: new THREE.MeshPhongMaterial({
+                transparent: true,
+                color: 0x000000,
+                emissive: 0x000000,
+                shininess: 0,
+                specularMap: new THREE.TextureLoader().load('/models/enemies_specular.png'),
+                alphaMap: new THREE.TextureLoader().load('/models/chunk.png')
+            })
         }
     };
 };
@@ -30509,16 +31035,16 @@ CustomModelCreator.prototype.clearBatch = function () {
 
 module.exports = CustomModelCreator;
 
-},{}],294:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 var ModelList = {
-    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/driller.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/greenlasgun.json', '/models/bluelasgun.json', '/models/lightlasgun.json', '/models/emdgun2.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/pulsewaveblast.json', '/models/missilelauncher.json', '/models/missilelauncher2.json', '/models/homingmissilelauncher.json', '/models/missilelauncher3.json', '/models/homingmissilelauncher3.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json', '/models/molten.json', '/models/moltenshotgun.json', '/models/minigun.json', '/models/minigunammo.json']
+    models: ['/models/none.json', '/models/ship.json', '/models/ravier.json', '/models/ravier_gunless.json', '/models/ravier_shield.json', '/models/drone.json', '/models/chaser.json', '/models/sniper.json', '/models/orbot.json', '/models/shulk.json', '/models/mhulk.json', '/models/lhulk.json', '/models/spider.json', '/models/spider2.json', '/models/driller.json', '/models/razorman.json', '/models/razorman_static.json', '/models/eva.json', '/models/chunk.json', '/models/telering_bottom.json', '/models/telering_top.json', '/models/levels/startmenu.json', '/models/lasgun.json', '/models/redlasgun.json', '/models/greenlasgun.json', '/models/bluelasgun.json', '/models/lightlasgun.json', '/models/emdgun2.json', '/models/plasmagun.json', '/models/plasmablast.json', '/models/pulsewavegun.json', '/models/pulsewaveblast.json', '/models/missilelauncher.json', '/models/missilelauncher2.json', '/models/homingmissilelauncher.json', '/models/missilelauncher3.json', '/models/homingmissilelauncher3.json', '/models/hudMaterial.json', '/models/flatHudMaterial.json', '/models/missile.json', '/models/molten.json', '/models/moltenshotgun.json', '/models/minigun.json', '/models/amcannon.json', '/models/minigunammo.json']
 };
 
 module.exports = ModelList;
 
-},{}],295:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 'use strict';
 
 function ModelLoader() {
@@ -30571,7 +31097,7 @@ ModelLoader.prototype.getDefaultTexturePath = function (path) {
 
 module.exports = ModelLoader;
 
-},{}],296:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 "use strict";
 
 var ModelStore = {
@@ -30607,7 +31133,7 @@ var ModelStore = {
 
 module.exports = ModelStore;
 
-},{}],297:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 'use strict';
 
 function SoundLoader(config) {
@@ -30641,6 +31167,7 @@ SoundLoader.prototype.loadSounds = function () {
     createjs.Sound.registerSound({ src: 'sounds/callout9.mp3', id: 'spider' });
     createjs.Sound.registerSound({ src: 'sounds/callout10.mp3', id: 'spiderling' });
     createjs.Sound.registerSound({ src: 'sounds/callout12.mp3', id: 'lhulk' });
+    createjs.Sound.registerSound({ src: 'sounds/callout8.mp3', id: 'razorman' });
     createjs.Sound.registerSound({ src: 'sounds/powerBoom2.mp3', id: 'spawn' });
     createjs.Sound.registerSound({ src: 'sounds/weaponChange1.mp3', id: 'cannon_change' });
     createjs.Sound.registerSound({ src: 'sounds/emptyError.mp3', id: 'empty' });
@@ -30655,11 +31182,12 @@ SoundLoader.prototype.loadSounds = function () {
     createjs.Sound.registerSound({ src: 'sounds/distrupter_fire.wav', id: 'disrupter' });
     createjs.Sound.registerSound({ src: 'sounds/missile2.mp3', id: 'missile' });
     createjs.Sound.registerSound({ src: 'sounds/gun1.mp3', id: 'minigun' });
+    createjs.Sound.registerSound({ src: 'sounds/gun3.mp3', id: 'heavycannon' });
 };
 
 module.exports = SoundLoader;
 
-},{}],298:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 'use strict';
 
 function FlatHudCamera(config) {
@@ -30688,7 +31216,7 @@ FlatHudCamera.prototype.update = function () {};
 
 module.exports = FlatHudCamera;
 
-},{}],299:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 'use strict';
 
 function Hud(config) {
@@ -30722,6 +31250,9 @@ Hud.prototype.drawRadar = function () {
     var enemies = this.actorManager.getEnemies();
     for (var enemyId in enemies) {
         var enemyActor = enemies[enemyId];
+
+        if (enemyActor.props.invisible) return; //invisible enemies don't appear on radar
+
         var rotation = Utils.rotationBetweenPoints(enemyActor.getPosition(), actorPosition);
 
         var color = 'DEEPRED',
@@ -30866,7 +31397,7 @@ Hud.prototype.drawShieldBarPlayer = function () {
 
 module.exports = Hud;
 
-},{}],300:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 'use strict';
 
 function ChunkMesh(config) {
@@ -30905,7 +31436,7 @@ ChunkMesh.prototype.setRotation = function (rotation) {
 
 module.exports = ChunkMesh;
 
-},{}],301:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 'use strict';
 
 function FlatHudParticleGenerator(config) {
@@ -31015,7 +31546,7 @@ FlatHudParticleGenerator.prototype.updateResolutionCoefficient = function (resol
 
 module.exports = FlatHudParticleGenerator;
 
-},{}],302:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 'use strict';
 
 var ParticleShaders = require('renderer/particleSystem/ParticleShaders');
@@ -31151,13 +31682,15 @@ ParticleConfigCreator.prototype.createPremades = function () {
         BlueBoom: require('renderer/particleSystem/premade/BlueBoom'),
         EmdTrail: require('renderer/particleSystem/premade/EmdTrail'),
         BulletTrail: require('renderer/particleSystem/premade/BulletTrail'),
-        OrangeSparks: require('renderer/particleSystem/premade/OrangeSparks')
+        LargeBulletTrail: require('renderer/particleSystem/premade/LargeBulletTrail'),
+        OrangeSparks: require('renderer/particleSystem/premade/OrangeSparks'),
+        ManyOrangeSparks: require('renderer/particleSystem/premade/ManyOrangeSparks')
     };
 };
 
 module.exports = ParticleConfigCreator;
 
-},{"renderer/particleSystem/ParticleShaders":305,"renderer/particleSystem/premade/BlueBoom":306,"renderer/particleSystem/premade/BlueLaserTrail":307,"renderer/particleSystem/premade/BlueSparks":308,"renderer/particleSystem/premade/BulletAmmoPickup":309,"renderer/particleSystem/premade/BulletTrail":310,"renderer/particleSystem/premade/EmdTrail":311,"renderer/particleSystem/premade/EnergyPickup":312,"renderer/particleSystem/premade/EngineGlowMedium":313,"renderer/particleSystem/premade/EngineGlowSmall":314,"renderer/particleSystem/premade/GreenBoomLarge":315,"renderer/particleSystem/premade/GreenBoomTiny":316,"renderer/particleSystem/premade/GreenLaserTrail":317,"renderer/particleSystem/premade/GreenSparks":318,"renderer/particleSystem/premade/GreenTrail":319,"renderer/particleSystem/premade/GreenTrailLarge":320,"renderer/particleSystem/premade/MissileQuadPickup":321,"renderer/particleSystem/premade/OrangeBoomLarge":322,"renderer/particleSystem/premade/OrangeBoomMedium":323,"renderer/particleSystem/premade/OrangeBoomSmall":324,"renderer/particleSystem/premade/OrangeBoomTiny":325,"renderer/particleSystem/premade/OrangeSparks":326,"renderer/particleSystem/premade/OrangeTrail":327,"renderer/particleSystem/premade/PlasmaPickup":328,"renderer/particleSystem/premade/PurpleEye":329,"renderer/particleSystem/premade/PurpleLaserTrail":330,"renderer/particleSystem/premade/PurpleSparks":331,"renderer/particleSystem/premade/RedEye":332,"renderer/particleSystem/premade/RedEyeBig":333,"renderer/particleSystem/premade/RedLaserSmallTrail":334,"renderer/particleSystem/premade/RedLaserTrail":335,"renderer/particleSystem/premade/RedSparks":336,"renderer/particleSystem/premade/ShieldPickup":337,"renderer/particleSystem/premade/SmokePuffLargeLong":338,"renderer/particleSystem/premade/SmokePuffSmall":339,"renderer/particleSystem/premade/WeaponPickup":340}],303:[function(require,module,exports){
+},{"renderer/particleSystem/ParticleShaders":314,"renderer/particleSystem/premade/BlueBoom":315,"renderer/particleSystem/premade/BlueLaserTrail":316,"renderer/particleSystem/premade/BlueSparks":317,"renderer/particleSystem/premade/BulletAmmoPickup":318,"renderer/particleSystem/premade/BulletTrail":319,"renderer/particleSystem/premade/EmdTrail":320,"renderer/particleSystem/premade/EnergyPickup":321,"renderer/particleSystem/premade/EngineGlowMedium":322,"renderer/particleSystem/premade/EngineGlowSmall":323,"renderer/particleSystem/premade/GreenBoomLarge":324,"renderer/particleSystem/premade/GreenBoomTiny":325,"renderer/particleSystem/premade/GreenLaserTrail":326,"renderer/particleSystem/premade/GreenSparks":327,"renderer/particleSystem/premade/GreenTrail":328,"renderer/particleSystem/premade/GreenTrailLarge":329,"renderer/particleSystem/premade/LargeBulletTrail":330,"renderer/particleSystem/premade/ManyOrangeSparks":331,"renderer/particleSystem/premade/MissileQuadPickup":332,"renderer/particleSystem/premade/OrangeBoomLarge":333,"renderer/particleSystem/premade/OrangeBoomMedium":334,"renderer/particleSystem/premade/OrangeBoomSmall":335,"renderer/particleSystem/premade/OrangeBoomTiny":336,"renderer/particleSystem/premade/OrangeSparks":337,"renderer/particleSystem/premade/OrangeTrail":338,"renderer/particleSystem/premade/PlasmaPickup":339,"renderer/particleSystem/premade/PurpleEye":340,"renderer/particleSystem/premade/PurpleLaserTrail":341,"renderer/particleSystem/premade/PurpleSparks":342,"renderer/particleSystem/premade/RedEye":343,"renderer/particleSystem/premade/RedEyeBig":344,"renderer/particleSystem/premade/RedLaserSmallTrail":345,"renderer/particleSystem/premade/RedLaserTrail":346,"renderer/particleSystem/premade/RedSparks":347,"renderer/particleSystem/premade/ShieldPickup":348,"renderer/particleSystem/premade/SmokePuffLargeLong":349,"renderer/particleSystem/premade/SmokePuffSmall":350,"renderer/particleSystem/premade/WeaponPickup":351}],312:[function(require,module,exports){
 'use strict';
 
 function ParticleGenerator(config) {
@@ -31293,7 +31826,7 @@ ParticleGenerator.prototype.updateResolutionCoefficient = function (resolutionCo
 
 module.exports = ParticleGenerator;
 
-},{}],304:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 'use strict';
 
 var ParticleConfigCreator = require('renderer/particleSystem/ParticleConfigCreator');
@@ -31370,7 +31903,7 @@ ParticleManager.prototype.updateResolutionCoefficient = function (coefficient) {
 
 module.exports = ParticleManager;
 
-},{"renderer/particleSystem/FlatHudParticleGenerator":301,"renderer/particleSystem/ParticleConfigCreator":302,"renderer/particleSystem/ParticleGenerator":303}],305:[function(require,module,exports){
+},{"renderer/particleSystem/FlatHudParticleGenerator":310,"renderer/particleSystem/ParticleConfigCreator":311,"renderer/particleSystem/ParticleGenerator":312}],314:[function(require,module,exports){
 'use strict';
 
 var ParticleShaders = {
@@ -31484,7 +32017,7 @@ var ParticleShaders = {
 
 module.exports = ParticleShaders;
 
-},{}],306:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31525,7 +32058,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],307:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31560,7 +32093,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],308:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31628,7 +32161,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],309:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31659,7 +32192,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],310:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31694,7 +32227,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],311:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31754,7 +32287,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],312:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31813,7 +32346,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],313:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31844,7 +32377,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],314:[function(require,module,exports){
+},{}],323:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31875,7 +32408,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],315:[function(require,module,exports){
+},{}],324:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -31946,7 +32479,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],316:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32003,7 +32536,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],317:[function(require,module,exports){
+},{}],326:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32038,7 +32571,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],318:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32106,7 +32639,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],319:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32138,7 +32671,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],320:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32197,7 +32730,110 @@ module.exports = function (config) {
     });
 };
 
-},{}],321:[function(require,module,exports){
+},{}],330:[function(require,module,exports){
+'use strict';
+
+module.exports = function (config) {
+    for (var i = 0; i < 36; i++) {
+        var offsetPosition = Utils.rotationToVector(config.rotation, -i * 0.3);
+        config.particleManager.createParticle('particleAdd', {
+            positionX: config.position[0] + offsetPosition[0],
+            positionY: config.position[1] + offsetPosition[1],
+            color: 'WHITE',
+            scale: 0.9,
+            alpha: 1 - 0.02 * i,
+            alphaMultiplier: 0.8,
+            particleVelocity: 2,
+            particleRotation: config.rotation,
+            lifeTime: 1
+        });
+    }
+
+    for (var _i = 0; _i < 18; _i++) {
+        var _offsetPosition = Utils.rotationToVector(config.rotation, -_i * 0.9);
+        config.particleManager.createParticle('particleAdd', {
+            positionX: config.position[0] + _offsetPosition[0],
+            positionY: config.position[1] + _offsetPosition[1],
+            color: 'ORANGE',
+            scale: 2.7,
+            alpha: 0.7 - 0.04 * _i,
+            alphaMultiplier: 0.6,
+            particleVelocity: 1.5,
+            particleRotation: config.rotation,
+            lifeTime: 1
+        });
+    }
+};
+
+},{}],331:[function(require,module,exports){
+'use strict';
+
+module.exports = function (config) {
+    for (var i = 0; i < 50; i++) {
+        config.particleManager.createParticle('particleAdd', {
+            positionX: config.position[0],
+            positionY: config.position[1],
+            color: 'ORANGE',
+            scale: 0.75,
+            alpha: 1,
+            alphaMultiplier: 0.96,
+            particleVelocity: Utils.rand(2, 16) / 10,
+            particleRotation: Utils.rand(0, 360),
+            speedZ: Utils.rand(-50, 50) / 100,
+            lifeTime: Utils.rand(20, 40)
+        });
+    }
+
+    config.particleManager.createParticle('particleAdd', {
+        positionX: config.position[0],
+        positionY: config.position[1],
+        color: 'WHITE',
+        scale: 20,
+        alpha: 1,
+        alphaMultiplier: 0.2,
+        particleVelocity: 0,
+        particleRotation: 0,
+        lifeTime: 10
+    });
+
+    config.particleManager.createParticle('particleAdd', {
+        positionX: config.position[0],
+        positionY: config.position[1],
+        color: 'ORANGE',
+        scale: 2,
+        alpha: 1,
+        alphaMultiplier: 0.9,
+        particleVelocity: 0,
+        particleRotation: 0,
+        lifeTime: 60
+    });
+
+    config.particleManager.createParticle('particleAdd', {
+        positionX: config.position[0],
+        positionY: config.position[1],
+        color: 'WHITE',
+        scale: 4,
+        alpha: 1,
+        alphaMultiplier: 0.8,
+        particleVelocity: 0,
+        particleRotation: 0,
+        lifeTime: 15
+    });
+
+    config.particleManager.createParticle('particleAdd', {
+        positionX: config.position[0],
+        positionY: config.position[1],
+        color: 'ORANGE',
+        scale: 6,
+        alpha: 1,
+        alphaMultiplier: 0.8,
+        particleVelocity: 0,
+        particleRotation: 0,
+        lifeTime: 20
+    });
+};
+
+},{}],332:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32228,7 +32864,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],322:[function(require,module,exports){
+},{}],333:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32334,7 +32970,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],323:[function(require,module,exports){
+},{}],334:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32440,7 +33076,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],324:[function(require,module,exports){
+},{}],335:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32546,7 +33182,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],325:[function(require,module,exports){
+},{}],336:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32603,7 +33239,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],326:[function(require,module,exports){
+},{}],337:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32671,7 +33307,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],327:[function(require,module,exports){
+},{}],338:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32708,7 +33344,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],328:[function(require,module,exports){
+},{}],339:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32767,7 +33403,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],329:[function(require,module,exports){
+},{}],340:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32799,7 +33435,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],330:[function(require,module,exports){
+},{}],341:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32834,7 +33470,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],331:[function(require,module,exports){
+},{}],342:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32902,7 +33538,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],332:[function(require,module,exports){
+},{}],343:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32933,7 +33569,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],333:[function(require,module,exports){
+},{}],344:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32964,7 +33600,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],334:[function(require,module,exports){
+},{}],345:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -32999,7 +33635,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],335:[function(require,module,exports){
+},{}],346:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33034,7 +33670,7 @@ module.exports = function (config) {
     }
 };
 
-},{}],336:[function(require,module,exports){
+},{}],347:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33102,7 +33738,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],337:[function(require,module,exports){
+},{}],348:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33159,7 +33795,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],338:[function(require,module,exports){
+},{}],349:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33177,7 +33813,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],339:[function(require,module,exports){
+},{}],350:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33195,7 +33831,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],340:[function(require,module,exports){
+},{}],351:[function(require,module,exports){
 'use strict';
 
 module.exports = function (config) {
@@ -33239,7 +33875,7 @@ module.exports = function (config) {
     });
 };
 
-},{}],341:[function(require,module,exports){
+},{}],352:[function(require,module,exports){
 'use strict';
 
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
@@ -33310,7 +33946,7 @@ BaseScene.prototype.testMesh = function (meshClass, scale) {
 
 module.exports = BaseScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296}],342:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305}],353:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
@@ -33364,7 +34000,7 @@ FlatHudScene.prototype.customUpdate = function () {};
 
 module.exports = FlatHudScene;
 
-},{"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296,"renderer/gameUi/FlatHudCamera":298,"renderer/scene/BaseScene":341}],343:[function(require,module,exports){
+},{"renderer/actor/component/mesh/BaseMesh":245,"renderer/assetManagement/model/ModelStore":305,"renderer/gameUi/FlatHudCamera":307,"renderer/scene/BaseScene":352}],354:[function(require,module,exports){
 'use strict';
 
 var ChunkStore = require('renderer/assetManagement/level/ChunkStore');
@@ -33569,13 +34205,17 @@ GameScene.prototype._getFogColor = function (fogSettingValue) {
 
 module.exports = GameScene;
 
-},{"renderer/Camera":231,"renderer/assetManagement/level/ChunkStore":291,"renderer/map/ChunkMesh":300,"renderer/scene/BaseScene":341}],344:[function(require,module,exports){
+},{"renderer/Camera":234,"renderer/assetManagement/level/ChunkStore":300,"renderer/map/ChunkMesh":309,"renderer/scene/BaseScene":352}],355:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
+var BaseSkinnedMesh = require('renderer/actor/component/mesh/BaseSkinnedMesh');
 var ModelStore = require('renderer/assetManagement/model/ModelStore');
 var Camera = require('renderer/Camera');
+var clock = require('renderer/Clock');
+
+var cloner = require('cloner');
 
 function MainMenuScene(config) {
     this.cameraDefaultPositionY = -50;
@@ -33659,7 +34299,6 @@ MainMenuScene.prototype.resetCamera = function () {
 };
 
 MainMenuScene.prototype.createStartScene = function () {
-
     this.sceneMaterial = ModelStore.get('startmenu').material;
 
     var mesh = new BaseMesh({
@@ -33707,6 +34346,304 @@ MainMenuScene.prototype.createStartScene = function () {
     this.directionalLight.intensity = 0;
     this.ambientLight.intensity = 0;
     this.sceneMaterial.emissiveIntensity = 0;
+};
+
+MainMenuScene.prototype.createStartScene2 = function () {
+
+    var cloneGeometry = function cloneGeometry(geometry) {
+
+        // console.log('asd2', geometry.animations[0]);
+        var clonedGeometry = geometry.clone();
+        var bones = JSON.parse(JSON.stringify(geometry.bones));
+        var skinWeights = JSON.parse(JSON.stringify(geometry.skinWeights));
+        var skinIndices = JSON.parse(JSON.stringify(geometry.skinIndices));
+        var animations = geometry.animations;
+
+        animations.forEach(function (animation) {
+            animation.uuid = Utils.generateUUID();
+        });
+
+        skinWeights = skinWeights.map(function (x) {
+            return new THREE.Vector4().copy(x);
+        });
+        skinIndices = skinIndices.map(function (x) {
+            return new THREE.Vector4().copy(x);
+        });
+        Object.assign(clonedGeometry, { bones: bones, skinWeights: skinWeights, skinIndices: skinIndices, animations: animations });
+        return clonedGeometry;
+    };
+
+    var createBones = function createBones(jsonBones) {
+        /* adapted from the THREE.SkinnedMesh constructor */
+        // create bone instances from json bone data
+        var bones = jsonBones.map(function (gbone) {
+            var bone = new THREE.Bone();
+            bone.name = gbone.name;
+            bone.position.fromArray(gbone.pos);
+            bone.quaternion.fromArray(gbone.rotq);
+            if (gbone.scl !== undefined) bone.scale.fromArray(gbone.scl);
+            return bone;
+        });
+        // add bone instances to the root object
+        jsonBones.forEach(function (gbone, index) {
+            if (gbone.parent !== -1 && gbone.parent !== null && bones[gbone.parent] !== undefined) {
+                bones[gbone.parent].add(bones[index]);
+            }
+        });
+        return bones;
+    };
+
+    var createSkinnedMesh = function createSkinnedMesh(mesh, skeleton) {
+        // create SkinnedMesh from static mesh geometry and swap it in the scene graph
+        var skinnedMesh = new THREE.SkinnedMesh(mesh.geometry, mesh.material);
+        skinnedMesh.castShadow = true;
+        skinnedMesh.receiveShadow = true;
+        // bind to skeleton
+        skinnedMesh.bind(skeleton, mesh.matrixWorld);
+        // swap mesh for skinned mesh
+        // mesh.parent.add( skinnedMesh );
+        // mesh.parent.remove( mesh );
+        return skinnedMesh;
+    };
+
+    var createBones2 = function createBones2(mesh, boneObjects) {
+        var bones = [],
+            bone,
+            gbone;
+        var i, il;
+
+        if (boneObjects !== undefined) {
+
+            // first, create array of 'Bone' objects from geometry data
+            for (i = 0, il = boneObjects.length; i < il; i++) {
+                gbone = boneObjects[i];
+
+                // create new 'Bone' object
+                bone = new THREE.Bone();
+                bones.push(bone);
+
+                // apply values
+                bone.name = gbone.name;
+                bone.position.fromArray(gbone.pos);
+                bone.quaternion.fromArray(gbone.rotq);
+                if (gbone.scl !== undefined) bone.scale.fromArray(gbone.scl);
+            }
+
+            // second, create bone hierarchy
+            for (i = 0, il = boneObjects.length; i < il; i++) {
+                gbone = boneObjects[i];
+                if (gbone.parent !== -1 && gbone.parent !== null && bones[gbone.parent] !== undefined) {
+                    // subsequent bones in the hierarchy
+                    bones[gbone.parent].add(bones[i]);
+                } else {
+                    // topmost bone, immediate child of the skinned mesh
+                    mesh.add(bones[i]);
+                }
+            }
+        }
+
+        // now the bones are part of the scene graph and children of the skinned mesh.
+        // let's update the corresponding matrices
+
+        mesh.updateMatrixWorld(true);
+        return bones;
+    };
+
+    this.sceneMaterial = ModelStore.get('startmenu').material;
+
+    var mesh = new BaseMesh({
+        geometry: ModelStore.get('startmenu').geometry,
+        material: this.sceneMaterial
+    });
+    var scale = 0.5;
+    mesh.scale.x = scale;
+    mesh.scale.y = scale;
+    mesh.scale.z = scale;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.rotation.x = Utils.degToRad(90);
+    mesh.rotation.y = Utils.degToRad(-90);
+    mesh.matrixAutoUpdate = false;
+    mesh.updateMatrix();
+
+    var geometry = ModelStore.get('razorman').geometry;
+
+    var shipMesh = new BaseSkinnedMesh({
+        geometry: geometry,
+        material: ModelStore.get('enemyModel').material
+    });
+
+    // var shipMesh2 = shipMesh.clone();
+
+    // var geometry2 = cloneGeometry(geometry);
+    // var geometry3 = cloneGeometry(geometry2);
+
+    var geometry2 = geometry.clone();
+    delete geometry2.bones;
+
+    var geometry3 = geometry.clone();
+    delete geometry2.bones;
+
+    var shipMesh2 = new BaseSkinnedMesh({
+        geometry: geometry2,
+        material: ModelStore.get('enemyModel').material
+    });
+
+    var bones = createBones2(shipMesh2, geometry.bones);
+    var skeleton = new THREE.Skeleton(bones);
+
+    var shipMesh3 = new BaseSkinnedMesh({
+        geometry: geometry3,
+        material: ModelStore.get('enemyModel').material
+    });
+
+    // shipMesh.bindMode = 'detached';
+    // shipMesh2.bindMode = 'detached';
+    // shipMesh3.bindMode = 'detached';
+
+    // // shipMesh.bind( skeleton, shipMesh.matrixWorld );
+    shipMesh2.bind(shipMesh.skeleton, shipMesh2.matrixWorld);
+    shipMesh2.master = shipMesh;
+
+    // shipMesh.shareSkeleton(shipMesh2);
+    shipMesh.shareSkeleton(shipMesh3);
+
+    scale = 2; //4.5;
+    shipMesh.scale.x = scale;
+    shipMesh.scale.y = scale;
+    shipMesh.scale.z = scale;
+    shipMesh.castShadow = true;
+    shipMesh.receiveShadow = true;
+    shipMesh.rotation.z = Utils.degToRad(-120);
+
+    shipMesh.position.z = 4;
+    shipMesh.speedZ = 0.015;
+    shipMesh.speedY = 0.0012;
+    shipMesh.speedX = 0.001;
+
+    scale = 3.5;
+    shipMesh2.scale.x = scale;
+    shipMesh2.scale.y = scale;
+    shipMesh2.scale.z = scale;
+    shipMesh2.castShadow = true;
+    shipMesh2.receiveShadow = true;
+    shipMesh2.rotation.z = Utils.degToRad(-120);
+
+    shipMesh2.position.z = 0;
+    shipMesh2.speedZ = 0.015;
+    shipMesh2.speedY = 0.0012;
+    shipMesh2.speedX = 0.001;
+
+    scale = 2.5;
+    shipMesh3.scale.x = scale;
+    shipMesh3.scale.y = scale;
+    shipMesh3.scale.z = scale;
+    shipMesh3.castShadow = true;
+    shipMesh3.receiveShadow = true;
+    shipMesh3.rotation.z = Utils.degToRad(-120);
+
+    shipMesh3.position.z = 1;
+    shipMesh3.speedZ = 0.015;
+    shipMesh3.speedY = 0.0012;
+    shipMesh3.speedX = 0.001;
+
+    this.shipMesh = shipMesh;
+    this.sceneMesh = mesh;
+
+    // this.threeScene.add(shipMesh);
+    this.threeScene.add(shipMesh2);
+    this.threeScene.add(shipMesh3);
+
+    this.directionalLight.intensity = 0;
+    this.ambientLight.intensity = 0;
+    this.sceneMaterial.emissiveIntensity = 0;
+
+    var isLoaded = false;
+    var action = {},
+        mixer;
+    var action2 = {},
+        mixer2;
+    var action3 = {},
+        mixer3;
+    var activeActionName = 'idle';
+
+    var arrAnimations = ['idle', 'walk', 'run', 'hello'];
+    var actualAnimation = 0;
+
+    mixer = new THREE.AnimationMixer(shipMesh);
+    // mixer2 = new THREE.AnimationMixer(shipMesh2);   
+    // mixer3 = new THREE.AnimationMixer(shipMesh3);   
+
+    setInterval(function () {
+        var delta = clock.getDelta();
+        mixer.update(delta);
+        // mixer2.update(delta);
+        // mixer3.update(delta);
+    }, 1);
+
+    action.hello = mixer.clipAction(geometry.animations[2]);
+    action.hello.setEffectiveWeight(1);
+    action.hello.enabled = true;
+
+    // action2.hello = mixer.clipAction(geometry2.animations[ 2 ]);
+    // action2.hello.setEffectiveWeight(1);
+    // action2.hello.enabled = true;
+
+    // action3.hello = mixer.clipAction(geometry3.animations[ 2 ]);
+    // action3.hello.setEffectiveWeight(1);
+    // action3.hello.enabled = true;
+
+    window.addEventListener('click', onDoubleClick, false);
+
+    isLoaded = true;
+
+    action.hello.play();
+    // action2.hello.play();
+    // action3.hello.play();
+
+    window.a1 = action;
+    // window.a2 = action2;
+    // window.a3 = action3;
+
+    window.g1 = geometry;
+    window.g2 = geometry2;
+    window.g3 = geometry3;
+
+    var mylatesttap;
+    function onDoubleClick() {
+        var now = new Date().getTime();
+        var timesince = now - mylatesttap;
+        if (timesince < 600 && timesince > 0) {
+            if (actualAnimation == arrAnimations.length - 1) {
+                actualAnimation = 0;
+            } else {
+                actualAnimation++;
+            }
+            fadeAction(arrAnimations[actualAnimation]);
+        } else {
+            // too much time to be a doubletap
+        }
+
+        mylatesttap = new Date().getTime();
+    }
+
+    function fadeAction(name) {
+        var from = action[activeActionName].play();
+        var to = action[name].play();
+
+        from.enabled = true;
+        to.enabled = true;
+
+        if (to.loop === THREE.LoopOnce) {
+            to.reset();
+        }
+
+        from.crossFadeTo(to, 0.3);
+        activeActionName = name;
+        console.log('fading...');
+    }
+
+    window.fadeAction = fadeAction;
 };
 
 MainMenuScene.prototype.customUpdate = function () {
@@ -33783,7 +34720,7 @@ MainMenuScene.prototype.lightPowerUp = function () {
 
 module.exports = MainMenuScene;
 
-},{"renderer/Camera":231,"renderer/actor/component/mesh/BaseMesh":241,"renderer/assetManagement/model/ModelStore":296,"renderer/scene/BaseScene":341}],345:[function(require,module,exports){
+},{"cloner":3,"renderer/Camera":234,"renderer/Clock":235,"renderer/actor/component/mesh/BaseMesh":245,"renderer/actor/component/mesh/BaseSkinnedMesh":246,"renderer/assetManagement/model/ModelStore":305,"renderer/scene/BaseScene":352}],356:[function(require,module,exports){
 'use strict';
 
 var BaseScene = require('renderer/scene/BaseScene');
@@ -33860,7 +34797,7 @@ SceneManager.prototype.getCoreActiveScene = function () {
 
 module.exports = SceneManager;
 
-},{"renderer/scene/BaseScene":341,"renderer/scene/FlatHudScene":342,"renderer/scene/GameScene":343,"renderer/scene/MainMenuScene":344}],346:[function(require,module,exports){
+},{"renderer/scene/BaseScene":352,"renderer/scene/FlatHudScene":353,"renderer/scene/GameScene":354,"renderer/scene/MainMenuScene":355}],357:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -33921,7 +34858,7 @@ ReactUi.prototype.changeMode = function (newMode, context) {
 
 module.exports = ReactUi;
 
-},{"classnames":2,"react":182,"react-dom":6,"renderer/ui/component/InitialView":350}],347:[function(require,module,exports){
+},{"classnames":2,"react":183,"react-dom":7,"renderer/ui/component/InitialView":361}],358:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -33949,7 +34886,7 @@ var ReactUtils = {
 
 module.exports = ReactUtils;
 
-},{"react":182}],348:[function(require,module,exports){
+},{"react":183}],359:[function(require,module,exports){
 'use strict';
 
 var ReactUi = require('renderer/ui/ReactUi');
@@ -34090,7 +35027,7 @@ Ui.prototype.updateState = function (state) {
 
 module.exports = Ui;
 
-},{"renderer/ui/ReactUi":346}],349:[function(require,module,exports){
+},{"renderer/ui/ReactUi":357}],360:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34167,7 +35104,7 @@ var EndScreen = function (_React$Component) {
 
 module.exports = EndScreen;
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/FlexBoxContainer":355,"renderer/ui/component/base/StyledText":359,"renderer/ui/component/base/Window":362,"renderer/ui/component/endGame/EndGamePanel":364}],350:[function(require,module,exports){
+},{"classnames":2,"react":183,"renderer/ui/component/base/FlexBoxContainer":366,"renderer/ui/component/base/StyledText":370,"renderer/ui/component/base/Window":373,"renderer/ui/component/endGame/EndGamePanel":375}],361:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -34247,7 +35184,7 @@ var InitialView = _react2.default.createClass({
 
 module.exports = InitialView;
 
-},{"classnames":2,"react":182,"renderer/ui/ReactUtils":347,"renderer/ui/component/EndScreen":349,"renderer/ui/component/StartHelp":352,"renderer/ui/component/StartScreen":353,"renderer/ui/component/base/FullScreenEffect":356,"renderer/ui/component/base/Viewport":361,"renderer/ui/component/hud/AmmoTileContainer":368,"renderer/ui/component/hud/MessageContainer":369,"renderer/ui/component/hud/WeaponInfoContainer":370}],351:[function(require,module,exports){
+},{"classnames":2,"react":183,"renderer/ui/ReactUtils":358,"renderer/ui/component/EndScreen":360,"renderer/ui/component/StartHelp":363,"renderer/ui/component/StartScreen":364,"renderer/ui/component/base/FullScreenEffect":367,"renderer/ui/component/base/Viewport":372,"renderer/ui/component/hud/AmmoTileContainer":379,"renderer/ui/component/hud/MessageContainer":380,"renderer/ui/component/hud/WeaponInfoContainer":381}],362:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34495,7 +35432,7 @@ module.exports = SettingsMenu;
             </div>
  */
 
-},{"classnames":2,"react":182,"renderer/ui/component/base/OptionButton":357,"renderer/ui/component/base/Slider":358,"renderer/ui/component/base/StyledText":359,"renderer/ui/component/base/ToggleButton":360}],352:[function(require,module,exports){
+},{"classnames":2,"react":183,"renderer/ui/component/base/OptionButton":368,"renderer/ui/component/base/Slider":369,"renderer/ui/component/base/StyledText":370,"renderer/ui/component/base/ToggleButton":371}],363:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34638,7 +35575,7 @@ var StartHelp = function (_React$Component) {
 
 module.exports = StartHelp;
 
-},{"classnames":2,"react":182,"renderer/ui/ReactUtils":347,"renderer/ui/component/base/StyledText":359}],353:[function(require,module,exports){
+},{"classnames":2,"react":183,"renderer/ui/ReactUtils":358,"renderer/ui/component/base/StyledText":370}],364:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -34724,7 +35661,7 @@ var StartScreen = _react2.default.createClass({
 
 module.exports = StartScreen;
 
-},{"classnames":2,"react":182,"renderer/ui/ReactUtils":347,"renderer/ui/component/SettingsMenu":351,"renderer/ui/component/base/Button":354,"renderer/ui/component/base/FlexBoxContainer":355,"renderer/ui/component/base/StyledText":359,"renderer/ui/component/base/Window":362,"renderer/ui/component/endGame/EndGamePanel":364}],354:[function(require,module,exports){
+},{"classnames":2,"react":183,"renderer/ui/ReactUtils":358,"renderer/ui/component/SettingsMenu":362,"renderer/ui/component/base/Button":365,"renderer/ui/component/base/FlexBoxContainer":366,"renderer/ui/component/base/StyledText":370,"renderer/ui/component/base/Window":373,"renderer/ui/component/endGame/EndGamePanel":375}],365:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34801,7 +35738,7 @@ var Button = function (_React$Component) {
 
 module.exports = Button;
 
-},{"classnames":2,"react":182}],355:[function(require,module,exports){
+},{"classnames":2,"react":183}],366:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -34857,7 +35794,7 @@ var FlexBoxContainer = function (_Component) {
 
 module.exports = FlexBoxContainer;
 
-},{"react":182}],356:[function(require,module,exports){
+},{"react":183}],367:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -34913,7 +35850,7 @@ var FullScreenEffect = _react2.default.createClass({
 
 module.exports = FullScreenEffect;
 
-},{"classnames":2,"react":182}],357:[function(require,module,exports){
+},{"classnames":2,"react":183}],368:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35008,7 +35945,7 @@ var OptionButton = function (_React$Component) {
 
 module.exports = OptionButton;
 
-},{"classnames":2,"react":182}],358:[function(require,module,exports){
+},{"classnames":2,"react":183}],369:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35111,7 +36048,7 @@ var Slider = function (_Component) {
 
 module.exports = Slider;
 
-},{"react":182,"react-slider":7}],359:[function(require,module,exports){
+},{"react":183,"react-slider":8}],370:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35158,7 +36095,7 @@ var StyledText = function (_React$Component) {
 
 module.exports = StyledText;
 
-},{"classnames":2,"react":182}],360:[function(require,module,exports){
+},{"classnames":2,"react":183}],371:[function(require,module,exports){
 'use strict';
 
 var _classnames = require('classnames');
@@ -35207,7 +36144,7 @@ var ToggleButton = _react2.default.createClass({
 
 module.exports = ToggleButton;
 
-},{"classnames":2,"react":182}],361:[function(require,module,exports){
+},{"classnames":2,"react":183}],372:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35253,7 +36190,7 @@ var Viewport = function (_React$Component) {
 
 module.exports = Viewport;
 
-},{"classnames":2,"react":182}],362:[function(require,module,exports){
+},{"classnames":2,"react":183}],373:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35437,7 +36374,7 @@ var Window = function (_Component) {
 
 module.exports = Window;
 
-},{"react":182}],363:[function(require,module,exports){
+},{"react":183}],374:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35526,7 +36463,7 @@ var DiedRow = function (_Component) {
 
 module.exports = DiedRow;
 
-},{"react":182}],364:[function(require,module,exports){
+},{"react":183}],375:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35652,7 +36589,7 @@ var EndGamePanel = function (_Component) {
 
 module.exports = EndGamePanel;
 
-},{"react":182,"renderer/ui/component/endGame/DiedRow":363,"renderer/ui/component/endGame/KillRow":365,"renderer/ui/component/endGame/Summary":366}],365:[function(require,module,exports){
+},{"react":183,"renderer/ui/component/endGame/DiedRow":374,"renderer/ui/component/endGame/KillRow":376,"renderer/ui/component/endGame/Summary":377}],376:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35812,7 +36749,7 @@ var KillRow = function (_Component) {
 
 module.exports = KillRow;
 
-},{"react":182}],366:[function(require,module,exports){
+},{"react":183}],377:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -35949,7 +36886,7 @@ var Summary = function (_Component) {
 
 module.exports = Summary;
 
-},{"react":182}],367:[function(require,module,exports){
+},{"react":183}],378:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -36099,7 +37036,7 @@ var AmmoTile = function (_Component) {
 
 module.exports = AmmoTile;
 
-},{"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":347}],368:[function(require,module,exports){
+},{"react":183,"react-addons-css-transition-group":6,"renderer/ui/ReactUtils":358}],379:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -36206,7 +37143,7 @@ var AmmoTileContainer = function (_Component) {
 
 module.exports = AmmoTileContainer;
 
-},{"react":182,"renderer/ui/ReactUtils":347,"renderer/ui/component/hud/AmmoTile":367}],369:[function(require,module,exports){
+},{"react":183,"renderer/ui/ReactUtils":358,"renderer/ui/component/hud/AmmoTile":378}],380:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -36361,7 +37298,7 @@ var MessageContainer = function (_Component) {
 
 module.exports = MessageContainer;
 
-},{"classnames":2,"react":182,"react-addons-css-transition-group":5,"renderer/ui/ReactUtils":347}],370:[function(require,module,exports){
+},{"classnames":2,"react":183,"react-addons-css-transition-group":6,"renderer/ui/ReactUtils":358}],381:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -36520,7 +37457,7 @@ var WeaponInfoContainer = function (_Component) {
 
 module.exports = WeaponInfoContainer;
 
-},{"classnames":2,"react":182,"shared/WeaponConfig":378}],371:[function(require,module,exports){
+},{"classnames":2,"react":183,"shared/WeaponConfig":389}],382:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -36611,6 +37548,22 @@ var ActorConfig = {
         bodyConfig: {
             radius: 2,
             mass: 1
+        }
+    },
+
+    PLASMAKICKPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 5,
+            removeOnHit: true,
+            timeout: 1,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 3,
+            mass: 2.5
         }
     },
 
@@ -36917,6 +37870,24 @@ var ActorConfig = {
         }
     },
 
+    HEAVYCANNONPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 16,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 2,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
     CHUNK: {
         props: {
             hp: 1,
@@ -36982,17 +37953,20 @@ var ActorConfig = {
             spawnPool: ['CHASER', 'MOOK', 'ORBOT', 'SNIPER'],
             spawnPoolAdditions: {
                 60: 'SHULK',
+                90: 'RAZORMAN',
                 120: 'SHULK',
                 150: 'SPIDER',
-                180: 'MHULK',
-                210: 'SPIDER',
-                240: 'MHULK',
-                270: 'DRILLER',
-                300: 'SHULK',
-                360: 'SPIDER',
-                390: 'LHULK',
-                420: 'DRILLER',
-                550: 'LHULK'
+                180: 'RAZORMAN',
+                210: 'MHULK',
+                240: 'SPIDER',
+                270: 'MHULK',
+                300: 'DRILLER',
+                330: 'RAZORMAN',
+                360: 'SHULK',
+                390: 'SPIDER',
+                420: 'LHULK',
+                450: 'DRILLER',
+                480: 'LHULK'
             }
         },
         bodyConfig: {
@@ -37115,7 +38089,7 @@ var ActorConfig = {
 
 module.exports = ActorConfig;
 
-},{"shared/ActorFactory":372}],372:[function(require,module,exports){
+},{"shared/ActorFactory":383}],383:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -37134,31 +38108,33 @@ var idMap = {
     SMALLEXPLOSION: 9,
     EMDPROJECTILE: 10,
     PLASMAPROJECTILE: 11,
-    PLASMABLASTPROJECTILE: 12,
-    PLASMABLASTMINIPROJECTILE: 13,
-    LASERPROJECTILE: 14,
-    REDLASERPROJECTILE: 15,
-    REDLASERENEMYPROJECTILE: 16,
-    PURPLELASERPROJECTILE: 17,
-    GREENLASERPROJECTILE: 18,
-    MOLTENPROJECTILE: 19,
-    RINGPROJECTILE: 20,
-    PULSEWAVEPROJECTILE: 21,
-    CONCSNMISSILE: 22,
-    ENEMYCONCSNMISSILE: 23,
-    HOMINGMISSILE: 24,
-    ENEMYHOMINGMISSILE: 25,
-    MINIGUNPROJECTILE: 26,
-    ENEMYSPAWNER: 27,
-    ENEMYSPAWNMARKER: 28,
-    ITEMSPAWNER: 29,
-    DEBUG: 30,
-    SHIELDPICKUP: 31,
-    ENERGYPICKUP: 32,
-    PLASMAPICKUP: 33,
-    MISSILEQUADPICKUP: 34,
-    BULLETAMMOPICKUP: 35,
-    WEAPONPICKUP: 36
+    PLASMAKICKPROJECTILE: 12,
+    PLASMABLASTPROJECTILE: 13,
+    PLASMABLASTMINIPROJECTILE: 14,
+    LASERPROJECTILE: 15,
+    REDLASERPROJECTILE: 16,
+    REDLASERENEMYPROJECTILE: 17,
+    PURPLELASERPROJECTILE: 18,
+    GREENLASERPROJECTILE: 19,
+    MOLTENPROJECTILE: 20,
+    RINGPROJECTILE: 21,
+    PULSEWAVEPROJECTILE: 22,
+    CONCSNMISSILE: 23,
+    ENEMYCONCSNMISSILE: 24,
+    HOMINGMISSILE: 25,
+    ENEMYHOMINGMISSILE: 26,
+    MINIGUNPROJECTILE: 27,
+    HEAVYCANNONPROJECTILE: 28,
+    ENEMYSPAWNER: 29,
+    ENEMYSPAWNMARKER: 30,
+    ITEMSPAWNER: 31,
+    DEBUG: 32,
+    SHIELDPICKUP: 33,
+    ENERGYPICKUP: 34,
+    PLASMAPICKUP: 35,
+    MISSILEQUADPICKUP: 36,
+    BULLETAMMOPICKUP: 37,
+    WEAPONPICKUP: 38
 
 };
 
@@ -37177,6 +38153,7 @@ function ActorFactory(context, actorDependencies) {
     ActorFactory.SmallExplosionActor = context === 'renderer' ? require("renderer/actor/object/SmallExplosionActor") : require("logic/actor/object/SmallExplosionActor");
     ActorFactory.EmdProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/EmdProjectileActor") : require("logic/actor/projectile/EmdProjectileActor");
     ActorFactory.PlasmaProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaProjectileActor") : require("logic/actor/projectile/PlasmaProjectileActor");
+    ActorFactory.PlasmaKickProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaKickProjectileActor") : require("logic/actor/projectile/PlasmaKickProjectileActor");
     ActorFactory.PlasmaBlastProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaBlastProjectileActor") : require("logic/actor/projectile/PlasmaBlastProjectileActor");
     ActorFactory.PlasmaBlastMiniProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/PlasmaBlastMiniProjectileActor") : require("logic/actor/projectile/PlasmaBlastMiniProjectileActor");
     ActorFactory.LaserProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/LaserProjectileActor") : require("logic/actor/projectile/LaserProjectileActor");
@@ -37192,6 +38169,7 @@ function ActorFactory(context, actorDependencies) {
     ActorFactory.HomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/HomingMissileActor") : require("logic/actor/projectile/HomingMissileActor");
     ActorFactory.EnemyHomingMissileActor = context === 'renderer' ? require("renderer/actor/projectile/EnemyHomingMissileActor") : require("logic/actor/projectile/EnemyHomingMissileActor");
     ActorFactory.MinigunProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/MinigunProjectileActor") : require("logic/actor/projectile/MinigunProjectileActor");
+    ActorFactory.HeavyCannonProjectileActor = context === 'renderer' ? require("renderer/actor/projectile/HeavyCannonProjectileActor") : require("logic/actor/projectile/HeavyCannonProjectileActor");
     ActorFactory.EnemySpawnerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnerActor") : require("logic/actor/map/EnemySpawnerActor");
     ActorFactory.EnemySpawnMarkerActor = context === 'renderer' ? require("renderer/actor/map/EnemySpawnMarkerActor") : require("logic/actor/map/EnemySpawnMarkerActor");
     ActorFactory.ItemSpawnerActor = context === 'renderer' ? require("renderer/actor/map/ItemSpawnerActor") : require("logic/actor/map/ItemSpawnerActor");
@@ -37203,7 +38181,7 @@ function ActorFactory(context, actorDependencies) {
     ActorFactory.BulletAmmoPickupActor = context === 'renderer' ? require("renderer/actor/pickup/BulletAmmoPickupActor") : require("logic/actor/pickup/BulletAmmoPickupActor");
     ActorFactory.WeaponPickupActor = context === 'renderer' ? require("renderer/actor/pickup/WeaponPickupActor") : require("logic/actor/pickup/WeaponPickupActor");
 
-    this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, idMap.SHIP, ActorFactory.ShipActor), _defineProperty(_actorMap, idMap.DEMOSHIP, ActorFactory.DemoShipActor), _defineProperty(_actorMap, idMap.ENEMY, ActorFactory.EnemyActor), _defineProperty(_actorMap, idMap.CHAMPIONENEMY, ActorFactory.ChampionEnemyActor), _defineProperty(_actorMap, idMap.CHUNK, ActorFactory.ChunkActor), _defineProperty(_actorMap, idMap.FLAMECHUNK, ActorFactory.FlameChunkActor), _defineProperty(_actorMap, idMap.BOOMCHUNK, ActorFactory.BoomChunkActor), _defineProperty(_actorMap, idMap.EXPLOSION, ActorFactory.ExplosionActor), _defineProperty(_actorMap, idMap.SMALLEXPLOSION, ActorFactory.SmallExplosionActor), _defineProperty(_actorMap, idMap.EMDPROJECTILE, ActorFactory.EmdProjectileActor), _defineProperty(_actorMap, idMap.PLASMAPROJECTILE, ActorFactory.PlasmaProjectileActor), _defineProperty(_actorMap, idMap.PLASMABLASTPROJECTILE, ActorFactory.PlasmaBlastProjectileActor), _defineProperty(_actorMap, idMap.PLASMABLASTMINIPROJECTILE, ActorFactory.PlasmaBlastMiniProjectileActor), _defineProperty(_actorMap, idMap.LASERPROJECTILE, ActorFactory.LaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERPROJECTILE, ActorFactory.RedLaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERENEMYPROJECTILE, ActorFactory.RedLaserEnemyProjectileActor), _defineProperty(_actorMap, idMap.PURPLELASERPROJECTILE, ActorFactory.PurpleLaserProjectileActor), _defineProperty(_actorMap, idMap.GREENLASERPROJECTILE, ActorFactory.GreenLaserProjectileActor), _defineProperty(_actorMap, idMap.MOLTENPROJECTILE, ActorFactory.MoltenProjectileActor), _defineProperty(_actorMap, idMap.RINGPROJECTILE, ActorFactory.RingProjectileActor), _defineProperty(_actorMap, idMap.PULSEWAVEPROJECTILE, ActorFactory.PulseWaveProjectileActor), _defineProperty(_actorMap, idMap.CONCSNMISSILE, ActorFactory.ConcsnMissileActor), _defineProperty(_actorMap, idMap.ENEMYCONCSNMISSILE, ActorFactory.EnemyConcsnMissileActor), _defineProperty(_actorMap, idMap.HOMINGMISSILE, ActorFactory.HomingMissileActor), _defineProperty(_actorMap, idMap.ENEMYHOMINGMISSILE, ActorFactory.EnemyHomingMissileActor), _defineProperty(_actorMap, idMap.MINIGUNPROJECTILE, ActorFactory.MinigunProjectileActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNER, ActorFactory.EnemySpawnerActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNMARKER, ActorFactory.EnemySpawnMarkerActor), _defineProperty(_actorMap, idMap.ITEMSPAWNER, ActorFactory.ItemSpawnerActor), _defineProperty(_actorMap, idMap.DEBUG, ActorFactory.DebugActor), _defineProperty(_actorMap, idMap.SHIELDPICKUP, ActorFactory.ShieldPickupActor), _defineProperty(_actorMap, idMap.ENERGYPICKUP, ActorFactory.EnergyPickupActor), _defineProperty(_actorMap, idMap.PLASMAPICKUP, ActorFactory.PlasmaPickupActor), _defineProperty(_actorMap, idMap.MISSILEQUADPICKUP, ActorFactory.MissileQuadPickupActor), _defineProperty(_actorMap, idMap.BULLETAMMOPICKUP, ActorFactory.BulletAmmoPickupActor), _defineProperty(_actorMap, idMap.WEAPONPICKUP, ActorFactory.WeaponPickupActor), _actorMap);
+    this.actorMap = (_actorMap = {}, _defineProperty(_actorMap, idMap.SHIP, ActorFactory.ShipActor), _defineProperty(_actorMap, idMap.DEMOSHIP, ActorFactory.DemoShipActor), _defineProperty(_actorMap, idMap.ENEMY, ActorFactory.EnemyActor), _defineProperty(_actorMap, idMap.CHAMPIONENEMY, ActorFactory.ChampionEnemyActor), _defineProperty(_actorMap, idMap.CHUNK, ActorFactory.ChunkActor), _defineProperty(_actorMap, idMap.FLAMECHUNK, ActorFactory.FlameChunkActor), _defineProperty(_actorMap, idMap.BOOMCHUNK, ActorFactory.BoomChunkActor), _defineProperty(_actorMap, idMap.EXPLOSION, ActorFactory.ExplosionActor), _defineProperty(_actorMap, idMap.SMALLEXPLOSION, ActorFactory.SmallExplosionActor), _defineProperty(_actorMap, idMap.EMDPROJECTILE, ActorFactory.EmdProjectileActor), _defineProperty(_actorMap, idMap.PLASMAPROJECTILE, ActorFactory.PlasmaProjectileActor), _defineProperty(_actorMap, idMap.PLASMAKICKPROJECTILE, ActorFactory.PlasmaKickProjectileActor), _defineProperty(_actorMap, idMap.PLASMABLASTPROJECTILE, ActorFactory.PlasmaBlastProjectileActor), _defineProperty(_actorMap, idMap.PLASMABLASTMINIPROJECTILE, ActorFactory.PlasmaBlastMiniProjectileActor), _defineProperty(_actorMap, idMap.LASERPROJECTILE, ActorFactory.LaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERPROJECTILE, ActorFactory.RedLaserProjectileActor), _defineProperty(_actorMap, idMap.REDLASERENEMYPROJECTILE, ActorFactory.RedLaserEnemyProjectileActor), _defineProperty(_actorMap, idMap.PURPLELASERPROJECTILE, ActorFactory.PurpleLaserProjectileActor), _defineProperty(_actorMap, idMap.GREENLASERPROJECTILE, ActorFactory.GreenLaserProjectileActor), _defineProperty(_actorMap, idMap.MOLTENPROJECTILE, ActorFactory.MoltenProjectileActor), _defineProperty(_actorMap, idMap.RINGPROJECTILE, ActorFactory.RingProjectileActor), _defineProperty(_actorMap, idMap.PULSEWAVEPROJECTILE, ActorFactory.PulseWaveProjectileActor), _defineProperty(_actorMap, idMap.CONCSNMISSILE, ActorFactory.ConcsnMissileActor), _defineProperty(_actorMap, idMap.ENEMYCONCSNMISSILE, ActorFactory.EnemyConcsnMissileActor), _defineProperty(_actorMap, idMap.HOMINGMISSILE, ActorFactory.HomingMissileActor), _defineProperty(_actorMap, idMap.ENEMYHOMINGMISSILE, ActorFactory.EnemyHomingMissileActor), _defineProperty(_actorMap, idMap.MINIGUNPROJECTILE, ActorFactory.MinigunProjectileActor), _defineProperty(_actorMap, idMap.HEAVYCANNONPROJECTILE, ActorFactory.HeavyCannonProjectileActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNER, ActorFactory.EnemySpawnerActor), _defineProperty(_actorMap, idMap.ENEMYSPAWNMARKER, ActorFactory.EnemySpawnMarkerActor), _defineProperty(_actorMap, idMap.ITEMSPAWNER, ActorFactory.ItemSpawnerActor), _defineProperty(_actorMap, idMap.DEBUG, ActorFactory.DebugActor), _defineProperty(_actorMap, idMap.SHIELDPICKUP, ActorFactory.ShieldPickupActor), _defineProperty(_actorMap, idMap.ENERGYPICKUP, ActorFactory.EnergyPickupActor), _defineProperty(_actorMap, idMap.PLASMAPICKUP, ActorFactory.PlasmaPickupActor), _defineProperty(_actorMap, idMap.MISSILEQUADPICKUP, ActorFactory.MissileQuadPickupActor), _defineProperty(_actorMap, idMap.BULLETAMMOPICKUP, ActorFactory.BulletAmmoPickupActor), _defineProperty(_actorMap, idMap.WEAPONPICKUP, ActorFactory.WeaponPickupActor), _actorMap);
 }
 
 ActorFactory.prototype.create = function (config) {
@@ -37227,7 +38205,7 @@ module.exports = function (context) {
     return returnObject;
 };
 
-},{"logic/actor/DebugActor":186,"logic/actor/enemy/ChampionEnemyActor":192,"logic/actor/enemy/EnemyActor":193,"logic/actor/map/EnemySpawnMarkerActor":194,"logic/actor/map/EnemySpawnerActor":195,"logic/actor/map/ItemSpawnerActor":196,"logic/actor/object/BoomChunkActor":201,"logic/actor/object/ChunkActor":202,"logic/actor/object/ExplosionActor":203,"logic/actor/object/FlameChunkActor":204,"logic/actor/object/SmallExplosionActor":205,"logic/actor/pickup/BulletAmmoPickupActor":206,"logic/actor/pickup/EnergyPickupActor":207,"logic/actor/pickup/MissileQuadPickupActor":208,"logic/actor/pickup/PlasmaPickupActor":209,"logic/actor/pickup/ShieldPickupActor":210,"logic/actor/pickup/WeaponPickupActor":211,"logic/actor/player/DemoShipActor":212,"logic/actor/player/ShipActor":213,"logic/actor/projectile/ConcsnMissileActor":214,"logic/actor/projectile/EmdProjectileActor":215,"logic/actor/projectile/EnemyConcsnMissileActor":216,"logic/actor/projectile/EnemyHomingMissileActor":217,"logic/actor/projectile/GreenLaserProjectileActor":218,"logic/actor/projectile/HomingMissileActor":219,"logic/actor/projectile/LaserProjectileActor":220,"logic/actor/projectile/MinigunProjectileActor":221,"logic/actor/projectile/MoltenProjectileActor":222,"logic/actor/projectile/PlasmaBlastMiniProjectileActor":223,"logic/actor/projectile/PlasmaBlastProjectileActor":224,"logic/actor/projectile/PlasmaProjectileActor":225,"logic/actor/projectile/PulseWaveProjectileActor":226,"logic/actor/projectile/PurpleLaserProjectileActor":227,"logic/actor/projectile/RedLaserEnemyProjectileActor":228,"logic/actor/projectile/RedLaserProjectileActor":229,"logic/actor/projectile/RingProjectileActor":230,"renderer/actor/DebugActor":240,"renderer/actor/enemy/ChampionEnemyActor":249,"renderer/actor/enemy/EnemyActor":250,"renderer/actor/map/EnemySpawnMarkerActor":251,"renderer/actor/map/EnemySpawnerActor":252,"renderer/actor/map/ItemSpawnerActor":253,"renderer/actor/object/BoomChunkActor":257,"renderer/actor/object/ChunkActor":258,"renderer/actor/object/ExplosionActor":259,"renderer/actor/object/FlameChunkActor":260,"renderer/actor/object/SmallExplosionActor":261,"renderer/actor/pickup/BulletAmmoPickupActor":262,"renderer/actor/pickup/EnergyPickupActor":263,"renderer/actor/pickup/MissileQuadPickupActor":264,"renderer/actor/pickup/PlasmaPickupActor":265,"renderer/actor/pickup/ShieldPickupActor":266,"renderer/actor/pickup/WeaponPickupActor":267,"renderer/actor/player/DemoShipActor":268,"renderer/actor/player/ShipActor":269,"renderer/actor/projectile/ConcsnMissileActor":270,"renderer/actor/projectile/EmdProjectileActor":271,"renderer/actor/projectile/EnemyConcsnMissileActor":272,"renderer/actor/projectile/EnemyHomingMissileActor":273,"renderer/actor/projectile/GreenLaserProjectileActor":274,"renderer/actor/projectile/HomingMissileActor":275,"renderer/actor/projectile/LaserProjectileActor":276,"renderer/actor/projectile/MinigunProjectileActor":277,"renderer/actor/projectile/MoltenProjectileActor":278,"renderer/actor/projectile/PlasmaBlastMiniProjectileActor":279,"renderer/actor/projectile/PlasmaBlastProjectileActor":280,"renderer/actor/projectile/PlasmaProjectileActor":281,"renderer/actor/projectile/PulseWaveProjectileActor":282,"renderer/actor/projectile/PurpleLaserProjectileActor":283,"renderer/actor/projectile/RedLaserEnemyProjectileActor":284,"renderer/actor/projectile/RedLaserProjectileActor":285,"renderer/actor/projectile/RingProjectileActor":286}],373:[function(require,module,exports){
+},{"logic/actor/DebugActor":187,"logic/actor/enemy/ChampionEnemyActor":193,"logic/actor/enemy/EnemyActor":194,"logic/actor/map/EnemySpawnMarkerActor":195,"logic/actor/map/EnemySpawnerActor":196,"logic/actor/map/ItemSpawnerActor":197,"logic/actor/object/BoomChunkActor":202,"logic/actor/object/ChunkActor":203,"logic/actor/object/ExplosionActor":204,"logic/actor/object/FlameChunkActor":205,"logic/actor/object/SmallExplosionActor":206,"logic/actor/pickup/BulletAmmoPickupActor":207,"logic/actor/pickup/EnergyPickupActor":208,"logic/actor/pickup/MissileQuadPickupActor":209,"logic/actor/pickup/PlasmaPickupActor":210,"logic/actor/pickup/ShieldPickupActor":211,"logic/actor/pickup/WeaponPickupActor":212,"logic/actor/player/DemoShipActor":213,"logic/actor/player/ShipActor":214,"logic/actor/projectile/ConcsnMissileActor":215,"logic/actor/projectile/EmdProjectileActor":216,"logic/actor/projectile/EnemyConcsnMissileActor":217,"logic/actor/projectile/EnemyHomingMissileActor":218,"logic/actor/projectile/GreenLaserProjectileActor":219,"logic/actor/projectile/HeavyCannonProjectileActor":220,"logic/actor/projectile/HomingMissileActor":221,"logic/actor/projectile/LaserProjectileActor":222,"logic/actor/projectile/MinigunProjectileActor":223,"logic/actor/projectile/MoltenProjectileActor":224,"logic/actor/projectile/PlasmaBlastMiniProjectileActor":225,"logic/actor/projectile/PlasmaBlastProjectileActor":226,"logic/actor/projectile/PlasmaKickProjectileActor":227,"logic/actor/projectile/PlasmaProjectileActor":228,"logic/actor/projectile/PulseWaveProjectileActor":229,"logic/actor/projectile/PurpleLaserProjectileActor":230,"logic/actor/projectile/RedLaserEnemyProjectileActor":231,"logic/actor/projectile/RedLaserProjectileActor":232,"logic/actor/projectile/RingProjectileActor":233,"renderer/actor/DebugActor":244,"renderer/actor/enemy/ChampionEnemyActor":255,"renderer/actor/enemy/EnemyActor":256,"renderer/actor/map/EnemySpawnMarkerActor":257,"renderer/actor/map/EnemySpawnerActor":258,"renderer/actor/map/ItemSpawnerActor":259,"renderer/actor/object/BoomChunkActor":264,"renderer/actor/object/ChunkActor":265,"renderer/actor/object/ExplosionActor":266,"renderer/actor/object/FlameChunkActor":267,"renderer/actor/object/SmallExplosionActor":268,"renderer/actor/pickup/BulletAmmoPickupActor":269,"renderer/actor/pickup/EnergyPickupActor":270,"renderer/actor/pickup/MissileQuadPickupActor":271,"renderer/actor/pickup/PlasmaPickupActor":272,"renderer/actor/pickup/ShieldPickupActor":273,"renderer/actor/pickup/WeaponPickupActor":274,"renderer/actor/player/DemoShipActor":275,"renderer/actor/player/ShipActor":276,"renderer/actor/projectile/ConcsnMissileActor":277,"renderer/actor/projectile/EmdProjectileActor":278,"renderer/actor/projectile/EnemyConcsnMissileActor":279,"renderer/actor/projectile/EnemyHomingMissileActor":280,"renderer/actor/projectile/GreenLaserProjectileActor":281,"renderer/actor/projectile/HeavyCannonProjectileActor":282,"renderer/actor/projectile/HomingMissileActor":283,"renderer/actor/projectile/LaserProjectileActor":284,"renderer/actor/projectile/MinigunProjectileActor":285,"renderer/actor/projectile/MoltenProjectileActor":286,"renderer/actor/projectile/PlasmaBlastMiniProjectileActor":287,"renderer/actor/projectile/PlasmaBlastProjectileActor":288,"renderer/actor/projectile/PlasmaKickProjectileActor":289,"renderer/actor/projectile/PlasmaProjectileActor":290,"renderer/actor/projectile/PulseWaveProjectileActor":291,"renderer/actor/projectile/PurpleLaserProjectileActor":292,"renderer/actor/projectile/RedLaserEnemyProjectileActor":293,"renderer/actor/projectile/RedLaserProjectileActor":294,"renderer/actor/projectile/RingProjectileActor":295}],384:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = {
@@ -37253,7 +38231,7 @@ var ActorTypes = {
 
 module.exports = ActorTypes;
 
-},{}],374:[function(require,module,exports){
+},{}],385:[function(require,module,exports){
 "use strict";
 
 var Constants = {
@@ -37307,7 +38285,7 @@ var Constants = {
 
 module.exports = Constants;
 
-},{}],375:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('logic');
@@ -37322,6 +38300,7 @@ var ENEMY_MAP = {
     MHULK: 7,
     LHULK: 8,
     DRILLER: 9,
+    RAZORMAN: 10,
 
     CHASERBOSS: 101,
     MOOKBOSS: 102,
@@ -37330,6 +38309,8 @@ var ENEMY_MAP = {
     SHULKBOSS: 105,
     SPIDERBOSS: 106,
     MHULKBOSS: 107,
+    DRILLERBOSS: 108,
+    RAZORMANBOSS: 109,
 
     SPIDERLING: 10007
 };
@@ -37632,7 +38613,7 @@ var EnemyConfig = {
             danger: 3,
             acceleration: 800,
             turnSpeed: 1.2,
-            hp: 10,
+            hp: 7,
             hpBarCount: 5,
             enemy: true,
             type: 'enemyShip',
@@ -38343,6 +39324,100 @@ var EnemyConfig = {
             angularDamping: 0,
             inertia: 10,
             radius: 2
+        }
+    },
+
+    RAZORMAN: {
+        props: {
+            danger: 2,
+            acceleration: 1800,
+            turnSpeed: 5,
+            hp: 16,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'RAZORMAN',
+            pointWorth: 40,
+            enemyIndex: 10,
+            calloutSound: 'razorman',
+            powerLevel: 1,
+            dropChance: 0.00001,
+            logic: {
+                brain: {
+                    shootingArc: 30,
+                    nearDistance: 1,
+                    farDistance: 1,
+                    firingDistance: 20,
+                    leadSkill: 1,
+                    minStrafingDistance: 50
+                },
+                weapon: {
+                    type: 'ENEMY_PLASMAKICK',
+                    firingPoints: [{ offsetAngle: -25, offsetDistance: 15, fireAngle: 0 }, { offsetAngle: 25, offsetDistance: 15, fireAngle: 0 }]
+                },
+                onDeath: {
+                    spawn: [{
+                        amount: 10,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        amount: 5,
+                        classId: ActorFactory.FLAMECHUNK,
+                        angle: [0, 360],
+                        velocity: [200, 300]
+                    }, {
+                        classId: ActorFactory.SMALLEXPLOSION,
+                        delay: 100
+                    }, {
+                        probability: 0.7,
+                        classId: ActorFactory.SHIELDPICKUP,
+                        delay: 100
+                    }, {
+                        probability: 0.2,
+                        classId: ActorFactory.SHIELDPICKUP,
+                        delay: 100
+                    }],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 4.5,
+                    scaleY: 4.5,
+                    scaleZ: 4.5,
+                    geometry: 'razorman_static',
+                    material: 'enemyModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },
+        bodyConfig: {
+            mass: 8,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
         }
     },
 
@@ -39149,13 +40224,258 @@ var EnemyConfig = {
             inertia: 10,
             radius: 8
         }
+    },
+
+    RAZORMANBOSS: {
+        props: {
+            invisible: true,
+            danger: 3,
+            acceleration: 4000,
+            turnSpeed: 5,
+            hp: 70,
+            hpBarCount: 7,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'BLADE SPECTRE',
+            pointWorth: 800,
+            enemyIndex: 10,
+            calloutSound: 'razorman',
+            powerLevel: 1,
+            dropChance: 0.00001,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
+            logic: {
+                brain: {
+                    shootingArc: 30,
+                    nearDistance: 1,
+                    farDistance: 1,
+                    firingDistance: 20,
+                    leadSkill: 1,
+                    minStrafingDistance: 50
+                },
+                weapon: {
+                    type: 'ENEMY_PLASMAKICK',
+                    firingPoints: [{ offsetAngle: -25, offsetDistance: 20, fireAngle: 0 }, { offsetAngle: 25, offsetDistance: 20, fireAngle: 0 }]
+                },
+                onDeath: {
+                    spawn: [{
+                        amount: 20,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        amount: 10,
+                        classId: ActorFactory.BOOMCHUNK,
+                        angle: [0, 360],
+                        velocity: [60, 120]
+                    }, {
+                        amount: 20,
+                        classId: ActorFactory.FLAMECHUNK,
+                        angle: [0, 360],
+                        velocity: [250, 300]
+                    }, {
+                        classId: ActorFactory.EXPLOSION,
+                        delay: 100
+                    }, {
+                        amount: 3,
+                        classId: ActorFactory.ENERGYPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        amount: 3,
+                        classId: ActorFactory.SHIELDPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        classId: ActorFactory.WEAPONPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100],
+                        subclassId: Utils.rand(1, 15)
+                    }],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                },
+                championConfig: {
+                    guardianTypes: ['RAZORMAN'],
+                    guardianCount: 3,
+                    spawnTime: 20
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 6,
+                    scaleY: 6,
+                    scaleZ: 6,
+                    geometry: 'razorman_static',
+                    material: 'cloakedModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
+        }
+    },
+
+    DRILLERBOSS: {
+        props: {
+            invisible: true,
+            danger: 3,
+            acceleration: 3600,
+            turnSpeed: 1.2,
+            hp: 50,
+            hpBarCount: 5,
+            enemy: true,
+            type: 'enemyShip',
+            name: 'HUNTER',
+            pointWorth: 2000,
+            enemyIndex: 9,
+            calloutSound: 'sniper',
+            powerLevel: 1.1,
+            delayedDeath: {
+                time: 180,
+                deathObjectSpawnChance: 0.1,
+                deathObjectPool: [ActorFactory.CHUNK, ActorFactory.FLAMECHUNK]
+            },
+            logic: {
+                brain: {
+                    shootingArc: 8,
+                    nearDistance: 100,
+                    farDistance: 700,
+                    firingDistance: 700,
+                    leadSkill: 0.6
+                },
+                weapon: {
+                    type: 'HEAVYCANNON',
+                    firingPoints: [{ offsetAngle: 0, offsetDistance: 16, fireAngle: 0 }]
+                },
+                onDeath: {
+                    spawn: [{
+                        amount: 20,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        amount: 10,
+                        classId: ActorFactory.BOOMCHUNK,
+                        angle: [0, 360],
+                        velocity: [60, 120]
+                    }, {
+                        amount: 20,
+                        classId: ActorFactory.FLAMECHUNK,
+                        angle: [0, 360],
+                        velocity: [250, 300]
+                    }, {
+                        classId: ActorFactory.EXPLOSION,
+                        delay: 100
+                    }, {
+                        amount: 3,
+                        classId: ActorFactory.ENERGYPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        amount: 3,
+                        classId: ActorFactory.SHIELDPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }, {
+                        classId: ActorFactory.WEAPONPICKUP,
+                        angle: [0, 360],
+                        velocity: [50, 100],
+                        subclassId: Utils.rand(1, 15)
+                    }, {
+                        probability: 1,
+                        amount: 2,
+                        classId: ActorFactory.BULLETAMMOPICKUP,
+                        angle: [0, 360],
+                        velocity: [15, 20]
+                    }, {
+                        probability: 0.5,
+                        amount: 2,
+                        classId: ActorFactory.BULLETAMMOPICKUP,
+                        angle: [0, 360],
+                        velocity: [15, 20]
+                    }, {
+                        probability: 0.25,
+                        amount: 2,
+                        classId: ActorFactory.BULLETAMMOPICKUP,
+                        angle: [0, 360],
+                        velocity: [15, 20]
+                    }],
+                    sounds: {
+                        sounds: ['debris1', 'debris2', 'debris3', 'debris4', 'debris5', 'debris6'],
+                        volume: 10
+                    }
+                },
+                onHit: {
+                    spawn: [{
+                        amount: 1,
+                        probability: 0.3,
+                        classId: ActorFactory.CHUNK,
+                        angle: [0, 360],
+                        velocity: [50, 100]
+                    }],
+                    sounds: {
+                        sounds: ['armorHit1', 'armorHit2'],
+                        volume: 1
+                    }
+                }
+            },
+            render: {
+                model: {
+                    scaleX: 6.1,
+                    scaleY: 6.1,
+                    scaleZ: 6.1,
+                    geometry: 'driller',
+                    material: 'cloakedModel'
+                },
+                onDeath: {
+                    premades: ['OrangeBoomSmall'],
+                    uiFlash: 'white',
+                    shake: true
+                }
+            }
+        },
+        bodyConfig: {
+            mass: 20,
+            damping: 0.75,
+            angularDamping: 0,
+            inertia: 10,
+            radius: 7
+        }
     }
 
 };
 
 module.exports = EnemyConfig;
 
-},{"shared/ActorFactory":372}],376:[function(require,module,exports){
+},{"shared/ActorFactory":383}],387:[function(require,module,exports){
 "use strict";
 
 /**
@@ -39260,7 +40580,7 @@ EventEmitter.prototype = {
     }
 };
 
-},{}],377:[function(require,module,exports){
+},{}],388:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -39453,6 +40773,28 @@ var Utils = {
         });
 
         return o;
+    },
+
+    generateUUID: function generateUUID() {
+        // http://www.broofa.com/Tools/Math.uuid.htm
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+        var uuid = new Array(36);
+        var rnd = 0,
+            r;
+
+        for (var i = 0; i < 36; i++) {
+            if (i === 8 || i === 13 || i === 18 || i === 23) {
+                uuid[i] = '-';
+            } else if (i === 14) {
+                uuid[i] = '4';
+            } else {
+                if (rnd <= 0x02) rnd = 0x2000000 + Math.random() * 0x1000000 | 0;
+                r = rnd & 0xf;
+                rnd = rnd >> 4;
+                uuid[i] = chars[i === 19 ? r & 0x3 | 0x8 : r];
+            }
+        }
+        return uuid.join('');
     }
 };
 
@@ -39487,7 +40829,7 @@ if (!Function.prototype.mixin) {
 
 module.exports = Utils;
 
-},{}],378:[function(require,module,exports){
+},{}],389:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -39511,9 +40853,11 @@ var WEAPON_MAP = {
     MOLTEN_BALL_SHOTGUN: 14,
     SLOW_PULSE_WAVE_GUN: 15,
     MINIGUN: 16,
+    HEAVYCANNON: 17,
 
     ENEMY_HOMING_MISSILE_LAUNCHER: 100,
     ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: 101,
+    ENEMY_PLASMAKICK: 102,
 
     NONE: 999
 };
@@ -39776,7 +41120,7 @@ var WeaponConfig = {
     },
     PURPLE_BLASTER: {
         projectileClass: ActorFactory.PURPLELASERPROJECTILE,
-        cooldown: 150,
+        cooldown: 60,
         velocity: 800,
         burstCount: 2,
         burstCooldown: 20,
@@ -39803,12 +41147,39 @@ var WeaponConfig = {
         ammoConfig: {
             bullets: 2
         }
+    },
+    HEAVYCANNON: {
+        projectileClass: ActorFactory.HEAVYCANNONPROJECTILE,
+        cooldown: 130,
+        velocity: 1500,
+        randomAngle: 1,
+        sound: 'heavycannon',
+        firingMode: 'alternate',
+        name: 'HEAVY CANNON',
+        modelName: 'amcannon',
+        recoil: 30000,
+        ammoConfig: {
+            bullets: 20
+        }
+    },
+    ENEMY_PLASMAKICK: {
+        projectileClass: ActorFactory.PLASMAKICKPROJECTILE,
+        cooldown: 20,
+        velocity: 1000,
+        sound: 'minigun',
+        firingMode: 'simultaneous',
+        name: 'PLASMAKICK',
+        modelName: 'minigun',
+        recoil: 20000,
+        ammoConfig: {
+            plasma: 1
+        }
     }
 };
 
 module.exports = WeaponConfig;
 
-},{"shared/ActorFactory":372}],379:[function(require,module,exports){
+},{"shared/ActorFactory":383}],390:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {
@@ -39838,4 +41209,4 @@ WorkerBus.prototype.handleMessage = function (message) {
 
 module.exports = WorkerBus;
 
-},{}]},{},[184]);
+},{}]},{},[185]);

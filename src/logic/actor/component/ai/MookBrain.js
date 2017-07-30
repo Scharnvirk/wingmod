@@ -2,6 +2,7 @@ var BaseBrain = require('logic/actor/component/ai/BaseBrain');
 
 function MookBrain(config){
 
+    config.minStrafingDistance = config.minStrafingDistance || 1;
     config.shootingArc = config.shootingArc || 15;
     config.nearDistance = config.nearDistance || 40;
     config.farDistance = config.farDistance || 90;
@@ -213,8 +214,12 @@ MookBrain.prototype.randomStrafeAction = function(){
     }
 };
 
+MookBrain.prototype.stopStrafing = function() {
+    this.orders.horizontalThrust = 0;
+};
+
 MookBrain.prototype.playCalloutSound = function() {
-    if (this.actor.calloutSound) {
+    if (this.actor.calloutSound && !this.actor.props.invisible) {
         if (Utils.rand(0, 150) === 0) {
             this.actor.playSound([this.actor.calloutSound]);
         }
@@ -238,9 +243,15 @@ MookBrain.prototype._dogfighterSeesEnemyAction = function() {
 
     if (distance < this.firingDistance){
         this.shootAction(distance);
+    } else {
+        this.orders.shoot = false;
     }
 
-    this.randomStrafeAction();
+    if (distance > this.minStrafingDistance){
+        this.randomStrafeAction();
+    } else {
+        this.stopStrafing();
+    }
     this.playCalloutSound();
 };
 

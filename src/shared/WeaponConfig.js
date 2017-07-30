@@ -19,9 +19,11 @@ const WEAPON_MAP = {
     MOLTEN_BALL_SHOTGUN: 14,
     SLOW_PULSE_WAVE_GUN: 15,
     MINIGUN: 16,
+    HEAVYCANNON: 17,
     
     ENEMY_HOMING_MISSILE_LAUNCHER: 100,
     ENEMY_CHAMPION_CONCUSSION_MISSILE_LAUNCHER: 101,
+    ENEMY_PLASMAKICK: 102,
 
     NONE: 999
 };
@@ -284,7 +286,7 @@ const WeaponConfig = {
     },
     PURPLE_BLASTER: {
         projectileClass: ActorFactory.PURPLELASERPROJECTILE,
-        cooldown: 150,
+        cooldown: 60,
         velocity: 800,
         burstCount: 2,
         burstCooldown: 20,
@@ -310,6 +312,33 @@ const WeaponConfig = {
         recoil: 1200,
         ammoConfig: {
             bullets: 2
+        }
+    },
+    HEAVYCANNON: {
+        projectileClass: ActorFactory.HEAVYCANNONPROJECTILE,    
+        cooldown: 130,
+        velocity: 1500,
+        randomAngle: 1,
+        sound: 'heavycannon', 
+        firingMode: 'alternate',
+        name: 'HEAVY CANNON',
+        modelName: 'amcannon',
+        recoil: 30000,
+        ammoConfig: {
+            bullets: 20
+        }
+    },
+    ENEMY_PLASMAKICK: {
+        projectileClass: ActorFactory.PLASMAKICKPROJECTILE,
+        cooldown: 20,
+        velocity: 1000,
+        sound: 'minigun', 
+        firingMode: 'simultaneous',
+        name: 'PLASMAKICK',
+        modelName: 'minigun',
+        recoil: 20000,
+        ammoConfig: {
+            plasma: 1
         }
     }
 };

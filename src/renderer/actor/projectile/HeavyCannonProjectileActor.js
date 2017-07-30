@@ -1,31 +1,32 @@
 var BaseActor = require('renderer/actor/BaseActor');
 var ParticleMixin = require('renderer/actor/mixin/ParticleMixin');
 
-function MinigunProjectileActor(){
+function HeavyCannonProjectileActor(){
     BaseActor.apply(this, arguments);
 }
 
-MinigunProjectileActor.extend(BaseActor);
-MinigunProjectileActor.mixin(ParticleMixin);
+HeavyCannonProjectileActor.extend(BaseActor);
+HeavyCannonProjectileActor.mixin(ParticleMixin);
 
-MinigunProjectileActor.prototype.customUpdate = function(){
-    this.createPremade({premadeName: 'BulletTrail'});
+HeavyCannonProjectileActor.prototype.customUpdate = function(){
+    this.createPremade({premadeName: 'LargeBulletTrail'});
 };
 
-MinigunProjectileActor.prototype.onDeath = function(){
+HeavyCannonProjectileActor.prototype.onDeath = function(){
     var offsetPosition = this.getOffsetPosition(-3);
-    this.createPremade({premadeName: 'OrangeSparks', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
+    this.createPremade({premadeName: 'ManyOrangeSparks', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
+    this.createPremade({premadeName: 'OrangeBoomTiny', offsetPositionX: offsetPosition[0], offsetPositionY: offsetPosition[1]});
 };
 
-MinigunProjectileActor.prototype.onSpawn = function(){
+HeavyCannonProjectileActor.prototype.onSpawn = function(){
     this.createParticle({
         particleClass: 'particleAdd',
         color: 'ORANGE',
         alphaMultiplier: 0.7,
-        scale: 5,
+        scale: 15,
         particleVelocity: 1,
         alpha: 7,
-        lifeTime: 1,
+        lifeTime: 2,
         spriteNumber: 2
     });
 
@@ -34,24 +35,24 @@ MinigunProjectileActor.prototype.onSpawn = function(){
         particleClass: 'particleAdd',
         offsetPositionX: offsetPosition[0],
         offsetPositionY: offsetPosition[1],
-        color: 'ORANGE',
+        color: 'WHITE',
         alphaMultiplier: 0.7,
-        scale: 4,
+        scale: 12,
         particleVelocity: 1,
         alpha: 0.5,
-        lifeTime: 1,
+        lifeTime: 2,
         spriteNumber: 2
     });
 
     this.createParticle({
         particleClass: 'particleAdd',
         color: 'ORANGE',
-        scale: 8,
+        scale: 24,
         alpha: 0.4,
         alphaMultiplier: 0.7,
         particleVelocity: 2,
-        lifeTime: 10
+        lifeTime: 20
     });
 };
 
-module.exports = MinigunProjectileActor;
+module.exports = HeavyCannonProjectileActor;

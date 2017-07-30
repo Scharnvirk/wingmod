@@ -4,7 +4,7 @@ function SoundLoader(config){
 }
 
 SoundLoader.prototype.loadSounds = function(){ 
-    createjs.Sound.alternateExtensions = ['mp3']; 
+    createjs.Sound.alternateExtensions = ['mp3'];
     createjs.Sound.registerSound({src:'sounds/laser2.mp3', id:'blue_laser'});
     createjs.Sound.registerSound({src:'sounds/laser13.mp3', id:'red_laser'});
     createjs.Sound.registerSound({src:'sounds/laser17.mp3', id:'red_light_laser'});
@@ -29,6 +29,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/callout9.mp3', id:'spider'}); 
     createjs.Sound.registerSound({src:'sounds/callout10.mp3', id:'spiderling'});
     createjs.Sound.registerSound({src:'sounds/callout12.mp3', id:'lhulk'});
+    createjs.Sound.registerSound({src:'sounds/callout8.mp3', id:'razorman'}); 
     createjs.Sound.registerSound({src:'sounds/powerBoom2.mp3', id:'spawn'});
     createjs.Sound.registerSound({src:'sounds/weaponChange1.mp3', id:'cannon_change'});
     createjs.Sound.registerSound({src:'sounds/emptyError.mp3', id:'empty'});
@@ -43,6 +44,7 @@ SoundLoader.prototype.loadSounds = function(){
     createjs.Sound.registerSound({src:'sounds/distrupter_fire.wav', id:'disrupter'});
     createjs.Sound.registerSound({src:'sounds/missile2.mp3', id:'missile'});
     createjs.Sound.registerSound({src:'sounds/gun1.mp3', id:'minigun'});
+    createjs.Sound.registerSound({src:'sounds/gun3.mp3', id:'heavycannon'});
 };
 
 module.exports = SoundLoader;

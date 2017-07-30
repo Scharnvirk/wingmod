@@ -1,5 +1,4 @@
 var BaseMesh = require('renderer/actor/component/mesh/BaseMesh');
-var ModelStore = require('renderer/assetManagement/model/ModelStore');
 
 function ShipMesh(config){
     BaseMesh.apply(this, arguments);

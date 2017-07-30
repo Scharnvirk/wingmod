@@ -140,7 +140,7 @@ EnemySpawnerActor.prototype._pickEnemyClassToSpawn = function() {
 };
 
 EnemySpawnerActor.prototype._pickEnemyChampionClassToSpawn = function() {
-    return EnemyConfig.getNameById(Utils.rand(101, 107));
+    return EnemyConfig.getNameById(Utils.rand(101, 109));
 };
 
 EnemySpawnerActor.prototype._updateSpawnPool = function() {

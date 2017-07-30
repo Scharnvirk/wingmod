@@ -89,6 +89,22 @@ const ActorConfig = {
         }
     },
 
+    PLASMAKICKPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 5,
+            removeOnHit: true,
+            timeout: 1,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'playerProjectile'
+        },
+        bodyConfig: {
+            radius: 3,
+            mass: 2.5
+        }
+    },
+
     EMDPROJECTILE: {
         props: {
             hp: 1,
@@ -392,6 +408,24 @@ const ActorConfig = {
         }
     },
 
+    HEAVYCANNONPROJECTILE: {
+        props: {
+            hp: 1,
+            damage: 16,
+            removeOnHit: true,
+            timeout: 60,
+            collisionFixesPosition: true,
+            soundsOnDeath: ['matterhit3'],
+            type: 'enemyProjectile'
+        },
+        bodyConfig: {
+            radius: 1,
+            mass: 2,
+            ccdSpeedThreshold: 1,
+            ccdIterations: 4
+        }
+    },
+
     CHUNK: {
         props:{
             hp: 1,
@@ -457,17 +491,20 @@ const ActorConfig = {
             spawnPool: ['CHASER', 'MOOK', 'ORBOT', 'SNIPER'],
             spawnPoolAdditions: {
                 60: 'SHULK',
+                90: 'RAZORMAN',
                 120: 'SHULK',
                 150: 'SPIDER',
-                180: 'MHULK',
-                210: 'SPIDER',
-                240: 'MHULK',
-                270: 'DRILLER',
-                300: 'SHULK',
-                360: 'SPIDER',
-                390: 'LHULK',
-                420: 'DRILLER',
-                550: 'LHULK'
+                180: 'RAZORMAN',
+                210: 'MHULK',
+                240: 'SPIDER',
+                270: 'MHULK',
+                300: 'DRILLER',
+                330: 'RAZORMAN',
+                360: 'SHULK',
+                390: 'SPIDER',
+                420: 'LHULK',
+                450: 'DRILLER',
+                480: 'LHULK'
             }
         },
         bodyConfig: {
