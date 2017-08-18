@@ -5,7 +5,7 @@ const ActorConfig = {
         props: {
             canPickup: true,
             acceleration: 1000,
-            turnSpeed: 12,
+            turnSpeed: 3,
             hp: 50,
             shield: 50,
             hpBarCount: 10,

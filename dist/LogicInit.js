@@ -429,7 +429,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: Utils.rand(1,17),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0         
+    //         angle: 0          
     //     });
     // }
 
@@ -439,7 +439,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: 16,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0         
+    //         angle: 0          
     //     });
     // }
 
@@ -448,7 +448,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         classId: ActorFactory.BULLETAMMOPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0         
+    //         angle: 0          
     //     });
     // }
 
@@ -993,7 +993,7 @@ function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1984,8 +1984,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -2011,7 +2011,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
+    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -2941,7 +2941,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         var timeCondition = Utils.rand(Math.min(this.timer / 60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
         var limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
         if (timeCondition && limitCondition) {
-            this.createEnemySpawnMarker(this._pickEnemyClassToSpawn());
+            // this.createEnemySpawnMarker(this._pickEnemyClassToSpawn()); 
         }
     }
 
@@ -3275,7 +3275,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
+        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -3308,8 +3308,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
         var p = this.getPosition();
 
@@ -3331,21 +3331,11 @@ var InputMixin = {
     _lastInputState: {},
 
     applyLookAtAngleInput: function applyLookAtAngleInput(inputState) {
-        var angleForce = 0;
-
-        var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
-        var angleVector = this.getAngleVector();
-        var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
-
-        if (angle < 180 && angle > 0) {
-            angleForce = Math.min(angle / this.getStepAngle(), 1) * -1;
+        if (inputState.left || inputState.right) {
+            this._applyKeyboardRotation(inputState);
+        } else {
+            this._applyMouseRotation(inputState);
         }
-
-        if (angle >= 180 && angle < 360) {
-            angleForce = Math.min((360 - angle) / this.getStepAngle(), 1);
-        }
-
-        this.setAngleForce(angleForce);
     },
 
     applyThrustInput: function applyThrustInput(inputState) {
@@ -3411,6 +3401,55 @@ var InputMixin = {
 
     saveLastInput: function saveLastInput(inputState) {
         this._lastInputState = Object.assign({}, inputState);
+    },
+
+    // Mouse rotation which stops when player stops moving the mouse
+    _applyMouseRotation: function _applyMouseRotation(inputState) {
+        var angleForce = 0;
+
+        var currentRotationAngle = Utils.angleToVector(inputState.mouseRotation, 1);
+        var lastRotationAngle = Utils.angleToVector(this._lastInputState.mouseRotation, 1);
+
+        var angle = Utils.angleBetweenPointsFromCenter(lastRotationAngle, currentRotationAngle);
+
+        if (angle < 180 && angle > 0) {
+            angleForce = Math.min(angle / this.getStepAngle(), 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            angleForce = Math.min((360 - angle) / this.getStepAngle(), 1);
+        }
+
+        this.setAngleForce(angleForce);
+    },
+
+    // Mouse roation which stops when target mouse rotation was achieved. 
+    // Harder to control because there is no cursor visible. 
+    // Works better with high rotation speeds.
+    _applyMouseLookAtRotation: function _applyMouseLookAtRotation(inputState) {
+        var angleForce = 0;
+
+        var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
+        var angleVector = this.getAngleVector();
+        var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
+
+        if (angle < 180 && angle > 0) {
+            angleForce = Math.min(angle / this.getStepAngle(), 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            angleForce = Math.min((360 - angle) / this.getStepAngle(), 1);
+        }
+
+        this.setAngleForce(angleForce);
+    },
+
+    // Keyboard rotation
+    _applyKeyboardRotation: function _applyKeyboardRotation(inputState) {
+        var angleForce = 0;
+        if (inputState.left > 0) angleForce = 1;
+        if (inputState.right > 0) angleForce = -1;
+        this.setAngleForce(angleForce);
     }
 };
 
@@ -7813,7 +7852,7 @@ var ActorConfig = {
         props: {
             canPickup: true,
             acceleration: 1000,
-            turnSpeed: 12,
+            turnSpeed: 3,
             hp: 50,
             shield: 50,
             hpBarCount: 10,
@@ -10929,7 +10968,7 @@ EventEmitter.prototype = {
 },{}],122:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
@@ -10978,8 +11017,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
+        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -11098,7 +11137,7 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such.
+    //expects each key and value to be unique; intended for name:id mappings and such. 
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;

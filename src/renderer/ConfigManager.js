@@ -9,7 +9,8 @@ function ConfigManager(config){
         resolution: 2,
         backgroundMode: 0,
         renderDistance: 5,
-        difficulty: 0
+        difficulty: 0,
+        controlSetup: 0
     };
 
     this.storageKey = 'wingmodConfig033';
@@ -108,6 +109,12 @@ ConfigManager.prototype.saveRenderDistance = function(value){
 ConfigManager.prototype.saveDifficulty = function(value){
     this.settingConfig.difficulty = value;
     this.config.difficulty = value;
+    this.saveToLocalStorage();
+};
+
+ConfigManager.prototype.saveControlSetup = function(value){
+    this.settingConfig.controlSetup = value;
+    this.config.controlSetup = value;
     this.saveToLocalStorage();
 };
 

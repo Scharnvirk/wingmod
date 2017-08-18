@@ -1,22 +1,12 @@
 var InputMixin = {
     _lastInputState: {},
 
-    applyLookAtAngleInput: function(inputState){
-        let angleForce = 0;
-
-        var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
-        var angleVector = this.getAngleVector();
-        var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
-
-        if (angle < 180 && angle > 0) {
-            angleForce = Math.min(angle/this.getStepAngle(), 1) * -1;
-        }
-
-        if (angle >= 180 && angle < 360) {
-            angleForce = Math.min((360-angle)/this.getStepAngle(), 1);
-        }
-
-        this.setAngleForce(angleForce);
+    applyLookAtAngleInput: function(inputState){        
+        if (inputState.left || inputState.right) {
+            this._applyKeyboardRotation(inputState);
+        } else {
+            this._applyMouseRotation(inputState);
+        }        
     },
 
     applyThrustInput: function(inputState){
@@ -80,8 +70,57 @@ var InputMixin = {
         }
     },
 
-    saveLastInput: function(inputState){
+    saveLastInput: function(inputState) {
         this._lastInputState = Object.assign({}, inputState);
+    },
+
+    // Mouse rotation which stops when player stops moving the mouse
+    _applyMouseRotation: function(inputState) {
+        let angleForce = 0;
+
+        let currentRotationAngle = Utils.angleToVector(inputState.mouseRotation, 1);
+        let lastRotationAngle = Utils.angleToVector(this._lastInputState.mouseRotation, 1);
+
+        let angle = Utils.angleBetweenPointsFromCenter(lastRotationAngle, currentRotationAngle);
+
+        if (angle < 180 && angle > 0) {
+            angleForce = Math.min(angle/this.getStepAngle(), 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            angleForce = Math.min((360-angle)/this.getStepAngle(), 1);
+        }
+
+        this.setAngleForce(angleForce);
+    },
+
+    // Mouse roation which stops when target mouse rotation was achieved. 
+    // Harder to control because there is no cursor visible. 
+    // Works better with high rotation speeds.
+    _applyMouseLookAtRotation: function(inputState) {
+        let angleForce = 0;
+
+        var lookTarget = Utils.angleToVector(inputState.mouseRotation, 1);
+        var angleVector = this.getAngleVector();
+        var angle = Utils.angleBetweenPointsFromCenter(angleVector, lookTarget);
+
+        if (angle < 180 && angle > 0) {
+            angleForce = Math.min(angle/this.getStepAngle(), 1) * -1;
+        }
+
+        if (angle >= 180 && angle < 360) {
+            angleForce = Math.min((360-angle)/this.getStepAngle(), 1);
+        }
+
+        this.setAngleForce(angleForce);
+    },
+
+    // Keyboard rotation
+    _applyKeyboardRotation: function(inputState) {
+        let angleForce = 0;
+        if (inputState.left > 0) angleForce = 1;
+        if (inputState.right > 0) angleForce = -1;        
+        this.setAngleForce(angleForce);
     }
 };
 
