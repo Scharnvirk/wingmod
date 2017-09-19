@@ -220,7 +220,7 @@ if ('function' === typeof importScripts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"logic/Core":3,"shared/Constants":119,"shared/EventEmitter":121,"shared/Utils":122}],3:[function(require,module,exports){
+},{"logic/Core":3,"shared/Constants":119,"shared/EventEmitter":121,"shared/Utils":123}],3:[function(require,module,exports){
 'use strict';
 
 var RenderBus = require('logic/RenderBus');
@@ -429,7 +429,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: Utils.rand(1,17),
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -439,7 +439,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         subclassId: 16,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -448,7 +448,7 @@ GameScene.prototype.fillScene = function (mapBodies) {
     //         classId: ActorFactory.BULLETAMMOPICKUP,
     //         positionX: Utils.rand(-100, 100),
     //         positionY: Utils.rand(-100, 100),
-    //         angle: 0          
+    //         angle: 0         
     //     });
     // }
 
@@ -686,7 +686,7 @@ GameScene.prototype.checkGameOverCondition = function () {
 
 module.exports = GameScene;
 
-},{"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":116,"shared/ActorFactory":117,"shared/EnemyConfig":120,"shared/WeaponConfig":123}],5:[function(require,module,exports){
+},{"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":116,"shared/ActorFactory":117,"shared/EnemyConfig":120,"shared/WeaponConfig":124}],5:[function(require,module,exports){
 'use strict';
 
 var WeaponConfig = require('shared/WeaponConfig');
@@ -986,14 +986,14 @@ GameState.prototype._subtractAmmo = function (ammoConfig) {
 
 module.exports = GameState;
 
-},{"shared/WeaponConfig":123}],6:[function(require,module,exports){
+},{"shared/WeaponConfig":124}],6:[function(require,module,exports){
 'use strict';
 
 function GameWorld(config) {
     p2.World.apply(this, arguments);
 
     this.positionTransferArray = new Float32Array(Constants.STORAGE_SIZE * 3); //this holds position transfer data for all actors, needs to be ultra-fast
-    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too 
+    this.configTransferArray = new Uint16Array(Constants.STORAGE_SIZE * 3); //this holds config transfer data for all actors, needs to be ultra-fast too
     //WATCH OUT FOR SIZE!!! UP TO 64K items!
 
     this.deadTransferArray = []; //amount of dying actors per cycle is minscule; it is more efficient to use standard array here
@@ -1131,7 +1131,7 @@ RenderBus.prototype.handleMessage = function (message) {
 
 module.exports = RenderBus;
 
-},{"shared/WorkerBus":124}],8:[function(require,module,exports){
+},{"shared/WorkerBus":125}],8:[function(require,module,exports){
 'use strict';
 
 function WorldAiMapExtractor(config) {
@@ -1913,7 +1913,7 @@ WeaponSystem.prototype._createDropPickup = function (weaponConfig) {
 
 module.exports = WeaponSystem;
 
-},{"logic/actor/component/weapon/Weapon":16,"shared/ActorFactory":117,"shared/WeaponConfig":123}],13:[function(require,module,exports){
+},{"logic/actor/component/weapon/Weapon":16,"shared/ActorFactory":117,"shared/WeaponConfig":124}],13:[function(require,module,exports){
 'use strict';
 
 var ActorTypes = require('shared/ActorTypes');
@@ -1984,8 +1984,8 @@ BaseBrain.prototype.getEnemyPosition = function () {
 };
 
 BaseBrain.prototype.getEnemyPositionWithLead = function () {
-    var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+    var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     var p = this.actor.getPosition();
     var tp = this.enemyActor.getPosition();
@@ -2011,7 +2011,7 @@ BaseBrain.prototype.castPosition = function (position, imageObject) {
 };
 
 BaseBrain.prototype.isWallBetween = function (positionA, positionB) {
-    var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+    var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
     if (this.manager.aiImage) {
         var imageObject = this.manager.aiImage;
@@ -2864,7 +2864,7 @@ EnemyActor.prototype._notifyParentOfDeath = function () {
 
 module.exports = EnemyActor;
 
-},{"logic/actor/BaseActor":10,"logic/actor/component/ai/MookBrain":14,"logic/actor/component/body/BaseBody":15,"logic/actor/component/weapon/Weapon":16,"logic/actor/mixin/BrainMixin":22,"shared/ActorFactory":117,"shared/EnemyConfig":120,"shared/WeaponConfig":123}],19:[function(require,module,exports){
+},{"logic/actor/BaseActor":10,"logic/actor/component/ai/MookBrain":14,"logic/actor/component/body/BaseBody":15,"logic/actor/component/weapon/Weapon":16,"logic/actor/mixin/BrainMixin":22,"shared/ActorFactory":117,"shared/EnemyConfig":120,"shared/WeaponConfig":124}],19:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('logic/actor/BaseActor');
@@ -2941,7 +2941,7 @@ EnemySpawnerActor.prototype.customUpdate = function () {
         var timeCondition = Utils.rand(Math.min(this.timer / 60, this.props.spawnRate), this.props.spawnRate) === this.props.spawnRate;
         var limitCondition = this.gameState.getActorCountByType('enemyShip') < this.state.globalMaxSpawnedEnemies;
         if (timeCondition && limitCondition) {
-            // this.createEnemySpawnMarker(this._pickEnemyClassToSpawn()); 
+            this.createEnemySpawnMarker(this._pickEnemyClassToSpawn());
         }
     }
 
@@ -3275,7 +3275,7 @@ var HomingMixin = {
     },
 
     _isWallBetween: function _isWallBetween(positionA, positionB) {
-        var densityMultiplier = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.5;
+        var densityMultiplier = arguments.length <= 2 || arguments[2] === undefined ? 0.5 : arguments[2];
 
         if (this.manager.aiImage) {
             var imageObject = this.manager.aiImage;
@@ -3308,8 +3308,8 @@ var HomingMixin = {
         return [parseInt(position[0] * imageObject.lengthMultiplierX + imageObject.centerX), parseInt(position[1] * imageObject.lengthMultiplierY + imageObject.centerY)];
     },
     _getTargetPositionWithLead: function _getTargetPositionWithLead() {
-        var leadSpeed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var leadSkill = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        var leadSpeed = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+        var leadSkill = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
         var p = this.getPosition();
 
@@ -3325,16 +3325,18 @@ var HomingMixin = {
 module.exports = HomingMixin;
 
 },{}],24:[function(require,module,exports){
-"use strict";
+'use strict';
+
+var KeyboardLayouts = require('shared/KeyboardLayouts');
 
 var InputMixin = {
-    _lastInputState: {},
+    _lastInputStates: [{}, {}, {}],
 
     applyLookAtAngleInput: function applyLookAtAngleInput(inputState) {
-        if (inputState.left || inputState.right) {
-            this._applyKeyboardRotation(inputState);
-        } else {
+        if (KeyboardLayouts.getKeyForControl('rotateLeft') === 'mouseX') {
             this._applyMouseRotation(inputState);
+        } else {
+            this._applyKeyboardRotation(inputState);
         }
     },
 
@@ -3342,75 +3344,93 @@ var InputMixin = {
         this.setThrust(0);
         this.setHorizontalThrust(0);
 
-        if (inputState.a) {
+        if (inputState[KeyboardLayouts.getKeyForControl('strafeLeft')]) {
             this.setHorizontalThrust(-1);
         }
 
-        if (inputState.d) {
+        if (inputState[KeyboardLayouts.getKeyForControl('strafeRight')]) {
             this.setHorizontalThrust(1);
         }
 
-        if (inputState.w) {
+        if (inputState[KeyboardLayouts.getKeyForControl('forward')]) {
             this.setThrust(1);
         }
 
-        if (inputState.s) {
+        if (inputState[KeyboardLayouts.getKeyForControl('backward')]) {
             this.setThrust(-1);
         }
     },
 
     applyWeaponInput: function applyWeaponInput(inputState) {
-        if (inputState.mouseLeft) {
+        var swapWeapon1Key = KeyboardLayouts.getKeyForControl('swapWeapon1');
+        var swapWeapon2Key = KeyboardLayouts.getKeyForControl('swapWeapon2');
+
+        if (inputState[KeyboardLayouts.getKeyForControl('fireWeapon1')]) {
             this.primaryWeaponSystem.shoot();
         } else {
             this.primaryWeaponSystem.stopShooting();
         }
 
-        if (inputState.mouseRight) {
+        if (inputState[KeyboardLayouts.getKeyForControl('fireWeapon2')]) {
             this.secondaryWeaponSystem.shoot();
         } else {
             this.secondaryWeaponSystem.stopShooting();
         }
 
-        if (!inputState.q && this._lastInputState.q === 1) {
+        if (!inputState[swapWeapon1Key] && this._lastInputStates[0][swapWeapon1Key] === 1) {
             this.secondaryWeaponSystem.switchWeaponToNext();
         }
 
-        if (!inputState.e && this._lastInputState.e === 1) {
+        if (!inputState[swapWeapon2Key] && this._lastInputStates[0][swapWeapon2Key] === 1) {
             this.primaryWeaponSystem.switchWeaponToNext();
         }
 
-        if (inputState.q && this._lastInputState.q > 1) {
+        if (inputState[swapWeapon1Key] && this._lastInputStates[0][swapWeapon1Key] > 1) {
             this.secondaryWeaponSystem.dropWeapon();
             this.secondaryWeaponSystem.lockDropWeapon();
         }
 
-        if (inputState.e && this._lastInputState.e > 1) {
+        if (inputState[swapWeapon2Key] && this._lastInputStates[0][swapWeapon2Key] > 1) {
             this.primaryWeaponSystem.dropWeapon();
             this.primaryWeaponSystem.lockDropWeapon();
         }
 
-        if (!inputState.q && this._lastInputState.q > 1) {
+        if (!inputState[swapWeapon1Key] && this._lastInputStates[0][swapWeapon1Key] > 1) {
             this.secondaryWeaponSystem.unlockDropWeapon();
         }
 
-        if (!inputState.e && this._lastInputState.e > 1) {
+        if (!inputState[swapWeapon2Key] && this._lastInputStates[0][swapWeapon2Key] > 1) {
             this.primaryWeaponSystem.unlockDropWeapon();
         }
     },
 
     saveLastInput: function saveLastInput(inputState) {
-        this._lastInputState = Object.assign({}, inputState);
+        for (var i = this._lastInputStates.length - 1; i > 0; i--) {
+            this._lastInputStates[i] = this._lastInputStates[i - 1];
+        }
+        this._lastInputStates[0] = Object.assign({}, inputState);
     },
 
     // Mouse rotation which stops when player stops moving the mouse
     _applyMouseRotation: function _applyMouseRotation(inputState) {
         var angleForce = 0;
 
-        var currentRotationAngle = Utils.angleToVector(inputState.mouseRotation, 1);
-        var lastRotationAngle = Utils.angleToVector(this._lastInputState.mouseRotation, 1);
+        //averaging for mouse smoothing
+        var averageLastRotation = this._lastInputStates.reduce(function (carry, value) {
+            return carry += value.mouseRotation;
+        }, 0) / this._lastInputStates.length;
 
-        var angle = Utils.angleBetweenPointsFromCenter(lastRotationAngle, currentRotationAngle);
+        //override for quicker stop
+        if (this._lastInputStates[0].mouseRotation === this._lastInputStates[1].mouseRotation && this._lastInputStates[0].mouseRotation === inputState.mouseRotation) {
+            averageLastRotation = inputState.mouseRotation;
+        }
+
+        var currentRotationAngle = Utils.angleToVector(inputState.mouseRotation, 1);
+        var averageLastRotationAngle = Utils.angleToVector(averageLastRotation, 1);
+
+        var angle = Utils.angleBetweenPointsFromCenter(averageLastRotationAngle, currentRotationAngle);
+
+        console.log(averageLastRotation, angle);
 
         if (angle < 180 && angle > 0) {
             angleForce = Math.min(angle / this.getStepAngle(), 1) * -1;
@@ -3423,8 +3443,8 @@ var InputMixin = {
         this.setAngleForce(angleForce);
     },
 
-    // Mouse roation which stops when target mouse rotation was achieved. 
-    // Harder to control because there is no cursor visible. 
+    // Mouse roation which stops when target mouse rotation was achieved.
+    // Harder to control because there is no cursor visible.
     // Works better with high rotation speeds.
     _applyMouseLookAtRotation: function _applyMouseLookAtRotation(inputState) {
         var angleForce = 0;
@@ -3447,15 +3467,15 @@ var InputMixin = {
     // Keyboard rotation
     _applyKeyboardRotation: function _applyKeyboardRotation(inputState) {
         var angleForce = 0;
-        if (inputState.left > 0) angleForce = 1;
-        if (inputState.right > 0) angleForce = -1;
+        if (inputState[KeyboardLayouts.getKeyForControl('rotateLeft')] > 0) angleForce = 1;
+        if (inputState[KeyboardLayouts.getKeyForControl('rotateRight')] > 0) angleForce = -1;
         this.setAngleForce(angleForce);
     }
 };
 
 module.exports = InputMixin;
 
-},{}],25:[function(require,module,exports){
+},{"shared/KeyboardLayouts":122}],25:[function(require,module,exports){
 'use strict';
 
 var PickupMixin = {
@@ -3872,7 +3892,7 @@ WeaponPickupActor.prototype.onDeath = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":116,"shared/WeaponConfig":123}],37:[function(require,module,exports){
+},{"logic/actor/BaseActor":10,"logic/actor/component/body/BaseBody":15,"shared/ActorConfig":116,"shared/WeaponConfig":124}],37:[function(require,module,exports){
 'use strict';
 
 var ShipActor = require('logic/actor/player/ShipActor');
@@ -3925,7 +3945,7 @@ DemoShipActor.prototype.createWeapon = function () {
 
 module.exports = DemoShipActor;
 
-},{"logic/actor/component/ai/MookBrain":14,"logic/actor/component/weapon/Weapon":16,"logic/actor/mixin/BrainMixin":22,"logic/actor/player/ShipActor":38,"shared/ActorConfig":116,"shared/ActorTypes":118,"shared/WeaponConfig":123}],38:[function(require,module,exports){
+},{"logic/actor/component/ai/MookBrain":14,"logic/actor/component/weapon/Weapon":16,"logic/actor/mixin/BrainMixin":22,"logic/actor/player/ShipActor":38,"shared/ActorConfig":116,"shared/ActorTypes":118,"shared/WeaponConfig":124}],38:[function(require,module,exports){
 'use strict';
 
 var BaseBody = require('logic/actor/component/body/BaseBody');
@@ -6215,7 +6235,7 @@ WeaponPickupActor.prototype.customUpdate = function () {
 
 module.exports = WeaponPickupActor;
 
-},{"renderer/actor/BaseActor":62,"renderer/actor/component/mesh/PickupMesh":68,"renderer/actor/mixin/ParticleMixin":81,"shared/WeaponConfig":123}],94:[function(require,module,exports){
+},{"renderer/actor/BaseActor":62,"renderer/actor/component/mesh/PickupMesh":68,"renderer/actor/mixin/ParticleMixin":81,"shared/WeaponConfig":124}],94:[function(require,module,exports){
 'use strict';
 
 var ActorConfig = require('shared/ActorConfig');
@@ -6493,7 +6513,7 @@ ShipActor.prototype._setupWeapons = function () {
 
 module.exports = ShipActor;
 
-},{"renderer/actor/BaseActor":62,"renderer/actor/component/mesh/BaseMesh":64,"renderer/actor/component/mesh/RavierMesh":69,"renderer/actor/component/mesh/ShieldMesh":70,"renderer/actor/mixin/BobMixin":80,"renderer/actor/mixin/ParticleMixin":81,"renderer/actor/mixin/ShowDamageMixin":82,"renderer/assetManagement/model/ModelStore":115,"shared/ActorConfig":116,"shared/WeaponConfig":123}],96:[function(require,module,exports){
+},{"renderer/actor/BaseActor":62,"renderer/actor/component/mesh/BaseMesh":64,"renderer/actor/component/mesh/RavierMesh":69,"renderer/actor/component/mesh/ShieldMesh":70,"renderer/actor/mixin/BobMixin":80,"renderer/actor/mixin/ParticleMixin":81,"renderer/actor/mixin/ShowDamageMixin":82,"renderer/assetManagement/model/ModelStore":115,"shared/ActorConfig":116,"shared/WeaponConfig":124}],96:[function(require,module,exports){
 'use strict';
 
 var BaseActor = require('renderer/actor/BaseActor');
@@ -7852,7 +7872,7 @@ var ActorConfig = {
         props: {
             canPickup: true,
             acceleration: 1000,
-            turnSpeed: 3,
+            turnSpeed: 4,
             hp: 50,
             shield: 50,
             hpBarCount: 10,
@@ -10968,7 +10988,72 @@ EventEmitter.prototype = {
 },{}],122:[function(require,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+module.exports = {
+    getLayout: function getLayout(layoutIndex) {
+        if (layoutIndex < 0 || layoutIndex >= this._layouts.length) throw new Error('Unknown keyboard layout, requested was of index ' + layoutIndex);
+        return this._layouts[layoutIndex];
+    },
+    getKeyForControl: function getKeyForControl(key) {
+        return this._layouts[this._currentKeyboardLayout][key];
+    },
+    setCurrentKeyboardLayout: function setCurrentKeyboardLayout(layoutIndex) {
+        if (layoutIndex < 0 || layoutIndex >= this._layouts.length) throw new Error('Unknown keyboard layout, requested was of index ' + layoutIndex);
+        this._currentKeyboardLayout = layoutIndex;
+    },
+
+    _currentKeyboardLayout: 0, //save from controls
+    _layouts: [{
+        strafeLeft: 'a',
+        strafeRight: 'd',
+        forward: 'w',
+        backward: 's',
+        rotateLeft: 'mouseX',
+        rotateRight: 'mouseX',
+        fireWeapon1: 'mouseLeft',
+        fireWeapon2: 'mouseRight',
+        swapWeapon1: 'q',
+        swapWeapon2: 'e',
+        targetingLonger: 'mouseY',
+        targetingShorter: 'mouseY',
+        viewHigher: 'mouseScroll',
+        viewLower: 'mouseScroll'
+    }, {
+        strafeLeft: 'a',
+        strafeRight: 'd',
+        forward: 'up',
+        backward: 'down',
+        rotateLeft: 'left',
+        rotateRight: 'right',
+        fireWeapon1: 's',
+        fireWeapon2: 'space',
+        swapWeapon1: 'q',
+        swapWeapon2: 'e',
+        targetingLonger: 'o',
+        targetingShorter: 'p',
+        viewHigher: 'w',
+        viewLower: 'x'
+    }, {
+        strafeLeft: 'a',
+        strafeRight: 'd',
+        forward: 'w',
+        backward: 's',
+        rotateLeft: 'left',
+        rotateRight: 'right',
+        fireWeapon1: 'shiftLeft',
+        fireWeapon2: 'space',
+        swapWeapon1: 'q',
+        swapWeapon2: 'e',
+        targetingLonger: 'o',
+        targetingShorter: 'p',
+        viewHigher: 'up',
+        viewLower: 'down'
+    }]
+};
+
+},{}],123:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var Utils = {
     isBrowserMobile: function isBrowserMobile() {
@@ -11017,8 +11102,8 @@ var Utils = {
     },
 
     makeRandomColor: function makeRandomColor() {
-        var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 255;
+        var min = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+        var max = arguments.length <= 1 || arguments[1] === undefined ? 255 : arguments[1];
         var r = arguments[2];
         var g = arguments[3];
         var b = arguments[4];
@@ -11137,7 +11222,7 @@ var Utils = {
         return this.distanceBetweenPoints(actor1._body.position[0], actor2._body.position[0], actor1._body.position[1], actor2._body.position[1]);
     },
 
-    //expects each key and value to be unique; intended for name:id mappings and such. 
+    //expects each key and value to be unique; intended for name:id mappings and such.
     objectSwitchKeysAndValues: function objectSwitchKeysAndValues(object) {
         return Object.keys(object).reduce(function (carry, objectKey) {
             carry[object[objectKey]] = objectKey;
@@ -11214,7 +11299,7 @@ if (!Function.prototype.mixin) {
 
 module.exports = Utils;
 
-},{}],123:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 'use strict';
 
 var ActorFactory = require('shared/ActorFactory')('renderer');
@@ -11564,7 +11649,7 @@ var WeaponConfig = {
 
 module.exports = WeaponConfig;
 
-},{"shared/ActorFactory":117}],124:[function(require,module,exports){
+},{"shared/ActorFactory":117}],125:[function(require,module,exports){
 'use strict';
 
 function WorkerBus(config) {

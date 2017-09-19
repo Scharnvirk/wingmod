@@ -67,7 +67,7 @@ MainMenuScene.prototype.create = function(){
 
     this.threeScene.add( this.ambientLight );
 
-    this.createStartScene();
+    this.createStartScene2();
 };
 
 
@@ -268,22 +268,27 @@ MainMenuScene.prototype.createStartScene2 = function(){
     // var geometry2 = cloneGeometry(geometry);
     // var geometry3 = cloneGeometry(geometry2);
 
-    var geometry2 = geometry.clone();
-    delete geometry2.bones; 
+    // var geometry2 = geometry.clone();
+    // delete geometry2.bones; 
 
-    var geometry3 = geometry.clone();
-    delete geometry2.bones; 
+    // var geometry3 = geometry.clone();
+    // delete geometry2.bones; 
 
     var shipMesh2 = new BaseSkinnedMesh({
-        geometry: geometry2,
+        geometry: geometry,
         material: ModelStore.get('enemyModel').material
     });
 
-    const bones = createBones2( shipMesh2, geometry.bones );    
-    const skeleton = new THREE.Skeleton(bones);
+    // const bones = createBones2( shipMesh2, geometry.bones );    
+    // const skeleton = new THREE.Skeleton(bones);
 
     var shipMesh3 = new BaseSkinnedMesh({
-        geometry: geometry3,
+        geometry: geometry,
+        material: ModelStore.get('enemyModel').material
+    });
+
+    var shipMesh4 = new BaseSkinnedMesh({
+        geometry: geometry,
         material: ModelStore.get('enemyModel').material
     });
 
@@ -291,13 +296,12 @@ MainMenuScene.prototype.createStartScene2 = function(){
     // shipMesh2.bindMode = 'detached';
     // shipMesh3.bindMode = 'detached';
 
-
     // // shipMesh.bind( skeleton, shipMesh.matrixWorld );
-    shipMesh2.bind( shipMesh.skeleton, shipMesh2.matrixWorld );
-    shipMesh2.master = shipMesh; 
+    // shipMesh2.bind( shipMesh.skeleton, shipMesh2.matrixWorld );
+    // shipMesh2.master = shipMesh; 
 
     // shipMesh.shareSkeleton(shipMesh2);
-    shipMesh.shareSkeleton(shipMesh3);
+    // shipMesh.shareSkeleton(shipMesh3);
 
     scale = 2;//4.5;
     shipMesh.scale.x = scale;
@@ -339,13 +343,28 @@ MainMenuScene.prototype.createStartScene2 = function(){
     shipMesh3.speedY = 0.0012;
     shipMesh3.speedX = 0.001;
 
+    scale = 2;
+    shipMesh4.scale.x = scale;
+    shipMesh4.scale.y = scale;
+    shipMesh4.scale.z = scale;
+    shipMesh4.castShadow = true;
+    shipMesh4.receiveShadow = true;
+    shipMesh4.rotation.z = Utils.degToRad(-120);
+
+    shipMesh4.position.z = 2;
+    shipMesh4.speedZ = 0.015;
+    shipMesh4.speedY = 0.0012;
+    shipMesh4.speedX = 0.001;
+
+
 
     this.shipMesh = shipMesh;
     this.sceneMesh = mesh;
 
     // this.threeScene.add(shipMesh);
-    this.threeScene.add(shipMesh2);
+    // this.threeScene.add(shipMesh2);
     this.threeScene.add(shipMesh3);
+    this.threeScene.add(shipMesh4);
 
     this.directionalLight.intensity = 0;
     this.ambientLight.intensity = 0;
@@ -353,8 +372,9 @@ MainMenuScene.prototype.createStartScene2 = function(){
 
     var isLoaded = false;
     var action = {}, mixer;
-    var action2 = {}, mixer2;
-    var action3 = {}, mixer3;
+    var action2 = {};
+    var action3 = {};
+    var action4 = {};
     var activeActionName = 'idle'; 
 
     var arrAnimations = [ 
@@ -376,17 +396,22 @@ MainMenuScene.prototype.createStartScene2 = function(){
         // mixer3.update(delta);
     }, 1);
 
-    action.hello = mixer.clipAction(geometry.animations[ 2 ]);
+    action.hello = mixer.clipAction(geometry.animations[ 2 ], shipMesh);
     action.hello.setEffectiveWeight(1);
     action.hello.enabled = true;
 
-    // action2.hello = mixer.clipAction(geometry2.animations[ 2 ]);
-    // action2.hello.setEffectiveWeight(1);
-    // action2.hello.enabled = true;
+    action2.hello = mixer.clipAction(geometry.animations[ 2 ], shipMesh2);
+    action2.hello.setEffectiveWeight(1);
+    action2.hello.enabled = true;
 
-    // action3.hello = mixer.clipAction(geometry3.animations[ 2 ]);
-    // action3.hello.setEffectiveWeight(1);
-    // action3.hello.enabled = true;
+    action3.hello = mixer.clipAction(geometry.animations[ 2 ], shipMesh3);
+    action3.hello.setEffectiveWeight(1);
+    action3.hello.enabled = true;
+
+    action4.hello = mixer.clipAction(geometry.animations[ 2 ], shipMesh3);
+    action4.hello.setEffectiveWeight(1);
+    action4.hello.enabled = true;
+
 
 
     window.addEventListener('click', onDoubleClick, false);
@@ -394,16 +419,18 @@ MainMenuScene.prototype.createStartScene2 = function(){
     isLoaded = true;
 
     action.hello.play();
-    // action2.hello.play();
-    // action3.hello.play();
+    action2.hello.play();
+    action3.hello.play();
+    action4.hello.play();
 
     window.a1 = action;
-    // window.a2 = action2;
-    // window.a3 = action3;
+    window.a2 = action2;
+    window.a3 = action3;
+    window.a3 = action4;
 
     window.g1 = geometry;
-    window.g2 = geometry2;
-    window.g3 = geometry3;
+    // window.g2 = geometry2;
+    // window.g3 = geometry3;
     
 
     var mylatesttap;

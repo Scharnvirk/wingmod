@@ -122,65 +122,18 @@ class SettingsMenu extends Component {
                 />
             </div>
 
+            <div style = {this.componentStyle.settingItem}>
+                <span style={this.componentStyle.settingText} >{'CONTROLS:'}</span>
+                <OptionButton 
+                    actionEvent={'backgroundMode'} 
+                    options={['MOUSE', 'KEYBOARD A', 'KEYBOARD B']} 
+                    value={this.state.initialConfigs.backgroundMode}
+                    style={this.componentStyle.buttonStyle}
+                />
+            </div>
+
         </div>;
     }
-};
+}
 
 module.exports = SettingsMenu;
-
-/**
- * 
- * 
-            <div style = {this.componentStyle.settingItem} className={'centerHorizontal'}>
-                <div style = { {float:'left', marginTop: '12px'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <span className={'textDark'} >{'RESOLUTION:'}</span>
-                </StyledText> </div>
-                <div style = { {float:'right'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <OptionButton 
-                        actionEvent={'resolutionConfig'} 
-                        options={['LOW', 'MEDIUM', 'HIGH', 'TOO HIGH']} 
-                        value={this.state.initialConfigs.resolution}
-                    />
-                </StyledText>  </div>
-            </div>
-
-            <div style = {this.componentStyle.settingItem} className={'centerHorizontal'}>
-                <div style = { {float:'left', marginTop: '12px'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <span className={'textDark'} >{'DISTANCE:'}</span>
-                </StyledText> </div>
-                <div style = { {float:'right'} }> <StyledText style={classnames('class', ['verticalSpacing'])}>
-                     <Slider
-                        min={1} 
-                        actionEvent={'renderDistance'} 
-                        class={classnames('class', ['highlight'])} 
-                        value={this.state.initialConfigs.renderDistance}
-                    />
-                </StyledText>  </div>
-            </div>
-
-            <div style = {this.componentStyle.settingItem} className={'centerHorizontal'}>
-                <div style = { {float:'left', marginTop: '12px'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <span className={'textDark'} >{'SOUND:'}</span>
-                </StyledText> </div>
-                <div style = { {float:'right'} }> <StyledText style={classnames('class', ['verticalSpacing'])}>
-                    <Slider 
-                        actionEvent={'soundConfig'} 
-                        class={classnames('class', ['highlight'])} 
-                        value={this.state.initialConfigs.soundVolume}
-                    />
-                </StyledText>  </div>
-            </div>
-
-            <div style = {this.componentStyle.settingItem} className={'centerHorizontal'}>
-                <div style = { {float:'left', marginTop: '12px'} }> <StyledText style={classnames('class', ['smallText', 'verticalSpacing'])}>
-                    <span className={'textDark'} >{'BACKGROUND:'}</span>
-                </StyledText> </div>
-                <div style = { {float:'right'} }> <StyledText style={classnames('class', ['verticalSpacing'])}>
-                    <OptionButton 
-                        actionEvent={'backgroundMode'} 
-                        options={['RANDOM', 'SPACE', 'RANCID', 'FOG', 'DOOM', 'SUNKEN']} 
-                        value={this.state.initialConfigs.backgroundMode}
-                    />
-                </StyledText>  </div>
-            </div>
- */

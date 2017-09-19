@@ -29,6 +29,10 @@ var componentStyle = {
         WebkitUserDrag: 'none',
         userDrag: 'none',
         userSelect: 'none'
+    },
+    titlePosition: {
+        position: 'relative',
+        bottom: '100px' 
     }
 };
 
@@ -47,11 +51,13 @@ var StartScreen = React.createClass({
         var startButtonText = this.state.assetsLoaded ? startText : 'LOADING...';
 
         return <FlexBoxContainer style={componentStyle.container}>
-            <div style={componentStyle.titleText}>
-                <span>{'WINGMOD'}</span>
-                <span style={{color: 'red'}}>{'2'}</span>
-            </div>
-            <Button text={startButtonText} buttonEvent={'start'} />
+            <div style={componentStyle.titlePosition}>
+                <div style={componentStyle.titleText}>
+                    <span>{'WINGMOD'}</span>
+                    <span style={{color: 'red'}}>{'2'}</span>
+                </div>
+                <Button text={startButtonText} buttonEvent={'start'} />
+            </div>            
             <SettingsMenu visible={this.state.assetsLoaded}/>
         </FlexBoxContainer>;
     }
