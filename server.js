@@ -180,6 +180,8 @@ Server.prototype.createRoutes = function(paths) {
 
     paths.forEach(function(itemPath){
         routes[itemPath] = function(req, res) {
+            console.log(itemPath)
+            if (itemPath.includes('/lib')) res.setHeader('Content-Type', 'text/javascript')
             res.send(this.getFromCache(itemPath) );
         }.bind(this);
     }.bind(this));
